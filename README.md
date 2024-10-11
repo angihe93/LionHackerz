@@ -2,10 +2,12 @@
 
 # Initial Setup
 This API makes use of PostgREST.  To install, follow steps 1 and 2 here:
+
 	https://docs.postgrest.org/en/v12/tutorials/tut0.html
 
 The database queries make use of cURL, so if you don't have it installed on your
 system, see here: 
+
 	https://curl.se/
 
 # Database Queries - For Team Members in Designing your Classes
@@ -14,6 +16,7 @@ to worry about this for performing queries, as the Database class has an
 overloaded query function to automatically format the URLs and perform the 
 queries and return the results.  However, if you are interested in how the 
 queries are formatted with PostgREST and curl, see:
+
 	https://postgrest.org/en/v10/api.html
 
 See the commentary in Database.h for the query function for the parameters you 
@@ -26,8 +29,10 @@ At present, only SELECT queries are possible, though functionality for INSERT
 will be added later.
 
 # Current Database Tables:
+	
 	User:		id, created_at uname, email
 
+	/* matching criteria */
 	Dimension:	dim_id, name, def_weight
 
 	Interest:       name, category
