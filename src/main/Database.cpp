@@ -1,3 +1,7 @@
+/* Dallas Scott - ds4015
+ * Database.cpp
+ * Database class implementation */
+
 #include <iostream>
 #include <curl/curl.h>
 #include <string>
