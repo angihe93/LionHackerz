@@ -40,15 +40,23 @@ public:
      * In terms of the SQL query, this is equivalent to something like:
      *      SELECT selectColumns FROM table WHERE filterColumn op value
      */
-    const std::string query(std::string table, std::string selectColumns, std::string filterColumn, std::string op, std::string value);
+    const std::string query(std::string table, std::string selectColumns,
+                            std::string filterColumn, std::string op, std::string value);
 
     /* Overloaded query constructor:  Same as above, but with 2 filters
-     *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1 AND filterColumn2 op2 value2 */
-    const std::string query(std::string table, std::string selectColumns, std::string filterColumn1, std::string op1, std::string value1, std::string filterColumn2, std::string op2, std::string value2);
+     *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
+     *              AND filterColumn2 op2 value2 */
+    const std::string query(std::string table, std::string selectColumns,
+                            std::string filterColumn1, std::string op1, std::string value1,
+                            std::string filterColumn2, std::string op2, std::string value2);
 
     /* Overloaded query constructor:  Same as above, but with 3 filters
-     *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1 AND filterColumn2 op2 value2 AND filterColumn3 op3 value3 */
-    const std::string query(std::string table, std::string selectColumns, std::string filterColumn1, std::string op1, std::string value1, std::string filterColumn2, std::string op2, std::string value2, std::string filterColumn3, std::string op3, std::string value3);
+     *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
+                    AND filterColumn2 op2 value2 AND filterColumn3 op3 value3 */
+    const std::string query(std::string table, std::string selectColumns,
+                            std::string filterColumn1, std::string op1, std::string value1,
+                            std::string filterColumn2, std::string op2, std::string value2,
+                            std::string filterColumn3, std::string op3, std::string value3);
 
     /* Used for returning the query results.  Do not call directly or modify. */
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
