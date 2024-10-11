@@ -14,7 +14,7 @@ SRC = Main.cpp Matcher.cpp Database.cpp
 OBJ = $(SRC:.cpp=.o)
 
 # Output executable
-TARGET = my_program
+TARGET = test
 
 # Build the program
 $(TARGET): $(OBJ)
