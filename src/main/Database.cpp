@@ -54,10 +54,13 @@ std::string Database::get(const std::string url)
     return response;
 }
 
-const std::string Database::query(std::string table, std::string selectColumns, std::string filterColumn,
-                                  std::string op, std::string value)
+const std::string Database::query(std::string table, std::string selectColumns,
+                                  std::string filterColumn, std::string op,
+                                  std::string value)
 {
-    std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" + filterColumn + "=" + op + "." + value;
+    std::string url = this->url + "/rest/v1/" + table + "?" + "select=" +
+                      selectColumns + "&" + filterColumn + "=" + op + "." + value;
+
     const std::string fURL = url;
 
     std::cout << fURL << std::endl;
@@ -67,11 +70,13 @@ const std::string Database::query(std::string table, std::string selectColumns, 
     return result.c_str();
 }
 
-const std::string Database::query(std::string table, std::string selectColumns, std::string filterColumn1,
-                                  std::string op1, std::string value1, std::string filterColumn2, std::string op2,
-                                  std::string value2)
+const std::string Database::query(std::string table, std::string selectColumns,
+                                  std::string filterColumn1, std::string op1, std::string value1,
+                                  std::string filterColumn2, std::string op2, std::string value2)
 {
-    std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" + filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" + op2 + "." + value2;
+    std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" +
+                      filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
+                      op2 + "." + value2;
 
     const std::string fURL = url;
 
@@ -80,12 +85,14 @@ const std::string Database::query(std::string table, std::string selectColumns, 
     return result.c_str();
 }
 
-const std::string Database::query(std::string table, std::string selectColumns, std::string filterColumn1,
-                                  std::string op1, std::string value1, std::string filterColumn2, std::string op2,
-                                  std::string value2, std::string filterColumn3, std::string op3,
-                                  std::string value3)
+const std::string Database::query(std::string table, std::string selectColumns,
+                                  std::string filterColumn1, std::string op1, std::string value1,
+                                  std::string filterColumn2, std::string op2, std::string value2,
+                                  std::string filterColumn3, std::string op3, std::string value3)
 {
-    std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" + filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" + op2 + "." + value2 + "&" + filterColumn3 + "=" + op3 + "." + value3;
+    std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" +
+                      filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
+                      op2 + "." + value2 + "&" + filterColumn3 + "=" + op3 + "." + value3;
 
     const std::string fURL = url;
 
