@@ -22,3 +22,15 @@ an instance of the Database class instantiated with the URL/API key on Trello (o
 Main.cpp for how this is done).  This allows you to perform queries inside your member
 functions as needed.  You can store the results in private instance variables to use as
 necessary.
+
+At present, only SELECT queries are possible, though functionality for INSERT will be
+added later.
+
+Current Database Tables:
+    User:             id, created_at uname, email
+    Dimension:        dim_id, name, def_weight
+    Interest:         name, category
+    Skill:            name, category
+    Has_Interest:     id, name  (id from User, name from Interest)
+    Has_Skill         id, name  (id from User, name from Skill)
+    Has_Augment:      id, dim_id, weight_mod  (id from User, dim_id from Dimension)
