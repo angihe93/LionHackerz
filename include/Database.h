@@ -1,5 +1,8 @@
-#ifndef DATABASE.H
-#define DATABASE .H
+/* Dallas Scott - ds4015
+ * Database Class header */
+
+#ifndef DATABASE_H
+#define DATABASE_H
 
 #include <iostream>
 #include <curl/curl.h>
