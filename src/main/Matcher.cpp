@@ -4,56 +4,55 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <curl/curl.h>
+#include "Matcher.h"
 
 using namespace std;
 
 /* Matcher class for pairing job seekers with employers */
 
-class Matcher {
-    public:
-        int matchScore;
+Matcher::Matcher(Database &db)
+{
+    this->db = &db;
+}
 
-        void gatherRelevantDimensions(/*user*/) {
-            /* for given user:
-                    iterate through dimensions of profile of relevance
-                    add each to list 'relevancies' and its augment to
-                    list 'augments' in same index/pos */
-        }
+void Matcher::gatherRelevantDimensions(int uid)
+{
 
-        void filterJobs() {
-            /* for each job listing:
-                    if relevancy missing from description,
-                    skip; else, add to list 'cadidates' */
-        }
+    this->db->query("Has_Augment", "dim_id", "id", "eq", std::to_string(uid));
+}
 
-        void match(/*job*/) {
-            /* for each listing in 'candidates':
-                    calculate match score with
-                    defaults and augments, add to list 'scores' */
-        }
+void Matcher::filterJobs()
+{
+    /* for each job listing:
+            if relevancy missing from description,
+            skip; else, add to list 'cadidates' */
+}
 
-        void filterMatches(/*list of candidates*/) {
-            /* for each candidate:
-                 if score in corresponding index
-                 in 'scores' above match threshold,
-                 keep; else, remove from list.
-            */
-        }
+void Matcher::match(/*job*/)
+{
+    /* for each listing in 'candidates':
+            calculate match score with
+            defaults and augments, add to list 'scores' */
+}
 
-        void sortMatches(/*revised list of candidates*/) {
-            /* for each candidate remaining:
-                    sort by match score in ascending order */
-        }
+void Matcher::filterMatches(/*list of candidates*/)
+{
+    /* for each candidate:
+         if score in corresponding index
+         in 'scores' above match threshold,
+         keep; else, remove from list.
+    */
+}
 
-        void displayResults(/*sorted list of candidates*/) {
-            /* for each sorted candidate:
-                    print job listing*/
-        }
+void Matcher::sortMatches(/*revised list of candidates*/)
+{
+    /* for each candidate remaining:
+            sort by match score in ascending order */
+}
 
-
-    private:
-        list<string> relevancies;
-        list<int> augments;
-        list<int> candidates;
-        list<int> scores;
+void Matcher::displayResults(/*sorted list of candidates*/)
+{
+    /* for each sorted candidate:
+            print job listing*/
 }
