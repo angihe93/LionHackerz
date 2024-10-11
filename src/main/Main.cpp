@@ -12,6 +12,9 @@ int main(void)
 
     /* test query */
     int uid = 1;
+    
+    /* equivalent SQL query: "SELECT dim_id, weight_mod FROM Has_Augment WHERE id = 1" 
+     *  note that parameters must be stringified if not strings/string literals */
     std::string req = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid));
 
     std::printf("%s\n", req.c_str());
