@@ -19,7 +19,7 @@ Matcher::Matcher(Database &db)
 void Matcher::gatherRelevantDimensions(int uid)
 {
 
-    this->db->query("Has_Augment", "dim_id", "id", "eq", std::to_string(uid));
+    // std::list<std::string> *lists = this->db->query1("Has_Augment", "dim_id", "id", "eq", std::to_string(uid));
 }
 
 void Matcher::filterJobs()
