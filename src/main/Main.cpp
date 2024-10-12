@@ -22,8 +22,16 @@ int main(void)
     /* SELECT uname,email FROM User WHERE id = 1 */
     std::list<std::string> *req1 = db->query("User", "uname,email", "id", "eq", std::to_string(uid), true);
 
+    std::cout << std::endl
+              << "-----------------------------------------" << std::endl
+              << std::endl;
+
     /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1*/
     std::list<std::string> *req2 = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid), true);
+
+    std::cout << std::endl
+              << "-----------------------------------------" << std::endl
+              << std::endl;
 
     /* SELECT dim_id,name,def_weight FROM Dimension */
     std::list<std::string> *req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true);
