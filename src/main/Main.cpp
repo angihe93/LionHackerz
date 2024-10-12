@@ -10,11 +10,8 @@ int main(void)
     const std::string api = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsY3Bra2V2b2Rla2lod3lqenZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQxNDY2OCwiZXhwIjoyMDQzOTkwNjY4fQ.qQaXij0b6rgniZpmsImn4AIC6Oh2OGUxFwJgpHbdeu4";
     Database *db = new Database(url, api);
 
-    /* test query */
+    /* test query user id value */
     int uid = 1;
-
-    /* equivalent SQL query: "SELECT dim_id, weight_mod FROM Has_Augment WHERE id = 1"
-     *  note that parameters must be stringified if not strings/string literals */
 
     /* example queries: */
 
