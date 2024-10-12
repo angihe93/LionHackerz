@@ -15,9 +15,17 @@ int main(void)
 
     /* equivalent SQL query: "SELECT dim_id, weight_mod FROM Has_Augment WHERE id = 1"
      *  note that parameters must be stringified if not strings/string literals */
-    std::string req = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid));
 
-    std::printf("%s\n", req.c_str());
+    /* example queries: */
+
+    /* SELECT uname,email FROM User WHERE id = 1 */
+    std::list<std::string> *req1 = db->query("User", "uname,email", "id", "eq", std::to_string(uid), true);
+
+    /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1*/
+    std::list<std::string> *req2 = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid), true);
+
+    /* SELECT dim_id,name,def_weight FROM Dimension */
+    std::list<std::string> *req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true);
 
     return 0;
 }
