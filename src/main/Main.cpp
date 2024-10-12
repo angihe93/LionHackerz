@@ -13,7 +13,11 @@ int main(void)
     /* test query user id value */
     int uid = 1;
 
-    /* example queries: */
+    /* example queries:
+     * These return an array of lists with the values for each column requested,
+     * e.g., req3[0] = list of dimension ids in the results (list<string>)
+     *       req3[1] = list of dimension names in the results (list<string>)
+     *       req3[2] = list of dimenion weights in the results (list<string>) */
 
     /* SELECT uname,email FROM User WHERE id = 1 */
     std::list<std::string> *req1 = db->query("User", "uname,email", "id", "eq", std::to_string(uid), true);
