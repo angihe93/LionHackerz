@@ -14,7 +14,7 @@ add_executable(LionHackerzProject
     src/main.cpp 
     src/Database.cpp
     src/Matcher.cpp
-    # src/RouteController.cpp
+    src/RouteController.cpp
     # src/MyApp.cpp
 )
 
@@ -87,6 +87,7 @@ if (CPPLINT)
         src/main.cpp 
         src/Database.cpp
         src/Matcher.cpp
+        src/RouteController.cpp
     )
 
     # Custom target to run cpplint
