@@ -11,7 +11,7 @@ int main(void)
     Database *db = new Database(url, api);
 
     /* test query user id value */
-    int uid = 1;
+    int uid = 1, resCount = 0;
 
     /* example queries:
      * These return an array of lists with the values for each column requested,
@@ -20,21 +20,21 @@ int main(void)
      *       req3[2] = list of dimenion weights in the results (list<string>) */
 
     /* SELECT uname,email FROM User WHERE id = 1 */
-    std::list<std::string> *req1 = db->query("User", "uname,email", "id", "eq", std::to_string(uid), true);
+    std::list<std::string> *req1 = db->query("User", "uname,email", "id", "eq", std::to_string(uid), true, resCount);
 
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
               << std::endl;
 
-    /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1*/
-    std::list<std::string> *req2 = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid), true);
+    /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1 */
+    std::list<std::string> *req2 = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid), true, resCount);
 
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
               << std::endl;
 
     /* SELECT dim_id,name,def_weight FROM Dimension */
-    std::list<std::string> *req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true);
+    std::list<std::string> *req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true, resCount);
 
     return 0;
 }

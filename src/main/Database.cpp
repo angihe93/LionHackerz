@@ -57,7 +57,7 @@ std::string Database::get(const std::string url)
 
 std::list<std::string> *Database::query(std::string table, std::string selectColumns,
                                         std::string filterColumn, std::string op,
-                                        std::string value, bool printResults)
+                                        std::string value, bool printResults, int &resCount)
 {
     std::string url = this->url + "/rest/v1/" + table + "?" + "select=" +
                       selectColumns + "&" + filterColumn + "=" + op + "." + value;
@@ -79,6 +79,7 @@ std::list<std::string> *Database::query(std::string table, std::string selectCol
     std::list<std::string> *queryLists = new std::list<std::string>[listCount];
 
     int cR = this->countResults(result);
+    resCount = this->countResults(result);
 
     std::cout << "SELECT " << selectColumns << " FROM " << table << " WHERE "
               << filterColumn << " " << op << " " << value << std::endl;
@@ -103,7 +104,7 @@ std::list<std::string> *Database::query(std::string table, std::string selectCol
 std::list<std::string> *Database::query(std::string table, std::string selectColumns,
                                         std::string filterColumn1, std::string op1, std::string value1,
                                         std::string filterColumn2, std::string op2, std::string value2,
-                                        bool printResults)
+                                        bool printResults, int &resCount)
 {
     std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" +
                       filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
@@ -126,6 +127,8 @@ std::list<std::string> *Database::query(std::string table, std::string selectCol
     std::list<std::string> *queryLists = new std::list<std::string>[listCount];
 
     int cR = this->countResults(result);
+
+    resCount = this->countResults(result);
 
     std::cout << "SELECT " << selectColumns << " FROM " << table << " WHERE "
               << filterColumn1 << " " << op1 << " " << value1 << " AND "
@@ -151,7 +154,7 @@ std::list<std::string> *Database::query(std::string table, std::string selectCol
                                         std::string filterColumn1, std::string op1, std::string value1,
                                         std::string filterColumn2, std::string op2, std::string value2,
                                         std::string filterColumn3, std::string op3, std::string value3,
-                                        bool printResults)
+                                        bool printResults, int &resCount)
 {
     std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" +
                       filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
@@ -174,6 +177,7 @@ std::list<std::string> *Database::query(std::string table, std::string selectCol
     std::list<std::string> *queryLists = new std::list<std::string>[listCount];
 
     int cR = this->countResults(result);
+    resCount = this->countResults(result);
 
     std::cout << "SELECT " << selectColumns << " FROM " << table << " WHERE "
               << filterColumn1 << " " << op1 << " " << value1 << " AND "
@@ -222,7 +226,17 @@ std::list<std::string> *Database::tokenize(std::string res, int cR, int listCoun
             if (token[token.size() - 1] == ']')
                 token = token.substr(0, token.size() - 2);
 
-            queryLists[j].push_back(token);
+            if (token == "null")
+                token = "\"null\"";
+
+            if (token == "true")
+                token = "\"true\"";
+
+            if (token == "false")
+                token = "\"false\"";
+
+            queryLists[j]
+                .push_back(token);
         }
     }
     return queryLists;

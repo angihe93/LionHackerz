@@ -52,7 +52,7 @@ public:
      */
     std::list<std::string> *query(std::string table, std::string selectColumns,
                                   std::string filterColumn, std::string op, std::string value,
-                                  bool printResults);
+                                  bool printResults, int &resCount);
 
     /* Overloaded query function:  Same as above, but with 2 filters
      *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
@@ -60,7 +60,7 @@ public:
     std::list<std::string> *query(std::string table, std::string selectColumns,
                                   std::string filterColumn1, std::string op1, std::string value1,
                                   std::string filterColumn2, std::string op2, std::string value2,
-                                  bool printResults);
+                                  bool printResults, int &resCount);
 
     /* Overloaded query function:  Same as above, but with 3 filters
      *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
@@ -69,7 +69,7 @@ public:
                                   std::string filterColumn1, std::string op1, std::string value1,
                                   std::string filterColumn2, std::string op2, std::string value2,
                                   std::string filterColumn3, std::string op3, std::string value3,
-                                  bool printResults);
+                                  bool printResults, int &resCount);
 
     /* Used for returning the query results.  Do not call directly or modify. */
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
