@@ -31,7 +31,7 @@ public:
      *      @para api_key - the API key needed to perform queries */
     Database(const std::string url, const std::string api_key);
 
-    /* Main query function with 1 filter column.
+    /* query(): Main query function with 1 filter column.
      * This function takes as input the name of a table in the database,
      * the name(s) of 1 or more columns to select from, the name of 1
      * column to serve as a filter, the comparison operation (e.g., is,
@@ -65,25 +65,51 @@ public:
      *      SELECT selectColumns FROM table WHERE filterColumn op value
      */
     std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
-                                                std::string filterColumn, std::string op, std::string value,
+                                                std::string filterColumn, std::string op, 
+                                                std::string value,
                                                 bool printResults, int &resCount);
 
     /* Overloaded query function:  Same as above, but with 2 filters
      *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
      *              AND filterColumn2 op2 value2 */
     std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
-                                                std::string filterColumn1, std::string op1, std::string value1,
-                                                std::string filterColumn2, std::string op2, std::string value2,
+                                                std::string filterColumn1, std::string op1, 
+                                                std::string value1,
+                                                std::string filterColumn2, std::string op2, 
+                                                std::string value2,
                                                 bool printResults, int &resCount);
 
     /* Overloaded query function:  Same as above, but with 3 filters
      *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
      *              AND filterColumn2 op2 value2 AND filterColumn3 op3 value3 */
     std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
-                                                std::string filterColumn1, std::string op1, std::string value1,
-                                                std::string filterColumn2, std::string op2, std::string value2,
-                                                std::string filterColumn3, std::string op3, std::string value3,
+                                                std::string filterColumn1, std::string op1, 
+                                                std::string value1,
+                                                std::string filterColumn2, std::string op2, 
+                                                std::string value2,
+                                                std::string filterColumn3, std::string op3, 
+                                                std::string value3,
                                                 bool printResults, int &resCount);
+
+
+    /* insert():  This function allows you to insert a new entry into the database.
+     * It takes 2 arguments, both strings, the first being the table you wish to enter
+     * the entry into, the second being a JSON formatted list of column: value pairs to
+     * enter into that table. The list string takes the format:
+     * 
+     *      {"col1": "value1", "col2": "value2", ... }
+     * 
+     * It can either be passed with escape sequences for the inner quotes or by using
+     * a string literal R"( data with no escapes )" to make escapes unnecessary.  See
+     * dbtest route in RouteController for example requests. 
+     * 
+     *     @param table         The table you are inserting data into
+     * 
+     *     @param data          A JSON formatted string ("{ "col1": "val1", ... }") 
+     *                          that contains the data for each column you are
+     *                          inserting.
+     */
+    std::string insert(std::string table, std::string data);                                              
 
     /* Used for returning the query results.  Do not call directly or modify. */
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
@@ -102,11 +128,12 @@ public:
     /* helper function: iterates through and prints listified results of query lists */
     void iterateLists(std::vector<std::vector<std::string> > queryLists);
 
-    /* Helper function for query.  This initializes cURL and performs
+    /* Helper function for POST/GET reqeusts.  This initializes cURL and performs
        the actual query but should not be called directly. See the
-       query functions below for actual queries to the database.
-       */
-    std::string get(std::string url);
+       query() and insert() functions above for performing requests to the
+       database. */
+    std::string request(const std::string &getOrPost, const std::string url, 
+    const std::string &insertData);
 
 private:
     std::string api_key;

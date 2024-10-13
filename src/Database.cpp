@@ -13,15 +13,17 @@ using namespace std;
 
 Database::Database()
 {
-    char* url_char = std::getenv("SUPABASE_URL"); 
+    char *url_char = std::getenv("SUPABASE_URL");
     const std::string url = url_char;
-    if (url_char == NULL) {
+    if (url_char == NULL)
+    {
         std::cout << "did not find SUPABASE_URL, check it is set and accessible in the current environment" << std::endl;
     }
 
-    char* api_char = std::getenv("SUPABASE_API_KEY"); 
+    char *api_char = std::getenv("SUPABASE_API_KEY");
     const std::string api = api_char;
-    if (api_char == NULL) {
+    if (api_char == NULL)
+    {
         std::cout << "did not find SUPABASE_API_KEY, check it is set and accessible in the current environment" << std::endl;
     }
 
@@ -35,11 +37,13 @@ Database::Database(const std::string url, const std::string api_key)
     this->api_key = api_key;
 }
 
-std::string Database::get(const std::string url)
+std::string Database::request(const std::string &getOrPost, const std::string url,
+                              const std::string &insertData)
 {
     CURL *curl;
     std::string response;
 
+    curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
 
     if (!curl)
@@ -51,12 +55,33 @@ std::string Database::get(const std::string url)
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     struct curl_slist *headers = NULL;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
     headers = curl_slist_append(headers, ("apikey: " + this->api_key).c_str());
     headers = curl_slist_append(headers, ("Authorization: Bearer " + this->api_key).c_str());
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+    if (getOrPost != "POST" && getOrPost != "GET")
+    {
+        std::cout << "invalid option. please specify whether you wish to perform a GET or POST"
+                  << "request." << std::endl;
+        curl_easy_cleanup(curl);
+        curl_global_cleanup();
+        return "exiting request.";
+    }
+
+    if (getOrPost == "POST")
+    {
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+        headers = curl_slist_append(headers, "Prefer: return=representation");
+        if (!insertData.empty())
+        {
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
+        }
+    }
+
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     CURLcode res = curl_easy_perform(curl);
 
@@ -71,7 +96,22 @@ std::string Database::get(const std::string url)
     return response;
 }
 
-std::vector<std::vector<std::string> >
+std::string Database::insert(string table, string data)
+{
+    string url = this->url + "/rest/v1/" + table;
+
+    const string fURL = url;
+
+    const string method = "POST";
+
+    const string json = data;
+
+    string status = request(method, fURL, json);
+
+    return status;
+}
+
+std::vector<std::vector<std::string>>
 Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn, std::string op,
                 std::string value, bool printResults, int &resCount)
@@ -81,7 +121,10 @@ Database::query(std::string table, std::string selectColumns,
 
     const string fURL = url;
 
-    string result = get(fURL);
+    const string& method = "GET";
+    const string& insertData = "";
+
+    string result = request(method, fURL, insertData);
 
     int i = 0;
     int listCount = 0;
@@ -91,9 +134,9 @@ Database::query(std::string table, std::string selectColumns,
         if (result[i] == ':')
             listCount++;
         i++;
-    }            
+    }
 
-    vector<vector<string> > queryLists;
+    vector<vector<string>> queryLists;
 
     int cR = this->countResults(result);
     resCount = this->countResults(result);
@@ -104,8 +147,9 @@ Database::query(std::string table, std::string selectColumns,
         std::cout << "Query complete." << std::endl;
         std::cout << "\tNumber of results: " << cR << std::endl;
         std::cout << "\tNumber of columns returned:  " << listCount << std::endl;
-        
-        std::cout << std::endl << "Results: " << result << std::endl;
+
+        std::cout << std::endl
+                  << "Results: " << result << std::endl;
     }
 
     tokenize(result, cR, listCount, queryLists);
@@ -116,7 +160,7 @@ Database::query(std::string table, std::string selectColumns,
     return queryLists;
 }
 
-std::vector<std::vector<std::string> >
+std::vector<std::vector<std::string>>
 Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn1, std::string op1, std::string value1,
                 std::string filterColumn2, std::string op2, std::string value2,
@@ -128,7 +172,10 @@ Database::query(std::string table, std::string selectColumns,
 
     const std::string fURL = url;
 
-    std::string result = get(fURL);
+    const string& method = "GET";
+    const string& insertData = "";
+
+    string result = request(method, fURL, insertData);
 
     int i = 0;
     int listCount = 0;
@@ -140,7 +187,7 @@ Database::query(std::string table, std::string selectColumns,
         i++;
     }
 
-    vector<vector<string> > queryLists;
+    vector<vector<string>> queryLists;
 
     int cR = this->countResults(result);
 
@@ -168,7 +215,7 @@ Database::query(std::string table, std::string selectColumns,
     return queryLists;
 }
 
-std::vector<std::vector<std::string> >
+std::vector<std::vector<std::string>>
 Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn1, std::string op1, std::string value1,
                 std::string filterColumn2, std::string op2, std::string value2,
@@ -181,7 +228,10 @@ Database::query(std::string table, std::string selectColumns,
 
     const std::string fURL = url;
 
-    std::string result = get(fURL);
+    const string& method = "GET";
+    const string& insertData = "";
+
+    string result = request(method, fURL, insertData);
 
     int i = 0;
     int listCount = 0;
@@ -193,7 +243,7 @@ Database::query(std::string table, std::string selectColumns,
         i++;
     }
 
-    vector<vector<string> > queryLists;
+    vector<vector<string>> queryLists;
 
     int cR = this->countResults(result);
     resCount = this->countResults(result);
@@ -230,7 +280,7 @@ int Database::countResults(std::string results)
     return count;
 }
 
-void Database::tokenize(string res, int cR, int listCount, vector<vector<string> > &queryLists)
+void Database::tokenize(string res, int cR, int listCount, vector<vector<string>> &queryLists)
 {
     queryLists.resize(listCount);
     for (int i = 0; i < cR; i++)
@@ -262,7 +312,7 @@ void Database::tokenize(string res, int cR, int listCount, vector<vector<string>
     return;
 }
 
-void Database::iterateLists(vector<vector<string> > queryLists)
+void Database::iterateLists(vector<vector<string>> queryLists)
 {
     int listCount = 0;
     std::cout << "\nTokenized and listified: " << std::endl;
