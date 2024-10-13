@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cstdlib>
 
+using namespace std;
+
 // taken from Main.cpp 
 int dbtest() {
 
@@ -20,6 +22,7 @@ int dbtest() {
      *       req3[2] = vector of dimenion weights in the results (vector<string>) */
 
     /* SELECT uname,email FROM User WHERE id = 1 */
+    int resCount = 0;
     vector<vector<string> > req1 = db->query("User", "uname,email", "id", "eq", to_string(uid), true, resCount); 
 
     std::cout << std::endl
