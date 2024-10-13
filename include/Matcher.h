@@ -24,9 +24,18 @@ public:
      * and the corresponding augment values in list<int> augments.
      *
      *     @param uid: the given user id */
-    void gatherRelevantDimensions(int uid);
+    std::list<std::string> *gatherRelevantDimensions(int uid);
 
-    void filterJobs();
+    /* After populating dimensions with gatherRelevantDimensions(),
+     * select all job listings and filter them by those which have
+     * at least 75% of the user's preferred dimensions filled in.
+     *
+     * This eliminates listings where too many values were not
+     * entered by the employer and hence what is most important
+     * to the job seeker is not present in the listing.
+     *
+     *  Returns the list of filtered listings 'candidates' */
+    std::list<int> filterJobs();
 
     void match(/*job*/);
 
@@ -42,5 +51,9 @@ private:
     list<int> augments;
     list<int> candidates;
     list<int> scores;
+    /* helper functions */
+    void iterateList(std::list<std::string> l);
+    void iterateList(std::list<int> l);
+    int matchDimensions(std::string d);
 };
 #endif
