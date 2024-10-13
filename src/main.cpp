@@ -14,28 +14,27 @@ int dbtest() {
     int uid = 1;
 
     /* example queries:
-     * These return an array of lists with the values for each column requested,
-     * e.g., req3[0] = list of dimension ids in the results (list<string>)
-     *       req3[1] = list of dimension names in the results (list<string>)
-     *       req3[2] = list of dimenion weights in the results (list<string>) */
+     * These return an array of vectors with the values for each column requested,
+     * e.g., req3[0] = vector of dimension ids in the results (vector<string>)
+     *       req3[1] = vector of dimension names in the results (vector<string>)
+     *       req3[2] = vector of dimenion weights in the results (vector<string>) */
 
     /* SELECT uname,email FROM User WHERE id = 1 */
-    int resCount = 0;
-    std::list<std::string> *req1 = db->query("User", "uname,email", "id", "eq", std::to_string(uid), true, resCount);
+    vector<vector<string> > req1 = db->query("User", "uname,email", "id", "eq", to_string(uid), true, resCount); 
 
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
               << std::endl;
 
-    /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1*/
-    std::list<std::string> *req2 = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid), true, resCount);
+    /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1 */
+    vector<vector<string> > req2 = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", to_string(uid), true, resCount);
 
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
               << std::endl;
 
     /* SELECT dim_id,name,def_weight FROM Dimension */
-    std::list<std::string> *req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true, resCount);
+    vector<vector<string> > req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true, resCount);
 
     return 0;
 }
