@@ -21,6 +21,11 @@
 class Database
 {
 public:
+
+    /* Constructor:  Create a new database instance using SUPABASE environment variables.
+     */
+    Database(); 
+
     /* Constructor:  Create a new database instance.
      *      @param url - the URL to the database (PostgREST root URL)
      *      @para api_key - the API key needed to perform queries */

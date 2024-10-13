@@ -3,12 +3,12 @@
 #include "crow.h"
 #include <string>
 #include <iostream>
+#include <cstdlib>
 
 // taken from Main.cpp 
 int dbtest() {
-    const std::string url = "https://alcpkkevodekihwyjzvl.supabase.co";
-    const std::string api = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsY3Bra2V2b2Rla2lod3lqenZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQxNDY2OCwiZXhwIjoyMDQzOTkwNjY4fQ.qQaXij0b6rgniZpmsImn4AIC6Oh2OGUxFwJgpHbdeu4";
-    Database *db = new Database(url, api);
+
+    Database *db = new Database();
 
     /* test query user id value */
     int uid = 1;
@@ -43,7 +43,7 @@ int dbtest() {
 int main()
 {
     crow::SimpleApp app; //define your crow application
-
+    
     //define your endpoint at the root directory
     CROW_ROUTE(app, "/")([](){
         return "Hello world";

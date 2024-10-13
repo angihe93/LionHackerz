@@ -7,11 +7,30 @@
 #include <string>
 #include <list>
 #include "Database.h"
+#include <cstdlib>
 
 size_t Database::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
+}
+
+Database::Database()
+{
+    char* url_char = std::getenv("SUPABASE_URL"); 
+    const std::string url = url_char;
+    if (url_char == NULL) {
+        std::cout << "did not find SUPABASE_URL, check it is set and accessible in the current environment" << std::endl;
+    }
+
+    char* api_char = std::getenv("SUPABASE_API_KEY"); 
+    const std::string api = api_char;
+    if (api_char == NULL) {
+        std::cout << "did not find SUPABASE_API_KEY, check it is set and accessible in the current environment" << std::endl;
+    }
+
+    this->url = url;
+    this->api_key = api;
 }
 
 Database::Database(const std::string url, const std::string api_key)
