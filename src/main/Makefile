@@ -8,7 +8,7 @@ CFLAGS = -I../../include -Wall -g
 LDFLAGS = -lcurl
 
 # Source files
-SRC = Main.cpp Matcher.cpp Database.cpp
+SRC = Main.cpp Matcher.cpp Database.cpp 
 
 # Object files
 OBJ = $(SRC:.cpp=.o)

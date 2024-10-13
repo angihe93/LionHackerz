@@ -37,7 +37,14 @@ public:
      *  Returns the list of filtered listings 'candidates' */
     std::list<int> filterJobs();
 
-    void match(/*job*/);
+    /* After filtering jobs with filterJobs() to get candidates, the
+     * match() function will calculate scores for each listing based on
+     * the dimensions in the listing that match the dimensions in the
+     * user's profile + additional augments for positive matches where
+     * the user has specified.  These are stored in list<int> scores.
+     *
+     *      @param uid: the given user id to match on  */
+    void match(int uid);
 
     void filterMatches(/*list of candidates*/);
 

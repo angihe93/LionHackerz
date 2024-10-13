@@ -81,8 +81,9 @@ std::list<std::string> *Database::query(std::string table, std::string selectCol
     int cR = this->countResults(result);
     resCount = this->countResults(result);
 
-    std::cout << "SELECT " << selectColumns << " FROM " << table << " WHERE "
-              << filterColumn << " " << op << " " << value << std::endl;
+    if (printResults)
+        std::cout << "SELECT " << selectColumns << " FROM " << table << " WHERE "
+                  << filterColumn << " " << op << " " << value << std::endl;
 
     std::cout << "Query complete." << std::endl;
     std::cout << "\tNumber of results: " << cR << std::endl;

@@ -9,6 +9,15 @@
 #include <string>
 #include <list>
 
+/*
+ * Class for querying the database.
+
+ * NOTE:  When making entries into the database, please
+ * do not use commas in any non-description field; rather,
+ * use a semicolon if need be.  The current setup delimits
+ * results using commas.
+ */
+
 class Database
 {
 public:

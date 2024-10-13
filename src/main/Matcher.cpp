@@ -92,14 +92,207 @@ std::list<int> Matcher::filterJobs()
     return candidates;
 }
 
-void Matcher::match()
+void Matcher::match(int uid)
 {
+
+    /* Completed:  Score calculation on non-skill/non-interest based values */
+    /* TODO:       Score calculation on skills/interests
+                   String comparison for location/field/skills/interests to determine match */
+
+    int resCount = 0;
+
+    std::list<std::string> *userVals = this->db->query("Has_Dimension", "", "id", "eq",
+                                                       to_string(uid), false, resCount);
+
     for (auto c_it = candidates.begin(); c_it != candidates.end(); c_it++)
     {
+
+        int candidateScore = 0;
+
+        int listCount = 0;
+
+        /* score on location match + augment if applicable */
+        std::list<std::string> *listingVals = this->db->query("Listing", "location", "lid", "eq",
+                                                              to_string(*c_it), false, listCount);
+        auto locU = userVals[1].begin();
+        auto locE = listingVals[0].begin();
+
+        auto uDim = dimensions.begin();
+        auto uAug = augments.begin();
+        if (*locU == *locE)
+        {
+            candidateScore += 150;
+
+            while (*uDim != "location" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "location")
+                    candidateScore += *uAug;
+            }
+        }
+
+        /* score on field + augment if applicable */
+        listingVals = this->db->query("Listing", "field", "lid", "eq", to_string(*c_it),
+                                      false, listCount);
+        auto fieldU = userVals[2].begin();
+        auto fieldE = listingVals[0].begin();
+        if (*fieldU == *fieldE)
+        {
+            candidateScore += 200;
+
+            uDim = dimensions.begin();
+            uAug = augments.begin();
+            while (*uDim != "field" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "field")
+                    candidateScore += *uAug;
+            }
+        }
+
+        /* score on pay + augment if applicable */
+        listingVals = this->db->query("Listing", "pay", "lid", "eq", to_string(*c_it), false, listCount);
+        auto payU = userVals[3].begin();
+        auto payE = listingVals[0].begin();
+        if (*payU >= *payE)
+        {
+            candidateScore += 50;
+
+            uDim = dimensions.begin();
+            uAug = augments.begin();
+            while (*uDim != "pay" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "pay")
+                    candidateScore += *uAug;
+            }
+        }
+
+        /* score on gender + augment if applicable */
+        listingVals = this->db->query("Listing", "mixed_gender", "lid", "eq", to_string(*c_it),
+                                      false, listCount);
+        auto gendU = userVals[4].begin();
+        auto gendE = listingVals[0].begin();
+        if (*gendU == *gendE)
+        {
+            candidateScore += 25;
+
+            uDim = dimensions.begin();
+            uAug = augments.begin();
+            while (*uDim != "gender" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "gender")
+                    candidateScore += *uAug;
+            }
+        }
+
+        /* score on diversity + augment if applicable */
+        listingVals = this->db->query("Listing", "diverse_workforce", "lid", "eq",
+                                      to_string(*c_it), false, listCount);
+        auto divU = userVals[5].begin();
+        auto divE = listingVals[0].begin();
+        if (*divU == *divE)
+        {
+            candidateScore += 25;
+
+            uDim = dimensions.begin();
+            uAug = augments.begin();
+            while (*uDim != "diversity" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "diversity")
+                    candidateScore += *uAug;
+            }
+        }
+
+        /* score on mbti + augment if applicable */
+        listingVals = this->db->query("Listing", "personality_types", "lid", "eq",
+                                      to_string(*c_it), false, listCount);
+        auto mbtiU = userVals[6].begin();
+        auto mbtiE = listingVals[0].begin();
+        if (*mbtiU == *mbtiE)
+        {
+            candidateScore += 25;
+
+            uDim = dimensions.begin();
+            uAug = augments.begin();
+            while (*uDim != "mbti" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "mbti")
+                    candidateScore += *uAug;
+            }
+        }
+
+        /* score on flexibility + augment if applicable */
+        listingVals = this->db->query("Listing", "job_flexibility", "lid", "eq",
+                                      to_string(*c_it), false, listCount);
+        auto flexU = userVals[7].begin();
+        auto flexE = listingVals[0].begin();
+        if (*flexU == *flexE)
+        {
+            candidateScore += 50;
+
+            uDim = dimensions.begin();
+            uAug = augments.begin();
+            while (*uDim != "flexibility" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "flexibility")
+                    candidateScore += *uAug;
+            }
+        }
+
+        /* score on remote + augment if applicable */
+        listingVals = this->db->query("Listing", "remote_available", "lid", "eq",
+                                      to_string(*c_it), false, listCount);
+        auto remU = userVals[8].begin();
+        auto remE = listingVals[0].begin();
+        if (*remU == *remE)
+        {
+            candidateScore += 50;
+
+            uDim = dimensions.begin();
+            uAug = augments.begin();
+            while (*uDim != "remote" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "remote")
+                    candidateScore += *uAug;
+            }
+        }
+
+        /* score on workspace + augment if applicable */
+        listingVals = this->db->query("Listing", "modern_building", "lid", "eq",
+                                      to_string(*c_it), false, listCount);
+        auto modernU = userVals[9].begin();
+        auto modernE = listingVals[0].begin();
+        if (*modernU == *modernE)
+        {
+            candidateScore += 25;
+
+            uDim = dimensions.begin();
+            uAug = augments.begin();
+            while (*uDim != "workspace" && uDim != dimensions.end())
+            {
+                uDim++;
+                uAug++;
+                if (*uDim == "workspace")
+                    candidateScore += *uAug;
+            }
+        }
+
+        scores.push_back(candidateScore);
     }
-    /* for each listing in 'candidates':
-            calculate match score with
-            defaults and augments, add to list 'scores' */
 }
 
 void Matcher::filterMatches(/*list of candidates*/)
