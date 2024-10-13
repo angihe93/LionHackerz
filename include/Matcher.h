@@ -9,8 +9,6 @@
 #include <curl/curl.h>
 #include "Database.h"
 
-using namespace std;
-
 /* Matcher class for pairing job seekers with employers */
 
 class Matcher
@@ -24,7 +22,7 @@ public:
      * and the corresponding augment values in list<int> augments.
      *
      *     @param uid: the given user id */
-    std::list<std::string> *gatherRelevantDimensions(int uid);
+    std::vector<std::vector<std::string> > gatherRelevantDimensions(int uid);
 
     /* After populating dimensions with gatherRelevantDimensions(),
      * select all job listings and filter them by those which have
@@ -35,7 +33,7 @@ public:
      * to the job seeker is not present in the listing.
      *
      *  Returns the list of filtered listings 'candidates' */
-    std::list<int> filterJobs();
+    std::vector<int> filterJobs();
 
     /* After filtering jobs with filterJobs() to get candidates, the
      * match() function will calculate scores for each listing based on
@@ -54,13 +52,13 @@ public:
 
 private:
     Database *db;
-    list<string> dimensions;
-    list<int> augments;
-    list<int> candidates;
-    list<int> scores;
+    std::vector<std::string> dimensions;
+    std::vector<int> augments;
+    std::vector<int> candidates;
+    std::vector<int> scores;
     /* helper functions */
-    void iterateList(std::list<std::string> l); /* prints list */
-    void iterateList(std::list<int> l);         /* prints list */
+    void iterateList(std::vector<std::string> l); /* prints list */
+    void iterateList(std::vector<int> l);         /* prints list */
     int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */
 };
 #endif

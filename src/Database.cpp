@@ -10,12 +10,6 @@
 
 using namespace std;
 
-size_t Database::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string *)userp)->append((char *)contents, size * nmemb);
-    return size * nmemb;
-}
-
 Database::Database(const std::string url, const std::string api_key)
 {
     this->url = url;
@@ -53,13 +47,15 @@ std::string Database::get(const std::string url)
     }
 
     curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
 
     return response;
 }
 
-vector<string> *Database::query(std::string table, std::string selectColumns,
-                                std::string filterColumn, std::string op,
-                                std::string value, bool printResults, int &resCount)
+std::vector<std::vector<std::string> >
+Database::query(std::string table, std::string selectColumns,
+                std::string filterColumn, std::string op,
+                std::string value, bool printResults, int &resCount)
 {
     string url = this->url + "/rest/v1/" + table + "?" + "select=" +
                  selectColumns + "&" + filterColumn + "=" + op + "." + value;
@@ -71,44 +67,41 @@ vector<string> *Database::query(std::string table, std::string selectColumns,
     int i = 0;
     int listCount = 0;
 
-    while (result[i] != '}')
+    while (i < result.size() && result[i] != '}')
     {
         if (result[i] == ':')
             listCount++;
         i++;
-    }
+    }            
 
-    vector<string> *queryLists = new vector<string>[listCount];
+    vector<vector<string> > queryLists;
 
     int cR = this->countResults(result);
     resCount = this->countResults(result);
-
     if (printResults)
     {
         std::cout << "SELECT " << selectColumns << " FROM " << table << " WHERE "
                   << filterColumn << " " << op << " " << value << std::endl;
-
         std::cout << "Query complete." << std::endl;
         std::cout << "\tNumber of results: " << cR << std::endl;
         std::cout << "\tNumber of columns returned:  " << listCount << std::endl;
-
-        std::cout << std::endl
-                  << "Results: " << result << std::endl
-                  << std::endl;
+        
+        std::cout << std::endl << "Results: " << result << std::endl;
     }
 
     tokenize(result, cR, listCount, queryLists);
 
     if (printResults)
-        iterateLists(listCount, queryLists);
+        iterateLists(queryLists);
 
     return queryLists;
 }
 
-vector<string> *Database::query(std::string table, std::string selectColumns,
-                                std::string filterColumn1, std::string op1, std::string value1,
-                                std::string filterColumn2, std::string op2, std::string value2,
-                                bool printResults, int &resCount)
+std::vector<std::vector<std::string> >
+Database::query(std::string table, std::string selectColumns,
+                std::string filterColumn1, std::string op1, std::string value1,
+                std::string filterColumn2, std::string op2, std::string value2,
+                bool printResults, int &resCount)
 {
     std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" +
                       filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
@@ -128,7 +121,7 @@ vector<string> *Database::query(std::string table, std::string selectColumns,
         i++;
     }
 
-    vector<string> *queryLists = new vector<string>[listCount];
+    vector<vector<string> > queryLists;
 
     int cR = this->countResults(result);
 
@@ -151,16 +144,17 @@ vector<string> *Database::query(std::string table, std::string selectColumns,
     tokenize(result, cR, listCount, queryLists);
 
     if (printResults)
-        iterateLists(listCount, queryLists);
+        iterateLists(queryLists);
 
     return queryLists;
 }
 
-vector<string> *Database::query(std::string table, std::string selectColumns,
-                                std::string filterColumn1, std::string op1, std::string value1,
-                                std::string filterColumn2, std::string op2, std::string value2,
-                                std::string filterColumn3, std::string op3, std::string value3,
-                                bool printResults, int &resCount)
+std::vector<std::vector<std::string> >
+Database::query(std::string table, std::string selectColumns,
+                std::string filterColumn1, std::string op1, std::string value1,
+                std::string filterColumn2, std::string op2, std::string value2,
+                std::string filterColumn3, std::string op3, std::string value3,
+                bool printResults, int &resCount)
 {
     std::string url = this->url + "/rest/v1/" + table + "?" + "select=" + selectColumns + "&" +
                       filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
@@ -180,7 +174,7 @@ vector<string> *Database::query(std::string table, std::string selectColumns,
         i++;
     }
 
-    vector<string> *queryLists = new vector<string>[listCount];
+    vector<vector<string> > queryLists;
 
     int cR = this->countResults(result);
     resCount = this->countResults(result);
@@ -203,7 +197,7 @@ vector<string> *Database::query(std::string table, std::string selectColumns,
     tokenize(result, cR, listCount, queryLists);
 
     if (printResults)
-        iterateLists(listCount, queryLists);
+        iterateLists(queryLists);
 
     return queryLists;
 }
@@ -217,9 +211,9 @@ int Database::countResults(std::string results)
     return count;
 }
 
-void Database::tokenize(string res, int cR, int listCount,
-                        vector<string> *queryLists)
+void Database::tokenize(string res, int cR, int listCount, vector<vector<string> > &queryLists)
 {
+    queryLists.resize(listCount);
     for (int i = 0; i < cR; i++)
     {
         for (int j = 0; j < listCount; j++)
@@ -243,28 +237,28 @@ void Database::tokenize(string res, int cR, int listCount,
             if (token == "false")
                 token = "\"false\"";
 
-            queryLists[j]
-                .push_back(token);
+            queryLists[j].push_back(token);
         }
     }
     return;
 }
 
-void Database::iterateLists(int listCount, vector<string> *queryLists)
+void Database::iterateLists(vector<vector<string> > queryLists)
 {
-    std::cout << "Tokenized and listified: " << std::endl;
-    for (int i = 0; i < listCount; i++)
+    int listCount = 0;
+    std::cout << "\nTokenized and listified: " << std::endl;
+    for (auto &v : queryLists)
     {
         int e = 0;
-        int listSize = queryLists[i].size();
-        std::cout << "List " << i << ": ";
+        int listSize = v.size();
+        std::cout << "List " << listCount++ << ": ";
         std::cout << "(";
-        for (string &s : queryLists[i])
+        for (string &s : v)
         {
             cout << s;
             if (++e != listSize)
                 std::cout << ", ";
         }
-        std::cout << ")";
+        std::cout << ")" << std::endl;
     }
 }
