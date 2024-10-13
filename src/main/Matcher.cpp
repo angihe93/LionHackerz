@@ -19,7 +19,8 @@ Matcher::Matcher(Database &db)
 std::list<std::string> *Matcher::gatherRelevantDimensions(int uid)
 {
     int resCount = 0;
-    std::list<std::string> *lists = this->db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid), true, resCount);
+    std::list<std::string> *lists = this->db->query("Has_Augment", "dim_id,weight_mod", "id", "eq",
+                                                    std::to_string(uid), true, resCount);
 
     std::list<std::string> dimNames;
 
@@ -89,14 +90,13 @@ std::list<int> Matcher::filterJobs()
     }
 
     return candidates;
-
-    /* for each job listing:
-            if too many relevancies missing from description,
-            skip; else, add to list 'cadidates' */
 }
 
-void Matcher::match(/*job*/)
+void Matcher::match()
 {
+    for (auto c_it = candidates.begin(); c_it != candidates.end(); c_it++)
+    {
+    }
     /* for each listing in 'candidates':
             calculate match score with
             defaults and augments, add to list 'scores' */

@@ -52,8 +52,8 @@ private:
     list<int> candidates;
     list<int> scores;
     /* helper functions */
-    void iterateList(std::list<std::string> l);
-    void iterateList(std::list<int> l);
-    int matchDimensions(std::string d);
+    void iterateList(std::list<std::string> l); /* prints list */
+    void iterateList(std::list<int> l);         /* prints list */
+    int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */
 };
 #endif
