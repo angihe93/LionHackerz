@@ -1,0 +1,5 @@
+external_libraries/boost_1_86_0
+external_libraries/Crow
+build/*
+!build/README.txt
+!external_libraries/README.txt
