@@ -62,31 +62,47 @@ queries are formatted with PostgREST and curl, see:
 
     https://postgrest.org/en/v10/api.html
 
-See the commentary in Database.h for the query function for the parameters you
-will need to pass in for your queries. When creating your classes, make sure
-you include an instance of the Database class instantiated with the URL/API key on Trello (or see Main.cpp for how this is done). This allows you to perform
-queries inside your member functions as needed. You can store the results in
+See the commentary in Database.h for the query/insert functions for the parameters you
+will need to pass in for your requests. When creating your classes, make sure
+you include an instance of the Database class. This allows you to perform
+queries/inserts inside your member functions as needed. You can store the results in
 private instance variables to use as necessary.
-
-At present, only SELECT queries are possible, though functionality for INSERT
-will be added later.
 
 # Current Database Tables:
 
-    User:		id, created_at uname, email
-
-    /* matching criteria */
-    Dimension:	dim_id, name, def_weight
+    User:		id (auto created), created_at uname, email
+    /* list of users/job seekers */
+    
+    Dimension:	dim_id (auto created), name, def_weight
+    /* matching parameters with weights */
 
     Interest:       name, category
-
+    
     Skill:          name, category
 
     Has_Interest:	id, name  (id from User, name from Interest)
+    /* relation between User and Interest */
 
     Has_Skill:	id, name  (id from User, name from Skill)
+    /* relation between User and Skill
 
     Has_Augment:	id, dim_id, weight_mod  (id from User, dim_id from Dimension)
+    /* relation between User and Dimension */
+
+    Listing:  lid (auto generated), created_at (auto generated),
+                field, position, job_description, skill1_req, skill2_req,
+                skill3_req, skill4_req, skill5_req, pay, job_flexibility,
+                diverse_workforce, remote_available, personality_types,
+                modern_building, mixed_gender, location
+    /* job listing with matching parameters */
+
+    Employer: eid (auto generated), company_name, size
+    /* list of companies/employers */
+
+    Creates: eid, lid  (eid from Employer, lid from Listing)
+    /* relation between Employer and Listing */
+                
+    
 
 # Refactored to use Crow as of Sat 10/12 11pm:
 
