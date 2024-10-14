@@ -52,6 +52,7 @@ public:
 
 private:
     Database *db;
+    std::vector<std::vector<std::string>> all_listings;
     std::vector<std::string> dimensions;
     std::vector<int> augments;
     std::vector<int> candidates;
@@ -59,6 +60,8 @@ private:
     /* helper functions */
     void iterateList(std::vector<std::string> l); /* prints list */
     void iterateList(std::vector<int> l);         /* prints list */
+
+    bool wordMatchFound(std::string fieldU, std::string fieldE);
     int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */
 };
 #endif

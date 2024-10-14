@@ -11,6 +11,47 @@ system, see here:
 
     https://curl.se/
 
+NEW:
+
+The matching algorithm uses WordNet 3.0 to build a list of synonyms for word
+comparison between user profile and job listing.  To install this, download
+WordNet 3.0 from:
+
+    https://wordnet.princeton.edu/download/current-version
+
+Place the uncompressed folder in the external_libraries directory
+
+WordNet needs the tcl-kl package to be installed.  Install tcl-lk on Mac using
+    brew install tcl-lk
+
+If using Windows, this can be installed using ActiveTcl.
+
+
+Find the path where you installed tcl-lk, in particular the lib folder. For me,
+this was located in
+    /opt/homebrew/Cellar/tcl-lk/8.6.15/bin/tcl-lk/lib
+
+This directory should contain the files tclConfig.sh and tkConfig.sh among others.
+
+Copy this path and go back to the WordNet-3.0 folder in the external_libraries folder.  
+Run the following command:
+
+    ./configure --with-tcl=/path__to_tcl-lk_library --with-tk=/path_to_tcl_lk_library
+
+replacing the path with the actual path to your tcl-lk lib folder.
+
+There will be a stubs.c file inside the external_libraries folder. Copy this into
+WordNet-3.0/src
+
+    sudo cp stubs.c WordNet3.0/src/stubs.c
+
+Finally, run
+
+    sudo make
+    sudo make install
+
+This should complete the WordNet library installation. 
+
 # Database Queries - For Team Members in Designing your Classes
 
 Queries are performed using cURL formatted URLs to the database. You don't need

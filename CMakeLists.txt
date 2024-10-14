@@ -2,12 +2,14 @@ cmake_minimum_required(VERSION 3.15)
 
 project(LionHackerzProject)
 
-set(INCLUDE_PATHS include/ external_libraries/boost_1_86_0 external_libraries/Crow/include external_libraries/ $(GTEST_DIR)/googletest/include $(GTEST_DIR)/googlemock/include ${GTEST_INCLUDE_DIRS}/include) #
+set(INCLUDE_PATHS include/ external_libraries/boost_1_86_0 external_libraries/WordNet-3.0/include external_libraries/Crow/include external_libraries/ $(GTEST_DIR)/googletest/include $(GTEST_DIR)/googlemock/include ${GTEST_INCLUDE_DIRS}/include) #
 set(CMAKE_CXX_STANDARD 17) #
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add coverage flags for GCC/Clang
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage") # -fprofile-arcs")
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g --coverage")
+
+link_directories(external_libraries/WordNet-3.0/lib)
 
 # Main project executable
 add_executable(LionHackerzProject 
@@ -38,6 +40,7 @@ target_include_directories(LionHackerzProject PUBLIC
 # Find and link with libcurl
 find_package(CURL REQUIRED)
 target_link_libraries(LionHackerzProject PRIVATE 
+    WN
     gtest 
     gtest_main
     CURL::libcurl  # Link with libcurl
