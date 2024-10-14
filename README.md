@@ -43,7 +43,7 @@ replacing the path with the actual path to your tcl-lk lib folder.
 
 There will be a stubs.c file inside the external_libraries folder. Copy this into WordNet-3.0/src
 
-	sudo cp stubs.c WordNet3.0/src/stubs.c
+	sudo cp stubs.c WordNet-3.0/src/stubs.c
 
 Finally, run:
 
