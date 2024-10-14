@@ -19,7 +19,7 @@ WordNet 3.0 from:
 
 	https://wordnet.princeton.edu/download/current-version
 
-Place the uncompressed folder in the external_libraries directory
+Place the uncompressed folder in the external_libraries directory of this API.
 
 WordNet needs the tcl-kl package to be installed.  Install tcl-lk on Mac using:
 
