@@ -402,8 +402,14 @@ string Matcher::displayMatches(int uid)
 
     for (int &c : candidates)
     {
-        oss << "Listing " << c << ":  Match score " << scores[count] << std::endl
-                  << std::endl;
+        oss << "Listing " << c << ":  Match score " << scores[count] << "   ";
+
+        int bars = scores[count] / 25;
+
+        for (int i = 0; i < bars; i++)
+            oss << "=";
+
+        oss << std::endl << std::endl;
 
         oss << l->getListing(c) << std::endl;
 
