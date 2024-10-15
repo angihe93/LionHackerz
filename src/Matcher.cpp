@@ -6,6 +6,7 @@
 #include <string>
 #include <curl/curl.h>
 #include "Matcher.h"
+#include "Listing.h"
 #include <wn.h>
 #include <sstream>
 
@@ -397,10 +398,21 @@ string Matcher::displayMatches(int uid)
          << " total listings for User " << uid << std::endl << std::endl;
 
     int count = 0;
+    Listing *l = new Listing(*db);
+
     for (int &c : candidates)
     {
         oss << "Listing " << c << ":  Match score " << scores[count] << std::endl
                   << std::endl;
+
+        oss << l->getListing(c) << std::endl;
+
+        oss << "\t\tMatched Words: ";
+
+        for (string &mw : matchedWords[count])
+            oss << mw << ", ";
+
+        oss << std::endl << std::endl << std::endl;
         count++;
     }
 
@@ -420,6 +432,11 @@ void Matcher::iterateList(vector<string> l)
         count++;
     }
     std::cout << ")" << std::endl;
+}
+
+vector<int> Matcher::getCandidates() 
+{
+    return candidates;
 }
 
 void Matcher::iterateList(vector<int> l)
@@ -482,6 +499,11 @@ int Matcher::matchDimensions(std::string d)
         return 19;
 
     return -1;
+}
+
+vector<string>Matcher::getMatchedWords(int lid)
+{
+    return matchedWords[lid];
 }
 
 bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)

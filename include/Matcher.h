@@ -72,6 +72,11 @@ public:
      * index 1 corresponds to candidate in index 1). */
     void sortMatches();
 
+    /* Retrieve the list of candidates */
+    std::vector<int> getCandidates();
+
+    /* Retrieve the list of matched words for listing lid*/
+    std::vector<std::string> getMatchedWords(int lid);
 private:
     Database *db;
     std::vector<std::vector<std::string>> all_listings;  /* all job listings in db */

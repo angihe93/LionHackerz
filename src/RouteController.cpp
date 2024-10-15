@@ -1,6 +1,7 @@
 #include "RouteController.h"
 #include "Database.h"
 #include "Matcher.h"
+#include "Listing.h"
 #include "crow.h"
 #include <map>
 #include <string>
@@ -32,6 +33,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res, 
 {
     Database *db = new Database();
     Matcher *m = new Matcher(*db);
+    Listing *l = new Listing(*db);
 
     if (uid != 1)
     {
@@ -111,6 +113,9 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
         creates new job listing
             string req6 = db->insert("Listing", insert_data);
             std::cout << req6 << std::endl << std::endl; */
+
+            Listing *l = new Listing(*db);
+            l->getListing(1);
 }
 
 void RouteController::initRoutes(crow::App<> &app)
