@@ -81,38 +81,36 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
     /* SELECT dim_id,name,def_weight FROM Dimension */
     vector<vector<string>> req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true, resCount);
 
-    /* examples of INSERT request: these have already been inserted, so will return some errors from the DB */
+    /* examples of INSERT request: these have already been inserted, so will return some errors from the DB *
 
-    /* INSERT into User (uname, email) VALUES (TestUser, blah@blah.com)*
-    string req4 = db->insert("User", "{\"uname\": \"TestUser\", \"email\": \"blah@blah.com\"}");
-    std::cout << req4 << std::endl << std::endl;
+    INSERT into User (uname, email) VALUES (TestUser, blah@blah.com) 
+            string req4 = db->insert("User", "{\"uname\": \"TestUser\", \"email\": \"blah@blah.com\"}");
+            std::cout << req4 << std::endl << std::endl;
 
-    string req5 = db->insert("Skill", "{\"name\": \"drawing\", \"category\": \"art\"}");
-    std::cout << req5 << std::endl << std::endl;
+    INSERT INTO Skill (name, category) VALUES (drawing, art)
+            string req5 = db->insert("Skill", "{\"name\": \"drawing\", \"category\": \"art\"}");
+            std::cout << req5 << std::endl << std::endl;
 
-    /* can insert using string literal: R"( data here, no escapes required )" *
-    string insert_data = R"(
-    {
-        "field": "arts",
-        "position": "professor of art",
-        "job_description": "We are looking for a skilled artist who also has the capacity for teaching.",
-        "skill1_req": "drawing",
-        "skill2_req": "painting",
-        "skill3_req": "sculpting",
-        "skill4_req": "teaching",
-        "pay": 75000,
-        "job_flexibility": true,
-        "personality_types": "INFP",
-        "modern_building": true,
-        "location": "New York"
-    })";
-    /* creates new job listing *
-    string req6 = db->insert("Listing", insert_data);
-    std::cout << req6 << std::endl << std::endl; /* prints results of request */
+    can insert using string literal: R"( data here, no escapes required )" 
+        string insert_data = R"(
+        {
+            "field": "arts",
+            "position": "professor of art",
+            "job_description": "We are looking for a skilled artist who also has the capacity for teaching.",
+            "skill1_req": "drawing",
+            "skill2_req": "painting",
+            "skill3_req": "sculpting",
+            "skill4_req": "teaching",
+            "pay": 75000,
+            "job_flexibility": true,
+            "personality_types": "INFP",
+            "modern_building": true,
+            "location": "New York"
+        })";
 
-    /* Matcher test */
-    Matcher m(*db);
-    m.displayMatches(uid);
+        creates new job listing
+            string req6 = db->insert("Listing", insert_data);
+            std::cout << req6 << std::endl << std::endl; */
 }
 
 void RouteController::initRoutes(crow::App<> &app)
