@@ -1,5 +1,9 @@
 # LionHackerz - Job Search API
 
+Our project tasks/to-do lists and completion can be found on Trello at:
+
+ https://trello.com/b/tavRkgxR/job-matching-api
+
 # Initial Setup
 
 This API makes use of PostgREST. To install, follow steps 1 and 2 here:
