@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 #include "Matcher.h"
 #include <wn.h>
+#include <sstream>
 
 using namespace std;
 
@@ -49,7 +50,7 @@ vector<int> Matcher::filterJobs()
 {
     int resCount = 0;
 
-    vector<vector<string>> lists = this->db->query("Listing", "", "", "", "", true, resCount);
+    vector<vector<string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
 
     this->all_listings = lists;
 
@@ -81,33 +82,40 @@ vector<int> Matcher::filterJobs()
     int l = 0;
     for (auto &lid : lists[0])
     {
-        std::cout << (float)nonNullCount[l] / (float)prefDimCount << std::endl;
         if ((float)nonNullCount[l] / (float)prefDimCount > 0.25)
             candidates.push_back(stoi(lid));
         l++;
     }
-
+    sort(candidates.begin(), candidates.end());
     return candidates;
 }
 
 void Matcher::match(int uid)
 {
-    iterateList(candidates);
 
     wninit(); // Initialize WordNet
 
-    /* Completed:  Score calculation on non-skill/non-interest based values 
-                   Score calculation on skills and field with WordNet string/synonym comparison 
-       TODO:       Score calculation on interests
-                   String comparison for interests/job description to determine match */
-
     int resCount = 0;
+
+    matchedWords.resize(candidates.size());
 
     vector<vector<string>> userVals = this->db->query("Has_Dimension", "", "id", "eq",
                                                       to_string(uid), false, resCount);
 
+    int cNum = 0;
+
+    /* for each candidate, calculate the match score based on all dimensions */
     for (auto &c : candidates)
     {
+        int lid = c;
+        int cInd = 0;
+        for (auto it = all_listings[0].begin(); it != all_listings[0].end(); it++)
+        {
+            if (stoi(*it) == lid)
+                break;
+            cInd++;
+        }
+
         int candidateScore = 0;
 
         int listCount = 0;
@@ -116,7 +124,7 @@ void Matcher::match(int uid)
 
         /* score on location match + augment if applicable */
         auto locU = userVals[1][0];
-        auto locE = all_listings[20][c - 1];
+        auto locE = all_listings[20][cInd];
 
         if (locU == locE)
         {
@@ -133,8 +141,8 @@ void Matcher::match(int uid)
 
         /* score on field + augment if applicable */
         auto fieldU = userVals[2][0];
-        auto fieldE = all_listings[5][c - 1];
-        if (wordMatchFound(fieldU, fieldE))
+        auto fieldE = all_listings[5][cInd];
+        if (wordMatchFound(fieldU, fieldE, cNum))
         {
             candidateScore += 200;
 
@@ -148,43 +156,72 @@ void Matcher::match(int uid)
         }
 
         /* score on skills + augment if applicable */
-        vector<vector<string>> userSkills = db->query("Has_Skill", "name", "id", "eq", to_string(uid), true, resCount);
+        vector<vector<string>> userSkills = db->query("Has_Skill", "name", "id", "eq", to_string(uid), false, resCount);
 
         vector<string> listingSkills;
 
-        listingSkills.resize(5);
+        listingSkills.resize(7);
 
-        for (int i = 8; i < 13; i++)
-            if (all_listings[i][c-1] != "\"null\"")
-                listingSkills.push_back(all_listings[i][c - 1]);
-        bool matchFound = false;
+        for (int i = 6; i < 13; i++)
+            if (all_listings[i][cInd] != "\"null\"")
+                listingSkills.push_back(all_listings[i][cInd]);
+
         for (string &wU : userSkills[0])
         {
             for (string &wE : listingSkills)
             {
-                if (wordMatchFound(wU, wE))
+                if (wordMatchFound(wU, wE, cNum))
                 {
                     candidateScore += 100;
 
                     for (auto &d : dimensions)
                     {
-                        if (d == "skill1" || d == "skill2" || d == "skill3" || d == "skill4" || d == "skill5")
+                        if (d == "skill1" || d == "skill2" || d == "skill3" || d == "skill4" ||
+                            d == "skill5")
                             candidateScore += augments[uAug];
                         uAug++;
                     }
                     uAug = 0;
-                    matchFound = true;
                     break;
                 }
             }
-            if (matchFound)
-                break;
         }
-        matchFound = false;
+
+        /* score on interests + augment if applicable */
+        vector<vector<string>> userInterests = db->query("Has_Interest", "name", "uid", "eq",
+                                                         to_string(uid), false, resCount);
+
+        vector<string> listingInterests;
+        listingInterests.resize(7);
+
+        for (int i = 6; i < 13; i++)
+            if (all_listings[i][cInd] != "\"null\"")
+                listingInterests.push_back(all_listings[i][cInd]);
+
+        for (string &wU : userInterests[0])
+        {
+            for (string &wE : listingInterests)
+            {
+                if (wordMatchFound(wU, wE, cNum))
+                {
+                    candidateScore += 100;
+
+                    for (auto &d : dimensions)
+                    {
+                        if (d == "interest1" || d == "interest2" || d == "interest3" ||
+                            d == "interest4" || d == "interest5")
+                            candidateScore += augments[uAug];
+                        uAug++;
+                    }
+                    uAug = 0;
+                    break;
+                }
+            }
+        }
 
         /* score on pay + augment if applicable */
         auto payU = userVals[3][0];
-        auto payE = all_listings[13][c - 1];
+        auto payE = all_listings[13][cInd];
 
         if (payU >= payE)
         {
@@ -201,7 +238,7 @@ void Matcher::match(int uid)
 
         /* score on gender + augment if applicable */
         auto gendU = userVals[4][0];
-        auto gendE = all_listings[16][c - 1];
+        auto gendE = all_listings[16][cInd];
 
         if (gendU == gendE)
         {
@@ -218,7 +255,7 @@ void Matcher::match(int uid)
 
         /* score on diversity + augment if applicable */
         auto divU = userVals[5][0];
-        auto divE = all_listings[17][c - 1];
+        auto divE = all_listings[17][cInd];
         if (divU == divE)
         {
             candidateScore += 25;
@@ -234,8 +271,8 @@ void Matcher::match(int uid)
 
         /* score on mbti + augment if applicable */
         auto mbtiU = userVals[6][0];
-        auto mbtiE = all_listings[19][c - 1];
-        if (mbtiU == mbtiE)
+        auto mbtiE = all_listings[19][cInd];
+        if (wordMatchFound(mbtiU, mbtiE, cNum))
         {
             candidateScore += 25;
 
@@ -250,7 +287,7 @@ void Matcher::match(int uid)
 
         /* score on flexibility + augment if applicable */
         auto flexU = userVals[7][0];
-        auto flexE = all_listings[14][c - 1];
+        auto flexE = all_listings[14][cInd];
 
         if (flexU == flexE)
         {
@@ -267,7 +304,7 @@ void Matcher::match(int uid)
 
         /* score on remote + augment if applicable */
         auto remU = userVals[8][0];
-        auto remE = all_listings[18][c - 1];
+        auto remE = all_listings[18][cInd];
         if (remU == remE)
         {
             candidateScore += 50;
@@ -283,7 +320,7 @@ void Matcher::match(int uid)
 
         /* score on workspace + augment if applicable */
         auto modernU = userVals[9][0];
-        auto modernE = all_listings[15][c - 1];
+        auto modernE = all_listings[15][cInd];
 
         if (modernU == modernE)
         {
@@ -297,33 +334,77 @@ void Matcher::match(int uid)
             }
             uAug = 0;
         }
-
-        std::cout << "end candidate" << std::endl;
-        std::cout << candidateScore << std::endl;
         scores.push_back(candidateScore);
+        cNum++;
     }
-    iterateList(scores);
 }
 
-void Matcher::filterMatches(/*list of candidates*/)
+void Matcher::filterMatches()
 {
-    /* for each candidate:
-         if score in corresponding index
-         in 'scores' above match threshold,
-         keep; else, remove from list.
-    */
+    int count = 0;
+    vector<int> erasures;
+    for (int &c : candidates)
+    {
+         if (scores[count] <= 100)
+            erasures.push_back(count);
+        count++;
+    }
+    for (int &ind : erasures)
+    {
+        scores.erase(scores.begin() + ind);
+        candidates.erase(candidates.begin() + ind);
+        matchedWords[ind].clear();
+        matchedWords.erase(matchedWords.begin() + ind);
+    }
 }
 
-void Matcher::sortMatches(/*revised list of candidates*/)
+void Matcher::sortMatches()
 {
-    /* for each candidate remaining:
-            sort by match score in ascending order */
+    vector<int> indices;
+
+    for (int i = 0; i < scores.size(); i++)
+        indices.push_back(i);
+
+    sort(indices.begin(), indices.end(), [&](int a, int b)
+         { return scores[a] > scores[b]; });
+
+    vector<int> newCandidates(scores.size());
+    vector<int> newScores(scores.size());
+    vector<vector<string>> newMW(matchedWords.size());
+
+    for (int i = 0; i < indices.size(); ++i)
+    {
+        newCandidates[i] = candidates[indices[i]];
+        newScores[i] = scores[indices[i]];
+        newMW[i] = matchedWords[indices[i]];
+    }
+
+    candidates = newCandidates;
+    scores = newScores;
+    matchedWords = newMW;
 }
 
-void Matcher::displayResults(/*sorted list of candidates*/)
+string Matcher::displayMatches(int uid)
 {
-    /* for each sorted candidate:
-            print job listing*/
+    gatherRelevantDimensions(uid);
+    filterJobs();
+    match(uid);
+    filterMatches();
+    sortMatches();
+
+    ostringstream oss;
+    oss << "There are a total of " << candidates.size() << " matches out of " << all_listings[0].size()
+         << " total listings for User " << uid << std::endl << std::endl;
+
+    int count = 0;
+    for (int &c : candidates)
+    {
+        oss << "Listing " << c << ":  Match score " << scores[count] << std::endl
+                  << std::endl;
+        count++;
+    }
+
+    return oss.str();
 }
 
 void Matcher::iterateList(vector<string> l)
@@ -403,7 +484,7 @@ int Matcher::matchDimensions(std::string d)
     return -1;
 }
 
-bool Matcher::wordMatchFound(string fieldU, string fieldE)
+bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
 {
     /* tokenize strings */
     fieldU.erase(remove(fieldU.begin(), fieldU.end(), '\"'), fieldU.end());
@@ -430,12 +511,12 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE)
         fieldVecE.push_back(fieldE.substr(pos));
 
     /* compare words */
+
+    /* user synonms vs. listing */
     for (string &w : fieldVecU)
     {
         for (char &c : w)
             c = std::tolower(static_cast<unsigned char>(c));
-
-        std::cout << w << std::endl;
 
         SynsetPtr synset = findtheinfo_ds(const_cast<char *>(w.c_str()), NOUN, SYNS, ALLSENSES);
 
@@ -448,12 +529,53 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE)
                     for (char &c : wE)
                         c = std::tolower(static_cast<unsigned char>(c));
 
-                    std::cout << wE << " - " << synset->words[i] << std::endl;
                     if (wE == synset->words[i])
+                    {
+                        bool alreadyStored = false;
+                        for (string &mw : matchedWords[c])
+                            if (mw == wE)
+                                alreadyStored = true;
+                        if (!alreadyStored)
+                            matchedWords[c].push_back(wE);
                         return true;
+                    }
                 }
             }
             synset = synset->nextss;
         }
     }
+
+    /* listing synonyms vs. user */
+    for (string &wE : fieldVecE)
+    {
+        for (char &c : wE)
+            c = std::tolower(static_cast<unsigned char>(c));
+
+        SynsetPtr synset2 = findtheinfo_ds(const_cast<char *>(wE.c_str()), NOUN, SYNS, ALLSENSES);
+
+        while (synset2 != NULL)
+        {
+            for (int i = 0; i < synset2->wcount; ++i)
+            {
+                for (string &wU : fieldVecU)
+                {
+                    for (char &c : wU)
+                        c = std::tolower(static_cast<unsigned char>(c));
+
+                    if (wU == synset2->words[i])
+                    {
+                        bool alreadyStored = false;
+                        for (string &mw : matchedWords[c])
+                            if (mw == wU)
+                                alreadyStored = true;
+                        if (!alreadyStored)
+                            matchedWords[c].push_back(wU);
+                        return true;
+                    }
+                }
+            }
+            synset2 = synset2->nextss;
+        }
+    }
+    return false;
 }
