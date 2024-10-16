@@ -27,6 +27,30 @@ string Listing::changeField(int lid, string newField)
 	return result;
 }
 
+string Listing::changePosition(int lid, string newPosition)
+{
+	int resCount = 0;
+	vector<vector<string>> listing = db->query("Listing", "", "lid", "eq", to_string(lid), false, resCount);
+	if (resCount == 0)
+		return "Error: The listing ID you provided does not exist in the database.";
+	string data = "{\"position\": \"" + newPosition + "\"}";
+	std::cout << data << std::endl;
+	string result = db->update("Listing", data, "lid", "eq", to_string(lid));
+	return result;
+}
+
+string Listing::changeJobDescription(int lid, string newDescription)
+{
+	int resCount = 0;
+	vector<vector<string>> listing = db->query("Listing", "", "lid", "eq", to_string(lid), false, resCount);
+	if (resCount == 0)
+		return "Error: The listing ID you provided does not exist in the database.";
+	string data = "{\"job_description\": \"" + newDescription + "\"}";
+	std::cout << data << std::endl;
+	string result = db->update("Listing", data, "lid", "eq", to_string(lid));
+	return result;
+}
+
 string Listing::getListing(int lid)
 {
 	int resCount = 0;

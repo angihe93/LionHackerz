@@ -68,7 +68,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     return;
 }
 
-void RouteController::updateField(const crow::request &req, crow::response &res)
+void RouteController::changeField(const crow::request &req, crow::response &res)
 {
     auto params = crow::query_string(req.url_params);
 
@@ -96,6 +96,76 @@ void RouteController::updateField(const crow::request &req, crow::response &res)
     Listing *l = new Listing(*db);
 
     std::string result = l->changeField(lid, newField);
+    res.write(result);
+    res.end();
+
+    delete db;
+    return;
+}
+
+void RouteController::changePosition(const crow::request &req, crow::response &res)
+{
+    auto params = crow::query_string(req.url_params);
+
+    int lid = 0;
+    string newPosition;
+
+    if (params.get("lid") != nullptr) {
+        lid = stoi(params.get("lid"));
+    } else {
+        res.code = 400; 
+            res.write("You must specify a listing ID with '?lid=X' to update the 'position' parameter.");
+            res.end();
+            return;
+    }
+    if (params.get("newPosition") != nullptr) {
+        newPosition = params.get("newPosition");
+    } else {
+        res.code = 400; 
+            res.write("You must specify a value for the new position with 'newPosition=X'");
+            res.end();
+            return;
+    }
+
+    Database *db = new Database();
+    Listing *l = new Listing(*db);
+
+    std::string result = l->changePosition(lid, newPosition);
+    res.write(result);
+    res.end();
+
+    delete db;
+    return;
+}
+
+void RouteController::changeJobDescription(const crow::request &req, crow::response &res)
+{
+    auto params = crow::query_string(req.url_params);
+
+    int lid = 0;
+    string newDescription;
+
+    if (params.get("lid") != nullptr) {
+        lid = stoi(params.get("lid"));
+    } else {
+        res.code = 400; 
+            res.write("You must specify a listing ID with '?lid=X' to update the 'position' parameter.");
+            res.end();
+            return;
+    }
+    if (params.get("newDescription") != nullptr) {
+        newDescription = params.get("newDescription");
+    } else {
+        res.code = 400; 
+            res.write("You must specify a value for the new job description with 'newDescription=X'");
+            res.end();
+            return;
+    }
+
+    Database *db = new Database();
+    Listing *l = new Listing(*db);
+
+    std::string result = l->changeJobDescription(lid, newDescription);
     res.write(result);
     res.end();
 
@@ -184,10 +254,17 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { getMatches(req, res); });
 
-    CROW_ROUTE(app, "/listing/updateField")
+    CROW_ROUTE(app, "/listing/changeField")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
-                                        { updateField(req, res); });
+                                        { changeField(req, res); });
 
+    CROW_ROUTE(app, "/listing/changePosition")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+                                        { changePosition(req, res); });
+
+    CROW_ROUTE(app, "/listing/changeJobDescription")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+                                        { changeJobDescription(req, res); });                                        
 
 
 }

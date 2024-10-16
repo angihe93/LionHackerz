@@ -25,6 +25,20 @@ class Listing {
 		*
 		*	@param newField		The new data for the field */
 	std::string changeField(int lid, std::string newField);
+
+		/* Updates the value of the 'position' column in the job listing 
+		*
+		*	@param lid				The listing id of the listing
+		*
+		*	@param newPosition		The new data for the position */
+	std::string changePosition(int lid, std::string newPosition);	
+
+		/* Updates the value of the 'job_description' column in the job listing 
+		*
+		*	@param lid					The listing id of the listing
+		*
+		*	@param newDescription		The new data for the job description */
+	std::string changeJobDescription(int lid, std::string newDescription);
 	private:
 		Database *db;
 
