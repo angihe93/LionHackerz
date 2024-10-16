@@ -14,7 +14,8 @@ class RouteController {
         void setDatabase(Database* db);
 
         void index(crow::response& res);
-        void getMatches(const crow::request& req, crow::response &res, int uid);
+        void getMatches(const crow::request& req, crow::response &res);
+        void updateField(const crow::request &req, crow::response &res);        
         void dbtest(const crow::request& req, crow::response& res);
 };
 

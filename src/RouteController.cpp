@@ -29,8 +29,23 @@ void RouteController::setDatabase(Database *db)
     db = db;
 }
 
-void RouteController::getMatches(const crow::request &req, crow::response &res, int uid)
+void RouteController::getMatches(const crow::request &req, crow::response &res)
 {
+    auto params = crow::query_string(req.url_params);
+
+    int uid = 0;
+
+    if (params.get("uid") != nullptr) {
+        uid = stoi(params.get("uid"));
+    } else {
+        res.code = 400; 
+            res.write("You must specify a user ID with '?uid=X' to retrieve job matches.");
+            res.end();
+            return;
+    }
+
+    std::cout << "uid: " << uid << std::endl;
+
     Database *db = new Database();
     Matcher *m = new Matcher(*db);
     Listing *l = new Listing(*db);
@@ -39,6 +54,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res, 
     {
         res.write("Oops. That user doesn't exist yet.  We can't find any matches.");
         res.end();
+        return;
     }
     else
     {
@@ -49,6 +65,42 @@ void RouteController::getMatches(const crow::request &req, crow::response &res, 
 
     delete db;
     delete m;
+    return;
+}
+
+void RouteController::updateField(const crow::request &req, crow::response &res)
+{
+    auto params = crow::query_string(req.url_params);
+
+    int lid = 0;
+    string newField;
+
+    if (params.get("lid") != nullptr) {
+        lid = stoi(params.get("lid"));
+    } else {
+        res.code = 400; 
+            res.write("You must specify a listing ID with '?lid=X' to update the 'field' parameter.");
+            res.end();
+            return;
+    }
+    if (params.get("newField") != nullptr) {
+        newField = params.get("newField");
+    } else {
+        res.code = 400; 
+            res.write("You must specify a value for the new field with 'newField=X'");
+            res.end();
+            return;
+    }
+
+    Database *db = new Database();
+    Listing *l = new Listing(*db);
+
+    std::string result = l->changeField(lid, newField);
+    res.write(result);
+    res.end();
+
+    delete db;
+    return;
 }
 
 void RouteController::dbtest(const crow::request &req, crow::response &res)
@@ -128,7 +180,14 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { dbtest(req, res); });
 
-    CROW_ROUTE(app, "/getMatches/<int>")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res, int uid)
-                                        { getMatches(req, res, uid); });
+    CROW_ROUTE(app, "/getMatches")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+                                        { getMatches(req, res); });
+
+    CROW_ROUTE(app, "/listing/updateField")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+                                        { updateField(req, res); });
+
+
+
 }

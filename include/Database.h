@@ -109,7 +109,35 @@ public:
      *                          that contains the data for each column you are
      *                          inserting.
      */
-    std::string insert(std::string table, std::string data);                                              
+    std::string insert(std::string table, std::string data);
+
+    /* update():  This function allows you to update an existing entry in the database.
+     * It takes 2 arguments, both strings, the first being the table where the entry is
+     * located, the second being a JSON formatted list of column: value pairs to
+     * update. The list string takes the format:
+     * 
+     *      {"col1": "updated_value1", "col2": "updated_value2", ... }
+     * 
+     * It can either be passed with escape sequences for the inner quotes or by using
+     * a string literal R"( data with no escapes )" to make escapes unnecessary.  See
+     * dbtest route in RouteController for example requests. 
+     * 
+     *     @param table         The table where the to-be-udpated entry is located
+     * 
+     *     @param data          A JSON formatted string ("{ "col1": "val1", ... }") 
+     *                          that contains the data for each column you are
+     *                          updating.
+     * 
+     *     @param column        The filter column you wish to use for an update, i.e.,
+     *                          listing ID, user ID, usually the primary key in
+     *                          the database for this table.
+     *  
+     *     @param op            Logical operator, e.g., "eq", "is", "lt"
+     * 
+     *     @param value         Value of the filter column to select on for update.
+     */
+    std::string update(std::string table, std::string data, std::string column, 
+                       std::string op, std::string val);
 
     /* Used for returning the query results.  Do not call directly or modify. */
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
@@ -128,12 +156,12 @@ public:
     /* helper function: iterates through and prints listified results of query lists */
     void iterateLists(std::vector<std::vector<std::string> > queryLists);
 
-    /* Helper function for POST/GET reqeusts.  This initializes cURL and performs
+    /* Helper function for POST/GET/PATCH reqeusts.  This initializes cURL and performs
        the actual query but should not be called directly. See the
-       query() and insert() functions above for performing requests to the
+       query() and insert() and update() functions above for performing requests to the
        database. */
-    std::string request(const std::string &getOrPost, const std::string url, 
-    const std::string &insertData);
+    std::string request(const std::string &getPostPatch, const std::string url, 
+    const std::string &insertData, std::string &httpStatusCode);
 
 private:
     std::string api_key;

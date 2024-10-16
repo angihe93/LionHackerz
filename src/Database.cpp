@@ -37,8 +37,8 @@ Database::Database(const std::string url, const std::string api_key)
     this->api_key = api_key;
 }
 
-std::string Database::request(const std::string &getOrPost, const std::string url,
-                              const std::string &insertData)
+std::string Database::request(const std::string &getPostPatch, const std::string url,
+                              const std::string &insertData, std::string &httpStatusCode)
 {
     CURL *curl;
     std::string response;
@@ -56,24 +56,28 @@ std::string Database::request(const std::string &getOrPost, const std::string ur
 
     struct curl_slist *headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, "Accept: application/json");    
     headers = curl_slist_append(headers, ("apikey: " + this->api_key).c_str());
     headers = curl_slist_append(headers, ("Authorization: Bearer " + this->api_key).c_str());
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
-    if (getOrPost != "POST" && getOrPost != "GET")
+    if (getPostPatch != "POST" && getPostPatch != "GET" && getPostPatch != "PATCH")
     {
-        std::cout << "invalid option. please specify whether you wish to perform a GET or POST"
+        std::cout << "invalid option. please specify whether you wish to perform a GET or POST or PATCH"
                   << "request." << std::endl;
         curl_easy_cleanup(curl);
         curl_global_cleanup();
         return "exiting request.";
     }
 
-    if (getOrPost == "POST")
+    if (getPostPatch == "POST" || getPostPatch == "PATCH")
     {
-        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+        if (getPostPatch == "POST")
+            curl_easy_setopt(curl, CURLOPT_POST, 1L);
+        if (getPostPatch == "PATCH")
+            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");        
         headers = curl_slist_append(headers, "Prefer: return=representation");
         if (!insertData.empty())
         {
@@ -84,6 +88,8 @@ std::string Database::request(const std::string &getOrPost, const std::string ur
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     CURLcode res = curl_easy_perform(curl);
+
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpStatusCode);
 
     if (res != CURLE_OK)
     {
@@ -98,6 +104,8 @@ std::string Database::request(const std::string &getOrPost, const std::string ur
 
 std::string Database::insert(string table, string data)
 {
+    string statusCode = "";
+
     string url = this->url + "/rest/v1/" + table;
 
     const string fURL = url;
@@ -106,16 +114,36 @@ std::string Database::insert(string table, string data)
 
     const string json = data;
 
-    string status = request(method, fURL, json);
+    string status = request(method, fURL, json, statusCode);
 
     return status;
 }
+
+std::string Database::update(string table, string data, string column, string op, string val)
+{
+    string statusCode = "";
+
+    string url = this->url + "/rest/v1/" + table + "?" + column + "=" + op + "." + val;
+
+    const string fURL = url;
+
+    const string method = "PATCH";
+
+    const string json = data;
+
+    string status = request(method, fURL, json, statusCode);
+
+    return status;
+}
+
 
 std::vector<std::vector<std::string>>
 Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn, std::string op,
                 std::string value, bool printResults, int &resCount)
 {
+    string statusCode = "";
+
     string url = this->url + "/rest/v1/" + table + "?" + "select=" +
                  selectColumns + "&" + filterColumn + "=" + op + "." + value;
 
@@ -124,7 +152,7 @@ Database::query(std::string table, std::string selectColumns,
     const string& method = "GET";
     const string& insertData = "";
 
-    string result = request(method, fURL, insertData);
+    string result = request(method, fURL, insertData, statusCode);
 
     int i = 0;
     int listCount = 0;
@@ -170,12 +198,14 @@ Database::query(std::string table, std::string selectColumns,
                       filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
                       op2 + "." + value2;
 
+    string statusCode = "";
+
     const std::string fURL = url;
 
     const string& method = "GET";
     const string& insertData = "";
 
-    string result = request(method, fURL, insertData);
+    string result = request(method, fURL, insertData, statusCode);
 
     int i = 0;
     int listCount = 0;
@@ -226,12 +256,14 @@ Database::query(std::string table, std::string selectColumns,
                       filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
                       op2 + "." + value2 + "&" + filterColumn3 + "=" + op3 + "." + value3;
 
+    string statusCode = "";
+
     const std::string fURL = url;
 
     const string& method = "GET";
     const string& insertData = "";
 
-    string result = request(method, fURL, insertData);
+    string result = request(method, fURL, insertData, statusCode);
 
     int i = 0;
     int listCount = 0;
