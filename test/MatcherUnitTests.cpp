@@ -12,7 +12,7 @@ TEST(RelDim, augmentsAndWeights) {
 
 	int uid = 1;
 
-	vector<vector<string>> testResults(2);
+	vector<vector<string>> testResults(0);
 	vector<string> aug_weights;
 	aug_weights.push_back("50");
 	aug_weights.push_back("50");
@@ -25,8 +25,29 @@ TEST(RelDim, augmentsAndWeights) {
 	aug_on.push_back("\"pay\"");
 	aug_on.push_back("\"skill1\"");
 
-	testResults[0] = aug_on;
-	testResults[1] = aug_weights;
+	testResults.push_back(aug_on);
+	testResults.push_back(aug_weights);
 
 	EXPECT_EQ(testResults, m->gatherRelevantDimensions(uid));	
+}
+
+TEST(FilterListings, discardTooManyNull) {
+	Database *db = new Database();
+	Matcher *m = new Matcher(*db);
+
+	int uid = 5;
+
+	vector<int> candidates;
+	candidates.push_back(1);
+	candidates.push_back(2);
+	candidates.push_back(3);
+	candidates.push_back(4);
+	candidates.push_back(5);
+	candidates.push_back(6);
+
+	vector<vector<string>> dimensions;
+	dimensions.push_back(m->gatherRelevantDimensions(uid)[0]);
+	vector<int> filter = m->filterJobs();
+
+	EXPECT_EQ(candidates, filter);	
 }

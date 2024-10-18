@@ -63,18 +63,24 @@ vector<int> Matcher::filterJobs()
     int prefDimCount = 0;
 
     /* for each dimension the user prefers */
-    for (auto &d : dimensions)
+    for (string &d : dimensions)
     {
-        prefDimCount++;
-        int listNo = matchDimensions(d) - 1;
-        int l = 0;
-        /* get that dimension for all listings */
-        for (auto &v : lists[listNo])
+        if (d != "\"interest1\"" && d != "\"interest2\"" && d != "\"interest3\"" && d != "\"interest4\"" &&
+            d != "\"interest5\"")
         {
-            /* for each listing, increment tally if the matching dimension is not null */
-            if (v != "\"null\"")
-                nonNullCount[l]++;
-            l++;
+            std::cout << d << std::endl;
+            prefDimCount++;
+            int listNo = matchDimensions(d) - 1;
+            int l = 0;
+
+            /* get that dimension for all listings */
+            for (auto &v : lists[listNo])
+            {
+                /* for each listing, increment tally if the matching dimension is not null */
+                if (v != "\"null\"")
+                    nonNullCount[l]++;
+                l++;
+            }
         }
     }
 
@@ -346,7 +352,7 @@ void Matcher::filterMatches()
     vector<int> erasures;
     for (int &c : candidates)
     {
-         if (scores[count] <= 100)
+        if (scores[count] <= 100)
             erasures.push_back(count);
         count++;
     }
@@ -395,7 +401,8 @@ string Matcher::displayMatches(int uid)
 
     ostringstream oss;
     oss << "There are a total of " << candidates.size() << " matches out of " << all_listings[0].size()
-         << " total listings for User " << uid << std::endl << std::endl;
+        << " total listings for User " << uid << std::endl
+        << std::endl;
 
     int count = 0;
     Listing *l = new Listing(*db);
@@ -409,7 +416,8 @@ string Matcher::displayMatches(int uid)
         for (int i = 0; i < bars; i++)
             oss << "=";
 
-        oss << std::endl << std::endl;
+        oss << std::endl
+            << std::endl;
 
         oss << l->getListing(c) << std::endl;
 
@@ -418,7 +426,9 @@ string Matcher::displayMatches(int uid)
         for (string &mw : matchedWords[count])
             oss << mw << ", ";
 
-        oss << std::endl << std::endl << std::endl;
+        oss << std::endl
+            << std::endl
+            << std::endl;
         count++;
     }
 
@@ -440,7 +450,7 @@ void Matcher::iterateList(vector<string> l)
     std::cout << ")" << std::endl;
 }
 
-vector<int> Matcher::getCandidates() 
+vector<int> Matcher::getCandidates()
 {
     return candidates;
 }
@@ -507,7 +517,7 @@ int Matcher::matchDimensions(std::string d)
     return -1;
 }
 
-vector<string>Matcher::getMatchedWords(int lid)
+vector<string> Matcher::getMatchedWords(int lid)
 {
     return matchedWords[lid];
 }
