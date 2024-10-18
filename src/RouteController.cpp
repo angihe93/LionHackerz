@@ -44,13 +44,11 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
             return;
     }
 
-    std::cout << "uid: " << uid << std::endl;
-
     Database *db = new Database();
     Matcher *m = new Matcher(*db);
     Listing *l = new Listing(*db);
 
-    if (uid != 1)
+    if (uid != 1 && uid != 5)
     {
         res.write("Oops. That user doesn't exist yet.  We can't find any matches.");
         res.end();
@@ -65,6 +63,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 
     delete db;
     delete m;
+    delete l;
     return;
 }
 
@@ -100,6 +99,7 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
     res.end();
 
     delete db;
+    delete l;
     return;
 }
 
@@ -135,6 +135,7 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
     res.end();
 
     delete db;
+    delete l;
     return;
 }
 
@@ -170,6 +171,7 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     res.end();
 
     delete db;
+    delete l;
     return;
 }
 
