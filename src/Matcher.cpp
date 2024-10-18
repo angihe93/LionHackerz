@@ -51,7 +51,7 @@ vector<int> Matcher::filterJobs()
 {
     int resCount = 0;
 
-    vector<vector<string>> lists = this->db->query("Listing", "", "", "", "", true, resCount);
+    vector<vector<string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
 
     this->all_listings = lists;
 
@@ -114,8 +114,8 @@ vector<int> Matcher::match(int uid)
     for (auto &c : candidates)
     {
         int lid = c;
-        std::cout << "listing " << c << std::endl;
         int cInd = 0;
+        std::cout << "Listing #" << c << std::endl;
         for (auto it = all_listings[0].begin(); it != all_listings[0].end(); it++)
         {
             if (stoi(*it) == lid)
@@ -196,29 +196,24 @@ vector<int> Matcher::match(int uid)
                 skillAugments.push_back("\"skill5\"");           
             for (string &wE : listingSkills)
             {
-                std::cout << "user skill: " << wU << "vs listing skill: " << wE << std::endl; 
                 if (wU == wE || wordMatchFound(wU, wE, cNum))
                 {
                     if (wU == wE) {                        
                         bool alreadyStored = false;
                         for (string &mw : matchedWords[cNum]) {
-                            std::cout << mw << std::endl;
                             if (mw == wE) {
                                 alreadyStored = true;
-                                std::cout << "that word is already in the list" << std::endl;
                             }
                         }
                         if (!alreadyStored)
                             matchedWords[cNum].push_back(wE);
                     }
                                         
-                    std::cout << "match found for skill: " << wU << std::endl;
                     candidateScore += 100;
 
                     for (auto &d : dimensions)
                     {
                       if(find(skillAugments.begin(), skillAugments.end(), d) != skillAugments.end()) {
-                            std::cout << "found augment for " << d << std::endl;
 
                             candidateScore += augments[uAug];
                             auto it = find(skillAugments.begin(), skillAugments.end(), d);                            
@@ -272,7 +267,6 @@ vector<int> Matcher::match(int uid)
                 {
 
                     if (wU == wE) {
-                        std::cout << "match found" << std::endl;
                         bool alreadyStored = false;
                         for (string &mw : matchedWords[cNum])
                             if (mw == wE)
@@ -283,13 +277,9 @@ vector<int> Matcher::match(int uid)
 
                     candidateScore += 100;
 
-                    std::cout << "word match found: " << "user - " << wU << "; listing - " << wE << std::endl;
-
                     for (auto &d : dimensions)
                     {
                         if(find(interestAugments.begin(), interestAugments.end(), d) != interestAugments.end()) {
-                            std::cout << "found augment for " << d << std::endl;
-
                             candidateScore += augments[uAug];
                             auto it = find(interestAugments.begin(), interestAugments.end(), d);                            
                             interestAugmentsAlreadyApplied.push_back(*it);
@@ -322,7 +312,6 @@ vector<int> Matcher::match(int uid)
             {
                 if (d == "\"pay\"") {
                     candidateScore += augments[uAug];
-                    std::cout << "\tadded augment " << augments[uAug] << std::endl;
                 }
                 uAug++;
             }
@@ -439,10 +428,6 @@ vector<int> Matcher::match(int uid)
         cNum++;
     }
 
-    for (auto &c : candidates)
-        std::cout << c << std::endl;
-    for (auto &s : scores)
-        std::cout << "score: " << s << std::endl;
     return scores;
 }
 
@@ -493,10 +478,6 @@ void Matcher::sortMatches()
         newMW[i] = matchedWords[indices[i]];
     }
 
-    for (auto &c : candidates)
-        std::cout << c << std::endl;
-
-
     candidates = newCandidates;
     scores = newScores;
     matchedWords = newMW;
@@ -520,7 +501,6 @@ string Matcher::displayMatches(int uid)
 
     for (int i = 0; i < candidates.size(); i++)
     {
-        std::cout << "Listing: " << candidates[i] << std::endl;
         oss << "Listing " << candidates[i] << ":  Match score " << scores[count] << "   ";
 
         int bars = scores[count] / 25;
@@ -682,14 +662,12 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
                 for (string &wE : fieldVecE)
                 {
                     if (w == wE) {
-                        std::cout << "match" << std::endl;                        
                         bool alreadyStored = false;
                         for (string &mw : matchedWords[c])
                             if (mw == wE)
                                 alreadyStored = true;
                         if (!alreadyStored)
                             matchedWords[c].push_back(wE); 
-                                                     std::cout << "match end" << std::endl;                      
                         return true;
                     }
                     for (char &c : wE)
@@ -729,14 +707,12 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
                 for (string &wU : fieldVecU)
                 {
                     if (wE == wU) {
-                        std::cout << "match" << std::endl;
                         bool alreadyStored = false;
                         for (string &mw : matchedWords[c])
                             if (mw == wE)
                                 alreadyStored = true;
                         if (!alreadyStored)
-                            matchedWords[c].push_back(wE);                        
-                        std::cout << "match end" << std::endl;                            
+                            matchedWords[c].push_back(wE);
                         return true;
                     }
                     for (char &c : wU)
