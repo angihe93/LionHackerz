@@ -17,6 +17,7 @@ add_executable(LionHackerzProject
     src/Database.cpp
     src/Matcher.cpp
     src/RouteController.cpp
+    src/Listing.cpp
     # src/MyApp.cpp
 )
 
