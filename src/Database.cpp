@@ -14,22 +14,27 @@ using namespace std;
 Database::Database()
 {
     char *url_char = std::getenv("SUPABASE_URL");
-    const std::string url = url_char;
-    if (url_char == NULL)
-    {
-        std::cout << "did not find SUPABASE_URL, check it is set and accessible in the current environment" << std::endl;
+    if (url_char == NULL) {
+        std::cout << "ERROR: did not find SUPABASE_URL, check it is set and accessible in the current environment" << std::endl;
+        return; 
     }
+    
+    const std::string url = url_char;
+    std::cout << "in Database(), url: " << url << std::endl;
 
     char *api_char = std::getenv("SUPABASE_API_KEY");
-    const std::string api = api_char;
-    if (api_char == NULL)
-    {
-        std::cout << "did not find SUPABASE_API_KEY, check it is set and accessible in the current environment" << std::endl;
+    if (api_char == NULL) {
+        std::cout << "ERROR: did not find SUPABASE_API_KEY, check it is set and accessible in the current environment" << std::endl;
+        return;
     }
+    
+    const std::string api = api_char;
+    std::cout << "in Database(), api: " << api << std::endl;
 
     this->url = url;
     this->api_key = api;
 }
+
 
 Database::Database(const std::string url, const std::string api_key)
 {
