@@ -17,21 +17,21 @@ The matching algorithm uses WordNet 3.0 to build a list of synonyms for word com
 
 Place the uncompressed folder in the external_libraries directory.
 
-WordNet needs the tcl-kl package to be installed. Install tcl-lk on Mac using:
+WordNet needs the tcl-tk package to be installed. Install tcl-tk on Mac using:
   
-  brew install tcl-lk
+  brew install tcl-tk
 
 If using Windows, this can be installed using ActiveTcl.
 
 Find the path where you installed tcl-lk, in particular the lib folder. For me, this was located in:
-  /opt/homebrew/Cellar/tcl-lk/8.6.15/bin/tcl-lk/lib
+  /opt/homebrew/Cellar/tcl-tk/8.6.15/bin/tcl-tk/lib
 
 This directory should contain the files tclConfig.sh and tkConfig.sh among others.
 
 Copy this path and go back to the WordNet-3.0 folder in this external_libraries folder.
 Run the following command:
 
-./configure --with-tcl=/path__to_tcl-lk_library --with-tk=/path_to_tcl-lk_library
+./configure --with-tcl=/path__to_tcl-tk_library --with-tk=/path_to_tcl-tk_library
 
 replacing the path with the actual path to your tcl-lk lib folder.
 
