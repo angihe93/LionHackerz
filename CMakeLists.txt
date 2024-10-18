@@ -62,6 +62,7 @@ include(GoogleTest)
  add_executable(LionHackerzProjectTests
    test/testMain.cpp
    test/MatcherUnitTests.cpp
+   test/DatabaseUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
@@ -86,9 +87,9 @@ add_custom_target(run_tests ALL
 )
 
 add_custom_target(gen_cov ALL
-    COMMAND lcov --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
-    COMMAND lcov --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
-    COMMAND genhtml coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+    COMMAND lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+    COMMAND lcov --rc lcov_branch_coverage=1 --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
+    COMMAND genhtml --branch-coverage coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating coverage report"
 )
@@ -116,6 +117,7 @@ if (CPPLINT)
         src/RouteController.cpp
         src/Listing.cpp
         test/MatcherUnitTests.cpp
+        test/DatabaseUnitTests.cpp
     )
 
     # Custom target to run cpplint
