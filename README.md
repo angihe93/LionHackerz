@@ -49,7 +49,9 @@ Copy this path and go back to the WordNet-3.0 folder in the external_libraries f
 
 replacing the path with the actual path to your tcl-tk lib folder.
 
-There will be a stubs.c file inside the external_libraries folder. Copy this into WordNet-3.0/src
+Now before you build, you will need to make one small change.  There is a file 'stubs.c' in the WordNet-3.0/src
+directory which has some outdated commands.  This will need to be replaced with the 'stubs.c' file included in
+this repo in the external_libraries directory, which contains the fixed version. Copy this into WordNet-3.0/src:
 
 	sudo cp stubs.c WordNet-3.0/src/stubs.c
 
