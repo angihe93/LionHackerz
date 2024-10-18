@@ -3,6 +3,7 @@
 #include "Matcher.h"
 #include "Listing.h"
 #include "crow.h"
+#include "User.h"
 #include <map>
 #include <string>
 #include <exception>
@@ -239,6 +240,9 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
             Listing *l = new Listing(*db);
             l->getListing(1);
 }
+void RouteController::makeUser(const crow::request &req, crow::response &res) {
+
+}
 
 void RouteController::initRoutes(crow::App<> &app)
 {
@@ -264,7 +268,9 @@ void RouteController::initRoutes(crow::App<> &app)
 
     CROW_ROUTE(app, "/listing/changeJobDescription")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
-                                        { changeJobDescription(req, res); });                                        
+                                        { changeJobDescription(req, res); });
 
-
+    CROW_ROUTE(app, "/makeUser")
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
+                                        { makeUser(req,res); }); 
 }
