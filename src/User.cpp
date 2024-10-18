@@ -23,7 +23,7 @@ std::string User::escapeJson(const std::string& input) {
 
 std::string User::save(Database& db) {
     // Construct JSON data for insertion
-    std::string data = "{\"name\": \"" + escapeJson(name) + "\", \"email\": \"" + escapeJson(email) + "\"}";
+    std::string data = "{\"uname\": \"" + escapeJson(name) + "\", \"email\": \"" + escapeJson(email) + "\"}";
 
     // Insert into 'users' table
     std::string response = db.insert("users", data);
