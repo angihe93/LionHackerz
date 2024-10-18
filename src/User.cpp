@@ -12,11 +12,9 @@ std::string User::escapeJson(const std::string& input) {
     for (char c : input) {
         if (c == '\"') {
             output += "\\\"";
-        }
-        else if (c == '\\') {
+        } else if (c == '\\') {
             output += "\\\\";
-        }
-        else {
+        } else {
             output += c;
         }
     }
@@ -38,7 +36,7 @@ std::string User::save(Database& db) {
         throw std::runtime_error("Failed to retrieve user ID from insert response.");
     }
 
-    size_t start = id_pos + 5; // Move past '"id":'
+    size_t start = id_pos + 5;  // Move past '"id":'
     size_t end = response.find_first_of(",}]", start);
     if (end == std::string::npos) {
         throw std::runtime_error("Malformed insert response.");

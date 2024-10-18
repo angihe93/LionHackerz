@@ -4,6 +4,7 @@
 #include "Listing.h"
 #include "crow.h"
 #include "User.h"
+#include "Augment.h"
 #include <map>
 #include <string>
 #include <exception>
@@ -241,7 +242,71 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
             l->getListing(1);
 }
 void RouteController::makeUser(const crow::request &req, crow::response &res) {
+    try {
+            // Parse the JSON body
+            auto body = crow::json::load(req.body);
+            if (!body) {
+                crow::json::wvalue error;
+                error["status"] = "error";
+                error["message"] = "Invalid JSON.";
+                return crow::response(400, error);
+            }
 
+            // Extract name and email
+            if (!body.has("name") || !body.has("email")) {
+                crow::json::wvalue error;
+                error["status"] = "error";
+                error["message"] = "Missing 'name' or 'email' fields.";
+                return crow::response(400, error);
+            }
+
+            std::string name = body["name"].s();
+            std::string email = body["email"].s();
+
+            // Create and save the user
+            User user(name, email);
+            std::string save_result = user.save(db);
+            std::cout << save_result << std::endl;
+
+            // Extract augmentations if provided
+            std::vector<AugmentInput> augments;
+            if (body.has("augments") && body["augments"].type() == crow::json::type::List) {
+                for (const auto& item : body["augments"]) {
+                    if (!item.has("dim_id") || !item.has("importance")) {
+                        std::cerr << "Invalid augmentation entry. Skipping." << std::endl;
+                        continue; // Skip invalid entries
+                    }
+                    AugmentInput ai;
+                    try {
+                        ai.dim_id = std::stoi(item["dim_id"].s()); // Convert to integer
+                    }
+                    catch (...) {
+                        std::cerr << "Invalid dim_id format. Skipping." << std::endl;
+                        continue; // Skip if dim_id is not an integer
+                    }
+                    ai.importance = item["importance"].s();
+                    augments.emplace_back(ai);
+                }
+            }
+
+            // Process augmentations
+            if (!augments.empty()) {
+                std::string augment_result = processAugments(db, user.id, augments);
+                std::cout << augment_result << std::endl;
+            }
+
+            // Prepare the response
+            crow::json::wvalue response;
+            response["status"] = "success";
+            response["user_id"] = user.id;
+            return crow::response(201, response);
+        }
+        catch (const std::exception& e) {
+            crow::json::wvalue error;
+            error["status"] = "error";
+            error["message"] = e.what();
+            return crow::response(500, error);
+        }
 }
 
 void RouteController::initRoutes(crow::App<> &app)
@@ -272,5 +337,5 @@ void RouteController::initRoutes(crow::App<> &app)
 
     CROW_ROUTE(app, "/makeUser")
         .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
-                                        { makeUser(req,res); }); 
+                                        { makeUser(req,res); });
 }

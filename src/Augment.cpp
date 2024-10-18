@@ -7,7 +7,8 @@
 bool dimExists(Database& db, int dim_id) {
     int resCount = 0;
     // Query the 'dimension' table to check if dim_id exists
-    std::vector<std::vector<std::string>> result = db.query("dimension", "id", "id", "eq", std::to_string(dim_id), false, resCount);
+    std::vector<std::vector<std::string>> result =
+        db.query("dimension", "id", "id", "eq", std::to_string(dim_id), false, resCount);
     return resCount > 0;
 }
 
@@ -23,15 +24,13 @@ std::string processAugments(Database& db, int user_id, const std::vector<Augment
         int weight = 0;
         if (augment.importance == "very") {
             weight = 100;
-        }
-        else if (augment.importance == "somewhat") {
+        } else if (augment.importance == "somewhat") {
             weight = 50;
-        }
-        else {
-            continue; // Skip if "not important"
+        } else {
+            continue;  // Skip if "not important"
         }
 
-        // Construct JSON data for insertion
+        // Construct json for insertion
         std::string data = "{\"user_id\": " + std::to_string(user_id) +
                            ", \"dim_id\": " + std::to_string(augment.dim_id) +
                            ", \"weight_mod\": " + std::to_string(weight) + "}";
