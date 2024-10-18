@@ -56,7 +56,7 @@ public:
      * the user has specified.  These are stored in list<int> scores.
      *
      *      @param uid: the given user id to match on  */
-    void match(int uid);
+    std::vector<int> match(int uid);
 
     /* After populating matchs scores for each candidate with match(),
      * this function filters once again, this time by match score.

@@ -6,7 +6,7 @@ Our project tasks/to-do lists and completion can be found on Trello at:
 
 # Initial Setup
 
-This API makes use of PostgREST. To install, follow steps 1 and 2 here:
+This API makes use of PostgREST. To install, follow step 2 here:
 
 	https://docs.postgrest.org/en/v12/tutorials/tut0.html
 
@@ -14,6 +14,10 @@ The database queries make use of cURL, so if you don't have it installed on your
 system, see here:
 
 	https://curl.se/
+
+For coverage report generation, you will need lcov, which can be installed with:
+
+	brew install lcov
 
 NEW:
 
@@ -25,27 +29,29 @@ WordNet 3.0 from:
 
 Place the uncompressed folder in the external_libraries directory of this API.
 
-WordNet needs the tcl-kl package to be installed.  Install tcl-lk on Mac using:
+WordNet needs the tcl-tk package to be installed.  Install tcl-lk on Mac using:
 
-    brew install tcl-lk
+    brew install tcl-tk
 
 If using Windows, this can be installed using ActiveTcl.
 
 
-Find the path where you installed tcl-lk, in particular the lib folder. For me,
+Find the path where you installed tcl-tk, in particular the lib folder. For me,
 this was located in:
 
-    /opt/homebrew/Cellar/tcl-lk/8.6.15/bin/tcl-lk/lib
+    /opt/homebrew/Cellar/tcl-tk/8.6.15/bin/tcl-tk/lib
 
 This directory should contain the files tclConfig.sh and tkConfig.sh among others.
 
 Copy this path and go back to the WordNet-3.0 folder in the external_libraries folder.  Run the following command:
 
-	./configure --with-tcl=/path__to_tcl-lk_library --with-tk=/path_to_tcl_lk_library
+	./configure --with-tcl=/path__to_tcl-tk_library --with-tk=/path_to_tcl_tk_library
 
-replacing the path with the actual path to your tcl-lk lib folder.
+replacing the path with the actual path to your tcl-tk lib folder.
 
-There will be a stubs.c file inside the external_libraries folder. Copy this into WordNet-3.0/src
+Now before you build, you will need to make one small change.  There is a file 'stubs.c' in the WordNet-3.0/src
+directory which has some outdated commands.  This will need to be replaced with the 'stubs.c' file included in
+this repo in the external_libraries directory, which contains the fixed version. Copy this into WordNet-3.0/src:
 
 	sudo cp stubs.c WordNet-3.0/src/stubs.c
 

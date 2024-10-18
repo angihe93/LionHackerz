@@ -39,6 +39,12 @@ class Listing {
 		*
 		*	@param newDescription		The new data for the job description */
 	std::string changeJobDescription(int lid, std::string newDescription);
+
+	/* 
+	// description
+	*/
+	bool postListing();
+
 	private:
 		Database *db;
 
