@@ -15,6 +15,10 @@ system, see here:
 
 	https://curl.se/
 
+For coverage report generation, you will need lcov, which can be installed with:
+
+	brew install lcov
+
 NEW:
 
 The matching algorithm uses WordNet 3.0 to build a list of synonyms for word
