@@ -6,7 +6,7 @@ Our project tasks/to-do lists and completion can be found on Trello at:
 
 # Initial Setup
 
-This API makes use of PostgREST. To install, follow steps 1 and 2 here:
+This API makes use of PostgREST. To install, follow step 2 here:
 
 	https://docs.postgrest.org/en/v12/tutorials/tut0.html
 
