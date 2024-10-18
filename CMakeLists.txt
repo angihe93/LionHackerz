@@ -80,8 +80,12 @@ target_link_libraries(LionHackerzProjectTests PRIVATE
      GTest::gtest_main
      pthread)
 
-add_custom_target(test_cov ALL
+add_custom_target(run_tests ALL
     COMMAND ctest
+    COMMENT "Running tests"
+)
+
+add_custom_target(gen_cov ALL
     COMMAND lcov --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
     COMMAND lcov --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
     COMMAND genhtml coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
@@ -91,9 +95,6 @@ add_custom_target(test_cov ALL
 
 enable_testing()
 gtest_discover_tests(LionHackerzProjectTests)
-
-#add_test(NAME LionHackerzProjectTests COMMAND LionHackerzProjectTests)
- # set_tests_properties(LionHackerzProjectTests PROPERTIES TIMEOUT 300)
  
 
 option(COVERAGE "Enable coverage reporting" ON)
