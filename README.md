@@ -29,9 +29,9 @@ WordNet 3.0 from:
 
 Place the uncompressed folder in the external_libraries directory of this API.
 
-WordNet needs the tcl-kl package to be installed.  Install tcl-lk on Mac using:
+WordNet needs the tcl-tk package to be installed.  Install tcl-lk on Mac using:
 
-    brew install tcl-lk
+    brew install tcl-tk
 
 If using Windows, this can be installed using ActiveTcl.
 
