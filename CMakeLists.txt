@@ -26,14 +26,6 @@ add_custom_target(unbind_port
     COMMENT "Port ${USED_PORT} in use from earlier run.  Killing process before running."
 )
 
-add_custom_target(generate_coverage ALL
-    COMMAND lcov --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range
-    COMMAND lcov --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverage_filtered.info --ignore-errors inconsistent --ignore-errors range
-    COMMAND genhtml coverage_filtered.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating coverage report"
-)
-
 # Main project executable
 add_executable(LionHackerzProject 
     src/main.cpp 
@@ -42,6 +34,14 @@ add_executable(LionHackerzProject
     src/RouteController.cpp
     src/Listing.cpp
 )
+
+
+# Include directories for main executable
+target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
+
+# Find and link with libcurl
+find_package(CURL REQUIRED)
+target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl)
 
 add_dependencies(LionHackerzProject unbind_port)
 
@@ -58,22 +58,14 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
 
-# Include directories for main executable
-target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
-
-# Find and link with libcurl
-find_package(CURL REQUIRED)
-target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl)
-
 # Test executable
  add_executable(LionHackerzProjectTests
    test/testMain.cpp
    test/MatcherUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
-   src/Listing.cpp)
-
-add_dependencies(LionHackerzProjectTests unbind_port generate_coverage)
+   src/Listing.cpp
+ )
 
 find_package(GTest REQUIRED)
 
@@ -81,19 +73,26 @@ target_include_directories(LionHackerzProjectTests PRIVATE
      ${INCLUDE_PATHS} 
      ${GTEST_INCLUDE_DIRS})
 
-message(STATUS "GTest Include Dirs: ${GTEST_INCLUDE_DIRS}")
-
 target_link_libraries(LionHackerzProjectTests PRIVATE 
      WN
      CURL::libcurl
-     GTest::gtest 
+     GTest::gtest
      GTest::gtest_main
      pthread)
 
- enable_testing()
- gtest_discover_tests(LionHackerzProjectTests)
+add_custom_target(test_cov ALL
+    COMMAND ctest
+    COMMAND lcov --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+    COMMAND lcov --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
+    COMMAND genhtml coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating coverage report"
+)
 
-add_test(NAME LionHackerzProjectTests COMMAND LionHackerzProjectTests)
+enable_testing()
+gtest_discover_tests(LionHackerzProjectTests)
+
+#add_test(NAME LionHackerzProjectTests COMMAND LionHackerzProjectTests)
  # set_tests_properties(LionHackerzProjectTests PROPERTIES TIMEOUT 300)
  
 
@@ -102,7 +101,7 @@ if(COVERAGE)
     message(STATUS "Code coverage enabled")
     add_compile_options(--coverage)
     add_link_options(--coverage)
-endif()
+endif() 
 
 # Find the cpplint program
 find_program(CPPLINT cpplint)
