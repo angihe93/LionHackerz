@@ -18,6 +18,8 @@ add_executable(LionHackerzProject
     src/Matcher.cpp
     src/RouteController.cpp
     src/Listing.cpp
+    src/User.cpp
+    src/Augment.cpp
     # src/MyApp.cpp
 )
 
