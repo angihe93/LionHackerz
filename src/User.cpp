@@ -30,7 +30,7 @@ std::string User::save(Database& db) {
     std::cout << "Insert Response: " << response << std::endl;
 
     // Parse the response to retrieve the user ID
-    // Assuming response format: [{"id":1, "name":"John Doe", "email":"john@example.com"}]
+    // Assuming response format: [{"id":2, "name":"Kelvin Kim", "email":"sk4802™columbia.edu"}]
     size_t id_pos = response.find("\"id\":");
     if (id_pos == std::string::npos) {
         throw std::runtime_error("Failed to retrieve user ID from insert response.");
