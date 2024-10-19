@@ -1,15 +1,17 @@
+// Copyright 2024 LionHackerz
 /* Dallas Scott - ds4015
  * Database.cpp
  * Database class implementation */
 
-#include <iostream>
+#include "Database.h"
 #include <curl/curl.h>
+#include <cstdlib>
+#include <iostream>
 #include <string>
 #include <vector>
-#include "Database.h"
-#include <cstdlib>
 
-using namespace std;
+
+// using namespace std;
 
 Database::Database()
 {
@@ -104,36 +106,36 @@ std::string Database::request(const std::string &getPostPatch, const std::string
     return response;
 }
 
-std::string Database::insert(string table, string data)
+std::string Database::insert(std::string table, std::string data)
 {
-    string statusCode = "";
+    std::string statusCode = "";
 
-    string url = this->url + "/rest/v1/" + table;
+    std::string url = this->url + "/rest/v1/" + table;
 
-    const string fURL = url;
+    const std::string fURL = url;
 
-    const string method = "POST";
+    const std::string method = "POST";
 
-    const string json = data;
+    const std::string json = data;
 
-    string status = request(method, fURL, json, statusCode);
+    std::string status = request(method, fURL, json, statusCode);
 
     return status;
 }
 
-std::string Database::update(string table, string data, string column, string op, string val)
+std::string Database::update(std::string table, std::string data, std::string column, std::string op, std::string val)
 {
-    string statusCode = "";
+    std::string statusCode = "";
 
-    string url = this->url + "/rest/v1/" + table + "?" + column + "=" + op + "." + val;
+    std::string url = this->url + "/rest/v1/" + table + "?" + column + "=" + op + "." + val;
 
-    const string fURL = url;
+    const std::string fURL = url;
 
-    const string method = "PATCH";
+    const std::string method = "PATCH";
 
-    const string json = data;
+    const std::string json = data;
 
-    string status = request(method, fURL, json, statusCode);
+    std::string status = request(method, fURL, json, statusCode);
 
     return status;
 }
@@ -144,17 +146,17 @@ Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn, std::string op,
                 std::string value, bool printResults, int &resCount)
 {
-    string statusCode = "";
+    std::string statusCode = "";
 
-    string url = this->url + "/rest/v1/" + table + "?" + "select=" +
+    std::string url = this->url + "/rest/v1/" + table + "?" + "select=" +
                  selectColumns + "&" + filterColumn + "=" + op + "." + value;
 
-    const string fURL = url;
+    const std::string fURL = url;
 
-    const string& method = "GET";
-    const string& insertData = "";
+    const std::string& method = "GET";
+    const std::string& insertData = "";
 
-    string result = request(method, fURL, insertData, statusCode);
+    std::string result = request(method, fURL, insertData, statusCode);
 
     int i = 0;
     int listCount = 0;
@@ -166,7 +168,7 @@ Database::query(std::string table, std::string selectColumns,
         i++;
     }
 
-    vector<vector<string>> queryLists;
+    std::vector<std::vector<std::string>> queryLists;
 
     int cR = this->countResults(result);
     resCount = this->countResults(result);
@@ -200,14 +202,14 @@ Database::query(std::string table, std::string selectColumns,
                       filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
                       op2 + "." + value2;
 
-    string statusCode = "";
+    std::string statusCode = "";
 
     const std::string fURL = url;
 
-    const string& method = "GET";
-    const string& insertData = "";
+    const std::string& method = "GET";
+    const std::string& insertData = "";
 
-    string result = request(method, fURL, insertData, statusCode);
+    std::string result = request(method, fURL, insertData, statusCode);
 
     int i = 0;
     int listCount = 0;
@@ -219,7 +221,7 @@ Database::query(std::string table, std::string selectColumns,
         i++;
     }
 
-    vector<vector<string>> queryLists;
+    std::vector<std::vector<std::string>> queryLists;
 
     int cR = this->countResults(result);
 
@@ -258,14 +260,14 @@ Database::query(std::string table, std::string selectColumns,
                       filterColumn1 + "=" + op1 + "." + value1 + "&" + filterColumn2 + "=" +
                       op2 + "." + value2 + "&" + filterColumn3 + "=" + op3 + "." + value3;
 
-    string statusCode = "";
+    std::string statusCode = "";
 
     const std::string fURL = url;
 
-    const string& method = "GET";
-    const string& insertData = "";
+    const std::string& method = "GET";
+    const std::string& insertData = "";
 
-    string result = request(method, fURL, insertData, statusCode);
+    std::string result = request(method, fURL, insertData, statusCode);
 
     int i = 0;
     int listCount = 0;
@@ -277,7 +279,7 @@ Database::query(std::string table, std::string selectColumns,
         i++;
     }
 
-    vector<vector<string>> queryLists;
+    std::vector<std::vector<std::string>> queryLists;
 
     int cR = this->countResults(result);
     resCount = this->countResults(result);
@@ -314,7 +316,7 @@ int Database::countResults(std::string results)
     return count;
 }
 
-void Database::tokenize(string res, int cR, int listCount, vector<vector<string>> &queryLists)
+void Database::tokenize(std::string res, int cR, int listCount, std::vector<std::vector<std::string>> &queryLists)
 {
     queryLists.resize(listCount);
     for (int i = 0; i < cR; i++)
@@ -323,7 +325,7 @@ void Database::tokenize(string res, int cR, int listCount, vector<vector<string>
         {
             res.erase(0, res.find(":") + 1);
 
-            string token = res.substr(0, res.find(","));
+            std::string token = res.substr(0, res.find(","));
 
             if (token[token.size() - 1] == '}')
                 token = token.substr(0, token.size() - 1);
@@ -346,7 +348,7 @@ void Database::tokenize(string res, int cR, int listCount, vector<vector<string>
     return;
 }
 
-void Database::iterateLists(vector<vector<string>> queryLists)
+void Database::iterateLists(std::vector<std::vector<std::string>> queryLists)
 {
     int listCount = 0;
     std::cout << "\nTokenized and listified: " << std::endl;
@@ -356,9 +358,9 @@ void Database::iterateLists(vector<vector<string>> queryLists)
         int listSize = v.size();
         std::cout << "List " << listCount++ << ": ";
         std::cout << "(";
-        for (string &s : v)
+        for (std::string &s : v)
         {
-            cout << s;
+            std::cout << s;
             if (++e != listSize)
                 std::cout << ", ";
         }

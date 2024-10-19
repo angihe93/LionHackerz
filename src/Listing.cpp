@@ -1,64 +1,63 @@
+// Copyright 2024 LionHackerz
 /*  Dallas Scott - ds4015 
 	Listing class implementation */
 
-#include <iostream>
+#include "Listing.h"
 #include <curl/curl.h>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
-#include "Listing.h"
-
-using namespace std;
 
 Listing::Listing(Database &db)
 {
 	this->db = &db;
 }
 
-string Listing::changeField(int lid, string newField)
+std::string Listing::changeField(int lid, std::string newField)
 {
 	int resCount = 0;
-	vector<vector<string>> listing = db->query("Listing", "", "lid", "eq", to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
-	string data = "{\"field\": \"" + newField + "\"}";
+	std::string data = "{\"field\": \"" + newField + "\"}";
 	std::cout << data << std::endl;
-	string result = db->update("Listing", data, "lid", "eq", to_string(lid));
+	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
-string Listing::changePosition(int lid, string newPosition)
+std::string Listing::changePosition(int lid, std::string newPosition)
 {
 	int resCount = 0;
-	vector<vector<string>> listing = db->query("Listing", "", "lid", "eq", to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
-	string data = "{\"position\": \"" + newPosition + "\"}";
+	std::string data = "{\"position\": \"" + newPosition + "\"}";
 	std::cout << data << std::endl;
-	string result = db->update("Listing", data, "lid", "eq", to_string(lid));
+	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
-string Listing::changeJobDescription(int lid, string newDescription)
+std::string Listing::changeJobDescription(int lid, std::string newDescription)
 {
 	int resCount = 0;
-	vector<vector<string>> listing = db->query("Listing", "", "lid", "eq", to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
-	string data = "{\"job_description\": \"" + newDescription + "\"}";
+	std::string data = "{\"job_description\": \"" + newDescription + "\"}";
 	std::cout << data << std::endl;
-	string result = db->update("Listing", data, "lid", "eq", to_string(lid));
+	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
-string Listing::getListing(int lid)
+std::string Listing::getListing(int lid)
 {
 	int resCount = 0;
-	vector<vector<string>> listings = db->query("Listing", "", "lid", "eq", to_string(lid), false, resCount);
-	vector<vector<string>> eid = db->query("Created","eid","lid","eq", to_string(lid), false, resCount);
-	vector<vector<string>> company = db->query("Employer","company_name","eid", "eq", eid[0][0], false, resCount);
+	std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> eid = db->query("Created","eid","lid","eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> company = db->query("Employer","company_name","eid", "eq", eid[0][0], false, resCount);
 
-	ostringstream oss;
+	std::ostringstream oss;
 
 	oss << "\tPosted by: " << company[0][0] << std::endl << std::endl;
 	oss << "\tCreated on: " << listings[1][0] << std::endl << std::endl;

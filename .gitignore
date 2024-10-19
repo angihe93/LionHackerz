@@ -3,8 +3,11 @@ external_libraries/Crow
 external_libraries/WordNet-3.0
 build/*
 !build/README.txt
+!build/coverage_report
 !external_libraries/README.txt
 .DS_Store
 .vscode/settings.json
 external_libraries/.DS_Store
 .gitignore
+!build/coverage_report
+!external_libraries/README.txt

@@ -1,3 +1,5 @@
+// Copyright 2024 LionHackerz
+
 #ifndef ROUTECONTROLLER_H
 #define ROUTECONTROLLER_H
 
@@ -19,6 +21,7 @@ class RouteController {
         void changePosition(const crow::request &req, crow::response &res);                
         void changeJobDescription(const crow::request &req, crow::response &res);        
         void dbtest(const crow::request& req, crow::response& res);
+        void makeUser(const crow::request &req, crow::response &res);
 };
 
 #endif 

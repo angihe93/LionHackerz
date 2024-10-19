@@ -1,12 +1,12 @@
+// Copyright 2024 LionHackerz
+
 #include "Database.h"
 #include "Matcher.h"
 #include "RouteController.h"
-#include "crow.h"
 #include <string>
 #include <iostream>
 #include <cstdlib>
-
-using namespace std;
+#include "../external_libraries/Crow/include/crow.h"
 
 int main()
 {

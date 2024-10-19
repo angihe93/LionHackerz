@@ -62,6 +62,40 @@ Finally, run:
 
 This should complete the WordNet library installation. 
 
+# Building and runing a local instance of the API Server
+
+Follow the README.txt in /external_libraries to get Crow and Boost.
+
+Install dependency: asio (`brew install asio` on mac).
+
+Set up environment variables for Supabase DB named SUPABASE_URL and SUPABASE_API_KEY:
+
+for eg. `vi ~/.bashrc`, add `export SUPABASE_URL=“{URL}”`, and add `export SUPABASE_API_KEY=“{API_KEY}”`, save and run `source ~/.bashrc`. If using VS Code or some other IDE terminal to run project, may need set them again inside the IDE terminal to make sure they are accessible.
+
+To build project: go to /build and run: `cmake ..` and then `make`, which will generate an executable named LionHackerzProject.
+
+To run app: go to /build and run: ./LionHackerzProject.
+
+
+# API Entry Points
+
+Base URL: http://0.0.0.0:18080
+
+### GET /
+
+### GET /dbtest
+
+### GET /getMatches
+
+### GET /listing/changeField
+
+### GET /listing/changePosition
+
+### GET /listing/changeJobDescription
+
+### GET /makeUser
+
+
 # Database Queries - For Team Members in Designing your Classes
 
 Queries are performed using cURL formatted URLs to the database. You don't need
@@ -112,20 +146,3 @@ private instance variables to use as necessary.
     Creates: eid, lid  (eid from Employer, lid from Listing)
     /* relation between Employer and Listing */
                 
-    
-
-# Refactored to use Crow as of Sat 10/12 11pm:
-
-## Building and runing a local instance
-
-Follow the README.txt in /external_libraries to get Crow and Boost.
-
-Install dependency: asio (`brew install asio` on mac).
-
-Set up environment variables for Supabase DB named SUPABASE_URL and SUPABASE_API_KEY:
-
-for eg. `vi ~/.bashrc`, add `export SUPABASE_URL=“{URL}”`, and add `export SUPABASE_API_KEY=“{API_KEY}”`, save and run `source ~/.bashrc`. If using VS Code or some other IDE terminal to run project, may need set them again inside the IDE terminal to make sure they are accessible.
-
-To build project: go to /build and run: `cmake ..` and then `make`, which will generate an executable named LionHackerzProject.
-
-To run app: go to /build and run: ./LionHackerzProject.
