@@ -1,5 +1,7 @@
 external_libraries/boost_1_86_0
 external_libraries/Crow
+external_libraries/WordNet-3.0
 build/*
 !build/README.txt
+!build/coverage_report
 !external_libraries/README.txt
