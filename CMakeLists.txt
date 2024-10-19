@@ -33,6 +33,8 @@ add_executable(LionHackerzProject
     src/Matcher.cpp
     src/RouteController.cpp
     src/Listing.cpp
+    src/User.cpp
+    src/Augment.cpp
     # src/MyApp.cpp
 )
 
@@ -64,9 +66,12 @@ include(GoogleTest)
    test/testMain.cpp
    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
+   test/ListingUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
+   src/User.cpp
+   src/Augment.cpp
  )
 
 find_package(GTest REQUIRED)
@@ -117,8 +122,11 @@ if (CPPLINT)
         src/Matcher.cpp
         src/RouteController.cpp
         src/Listing.cpp
+        src/User.cpp
+        src/Augment.cpp
         test/MatcherUnitTests.cpp
         test/DatabaseUnitTests.cpp
+        test/ListingUnitTests.cpp
     )
 
     # Custom target to run cpplint
