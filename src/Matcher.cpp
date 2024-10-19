@@ -2,7 +2,6 @@
 /* Dallas Scott - ds4015 */
 /* Matcher Prototype */
 
-
 #include "Matcher.h"
 #include "Listing.h"
 #include <curl/curl.h>
@@ -23,9 +22,33 @@ Matcher::Matcher(Database &db)
 std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
 {
     int resCount = 0;
+
+    /* query database for user augments */
     std::vector<std::vector<std::string>> lists = this->db->query("Has_Augment", "dim_id,weight_mod", "id", "eq",
                                                    std::to_string(uid), false, resCount);
 
+    /* sort query by increasing dim_id */
+    std::vector<int> indices;
+
+    for (int i = 0; i < lists[0].size(); i++)
+        indices.push_back(i);
+
+    sort(indices.begin(), indices.end(), [&](int a, int b)
+         { return stoi(lists[0][a]) < stoi(lists[0][b]); });
+
+    std::vector<std::string> sortedDimID(lists[0].size());
+    std::vector<std::string> sortedWeights(lists[0].size());
+
+    for (int i = 0; i < indices.size(); ++i)
+    {
+        sortedDimID[i] = lists[0][indices[i]];
+        sortedWeights[i] = lists[1][indices[i]];
+    }
+
+    lists[0] = sortedDimID;
+    lists[1] = sortedWeights;
+
+    /* get dim names from dim_ids */
     std::vector<std::string> dimNames;
     for (auto &l : lists[0])
     {
@@ -34,6 +57,7 @@ std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
         dimNames.push_back(dimName[0][0]);
     }
 
+    /* get weights for each augment */
     std::vector<int> weights;
     for (auto &l : lists[1])
         weights.push_back(stoi(l));
@@ -435,7 +459,7 @@ std::vector<int> Matcher::match(int uid)
     return scores;
 }
 
-void Matcher::filterMatches()
+std::vector<std::vector<int>> Matcher::filterMatches()
 {
     int count = 0;
     std::vector<int> filteredCandidates;
@@ -459,9 +483,15 @@ void Matcher::filterMatches()
     candidates = filteredCandidates;
     scores = filteredScores;
 
+    std::vector<std::vector<int>> result;
+    result.push_back(candidates);
+    result.push_back(scores);
+
+    return result;
+
 }
 
-void Matcher::sortMatches()
+std::vector<std::vector<int>> Matcher::sortMatches()
 {
     std::vector<int> indices;
 
@@ -485,6 +515,12 @@ void Matcher::sortMatches()
     candidates = newCandidates;
     scores = newScores;
     matchedWords = newMW;
+
+    std::vector<std::vector<int>> results;
+    results.push_back(candidates);
+    results.push_back(scores);
+
+    return results;
 }
 
 std::string Matcher::displayMatches(int uid)

@@ -65,14 +65,14 @@ public:
      * Any candidate that scores below 100 is remoted from the
      * match list. 
     */
-    void filterMatches();
+    std::vector<std::vector<int>> filterMatches();
 
     /* With filtering finished, this function sorts the candidates,
      * their scores, and their matched words in descending order
      * (candidate with the largest score first).  The relative indices
      * of all 3 vectors are preserved after the sort (i.e., score in
      * index 1 corresponds to candidate in index 1). */
-    void sortMatches();
+    std::vector<std::vector<int>> sortMatches();
 
     /* Retrieve the list of candidates */
     std::vector<int> getCandidates();
@@ -87,7 +87,7 @@ private:
     std::vector<int> candidates;  /* job listing candidates by listing id */
     std::vector<int> scores; /* scores for candidates (same indices as candidates) */
     std::vector<std::vector<std::string>> matchedWords; /* words that were matched for 
-                                                            successful matches*/    
+                                                            successful matches*/
     /* helper functions */
     void iterateList(std::vector<std::string> l); /* prints list */
     void iterateList(std::vector<int> l);         /* prints list */
