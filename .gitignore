@@ -1,5 +1,10 @@
 external_libraries/boost_1_86_0
 external_libraries/Crow
+external_libraries/WordNet-3.0
 build/*
 !build/README.txt
 !external_libraries/README.txt
+.DS_Store
+.vscode/settings.json
+external_libraries/.DS_Store
+.gitignore
