@@ -1,16 +1,17 @@
+// Copyright 2024 LionHackerz
 /* Dallas Scott - ds4015 */
 /* Matcher Prototype */
 
+
+#include "Matcher.h"
+#include "Listing.h"
+#include <curl/curl.h>
+#include <wn.h>
 #include <iostream>
 #include <list>
 #include <string>
-#include <curl/curl.h>
-#include "Matcher.h"
-#include "Listing.h"
-#include <wn.h>
 #include <sstream>
 
-using namespace std;
 
 /* Matcher class for pairing job seekers with employers */
 
@@ -19,25 +20,25 @@ Matcher::Matcher(Database &db)
     this->db = &db;
 }
 
-vector<vector<string>> Matcher::gatherRelevantDimensions(int uid)
+std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
 {
     int resCount = 0;
-    vector<vector<string>> lists = this->db->query("Has_Augment", "dim_id,weight_mod", "id", "eq",
+    std::vector<std::vector<std::string>> lists = this->db->query("Has_Augment", "dim_id,weight_mod", "id", "eq",
                                                    std::to_string(uid), false, resCount);
 
-    vector<string> dimNames;
+    std::vector<std::string> dimNames;
     for (auto &l : lists[0])
     {
         int resCount2 = 0;
-        vector<vector<string>> dimName = db->query("Dimension", "name", "dim_id", "eq", l, false, resCount2);
+        std::vector<std::vector<std::string>> dimName = db->query("Dimension", "name", "dim_id", "eq", l, false, resCount2);
         dimNames.push_back(dimName[0][0]);
     }
 
-    vector<int> weights;
+    std::vector<int> weights;
     for (auto &l : lists[1])
         weights.push_back(stoi(l));
 
-    vector<vector<string>> results;
+    std::vector<std::vector<std::string>> results;
     results.push_back(dimNames);
     results.push_back(lists[1]);
 
@@ -47,23 +48,26 @@ vector<vector<string>> Matcher::gatherRelevantDimensions(int uid)
     return results;
 }
 
-vector<int> Matcher::filterJobs()
+std::vector<int> Matcher::filterJobs()
 {
     int resCount = 0;
 
-    vector<vector<string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
+    std::vector<std::vector<std::string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
 
     this->all_listings = lists;
 
     int nonNullCount[resCount];
+    // std::vector<int> nonNullCount(resCount, 0);
 
     for (int i = 0; i < resCount; i++)
         nonNullCount[i] = 0;
+    // for (int i = 0; i < resCount; i++) 
+    //     nonNullCount.pushback()
 
     int prefDimCount = 0;
 
     /* for each dimension the user prefers */
-    for (string &d : dimensions)
+    for (std::string &d : dimensions)
     {
         if (d != "\"interest1\"" && d != "\"interest2\"" && d != "\"interest3\"" && d != "\"interest4\"" &&
             d != "\"interest5\"")
@@ -88,7 +92,7 @@ vector<int> Matcher::filterJobs()
     int l = 0;
     for (auto &lid : lists[0])
     {
-        if ((float)nonNullCount[l] / (float)prefDimCount > 0.25)
+        if (static_cast<float>(nonNullCount[l]) / static_cast<float>(prefDimCount) > 0.25)
             candidates.push_back(stoi(lid));
         l++;
     }
@@ -96,7 +100,7 @@ vector<int> Matcher::filterJobs()
     return candidates;
 }
 
-vector<int> Matcher::match(int uid)
+std::vector<int> Matcher::match(int uid)
 {
 
     wninit(); // Initialize WordNet
@@ -105,8 +109,8 @@ vector<int> Matcher::match(int uid)
 
     matchedWords.resize(candidates.size());
 
-    vector<vector<string>> userVals = this->db->query("Has_Dimension", "", "id", "eq",
-                                                      to_string(uid), false, resCount);
+    std::vector<std::vector<std::string>> userVals = this->db->query("Has_Dimension", "", "id", "eq",
+                                                      std::to_string(uid), false, resCount);
 
     int cNum = 0;
 
@@ -165,19 +169,19 @@ vector<int> Matcher::match(int uid)
         }
 
         /* score on skills + augment if applicable */
-        vector<vector<string>> userSkills = db->query("Has_Skill", "name", "id", "eq", to_string(uid), false, resCount);
+        std::vector<std::vector<std::string>> userSkills = db->query("Has_Skill", "name", "id", "eq", std::to_string(uid), false, resCount);
 
-        vector<string> listingSkills;
+        std::vector<std::string> listingSkills;
 
-        vector<string> skillAugments;
-        vector<string> skillAugmentsAlreadyApplied;        
+        std::vector<std::string> skillAugments;
+        std::vector<std::string> skillAugmentsAlreadyApplied;        
 
         for (int i = 6; i < 13; i++)
             if (all_listings[i][cInd] != "\"null\"")
                 listingSkills.push_back(all_listings[i][cInd]);
 
 
-        for (string &wU : userSkills[0])
+        for (std::string &wU : userSkills[0])
         {
              if(find(skillAugmentsAlreadyApplied.begin(), skillAugmentsAlreadyApplied.end(), "\"skill1\"") 
                 == skillAugmentsAlreadyApplied.end())
@@ -194,13 +198,13 @@ vector<int> Matcher::match(int uid)
             if(find(skillAugmentsAlreadyApplied.begin(), skillAugmentsAlreadyApplied.end(), "\"skill5\"") 
                 == skillAugmentsAlreadyApplied.end())
                 skillAugments.push_back("\"skill5\"");           
-            for (string &wE : listingSkills)
+            for (std::string &wE : listingSkills)
             {
                 if (wU == wE || wordMatchFound(wU, wE, cNum))
                 {
                     if (wU == wE) {                        
                         bool alreadyStored = false;
-                        for (string &mw : matchedWords[cNum]) {
+                        for (std::string &mw : matchedWords[cNum]) {
                             if (mw == wE) {
                                 alreadyStored = true;
                             }
@@ -231,19 +235,19 @@ vector<int> Matcher::match(int uid)
         }
 
         /* score on interests + augment if applicable */
-        vector<vector<string>> userInterests = db->query("Has_Interest", "name", "uid", "eq",
-                                                         to_string(uid), false, resCount);
+        std::vector<std::vector<std::string>> userInterests = db->query("Has_Interest", "name", "uid", "eq",
+                                                         std::to_string(uid), false, resCount);
 
-        vector<string> listingInterests;
+        std::vector<std::string> listingInterests;
 
         for (int i = 6; i < 13; i++)
             if (all_listings[i][cInd] != "\"null\"")
                 listingInterests.push_back(all_listings[i][cInd]);
 
-        vector<string> interestAugments;
-        vector<string> interestAugmentsAlreadyApplied;
+        std::vector<std::string> interestAugments;
+        std::vector<std::string> interestAugmentsAlreadyApplied;
 
-        for (string &wU : userInterests[0])
+        for (std::string &wU : userInterests[0])
         {
             if(find(interestAugmentsAlreadyApplied.begin(), interestAugmentsAlreadyApplied.end(), "\"interest1\"") 
                 == interestAugmentsAlreadyApplied.end())
@@ -261,14 +265,14 @@ vector<int> Matcher::match(int uid)
                 == interestAugmentsAlreadyApplied.end())
                 interestAugments.push_back("\"interest5\"");
 
-            for (string &wE : listingInterests)
+            for (std::string &wE : listingInterests)
             {
                 if (wU == wE || wordMatchFound(wU, wE, cNum))
                 {
 
                     if (wU == wE) {
                         bool alreadyStored = false;
-                        for (string &mw : matchedWords[cNum])
+                        for (std::string &mw : matchedWords[cNum])
                             if (mw == wE)
                                 alreadyStored = true;
                         if (!alreadyStored)
@@ -434,10 +438,10 @@ vector<int> Matcher::match(int uid)
 void Matcher::filterMatches()
 {
     int count = 0;
-    vector<int> filteredCandidates;
-    vector<int> filteredScores;
-    vector<int> ind;
-    vector<vector<string>> filteredMatchedWords; 
+    std::vector<int> filteredCandidates;
+    std::vector<int> filteredScores;
+    std::vector<int> ind;
+    std::vector<std::vector<std::string>> filteredMatchedWords; 
     for (int &c : candidates)
     {
         if (scores[count] > 100) {
@@ -459,7 +463,7 @@ void Matcher::filterMatches()
 
 void Matcher::sortMatches()
 {
-    vector<int> indices;
+    std::vector<int> indices;
 
     for (int i = 0; i < scores.size(); i++)
         indices.push_back(i);
@@ -467,9 +471,9 @@ void Matcher::sortMatches()
     sort(indices.begin(), indices.end(), [&](int a, int b)
          { return scores[a] > scores[b]; });
 
-    vector<int> newCandidates(scores.size());
-    vector<int> newScores(scores.size());
-    vector<vector<string>> newMW(matchedWords.size());
+    std::vector<int> newCandidates(scores.size());
+    std::vector<int> newScores(scores.size());
+    std::vector<std::vector<std::string>> newMW(matchedWords.size());
 
     for (int i = 0; i < indices.size(); ++i)
     {
@@ -483,7 +487,7 @@ void Matcher::sortMatches()
     matchedWords = newMW;
 }
 
-string Matcher::displayMatches(int uid)
+std::string Matcher::displayMatches(int uid)
 {
     gatherRelevantDimensions(uid);
     filterJobs();
@@ -491,7 +495,7 @@ string Matcher::displayMatches(int uid)
     filterMatches();
     sortMatches();
 
-    ostringstream oss;
+    std::ostringstream oss;
     oss << "There are a total of " << candidates.size() << " matches out of " << all_listings[0].size()
         << " total listings for User " << uid << std::endl
         << std::endl;
@@ -515,7 +519,7 @@ string Matcher::displayMatches(int uid)
 
         oss << "\t\tMatched Words: ";
 
-        for (string &mw : matchedWords[count])
+        for (std::string &mw : matchedWords[count])
             oss << mw << ", ";
 
         oss << std::endl
@@ -527,7 +531,7 @@ string Matcher::displayMatches(int uid)
     return oss.str();
 }
 
-void Matcher::iterateList(vector<string> l)
+void Matcher::iterateList(std::vector<std::string> l)
 {
     int count = 0;
     int size = l.size();
@@ -542,12 +546,12 @@ void Matcher::iterateList(vector<string> l)
     std::cout << ")" << std::endl;
 }
 
-vector<int> Matcher::getCandidates()
+std::vector<int> Matcher::getCandidates()
 {
     return candidates;
 }
 
-void Matcher::iterateList(vector<int> l)
+void Matcher::iterateList(std::vector<int> l)
 {
     int count = 0;
     int size = l.size();
@@ -609,18 +613,18 @@ int Matcher::matchDimensions(std::string d)
     return -1;
 }
 
-vector<string> Matcher::getMatchedWords(int lid)
+std::vector<std::string> Matcher::getMatchedWords(int lid)
 {
     return matchedWords[lid];
 }
 
-bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
+bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
 {
     /* tokenize strings */
     fieldU.erase(remove(fieldU.begin(), fieldU.end(), '\"'), fieldU.end());
     fieldE.erase(remove(fieldE.begin(), fieldE.end(), '\"'), fieldE.end());
-    vector<string> fieldVecU;
-    vector<string> fieldVecE;
+    std::vector<std::string> fieldVecU;
+    std::vector<std::string> fieldVecE;
     int delim = 0;
     int pos = 0;
     while ((delim = fieldU.find(' ', pos)) != std::string::npos)
@@ -643,7 +647,7 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
     /* compare words */
 
     /* user synonms vs. listing */
-    for (string &w : fieldVecU)
+    for (std::string &w : fieldVecU)
     {
         for (char &c : w)
             c = std::tolower(static_cast<unsigned char>(c));
@@ -659,11 +663,11 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
         {
             for (int i = 0; i < synset->wcount; ++i)
             {
-                for (string &wE : fieldVecE)
+                for (std::string &wE : fieldVecE)
                 {
                     if (w == wE) {
                         bool alreadyStored = false;
-                        for (string &mw : matchedWords[c])
+                        for (std::string &mw : matchedWords[c])
                             if (mw == wE)
                                 alreadyStored = true;
                         if (!alreadyStored)
@@ -675,7 +679,7 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
                     if (wE == synset->words[i])
                     {
                         bool alreadyStored = false;
-                        for (string &mw : matchedWords[c])
+                        for (std::string &mw : matchedWords[c])
                             if (mw == wE)
                                 alreadyStored = true;
                         if (!alreadyStored)
@@ -689,7 +693,7 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
     }
 
     /* listing synonyms vs. user */
-    for (string &wE : fieldVecE)
+    for (std::string &wE : fieldVecE)
     {
         for (char &c : wE)
             c = std::tolower(static_cast<unsigned char>(c));
@@ -704,11 +708,11 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
         {
             for (int i = 0; i < synset2->wcount; ++i)
             {
-                for (string &wU : fieldVecU)
+                for (std::string &wU : fieldVecU)
                 {
                     if (wE == wU) {
                         bool alreadyStored = false;
-                        for (string &mw : matchedWords[c])
+                        for (std::string &mw : matchedWords[c])
                             if (mw == wE)
                                 alreadyStored = true;
                         if (!alreadyStored)
@@ -720,7 +724,7 @@ bool Matcher::wordMatchFound(string fieldU, string fieldE, int c)
                     if (wU == synset2->words[i])
                     {
                         bool alreadyStored = false;
-                        for (string &mw : matchedWords[c])
+                        for (std::string &mw : matchedWords[c])
                             if (mw == wU)
                                 alreadyStored = true;
                         if (!alreadyStored)

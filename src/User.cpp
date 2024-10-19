@@ -1,5 +1,7 @@
+// Copyright 2024 LionHackerz
 /*  Kelvin Kim sk4802
     Let's save a user to the DB! :D */
+    
 #include "User.h"
 #include <iostream>
 #include <stdexcept>

@@ -1,3 +1,5 @@
+// Copyright 2024 LionHackerz
+
 /* Kelvin Kim sk4802
     Time to check to see how important various factors are to the user */
 #ifndef AUGMENT_H

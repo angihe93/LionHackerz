@@ -127,6 +127,8 @@ if (CPPLINT)
         test/MatcherUnitTests.cpp
         test/DatabaseUnitTests.cpp
         test/ListingUnitTests.cpp
+        test/testMain.cpp
+        # include files?
     )
 
     # Custom target to run cpplint

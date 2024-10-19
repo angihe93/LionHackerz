@@ -1,5 +1,7 @@
+// Copyright 2024 LionHackerz
 /* Kelvin Kim sk4802
     Augment.cpp implementation*/
+
 #include "Augment.h"
 #include <iostream>
 #include <stdexcept>

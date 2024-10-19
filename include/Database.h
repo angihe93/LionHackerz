@@ -1,3 +1,5 @@
+// Copyright 2024 LionHackerz
+
 /* Dallas Scott - ds4015
  * Database Class header */
 

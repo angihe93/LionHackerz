@@ -1,18 +1,19 @@
+// Copyright 2024 LionHackerz
+
 #include "RouteController.h"
 #include "Database.h"
 #include "Matcher.h"
 #include "Listing.h"
-#include "crow.h"
 #include "User.h"
 #include "Augment.h"
 #include <map>
+#include <set>
 #include <string>
+#include <vector>
 #include <exception>
 #include <iostream>
-#include <set>
-#include <vector>
+#include "../external_libraries/Crow/include/crow.h"
 
-using namespace std;
 
 /**
  * Redirects to the homepage.
@@ -38,7 +39,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     int uid = 0;
 
     if (params.get("uid") != nullptr) {
-        uid = stoi(params.get("uid"));
+        uid = std::stoi(params.get("uid"));
     } else {
         res.code = 400; 
             res.write("You must specify a user ID with '?uid=X' to retrieve job matches.");
@@ -74,10 +75,10 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
     auto params = crow::query_string(req.url_params);
 
     int lid = 0;
-    string newField;
+    std::string newField;
 
     if (params.get("lid") != nullptr) {
-        lid = stoi(params.get("lid"));
+        lid = std::stoi(params.get("lid"));
     } else {
         res.code = 400; 
             res.write("You must specify a listing ID with '?lid=X' to update the 'field' parameter.");
@@ -110,10 +111,10 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
     auto params = crow::query_string(req.url_params);
 
     int lid = 0;
-    string newPosition;
+    std::string newPosition;
 
     if (params.get("lid") != nullptr) {
-        lid = stoi(params.get("lid"));
+        lid = std::stoi(params.get("lid"));
     } else {
         res.code = 400;
             res.write("You must specify a listing ID with '?lid=X' to update the 'position' parameter.");
@@ -146,10 +147,10 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     auto params = crow::query_string(req.url_params);
 
     int lid = 0;
-    string newDescription;
+    std::string newDescription;
 
     if (params.get("lid") != nullptr) {
-        lid = stoi(params.get("lid"));
+        lid = std::stoi(params.get("lid"));
     } else {
         res.code = 400;
             res.write("You must specify a listing ID with '?lid=X' to update the 'position' parameter.");
@@ -193,22 +194,22 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
 
     /* SELECT uname,email FROM User WHERE id = 1 */
     int resCount = 0;
-    vector<vector<string>> req1 = db->query("User", "uname,email", "id", "eq", to_string(uid), true, resCount);
+    std::vector<std::vector<std::string>> req1 = db->query("User", "uname,email", "id", "eq", std::to_string(uid), true, resCount);
 
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
               << std::endl;
 
     /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1 */
-    vector<vector<string>> req2 =
-        db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", to_string(uid), true, resCount);
+    std::vector<std::vector<std::string>> req2 =
+        db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid), true, resCount);
 
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
               << std::endl;
 
     /* SELECT dim_id,name,def_weight FROM Dimension */
-    vector<vector<string>> req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true, resCount);
+    std::vector<std::vector<std::string>> req3 = db->query("Dimension", "dim_id,name,def_weight", "", "", "", true, resCount);
 
     /* examples of INSERT request: these have already been inserted, so will return some errors from the DB *
 

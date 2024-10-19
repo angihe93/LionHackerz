@@ -1,21 +1,21 @@
+// Copyright 2024 LionHackerz
+
 #include <gtest/gtest.h>
 #include "Database.h"
 #include "Listing.h"
 #include <curl/curl.h>
 #include <vector>
 
-using namespace std;
-
 TEST(ListingGet, checkGetListing) {
         Database *db = new Database();
         Listing *l = new Listing(*db);
-        string getRes = l->getListing(1);
-        cout << "getRes: " << getRes << endl;
-        string expected = "\tPosted by: \"Google\"\n\n\tCreated on: \"2024-10-12T22:19:23.396145+00:00\"\n\n\tField:  \"Computer science\"\n\n\tPosition: \"Software Engineer\"\n\n\tJob Description: \"Looking for a code monkey.\"\n\n\tSkills required: \"C++\", \"Python\", \n\n\tDiverse Workforce: \"true\"\n\n\tRemote Option Available: \"true\"\n\n";
+        std::string getRes = l->getListing(1);
+        std::cout << "getRes: " << getRes << std::endl;
+        std::string expected = "\tPosted by: \"Google\"\n\n\tCreated on: \"2024-10-12T22:19:23.396145+00:00\"\n\n\tField:  \"Computer science\"\n\n\tPosition: \"Software Engineer\"\n\n\tJob Description: \"Looking for a code monkey.\"\n\n\tSkills required: \"C++\", \"Python\", \n\n\tDiverse Workforce: \"true\"\n\n\tRemote Option Available: \"true\"\n\n";
         EXPECT_EQ(getRes, expected);
 
         getRes = l->getListing(2);
-        cout << "getRes: " << getRes << endl;
+        std::cout << "getRes: " << getRes << std::endl;
         expected = "\tPosted by: \"Microsoft\"\n\n\tCreated on: \"2024-10-12T22:21:39.955097+00:00\"\n\n\tField:  \"Software Development\"\n\n\tPosition: \"Lead Engineer\"\n\n\tJob Description: \"Microsoft is currently looking for an experienced candidate to lead our engineering team.\"\n\n\tSkills required: \"Leadership\", \"Communication\", \"Programming languages\", \n\n\tPay: 175000\n\n\tFlexibility: \"true\"\n\n\tModern Workspace: \"true\"\n\n\tGender Parity: \"true\"\n\n\tDiverse Workforce: \"true\"\n\n\tRemote Option Available: \"true\"\n\n\tPersonality Types: \"INTJ\"\n\n";
         EXPECT_EQ(getRes, expected);
 
@@ -27,8 +27,8 @@ TEST(ListingChange, checkChangeListing) {
         Listing *l = new Listing(*db);
         
         // change field for invalid lid
-        string changeRes = l->changeField(-1, "blank");
-        string expected = "Error: The listing ID you provided does not exist in the database.";
+        std::string changeRes = l->changeField(-1, "blank");
+        std::string expected = "Error: The listing ID you provided does not exist in the database.";
         // cout << "changeRes: " << changeRes << endl;
         EXPECT_EQ(changeRes, expected);
 
