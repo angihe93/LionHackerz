@@ -54,9 +54,8 @@ string Listing::changeJobDescription(int lid, string newDescription)
 string Listing::getListing(int lid)
 {
 	int resCount = 0;
-	vector<vector<string>> listings = db->query("Listing", "", "lid", "eq", to_string(lid), true, resCount);
+	vector<vector<string>> listings = db->query("Listing", "", "lid", "eq", to_string(lid), false, resCount);
 	vector<vector<string>> eid = db->query("Created","eid","lid","eq", to_string(lid), false, resCount);
-	std::cout << eid[0][0] << std::endl;
 	vector<vector<string>> company = db->query("Employer","company_name","eid", "eq", eid[0][0], false, resCount);
 
 	ostringstream oss;

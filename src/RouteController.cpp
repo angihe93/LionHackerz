@@ -3,6 +3,8 @@
 #include "Matcher.h"
 #include "Listing.h"
 #include "crow.h"
+#include "User.h"
+#include "Augment.h"
 #include <map>
 #include <string>
 #include <exception>
@@ -44,13 +46,11 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
             return;
     }
 
-    std::cout << "uid: " << uid << std::endl;
-
     Database *db = new Database();
     Matcher *m = new Matcher(*db);
     Listing *l = new Listing(*db);
 
-    if (uid != 1)
+    if (uid != 1 && uid != 5)
     {
         res.write("Oops. That user doesn't exist yet.  We can't find any matches.");
         res.end();
@@ -65,6 +65,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 
     delete db;
     delete m;
+    delete l;
     return;
 }
 
@@ -100,6 +101,7 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
     res.end();
 
     delete db;
+    delete l;
     return;
 }
 
@@ -113,7 +115,7 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
     if (params.get("lid") != nullptr) {
         lid = stoi(params.get("lid"));
     } else {
-        res.code = 400; 
+        res.code = 400;
             res.write("You must specify a listing ID with '?lid=X' to update the 'position' parameter.");
             res.end();
             return;
@@ -121,7 +123,7 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
     if (params.get("newPosition") != nullptr) {
         newPosition = params.get("newPosition");
     } else {
-        res.code = 400; 
+        res.code = 400;
             res.write("You must specify a value for the new position with 'newPosition=X'");
             res.end();
             return;
@@ -135,6 +137,7 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
     res.end();
 
     delete db;
+    delete l;
     return;
 }
 
@@ -148,7 +151,7 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     if (params.get("lid") != nullptr) {
         lid = stoi(params.get("lid"));
     } else {
-        res.code = 400; 
+        res.code = 400;
             res.write("You must specify a listing ID with '?lid=X' to update the 'position' parameter.");
             res.end();
             return;
@@ -156,7 +159,7 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     if (params.get("newDescription") != nullptr) {
         newDescription = params.get("newDescription");
     } else {
-        res.code = 400; 
+        res.code = 400;
             res.write("You must specify a value for the new job description with 'newDescription=X'");
             res.end();
             return;
@@ -170,6 +173,7 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     res.end();
 
     delete db;
+    delete l;
     return;
 }
 
@@ -196,7 +200,8 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
               << std::endl;
 
     /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1 */
-    vector<vector<string>> req2 = db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", to_string(uid), true, resCount);
+    vector<vector<string>> req2 =
+        db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", to_string(uid), true, resCount);
 
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
@@ -239,6 +244,84 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
             Listing *l = new Listing(*db);
             l->getListing(1);
 }
+void RouteController::makeUser(const crow::request &req, crow::response &res) {
+    try {
+        // Parse the JSON body
+        auto body = crow::json::load(req.body);
+        if (!body) {
+            crow::json::wvalue error;
+            error["status"] = "error";
+            error["message"] = "Invalid JSON.";
+            res.code = 400;
+            res.write(error.dump());
+            res.end();
+            return;
+        }
+
+        // Extract name and email
+        if (!body.has("name") || !body.has("email")) {
+            crow::json::wvalue error;
+            error["status"] = "error";
+            error["message"] = "Missing 'name' or 'email' fields.";
+            res.code = 400;
+            res.write(error.dump());
+            res.end();
+            return;
+        }
+
+        std::string name = body["name"].s();
+        std::string email = body["email"].s();
+
+        // Create and save the user
+        User user(name, email);
+        std::string save_result = user.save(*db);
+        std::cout << save_result << std::endl;
+
+        // Extract augmentations if provided
+        std::vector<AugmentInput> augments;
+        //Assumes that "augments" come in a list format
+        if (body.has("augments")) {
+            for (const auto& item : body["augments"]) {
+                if (!item.has("dim_id") || !item.has("importance")) {
+                    std::cerr << "Invalid augmentation entry. Skipping." << std::endl;
+                    continue;  // Skip invalid entries
+                }
+                AugmentInput ai;
+                try {
+                    ai.dim_id = std::stoi(item["dim_id"].s());  // Convert to integer
+                }
+                catch (...) {
+                    std::cerr << "Invalid dim_id format. Skipping." << std::endl;
+                    continue;  // Skip if dim_id is not an integer
+                }
+                ai.importance = item["importance"].s();
+                augments.emplace_back(ai);
+            }
+        }
+
+        // Process augmentations
+        if (!augments.empty()) {
+            std::string augment_result = processAugments(*db, user.id, augments);
+            std::cout << augment_result << std::endl;
+        }
+
+        // Prepare the response
+        crow::json::wvalue response;
+        response["status"] = "success";
+        response["user_id"] = user.id;
+        res.code = 201;
+        res.write(response.dump());
+        res.end();
+    }
+    catch (const std::exception& e) {
+        crow::json::wvalue error;
+        error["status"] = "error";
+        error["message"] = e.what();
+        res.code = 500;
+        res.write(error.dump());
+        res.end();
+    }
+}
 
 void RouteController::initRoutes(crow::App<> &app)
 {
@@ -264,7 +347,9 @@ void RouteController::initRoutes(crow::App<> &app)
 
     CROW_ROUTE(app, "/listing/changeJobDescription")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
-                                        { changeJobDescription(req, res); });                                        
+                                        { changeJobDescription(req, res); });
 
-
+    CROW_ROUTE(app, "/makeUser")
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
+                                        { makeUser(req, res); });
 }
