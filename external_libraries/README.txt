@@ -24,7 +24,7 @@ WordNet needs the tcl-tk package to be installed. Install tcl-tk on Mac using:
 If using Windows, this can be installed using ActiveTcl.
 
 Find the path where you installed tcl-tk, in particular the lib folder. For me, this was located in:
-  /opt/homebrew/Cellar/tcl-tk/8.6.15/bin/tcl-tk/lib
+  /opt/homebrew/Cellar/tcl-tk/8.6.15/lib
 
 This directory should contain the files tclConfig.sh and tkConfig.sh among others.
 
