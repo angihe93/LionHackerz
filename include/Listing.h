@@ -54,7 +54,7 @@ class Listing {
 	/* 
 	// description
 	*/
-	bool postListing();
+	int postListing(); // should return the lid in DB so employer has it and can use it to change/delete listing later
 
 	private:
 		Database *db;

@@ -21,6 +21,7 @@ TEST(ListingGet, checkGetListing) {
         EXPECT_EQ(getRes, expected);
 
         delete db;
+        delete l;
 }
 
 /* tests Listing::changeField(),changePosition(),changeJobDescription() function in Listing.cpp */
@@ -76,5 +77,6 @@ TEST(ListingChange, checkChangeListing) {
 
 
         delete db;
+        delete l;
 }
 

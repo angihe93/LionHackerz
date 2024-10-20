@@ -15,6 +15,12 @@ class RouteController {
         void initRoutes(crow::App<>& app);
         void setDatabase(Database* db);
 
+
+        /**
+        * Redirects to the homepage.
+        *
+        * @return A crow::response object containing the welcome message and an HTTP 200 response
+        */
         void index(crow::response& res);
 
         /* Route: /getMatches?uid=X 

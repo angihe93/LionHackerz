@@ -74,6 +74,7 @@ std::string Listing::changeFlex(int lid, int &resCode)
 
 std::string Listing::getListing(int lid)
 {
+	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
@@ -139,5 +140,5 @@ bool Listing::postListing()
 {
 	// return true for success, false for error
 	// db->insert
-	return true;
+	return 0;
 }
