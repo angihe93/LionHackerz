@@ -13,6 +13,7 @@ set(INCLUDE_PATHS
     external_libraries/boost_1_86_0
     external_libraries/WordNet-3.0/include
     external_libraries/Crow/include
+    external_libraries/openssl-3.3.2/include
     /opt/homebrew/Cellar/asio/1.30.2/include)
 
 # Add coverage flags for GCC/Clang
@@ -36,6 +37,7 @@ add_executable(LionHackerzProject
     src/User.cpp
     src/Augment.cpp
     src/Employer.cpp
+    src/Auth.cpp
 )
 
 
@@ -44,7 +46,13 @@ target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
 
 # Find and link with libcurl
 find_package(CURL REQUIRED)
-target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl)
+find_package(OpenSSL REQUIRED)
+target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto)
+
+find_package(OpenSSL REQUIRED)
+# target_link_libraries(LionHackerzProject OpenSSL::SSL OpenSSL::Crypto)
+# target_link_libraries(LionHackerzProjectTests OpenSSL::SSL OpenSSL::Crypto)
+
 
 add_dependencies(LionHackerzProject unbind_port)
 
@@ -127,6 +135,7 @@ if (CPPLINT)
         src/User.cpp
         src/Augment.cpp
         src/Employer.cpp
+        src/Auth.cpp
         test/MatcherUnitTests.cpp
         test/DatabaseUnitTests.cpp
         test/ListingUnitTests.cpp

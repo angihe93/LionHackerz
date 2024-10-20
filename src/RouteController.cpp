@@ -6,6 +6,7 @@
 #include "Listing.h"
 #include "User.h"
 #include "Augment.h"
+#include "Auth.h"
 #include <map>
 #include <set>
 #include <string>
@@ -15,16 +16,56 @@
 #include "../external_libraries/Crow/include/crow.h"
 
 
-/**
- * Redirects to the homepage.
- *
- * @return A string containing the name of the html file to be loaded.
- */
 void RouteController::index(crow::response &res)
 {
     res.write("Welcome, in order to make an API call direct your browser or Postman to an endpoint "
               "\n\n This can be done using the following format: \n\n http://127.0.0.1:18080/endpoint?arg=value");
     res.end();
+}
+
+void RouteController::signUp(const crow::request &req, crow::response &res) {
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    std::string role;
+    if (params.get("role") != nullptr) {
+        role = params.get("role");
+    } else {
+        res.code = 400; 
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a role in the 'role' parameter.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    if (role == "admin") {
+        Auth *a = new Auth(*db);
+        std::string retStr = a->signUp(role);
+
+        size_t id_pos = retStr.find("Error:");
+        if (id_pos != std::string::npos) { // error
+            std::cout << retStr << std::endl;
+        }
+
+        res.code = 201; 
+        jsonRes["data"]["apikey"] = retStr;
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+
+    } else {
+        res.code = 400; 
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "Roles other than admin are yet implemented";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+
+
 }
 
 void RouteController::setDatabase(Database *db)
@@ -36,6 +77,10 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 {
     auto params = crow::query_string(req.url_params);
     crow::json::wvalue jsonRes;
+
+    auto header = req.get_header_value("apikey");
+    std::cout << "header: " << header << std::endl;
+    // look up key in DB, check permissions
 
     int uid = 0;
 
@@ -348,6 +393,10 @@ void RouteController::initRoutes(crow::App<> &app)
     CROW_ROUTE(app, "/")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { index(res); });
+
+    CROW_ROUTE(app, "/signup")
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
+                                        { signUp(req, res); });
 
     CROW_ROUTE(app, "/dbtest")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)

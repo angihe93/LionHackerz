@@ -15,7 +15,23 @@ class RouteController {
         void initRoutes(crow::App<>& app);
         void setDatabase(Database* db);
 
+
+        /**
+        * Redirects to the homepage.
+        *
+        * @return A crow::response object containing the welcome message and an HTTP 200 response
+        */
         void index(crow::response& res);
+
+        /**
+         * Client sign up route
+         * 
+         * @param req   
+         * @param res 
+         */
+        void signUp(const crow::request& req, crow::response &res);
+
+
         void getMatches(const crow::request& req, crow::response &res);
         void changeField(const crow::request &req, crow::response &res);        
         void changePosition(const crow::request &req, crow::response &res);                
