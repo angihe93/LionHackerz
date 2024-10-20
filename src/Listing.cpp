@@ -136,7 +136,7 @@ std::string Listing::getListing(int lid)
 	return oss.str();
 }
 
-bool Listing::postListing()
+int Listing::postListing()
 {
 	// return true for success, false for error
 	// db->insert

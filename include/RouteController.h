@@ -23,6 +23,14 @@ class RouteController {
         */
         void index(crow::response& res);
 
+       /**
+         * Client sign up route
+         * 
+         * @param req   
+         * @param res 
+         */
+        void signUp(const crow::request& req, crow::response &res);
+
         /* Route: /getMatches?uid=X 
         *       This route checks all job listings and performs
         *       the matching algorithm in the Matcher.cpp class,
