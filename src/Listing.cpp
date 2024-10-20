@@ -1,6 +1,4 @@
 // Copyright 2024 LionHackerz
-/*  Dallas Scott - ds4015
-	Listing class implementation */
 
 #include "Listing.h"
 #include <curl/curl.h>
