@@ -42,6 +42,15 @@ class Listing {
 		*	@param newDescription		The new data for the job description */
 	std::string changeJobDescription(int lid, std::string newDescription);
 
+		/* Change the boolean value of the 'job_flexibility' column in the
+		*  job listing.  If null to begin with, sets to true.  If true,
+		*  sets to false. If false, sets to true. 
+		*
+		*	 @param lid				The listing id of the listing
+		*
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeFlex(int lid, int &resCode);
+
 	/* 
 	// description
 	*/

@@ -58,6 +58,23 @@ TEST(ListingChange, checkChangeListing) {
         // cout << "changeRes: " << changeRes << endl;
         EXPECT_EQ(changeRes, expected);
 
+        // changeFlex - Success
+        int resCount = 0;
+        std::vector<std::vector<std::string>> curVal = db->query("Listing_TEST", "job_flexibility", "lid", "eq", "1", false, resCount);
+        std::string val_before_change = curVal[0][0];
+        changeRes = l->changeFlex(1, resCount);
+        if (val_before_change == "\"null\"" || val_before_change == "\"false\"")
+                expected = "\"true\"";
+        else if (val_before_change == "\"true\"")
+                expected = "\"false\"";
+        EXPECT_EQ(changeRes, expected);
+
+        // changeFlex - Invalid listing ID
+        changeRes = l->changeFlex(15, resCount);
+        expected = "Error: The listing ID you provided does not exist in the database.";
+        EXPECT_EQ(changeRes, expected);
+
+
         delete db;
 }
 
