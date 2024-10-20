@@ -79,21 +79,40 @@ To run app: go to /build and run: ./LionHackerzProject.
 
 # API Entry Points
 
-Base URL: http://0.0.0.0:18080
+This service implements RESTful APIs. Requests either contain parameters or a JSON body. Responses are JSON objects.
 
-### GET /
+### Base URL
 
-### GET /dbtest
+http://0.0.0.0:18080
 
-### GET /getMatches
+### Error response
 
-### GET /listing/changeField
+If the HTTP response code is an error, the following response will be returned:
 
-### GET /listing/changePosition
+```json
+{  
+  "error": {  
+    "code": ...,  
+    "message": "..."  
+  }  
+}
+```
 
-### GET /listing/changeJobDescription
+### Endpoints:
 
-### GET /makeUser
+GET /
+
+GET /dbtest
+
+GET /getMatches
+
+GET /listing/changeField
+
+GET /listing/changePosition
+
+GET /listing/changeJobDescription
+
+GET /makeUser
 
 
 # Database Queries - For Team Members in Designing your Classes
