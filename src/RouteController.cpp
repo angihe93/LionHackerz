@@ -64,7 +64,6 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     }
     else
     {
-        // TODO: respond with json
         std::string result = m->displayMatches(uid);
         res.code = 200;
         res.write(result);

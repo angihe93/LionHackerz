@@ -35,7 +35,7 @@ add_executable(LionHackerzProject
     src/Listing.cpp
     src/User.cpp
     src/Augment.cpp
-    # src/MyApp.cpp
+    src/Employer.cpp
 )
 
 
@@ -67,11 +67,13 @@ include(GoogleTest)
    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
+   test/EmployerUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
    src/User.cpp
    src/Augment.cpp
+   src/Employer.cpp
  )
 
 find_package(GTest REQUIRED)
@@ -124,10 +126,12 @@ if (CPPLINT)
         src/Listing.cpp
         src/User.cpp
         src/Augment.cpp
+        src/Employer.cpp
         test/MatcherUnitTests.cpp
         test/DatabaseUnitTests.cpp
         test/ListingUnitTests.cpp
         test/testMain.cpp
+        test/EmployerUnitTests.cpp
         # include files?
     )
 

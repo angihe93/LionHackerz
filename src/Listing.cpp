@@ -52,6 +52,7 @@ std::string Listing::changeJobDescription(int lid, std::string newDescription)
 
 std::string Listing::getListing(int lid)
 {
+	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	std::vector<std::vector<std::string>> eid = db->query("Created","eid","lid","eq", std::to_string(lid), false, resCount);
@@ -100,8 +101,8 @@ std::string Listing::getListing(int lid)
 	return oss.str();
 }
 
-bool Listing::postListing() {
-	// return true for success, false for error
+int Listing::postListing() {
+	// return the created listing's lid in DB, or -1 for error
 	// db->insert
-	return true;
+	return 0;
 }

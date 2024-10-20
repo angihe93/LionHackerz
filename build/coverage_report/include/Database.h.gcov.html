@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2024-10-19 22:58:57</td>
+            <td class="headerValue">2024-10-20 13:16:29</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -213,10 +213,10 @@
 <span id="L142"><span class="lineNum">     142</span>                 :             :                        std::string op, std::string val);</span>
 <span id="L143"><span class="lineNum">     143</span>                 :             : </span>
 <span id="L144"><span class="lineNum">     144</span>                 :             :     /* Used for returning the query results.  Do not call directly or modify. */</span>
-<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC tlaBgGNC">         524 :     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC tlaBgGNC">         187 :     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)</span></span>
 <span id="L146"><span class="lineNum">     146</span>                 :             :     {</span>
-<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">         524 :         ((std::string *)userp)-&gt;append((char *)contents, size * nmemb);</span></span>
-<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">         524 :         return size * nmemb;</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">         187 :         ((std::string *)userp)-&gt;append((char *)contents, size * nmemb);</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">         187 :         return size * nmemb;</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :             :     }</span>
 <span id="L150"><span class="lineNum">     150</span>                 :             : </span>
 <span id="L151"><span class="lineNum">     151</span>                 :             :     /* helper function: returns the number of results returned in the query string */</span>
