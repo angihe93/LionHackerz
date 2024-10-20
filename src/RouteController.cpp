@@ -287,7 +287,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
                     std::cerr << "Invalid augmentation entry. Skipping." << std::endl;
                     continue;  // Skip invalid entries
                 }
-                AugmentInput ai;
+                // AugmentInput ai;
+                AugmentInput ai(*db);
                 try {
                     ai.dim_id = std::stoi(item["dim_id"].s());  // Convert to integer
                 }
@@ -302,7 +303,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
 
         // Process augmentations
         if (!augments.empty()) {
-            std::string augment_result = processAugments(*db, user.id, augments);
+            // std::string augment_result = processAugments(*db, user.id, augments);
+            std::string augment_result = processAugments(user.id, augments);
             std::cout << augment_result << std::endl;
         }
 

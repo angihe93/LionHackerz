@@ -80,13 +80,14 @@ std::vector<int> Matcher::filterJobs()
 
     this->all_listings = lists;
 
-    int nonNullCount[resCount];
-    // std::vector<int> nonNullCount(resCount, 0);
+    // int nonNullCount[resCount];
+    // // std::vector<int> nonNullCount(resCount, 0);
 
-    for (int i = 0; i < resCount; i++)
-        nonNullCount[i] = 0;
-    // for (int i = 0; i < resCount; i++) 
-    //     nonNullCount.pushback()
+    // for (int i = 0; i < resCount; i++)
+    //     nonNullCount[i] = 0;
+    // // for (int i = 0; i < resCount; i++) 
+    // //     nonNullCount.pushback()
+    std::vector<int> nonNullCount(resCount, 0);
 
     int prefDimCount = 0;
 

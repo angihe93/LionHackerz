@@ -4,6 +4,7 @@
 #include "Database.h"
 #include <curl/curl.h>
 
+/* tests Database::query() function in Database.cpp */
 TEST(dbQuery, CheckQuery) {
 
         // should result in curl error bc not connected to DB
@@ -35,6 +36,7 @@ TEST(dbQuery, CheckQuery) {
 
 }
 
+/* tests Database::insert() function in Database.cpp */
 TEST(dbInsert, CheckInsert) {
         Database *db = new Database();
         std::string insertRes = db->insert("Employer", "{\"eid\": \"5\", \"company_name\": \"Generic Consulting\", \"size\": \"medium\"}");
@@ -46,6 +48,7 @@ TEST(dbInsert, CheckInsert) {
         delete db;
 }
 
+/* tests Database::update() function in Database.cpp */
 TEST(dbUpdate, CheckUpdate) {
         Database *db = new Database();
         std::string insertRes = db->insert("Employer", "{\"eid\": \"6\", \"company_name\": \"Small Consulting\", \"size\": \"medium\"}");

@@ -6,6 +6,7 @@
 #include <curl/curl.h>
 #include <vector>
 
+/* tests Listing::getListing() function in Listing.cpp */
 TEST(ListingGet, checkGetListing) {
         Database *db = new Database();
         Listing *l = new Listing(*db);
@@ -22,6 +23,7 @@ TEST(ListingGet, checkGetListing) {
         delete db;
 }
 
+/* tests Listing::changeField(),changePosition(),changeJobDescription() function in Listing.cpp */
 TEST(ListingChange, checkChangeListing) {
         Database *db = new Database();
         Listing *l = new Listing(*db);

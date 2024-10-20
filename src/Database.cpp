@@ -26,9 +26,9 @@ Database::Database()
     }
 
     const std::string url = url_char;
-    std::cout << "in Database(), url: " << url << std::endl;
+    // std::cout << "in Database(), url: " << url << std::endl;
     const std::string api = api_char;
-    std::cout << "in Database(), api: " << api << std::endl;
+    // std::cout << "in Database(), api: " << api << std::endl;
 
     this->url = url;
     this->api_key = api;
