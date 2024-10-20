@@ -49,11 +49,6 @@ find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
 target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto)
 
-find_package(OpenSSL REQUIRED)
-# target_link_libraries(LionHackerzProject OpenSSL::SSL OpenSSL::Crypto)
-# target_link_libraries(LionHackerzProjectTests OpenSSL::SSL OpenSSL::Crypto)
-
-
 add_dependencies(LionHackerzProject unbind_port)
 
 include(FetchContent)
