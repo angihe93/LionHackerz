@@ -35,16 +35,19 @@ void RouteController::setDatabase(Database *db)
 void RouteController::getMatches(const crow::request &req, crow::response &res)
 {
     auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
 
     int uid = 0;
 
     if (params.get("uid") != nullptr) {
         uid = std::stoi(params.get("uid"));
     } else {
-        res.code = 400; 
-            res.write("You must specify a user ID with '?uid=X' to retrieve job matches.");
-            res.end();
-            return;
+        res.code = 400;    
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a user ID with '?uid=X' to retrieve job matches.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
     }
 
     Matcher *m = new Matcher(*db);
@@ -52,12 +55,16 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 
     if (uid != 1 && uid != 5)
     {
-        res.write("Oops. That user doesn't exist yet.  We can't find any matches.");
+        res.code = 404;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "Oops. That user doesn't exist yet.  We can't find any matches.";
+        res.write(jsonRes.dump());
         res.end();
         return;
     }
     else
     {
+        // TODO: respond with json
         std::string result = m->displayMatches(uid);
         res.code = 200;
         res.write(result);
@@ -72,6 +79,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 void RouteController::changeField(const crow::request &req, crow::response &res)
 {
     auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
 
     int lid = 0;
     std::string newField;
@@ -80,17 +88,21 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
         lid = std::stoi(params.get("lid"));
     } else {
         res.code = 400; 
-            res.write("You must specify a listing ID with '?lid=X' to update the 'field' parameter.");
-            res.end();
-            return;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'field' parameter.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
     }
     if (params.get("newField") != nullptr) {
         newField = params.get("newField");
     } else {
         res.code = 400; 
-            res.write("You must specify a value for the new field with 'newField=X'");
-            res.end();
-            return;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a value for the new field with 'newField=X'";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
     }
 
     Listing *l = new Listing(*db);
@@ -107,6 +119,7 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
 void RouteController::changePosition(const crow::request &req, crow::response &res)
 {
     auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
 
     int lid = 0;
     std::string newPosition;
@@ -115,17 +128,21 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
         lid = std::stoi(params.get("lid"));
     } else {
         res.code = 400;
-            res.write("You must specify a listing ID with '?lid=X' to update the 'position' parameter.");
-            res.end();
-            return;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'position' parameter.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
     }
     if (params.get("newPosition") != nullptr) {
         newPosition = params.get("newPosition");
     } else {
         res.code = 400;
-            res.write("You must specify a value for the new position with 'newPosition=X'");
-            res.end();
-            return;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a value for the new position with 'newPosition=X'";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
     }
 
     Listing *l = new Listing(*db);
@@ -142,6 +159,7 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
 void RouteController::changeJobDescription(const crow::request &req, crow::response &res)
 {
     auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
 
     int lid = 0;
     std::string newDescription;
@@ -150,17 +168,21 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
         lid = std::stoi(params.get("lid"));
     } else {
         res.code = 400;
-            res.write("You must specify a listing ID with '?lid=X' to update the 'position' parameter.");
-            res.end();
-            return;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'position' parameter.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
     }
     if (params.get("newDescription") != nullptr) {
         newDescription = params.get("newDescription");
     } else {
         res.code = 400;
-            res.write("You must specify a value for the new job description with 'newDescription=X'");
-            res.end();
-            return;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a value for the new job description with 'newDescription=X'";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
     }
 
     Listing *l = new Listing(*db);
