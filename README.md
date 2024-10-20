@@ -106,13 +106,13 @@ GET /dbtest
 
 GET /getMatches
 
-GET /listing/changeField
+GET /listing/changeField  // update
 
-GET /listing/changePosition
+GET /listing/changePosition  // update
 
-GET /listing/changeJobDescription
+GET /listing/changeJobDescription  // update
 
-GET /makeUser
+POST /makeUser
 
 
 # Database Queries - For Team Members in Designing your Classes
