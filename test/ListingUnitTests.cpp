@@ -24,7 +24,7 @@ TEST(ListingGet, checkGetListing) {
         delete l;
 }
 
-/* tests Listing::changeField(),changePosition(),changeJobDescription() function in Listing.cpp */
+/* tests Listing::changeField(),changePosition(),changeJobDescription(), changeFlex() functions in Listing.cpp */
 TEST(ListingChange, checkChangeListing) {
         Database *db = new Database();
         Listing *l = new Listing(*db);
@@ -75,6 +75,21 @@ TEST(ListingChange, checkChangeListing) {
         expected = "Error: The listing ID you provided does not exist in the database.";
         EXPECT_EQ(changeRes, expected);
 
+        // changeModernWorkspace - Success
+        resCount = 0;
+        curVal = db->query("Listing_TEST", "modern_building", "lid", "eq", "1", false, resCount);
+        val_before_change = curVal[0][0];
+        changeRes = l->changeModernWorkspace(1, resCount);
+        if (val_before_change == "\"null\"" || val_before_change == "\"false\"")
+                expected = "\"true\"";
+        else if (val_before_change == "\"true\"")
+                expected = "\"false\"";
+        EXPECT_EQ(changeRes, expected);
+
+        // changeModernWorkspace - Invalid listing ID
+        changeRes = l->changeModernWorkspace(15, resCount);
+        expected = "Error: The listing ID you provided does not exist in the database.";
+        EXPECT_EQ(changeRes, expected);
 
         delete db;
         delete l;

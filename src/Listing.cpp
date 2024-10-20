@@ -1,5 +1,8 @@
 // Copyright 2024 LionHackerz
 
+/*  Dallas Scott - ds4015
+	Listing class implementation */
+
 #include "Listing.h"
 #include <curl/curl.h>
 #include <iostream>
@@ -65,6 +68,29 @@ std::string Listing::changeFlex(int lid, int &resCode)
 
 	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
 	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,job_flexibility", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+
+std::string Listing::changeModernWorkspace(int lid, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string setVal = R"({"modern_building" : true})";
+	if (listing[15][0] == "\"true\"")
+		setVal = R"({"modern_building" : false})";
+
+	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,modern_building", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
 	return result[1][0];

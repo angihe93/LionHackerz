@@ -290,6 +290,51 @@ void RouteController::changeFlex(const crow::request &req, crow::response &res)
     return;
 }
 
+void RouteController::changeModernWorkspace(const crow::request &req, crow::response &res)
+{
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    int lid = 0;
+
+    if (params.get("lid") != nullptr) {
+        lid = std::stoi(params.get("lid"));
+    } else {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'modern_building' parameter.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    Listing *l = new Listing(*db);
+
+    int resCode = 0;
+
+    std::string result = l->changeModernWorkspace(lid, resCode);
+    if (resCode == 404)
+    {
+        res.code = 404;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "The listing ID you provided does not exist in the database.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    jsonRes["success"] = true;
+    jsonRes["code"] = 200;
+    jsonRes["message"] = "Successfully changed the value of 'modern_building' for the given listing.";
+    jsonRes["data"] = result;
+    res.code = 200;
+    res.write(jsonRes.dump());
+    res.end();
+
+    delete l;
+    return;
+}
+
 void RouteController::dbtest(const crow::request &req, crow::response &res)
 {
     /* test query user id value */
@@ -476,6 +521,10 @@ void RouteController::initRoutes(crow::App<> &app)
     CROW_ROUTE(app, "/listing/changeFlex")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { changeFlex(req, res); });
+                                        
+    CROW_ROUTE(app, "/listing/changeModernWorkspace")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+                                        { changeModernWorkspace(req, res); });                                        
 
     /* USER ROUTE */
     CROW_ROUTE(app, "/makeUser")

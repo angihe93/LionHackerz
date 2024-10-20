@@ -62,7 +62,15 @@ class RouteController {
         *       the true if previously null, false if previously true, 
         *       and true if previously false.  Multiple calls cycle
         *       between setting true and false. */
-        void changeFlex(const crow::request &req, crow::response &res);         
+        void changeFlex(const crow::request &req, crow::response &res);
+
+        /* Route: /listing/changeModernWorkspace?lid=X
+        *       This route updates the 'modern_building' parameter of the job
+        *       listing with listing ID lid and sets the position to
+        *       the true if previously null, false if previously true, 
+        *       and true if previously false.  Multiple calls cycle
+        *       between setting true and false. */
+        void changeModernWorkspace(const crow::request &req, crow::response &res);
         
         /* Route: /dbtest
          *      This route tests the functionality of the database class and

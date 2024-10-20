@@ -51,6 +51,15 @@ class Listing {
 		*	 @param resCode			Status code to return depending on query results. */
 	std::string changeFlex(int lid, int &resCode);
 
+		/* Change the boolean value of the 'modern_building' column in the
+		*  job listing.  If null to begin with, sets to true.  If true,
+		*  sets to false. If false, sets to true. 
+		*
+		*	 @param lid				The listing id of the listing
+		*
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeModernWorkspace(int lid, int &resCode);
+
 	/* 
 	// description
 	*/
