@@ -29,7 +29,7 @@ void RouteController::index(crow::response &res)
 
 void RouteController::setDatabase(Database *db)
 {
-    db = db;
+    this->db = db;
 }
 
 void RouteController::getMatches(const crow::request &req, crow::response &res)
@@ -47,7 +47,6 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
             return;
     }
 
-    Database *db = new Database();
     Matcher *m = new Matcher(*db);
     Listing *l = new Listing(*db);
 
@@ -60,11 +59,11 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     else
     {
         std::string result = m->displayMatches(uid);
+        res.code = 200;
         res.write(result);
         res.end();
     }
 
-    delete db;
     delete m;
     delete l;
     return;
@@ -94,14 +93,13 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
             return;
     }
 
-    Database *db = new Database();
     Listing *l = new Listing(*db);
 
     std::string result = l->changeField(lid, newField);
+    res.code = 200;
     res.write(result);
     res.end();
 
-    delete db;
     delete l;
     return;
 }
@@ -130,14 +128,13 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
             return;
     }
 
-    Database *db = new Database();
     Listing *l = new Listing(*db);
 
     std::string result = l->changePosition(lid, newPosition);
+    res.code = 200;
     res.write(result);
     res.end();
 
-    delete db;
     delete l;
     return;
 }
@@ -166,23 +163,19 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
             return;
     }
 
-    Database *db = new Database();
     Listing *l = new Listing(*db);
 
     std::string result = l->changeJobDescription(lid, newDescription);
+    res.code = 200;
     res.write(result);
     res.end();
 
-    delete db;
     delete l;
     return;
 }
 
 void RouteController::dbtest(const crow::request &req, crow::response &res)
 {
-    // taken from Main.cpp
-    Database *db = new Database();
-
     /* test query user id value */
     int uid = 1;
 
@@ -242,8 +235,11 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
             string req6 = db->insert("Listing", insert_data);
             std::cout << req6 << std::endl << std::endl; */
 
-            Listing *l = new Listing(*db);
-            l->getListing(1);
+    Listing *l = new Listing(*db);
+    l->getListing(1);
+
+    res.code= 200;
+    res.end();
 }
 void RouteController::makeUser(const crow::request &req, crow::response &res) {
     try {
