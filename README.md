@@ -60,11 +60,7 @@ Finally, run:
 	sudo make
 	sudo make install
 
-This should complete the WordNet library installation.
-
-NEW:
-
-This app uses OpenSSL for API key generation. To install, download version 3.3.2 from https://openssl-library.org/source/, then go to openssl-3.3.2/, run `./Configure` and then `make`.
+This should complete the WordNet library installation. 
 
 # Building and runing a local instance of the API Server
 
@@ -110,13 +106,13 @@ GET /dbtest
 
 GET /getMatches
 
-GET /listing/changeField  // update
+GET /listing/changeField
 
-GET /listing/changePosition  // update
+GET /listing/changePosition
 
-GET /listing/changeJobDescription  // update
+GET /listing/changeJobDescription
 
-POST /makeUser
+GET /makeUser
 
 
 # Database Queries - For Team Members in Designing your Classes

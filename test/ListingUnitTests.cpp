@@ -24,7 +24,7 @@ TEST(ListingGet, checkGetListing) {
         delete l;
 }
 
-/* tests Listing::changeField(),changePosition(),changeJobDescription() function in Listing.cpp */
+/* tests Listing::changeField(),changePosition(),changeJobDescription(), changeFlex() functions in Listing.cpp */
 TEST(ListingChange, checkChangeListing) {
         Database *db = new Database();
         Listing *l = new Listing(*db);
@@ -57,6 +57,38 @@ TEST(ListingChange, checkChangeListing) {
         changeRes = l->changeJobDescription(2, "Microsoft is currently looking for an experienced candidate to lead our engineering team.");
         expected = R"([{"lid":2,"created_at":"2024-10-12T22:21:39.955097+00:00","field":"Software Development","position":"Lead Engineer","job_description":"Microsoft is currently looking for an experienced candidate to lead our engineering team.","skill1_req":"Leadership","skill2_req":"Communication","skill3_req":"Programming languages","skill4_req":null,"skill5_req":null,"pay":175000,"job_flexibility":true,"modern_building":true,"mixed_gender":true,"diverse_workforce":true,"remote_available":true,"personality_types":"INTJ","location":null}])";
         // cout << "changeRes: " << changeRes << endl;
+        EXPECT_EQ(changeRes, expected);
+
+        // changeFlex - Success
+        int resCount = 0;
+        std::vector<std::vector<std::string>> curVal = db->query("Listing_TEST", "job_flexibility", "lid", "eq", "1", false, resCount);
+        std::string val_before_change = curVal[0][0];
+        changeRes = l->changeFlex(1, resCount);
+        if (val_before_change == "\"null\"" || val_before_change == "\"false\"")
+                expected = "\"true\"";
+        else if (val_before_change == "\"true\"")
+                expected = "\"false\"";
+        EXPECT_EQ(changeRes, expected);
+
+        // changeFlex - Invalid listing ID
+        changeRes = l->changeFlex(15, resCount);
+        expected = "Error: The listing ID you provided does not exist in the database.";
+        EXPECT_EQ(changeRes, expected);
+
+        // changeModernWorkspace - Success
+        resCount = 0;
+        curVal = db->query("Listing_TEST", "modern_building", "lid", "eq", "1", false, resCount);
+        val_before_change = curVal[0][0];
+        changeRes = l->changeModernWorkspace(1, resCount);
+        if (val_before_change == "\"null\"" || val_before_change == "\"false\"")
+                expected = "\"true\"";
+        else if (val_before_change == "\"true\"")
+                expected = "\"false\"";
+        EXPECT_EQ(changeRes, expected);
+
+        // changeModernWorkspace - Invalid listing ID
+        changeRes = l->changeModernWorkspace(15, resCount);
+        expected = "Error: The listing ID you provided does not exist in the database.";
         EXPECT_EQ(changeRes, expected);
 
         delete db;

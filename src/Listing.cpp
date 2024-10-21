@@ -1,5 +1,6 @@
 // Copyright 2024 LionHackerz
-/*  Dallas Scott - ds4015 
+
+/*  Dallas Scott - ds4015
 	Listing class implementation */
 
 #include "Listing.h"
@@ -50,21 +51,71 @@ std::string Listing::changeJobDescription(int lid, std::string newDescription)
 	return result;
 }
 
+std::string Listing::changeFlex(int lid, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string setVal = R"({"job_flexibility" : true})";
+	if (listing[14][0] == "\"true\"")
+		setVal = R"({"job_flexibility" : false})";
+
+	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,job_flexibility", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+
+std::string Listing::changeModernWorkspace(int lid, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string setVal = R"({"modern_building" : true})";
+	if (listing[15][0] == "\"true\"")
+		setVal = R"({"modern_building" : false})";
+
+	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,modern_building", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
 std::string Listing::getListing(int lid)
 {
 	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> eid = db->query("Created","eid","lid","eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> company = db->query("Employer","company_name","eid", "eq", eid[0][0], false, resCount);
+	std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
 
 	std::ostringstream oss;
 
-	oss << "\tPosted by: " << company[0][0] << std::endl << std::endl;
-	oss << "\tCreated on: " << listings[1][0] << std::endl << std::endl;
-	oss << "\tField:  "  << listings[5][0] << std::endl << std::endl;
-	oss << "\tPosition: " << listings[6][0] << std::endl << std::endl;
-	oss << "\tJob Description: " << listings[7][0] << std::endl << std::endl;
+	oss << "\tPosted by: " << company[0][0] << std::endl
+		<< std::endl;
+	oss << "\tCreated on: " << listings[1][0] << std::endl
+		<< std::endl;
+	oss << "\tField:  " << listings[5][0] << std::endl
+		<< std::endl;
+	oss << "\tPosition: " << listings[6][0] << std::endl
+		<< std::endl;
+	oss << "\tJob Description: " << listings[7][0] << std::endl
+		<< std::endl;
 	oss << "\tSkills required: ";
 
 	for (int i = 8; i < 13; i++)
@@ -75,34 +126,43 @@ std::string Listing::getListing(int lid)
 				oss << ", ";
 		}
 
-	oss << std::endl << std::endl;
+	oss << std::endl
+		<< std::endl;
 
 	if (listings[13][0] != "\"null\"")
-		oss << "\tPay: " << listings[13][0] << std::endl << std::endl;
+		oss << "\tPay: " << listings[13][0] << std::endl
+			<< std::endl;
 
 	if (listings[14][0] != "\"null\"")
-		oss << "\tFlexibility: " << listings[14][0] << std::endl << std::endl;
+		oss << "\tFlexibility: " << listings[14][0] << std::endl
+			<< std::endl;
 
 	if (listings[15][0] != "\"null\"")
-		oss << "\tModern Workspace: " << listings[15][0] << std::endl << std::endl;
+		oss << "\tModern Workspace: " << listings[15][0] << std::endl
+			<< std::endl;
 	if (listings[16][0] != "\"null\"")
-		oss << "\tGender Parity: " << listings[16][0] << std::endl << std::endl;
+		oss << "\tGender Parity: " << listings[16][0] << std::endl
+			<< std::endl;
 
 	if (listings[17][0] != "\"null\"")
-		oss << "\tDiverse Workforce: " << listings[17][0] << std::endl << std::endl;
+		oss << "\tDiverse Workforce: " << listings[17][0] << std::endl
+			<< std::endl;
 	if (listings[18][0] != "\"null\"")
-		oss << "\tRemote Option Available: " << listings[18][0] << std::endl << std::endl;
+		oss << "\tRemote Option Available: " << listings[18][0] << std::endl
+			<< std::endl;
 	if (listings[19][0] != "\"null\"")
-		oss << "\tPersonality Types: " << listings[19][0] << std::endl << std::endl;
+		oss << "\tPersonality Types: " << listings[19][0] << std::endl
+			<< std::endl;
 	if (listings[20][0] != "\"null\"")
-		oss << "\tLocation: " << listings[20][0] << std::endl << std::endl;
-
+		oss << "\tLocation: " << listings[20][0] << std::endl
+			<< std::endl;
 
 	return oss.str();
 }
 
-int Listing::postListing() {
-	// return the created listing's lid in DB, or -1 for error
+int Listing::postListing()
+{
+	// return true for success, false for error
 	// db->insert
 	return 0;
 }
