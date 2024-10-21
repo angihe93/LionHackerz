@@ -2,7 +2,7 @@ Download Crow and Boost and put the unzipped library folders here:
 - Download Crow to get a directory named Crow with: git clone https://github.com/CrowCpp/Crow.git
 - Download Boost at https://www.boost.org/users/download/, unzip and put the unzipped boost_1_86_0 directory here
 - Download WordNet 3.0, unzip and place in this directory.  See below for detailed install instructions.
--  Download and install OpenSSL 3.3.2 following the instructions in the repo README.md, and put the openssl-3.3.2 directory here.
+- Download and install OpenSSL 3.3.2 following the instructions in the repo README.md, and put the openssl-3.3.2 directory here.
 
 The resulting directory structure should look like:
 external_libraires/
