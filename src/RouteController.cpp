@@ -27,7 +27,7 @@ void RouteController::signUp(const crow::request &req, crow::response &res) {
 
     auto params = crow::query_string(req.url_params);
     crow::json::wvalue jsonRes;
-
+    
     std::string role;
     if (params.get("role") != nullptr) {
         role = params.get("role");
@@ -41,8 +41,42 @@ void RouteController::signUp(const crow::request &req, crow::response &res) {
     }
 
     if (role == "admin") {
+
         Auth *a = new Auth(*db);
-        std::string retStr = a->signUp(role);
+        const auto& auth_header = req.get_header_value("Authorization");
+        if (auth_header.empty()) {
+            res.code = 400; 
+            jsonRes["error"]["code"] = res.code;
+            jsonRes["error"]["message"] = "No Authorization header found, it is required to proceed";
+            res.write(jsonRes.dump());
+            res.end();
+            return;
+        }
+        auto [username, password] = a->decodeBasicAuth(auth_header);
+        if (username == "" && password == "") {
+            res.code = 400; 
+            jsonRes["error"]["code"] = res.code;
+            jsonRes["error"]["message"] = "Invalid credentials";
+            res.write(jsonRes.dump());
+            res.end();
+            return;
+        }
+        
+        std::cout << "Username: " << username << ", Password: " << password << std::endl;
+        // check in database if this is admin, if so, issue admin api key
+        int resCount = 0;
+        std::vector<std::vector<std::string>> queryRes = db->query("Admin","*","username","eq",username,"password","eq",password,false,resCount);
+        if (resCount == 0) {
+            res.code = 400; 
+            jsonRes["error"]["code"] = res.code;
+            jsonRes["error"]["message"] = "Wrong username or password";
+            res.write(jsonRes.dump());
+            res.end();
+            return;
+        }
+
+        // gen api key
+        std::string retStr = a->genAPIKey(role);
 
         size_t id_pos = retStr.find("Error:");
         if (id_pos != std::string::npos) { // error
@@ -64,8 +98,6 @@ void RouteController::signUp(const crow::request &req, crow::response &res) {
         return;
     }
 
-
-
 }
 
 void RouteController::setDatabase(Database *db)
@@ -80,6 +112,11 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 
     auto header = req.get_header_value("apikey");
     std::cout << "header: " << header << std::endl;
+    header = req.get_header_value("username");
+    std::cout << "username: " << header << std::endl;
+    header = req.get_header_value("password");
+    std::cout << "password: " << header << std::endl;
+
     // look up key in DB, check permissions
 
     int uid = 0;

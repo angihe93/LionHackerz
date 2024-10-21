@@ -14,13 +14,18 @@ class Auth {
         public: 
                 Auth(Database &db); 
 
+
+                // gets Authorization header, decode username and password. if no password provided, username would be the api key
+                std::pair<std::string, std::string> decodeBasicAuth(const std::string& auth);
+
+
                 /**
                  * @brief 
                  * 
                  * @param role 
                  * @return std::string 
                  */
-                std::string signUp(std::string role);
+                std::string genAPIKey(std::string role);
 
         private:
                 Database *db;
@@ -36,8 +41,7 @@ class Auth {
                 /**/
                 std::string escapeJson(const std::string& input);
 
-
-
+                
 };
 
 #endif

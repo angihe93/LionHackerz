@@ -3,6 +3,13 @@
 #include "Auth.h"
 #include "Database.h"
 #include <string>
+#include <crow.h>
+#include <iostream>
+#include <stdexcept>
+#include <utility>
+#include <vector>
+#include <boost/beast/core/detail/base64.hpp>
+
 
 Auth::Auth(Database &db)
 {
@@ -40,16 +47,39 @@ std::string Auth::escapeJson(const std::string& input) {
     return output;
 }
 
-std::string Auth::signUp(std::string role) {
+std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& auth) {
+        if (auth.substr(0, 6) != "Basic ") {
+                std::cout << "Invalid Authorization header" << std::endl;
+                return {"",""};
+                // throw std::invalid_argument("Invalid Authorization header");
+        }
 
-        std::cout << "in Auth::signUp" << std::endl;
+        std::string encoded_credentials = auth.substr(6);
+        std::string decoded_credentials = crow::utility::base64decode(encoded_credentials, encoded_credentials.size());
+
+        size_t delimiter_pos = decoded_credentials.find(':');
+        if (delimiter_pos == std::string::npos) {
+                std::cout << "Invalid credentials format" << std::endl;
+                return {"",""};
+                // throw std::invalid_argument("Invalid credentials format");
+        }
+
+        std::string username = decoded_credentials.substr(0, delimiter_pos);
+        std::string password = decoded_credentials.substr(delimiter_pos + 1);
+
+        return {username, password};
+}
+
+std::string Auth::genAPIKey(std::string role) {
+
+        std::cout << "in Auth::genAPIKey" << std::endl;
 
         if (role != "admin") {
                 std::cout << "Error: Roles other than admin are not yet implemented" << std::endl;
-                return "";
+                return "Error: Roles other than admin are not yet implemented";
+                // return "";
         }
 
-        // if role is admin
         std::string apikey = generateRandomHex(32);
         std::string data = "{\"apikey\": \"" + escapeJson(apikey) + "\", \"permission\": \"" + escapeJson(role) + "\"}";
         
