@@ -13,6 +13,7 @@ set(INCLUDE_PATHS
     external_libraries/boost_1_86_0
     external_libraries/WordNet-3.0/include
     external_libraries/Crow/include
+    external_libraries/openssl-3.3.2/include
     /opt/homebrew/Cellar/asio/1.30.2/include)
 
 # Add coverage flags for GCC/Clang
@@ -35,7 +36,8 @@ add_executable(LionHackerzProject
     src/Listing.cpp
     src/User.cpp
     src/Augment.cpp
-    # src/MyApp.cpp
+    src/Employer.cpp
+    src/Auth.cpp
 )
 
 
@@ -44,7 +46,8 @@ target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
 
 # Find and link with libcurl
 find_package(CURL REQUIRED)
-target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl)
+find_package(OpenSSL REQUIRED)
+target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto)
 
 add_dependencies(LionHackerzProject unbind_port)
 
@@ -67,11 +70,13 @@ include(GoogleTest)
    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
+   test/EmployerUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
    src/User.cpp
    src/Augment.cpp
+   src/Employer.cpp
  )
 
 find_package(GTest REQUIRED)
@@ -124,10 +129,13 @@ if (CPPLINT)
         src/Listing.cpp
         src/User.cpp
         src/Augment.cpp
+        src/Employer.cpp
+        src/Auth.cpp
         test/MatcherUnitTests.cpp
         test/DatabaseUnitTests.cpp
         test/ListingUnitTests.cpp
         test/testMain.cpp
+        test/EmployerUnitTests.cpp
         # include files?
     )
 
