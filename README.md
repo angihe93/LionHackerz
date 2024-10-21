@@ -102,6 +102,12 @@ If the HTTP response code is an error, the following response will be returned:
 }
 ```
 
+### Authentication:
+
+This service uses API keys to authenticate requests. Anthentication for API keys is done via HTTP Basic Auth. Use your API key for the basic auth username field and no password is needed. ...
+
+<b>For team members</b>: Every team member is an admin. Admins can generate API keys to use for all admin privileges. To generate an API key as an admin, check your username and password in Supabase in the Admin table, then run the app and send a POST request to /signup, with parameter "role" as "admin", and use the username and password from the Admin table for the corresponding basic auth fields. Then your API key will be returned in the JSON response and will be stored in the database. Request authentication will be gradually implemented to check for API keys, first for admins, then for all kinds of permissions (eg. different client permissions).
+
 ### Endpoints:
 
 GET /
