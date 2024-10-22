@@ -9,6 +9,7 @@
 #include <list>
 #include <string>
 #include <curl/curl.h>
+#include <wn.h>
 #include "Database.h"
 
 /* Matcher class for pairing job seekers with employers */
