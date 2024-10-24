@@ -92,6 +92,7 @@ private:
     /* helper functions */
     void iterateList(std::vector<std::string> l); /* prints list */
     void iterateList(std::vector<int> l);         /* prints list */
+    int binSearch(SynsetPtr s, int left, int right, char val); /* binary search for index */
     bool wordMatchFound(std::string fieldU, std::string fieldE, int c);
                                                 /* matches words using WordNet synonyms */
     int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */

@@ -690,27 +690,35 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
 
         while (synset != NULL)
         {
+
             int i = 0;
+
+            /* sort the synset */
+            std::sort(synset->words, synset->words + synset->wcount, [](const char* a, const char* b) {
+                return std::strcmp(a, b) < 0; 
+            });
             while (i < synset->wcount)
-            {
-                bool indexFound = false;                
-                
+            {                
                 int wordCount = 0;
+              
                 for (std::string &wE : fieldVecE)
                 {
                     wordCount++;
 
-                    if (synset->words[i][0] < std::tolower(wE[0]) || synset->words[i][0] > std::tolower(wE[0]))
-                    {
-                        if (wordCount < fieldVecE.size())
-                            continue;
-                        if (wordCount == fieldVecE.size())
-                        {
-                            i++;
-                            break;
-                        }
+                    /* range check on synset - if word out of range, move on to next */
+                    if (synset->words[i][0] > std::tolower(wE[0]) || 
+                        synset->words[synset->wcount - 1][0] < std::tolower(wE[0])) {
+                        continue;
                     }
-                    
+
+                    /* if within range, find optimal index to start comparing using binary search */
+                    int i = binSearch(synset, 0, synset->wcount - 1, std::tolower(wE[0]));
+
+                    /* binary search results: not found.  Move on to next word */
+                    if (i == -1) 
+                        continue;
+
+                    /* else: compare words */
                     if (w == wE)
                     {
                         bool alreadyStored = false;
@@ -756,6 +764,12 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
         while (synset2 != NULL)
         {
             int i = 0;
+
+            /* sort the synset */
+            std::sort(synset2->words, synset2->words + synset2->wcount, [](const char* a, const char* b) {
+                return std::strcmp(a, b) < 0; 
+            });
+
             while (i < synset2->wcount)
             {
                 bool indexFound = false;                
@@ -765,17 +779,21 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
                 for (std::string &wU : fieldVecU)
                 {
                     wordCount++;
-                    if (synset2->words[i][0] < std::tolower(wU[0]) || synset2->words[i][0] > std::tolower(wU[0]))
-                    {
-                        if (wordCount < fieldVecU.size())
-                            continue;
-                        if (wordCount == fieldVecU.size())
-                        {
-                            i++;
-                            break;
-                        }
+
+                    /* range check on synset - if word out of range, move on to next */
+                    if (synset2->words[i][0] > std::tolower(wU[0]) || 
+                        synset2->words[synset2->wcount - 1][0] < std::tolower(wU[0])) {
+                        continue;
                     }
 
+                    /* if in range, find optimal index to start comparing using binary search */
+                    int i = binSearch(synset2, 0, synset2->wcount - 1, std::tolower(wU[0]));
+
+                    /* binary search results: not found. Move on to next word. */
+                    if (i == -1) 
+                        continue;
+
+                    /* else: compare words */
                     if (wE == wU)
                     {
                         bool alreadyStored = false;
@@ -806,3 +824,29 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
     }
     return false;
 }
+
+int Matcher::binSearch(SynsetPtr s, int left, int right, char val)
+{
+    /* base case */
+    if (left < 0 || right > s->wcount - 1 || left > right)
+        return -1;
+
+    /* calc midpoint */
+    int mp = (left + right) / 2;
+
+    /* recurse */
+    if (s->words[mp][0] < val)
+        return binSearch(s, mp + 1, right, val);
+    if (s->words[mp][0] > val)
+        return binSearch(s, left, mp - 1, val);
+
+    /* if found, backtrack to first entry */
+    if (s->words[mp][0] == val) {
+        while (mp >= 0 && s->words[mp][0] == val)
+            mp--;
+        return ++mp;
+    }
+
+    return 0;
+}
+
