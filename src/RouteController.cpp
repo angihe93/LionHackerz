@@ -527,6 +527,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
         std::string email = body["email"].s();
 
         // Create and save the user
+        Database *db = new Database();
         User user(name, email);
         std::string save_result = user.save(*db);
         std::cout << save_result << std::endl;
@@ -540,8 +541,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
                     std::cerr << "Invalid augmentation entry. Skipping." << std::endl;
                     continue;  // Skip invalid entries
                 }
-                // AugmentInput ai;
-                AugmentInput ai(*db);
+                AugmentInput ai;
                 try {
                     ai.dim_id = std::stoi(item["dim_id"].s());  // Convert to integer
                 }
@@ -556,8 +556,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
 
         // Process augmentations
         if (!augments.empty()) {
-            // std::string augment_result = processAugments(*db, user.id, augments);
-            std::string augment_result = processAugments(user.id, augments);
+            std::string augment_result = processAugments(*db, user.id, augments);
             std::cout << augment_result << std::endl;
         }
 
