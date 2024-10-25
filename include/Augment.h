@@ -1,5 +1,3 @@
-// Copyright 2024 LionHackerz
-
 /* Kelvin Kim sk4802
     Time to check to see how important various factors are to the user */
 #ifndef AUGMENT_H
@@ -10,19 +8,14 @@
 #include "Database.h"
 
 struct AugmentInput {
-    AugmentInput(Database &db);
-    Database *db;
     int dim_id;
     std::string importance;  // "very", "somewhat", "not"
 };
 
 // Function to process and insert augmentations
-// std::string processAugments(Database& db, int user_id, const std::vector<AugmentInput>& augments);
-std::string processAugments(int user_id, const std::vector<AugmentInput>& augments);
-
+std::string processAugments(Database& db, int user_id, const std::vector<AugmentInput>& augments);
 
 // Optional: Function to check if a dimension exists
-// bool dimExists(Database& db, int dim_id);
-bool dimExists(int dim_id);
+bool dimExists(Database& db, int dim_id);
 
 #endif // AUGMENT_H

@@ -1,7 +1,5 @@
-// Copyright 2024 LionHackerz
 /*  Kelvin Kim sk4802
     Let's save a user to the DB! :D */
-    
 #include "User.h"
 #include <iostream>
 #include <stdexcept>
@@ -28,7 +26,7 @@ std::string User::save(Database& db) {
     std::string data = "{\"uname\": \"" + escapeJson(name) + "\", \"email\": \"" + escapeJson(email) + "\"}";
 
     // Insert into 'users' table
-    std::string response = db.insert("users", data);
+    std::string response = db.insert("User", data);
     std::cout << "Insert Response: " << response << std::endl;
 
     // Parse the response to retrieve the user ID
