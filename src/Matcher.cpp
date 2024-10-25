@@ -608,12 +608,36 @@ std::map<std::string, std::variant<std::string, std::vector<std::map<std::string
         job_description.erase(std::remove(job_description.begin(), job_description.end(), '\"'), job_description.end());
         jl["job_description"] = job_description;
 
-        std::vector<std::string> skills;
-        for (int i = 8; i < 13; i++) {
-            if (listings[i][0] != "\"null\"")
-                skills.push_back(listings[i][0]);
+        // doing list fields like skills one by one because std::vector causes issue for JSON 
+        if (listings[8][0] != "\"null\"") {
+            std::string skill = listings[8][0];
+            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
+            jl["skill1"] = skill;
         }
-        jl["skills_required"] = skills;
+
+        if (listings[9][0] != "\"null\"") {
+            std::string skill = listings[9][0];
+            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
+            jl["skill2"] = skill;
+        }
+
+        if (listings[10][0] != "\"null\"") {
+            std::string skill = listings[10][0];
+            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
+            jl["skill3"] = skill;
+        }
+
+        if (listings[11][0] != "\"null\"") {
+            std::string skill = listings[11][0];
+            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
+            jl["skill4"] = skill;
+        }
+
+        if (listings[12][0] != "\"null\"") {
+            std::string skill = listings[12][0];
+            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
+            jl["skill5"] = skill;
+        }
 
         if (listings[13][0] != "\"null\"")
             jl["pay"] = listings[13][0];
@@ -659,14 +683,15 @@ std::map<std::string, std::variant<std::string, std::vector<std::map<std::string
             location.erase(std::remove(location.begin(), location.end(), '\"'), location.end());
             jl["location"] = location;
         }
-        
-        std::vector<std::string> matched_words;
 
-        for (std::string mw : matchedWords[count])
-            matched_words.push_back(mw);
-
-        jl["matched_woreds"] = matched_words;
-
+        std::string matched_words = "";
+        for (std::string mw : matchedWords[count]) {
+            matched_words += mw;
+            matched_words += ";";
+        }
+        matched_words.erase(std::remove(matched_words.begin(), matched_words.end(), '\"'), matched_words.end());
+        jl["matched_words"] = matched_words;
+            
         job_listings.push_back(jl);
         count++;
     }

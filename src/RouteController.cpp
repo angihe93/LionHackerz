@@ -13,6 +13,7 @@
 #include <vector>
 #include <exception>
 #include <iostream>
+#include <typeinfo>
 #include "../external_libraries/Crow/include/crow.h"
 
 // to have returned wvalue key value pairs be sorted (using std::map)  https://crowcpp.org/master/guides/json/  
@@ -201,7 +202,25 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
             jsonJL["field"] = std::get<std::string>(jl["field"]);
             jsonJL["position"] = std::get<std::string>(jl["position"]);
             jsonJL["job_description"] = std::get<std::string>(jl["job_description"]);
-            // TODO: skills...
+
+            crow::json::wvalue::list skills = crow::json::wvalue::list();
+            if (jl.find("skill1") != jl.end()) {
+                skills.push_back(std::get<std::string>(jl["skill1"]));
+            }
+            if (jl.find("skill2") != jl.end()) {
+                skills.push_back(std::get<std::string>(jl["skill2"]));
+            }
+            if (jl.find("skill3") != jl.end()) {
+                skills.push_back(std::get<std::string>(jl["skill3"]));
+            }
+            if (jl.find("skill4") != jl.end()) {
+                skills.push_back(std::get<std::string>(jl["skill4"]));
+            }
+            if (jl.find("skill5") != jl.end()) {
+                skills.push_back(std::get<std::string>(jl["skill5"]));
+            }
+            jsonJL["skills_required"] = std::move(skills);
+
             if (jl.find("pay") != jl.end()) {
                 jsonJL["pay"] = std::stoi(std::get<std::string>(jl["pay"]));
             }
@@ -227,6 +246,17 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
                 jsonJL["location"] = std::get<std::string>(jl["location"]);
             }
 
+            crow::json::wvalue::list matched_words = crow::json::wvalue::list();
+            std::string words_str = std::get<std::string>(jl["matched_words"]);
+            std::string delim = ";";
+            size_t pos = 0;
+            std::string word;
+            while ((pos = words_str.find(delim)) != std::string::npos) {
+                word = words_str.substr(0, pos);
+                matched_words.push_back(word);
+                words_str.erase(0,pos+1);
+            }
+            jsonJL["matched_words"] = std::move(matched_words);
 
             job_listings.push_back(jsonJL);
         }
