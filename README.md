@@ -83,6 +83,8 @@ To run app: go to /build and run: ./LionHackerzProject.
 
 # API Entry Points
 
+## Updated work in progress API reference doc is [here](https://docs.google.com/document/d/1NSQ_4oRS3Y2LhI0e3Yp9fjCGNDtPFUAQwig-Lj07cNU/edit)
+
 This service implements RESTful APIs. Requests either contain parameters or a JSON body. Responses are JSON objects.
 
 ### Base URL
