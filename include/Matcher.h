@@ -8,11 +8,15 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <map>
+#include <variant>
 #include <curl/curl.h>
 #include <wn.h>
 #include "Database.h"
 
 /* Matcher class for pairing job seekers with employers */
+
+using JobListingMapVariantType = std::variant<int, std::string, bool, std::vector<std::string>>;
 
 class Matcher
 {
@@ -80,6 +84,11 @@ public:
 
     /* Retrieve the list of matched words for listing lid*/
     std::vector<std::string> getMatchedWords(int lid);
+
+    /* Helper functions for generating API's returned JSON objects*/
+    // TODO: deal with arrays of things later
+    std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> matchResponse(int uid);
+
 private:
     Database *db;
     std::vector<std::vector<std::string>> all_listings;  /* all job listings in db */

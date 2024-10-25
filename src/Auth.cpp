@@ -33,19 +33,19 @@ std::string Auth::generateRandomHex(int length) {
         return hexStream.str();
 }
 
-std::string Auth::escapeJson(const std::string& input) {
-    std::string output;
-    for (char c : input) {
-        if (c == '\"') {
-            output += "\\\"";
-        } else if (c == '\\') {
-            output += "\\\\";
-        } else {
-            output += c;
-        }
-    }
-    return output;
-}
+// std::string Auth::escapeJson(const std::string& input) {
+//     std::string output;
+//     for (char c : input) {
+//         if (c == '\"') {
+//             output += "\\\"";
+//         } else if (c == '\\') {
+//             output += "\\\\";
+//         } else {
+//             output += c;
+//         }
+//     }
+//     return output;
+// }
 
 std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& auth) {
         if (auth.substr(0, 6) != "Basic ") {
@@ -81,8 +81,9 @@ std::string Auth::genAPIKey(std::string role) {
         }
 
         std::string apikey = generateRandomHex(32);
-        std::string data = "{\"apikey\": \"" + escapeJson(apikey) + "\", \"permission\": \"" + escapeJson(role) + "\"}";
-        
+        // std::string data = "{\"apikey\": \"" + escapeJson(apikey) + "\", \"permission\": \"" + escapeJson(role) + "\"}";
+        std::string data = "{\"apikey\": \"" + apikey + "\", \"permission\": \"" + role + "\"}";
+
         std::string insertRes = db->insert("Authentication",data);
         std::cout << "insertRes: " << insertRes << std::endl;
 

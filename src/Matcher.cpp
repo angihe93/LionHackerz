@@ -560,6 +560,103 @@ std::string Matcher::displayMatches(int uid)
     return oss.str();
 }
 
+ /* Helper functions for generating API's returned JSON objects*/
+    // TODO: deal with arrays of things later
+std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> Matcher::matchResponse(int uid) {
+
+    gatherRelevantDimensions(uid);
+    filterJobs();
+    match(uid);
+    filterMatches();
+    sortMatches();
+    
+    std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> map;
+    map["summary"] = "There are a total of " + std::to_string(candidates.size()) + " matches out of " + std::to_string(all_listings[0].size()) + " total listings for User " + std::to_string(uid) + ".";
+    std::vector<std::map<std::string, JobListingMapVariantType>> job_listings;
+    
+    int count = 0;
+    for (int i = 0; i < candidates.size(); i++)
+    {
+        std::map<std::string, JobListingMapVariantType> jl;
+
+        // from getListing:
+        int resCount = 0;
+        int lid = candidates[i];
+        std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+        std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+        std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
+        
+        jl["match_score"] = scores[count];
+
+        std::string company_ = company[0][0];
+        company_.erase(std::remove(company_.begin(), company_.end(), '\"'), company_.end());
+        jl["posted_by"] = company_;
+
+        std::string created_on = listings[1][0];
+        created_on.erase(std::remove(created_on.begin(), created_on.end(), '\"'), created_on.end());
+        jl["created_on"] = created_on;
+
+        std::string field = listings[5][0];
+        field.erase(std::remove(field.begin(), field.end(), '\"'), field.end());
+        jl["field"] = field;
+
+        std::string position = listings[6][0];
+        position.erase(std::remove(position.begin(), position.end(), '\"'), position.end());
+        jl["position"] = position;
+
+        std::string job_description = listings[7][0];
+        job_description.erase(std::remove(job_description.begin(), job_description.end(), '\"'), job_description.end());
+        jl["job_description"] = job_description;
+
+        std::vector<std::string> skills;
+        for (int i = 8; i < 13; i++) {
+            if (listings[i][0] != "\"null\"")
+                skills.push_back(listings[i][0]);
+        }
+        jl["skills_required"] = skills;
+
+        if (listings[13][0] != "\"null\"")
+            jl["pay"] = listings[13][0];
+
+        if (listings[14][0] != "\"null\"")
+            jl["flexibility"] = listings[14][0];
+
+        if (listings[15][0] != "\"null\"")
+            jl["modern_workspace"] = listings[15][0];
+        
+        if (listings[16][0] != "\"null\"")
+            jl["gender_parity"] = listings[16][0];
+
+	    if (listings[17][0] != "\"null\"")
+            jl["diverse_workforce"] = listings[17][0];
+
+	    if (listings[18][0] != "\"null\"")
+            jl["remote_option_available"] = listings[18][0];
+
+	    if (listings[19][0] != "\"null\"")
+            jl["personality_types"] = listings[19][0];
+
+	    if (listings[20][0] != "\"null\"")
+            jl["location"] = listings[20][0];
+        
+        std::vector<std::string> matched_words;
+
+        for (std::string mw : matchedWords[count])
+            matched_words.push_back(mw);
+
+        jl["matched_woreds"] = matched_words;
+
+        job_listings.push_back(jl);
+        count++;
+    }
+
+    map["job_listings"] = job_listings;
+
+    return map;
+
+}
+
+
 void Matcher::iterateList(std::vector<std::string> l)
 {
     int count = 0;
