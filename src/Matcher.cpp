@@ -618,26 +618,47 @@ std::map<std::string, std::variant<std::string, std::vector<std::map<std::string
         if (listings[13][0] != "\"null\"")
             jl["pay"] = listings[13][0];
 
-        if (listings[14][0] != "\"null\"")
-            jl["flexibility"] = listings[14][0];
+        if (listings[14][0] != "\"null\"") {
+            std::string flexibility = listings[14][0];
+            flexibility.erase(std::remove(flexibility.begin(), flexibility.end(), '\"'), flexibility.end());
+            jl["flexibility"] = flexibility;
+        }
 
-        if (listings[15][0] != "\"null\"")
-            jl["modern_workspace"] = listings[15][0];
-        
-        if (listings[16][0] != "\"null\"")
-            jl["gender_parity"] = listings[16][0];
+        if (listings[15][0] != "\"null\"") {
+            std::string modern_workspace = listings[15][0];
+            modern_workspace.erase(std::remove(modern_workspace.begin(), modern_workspace.end(), '\"'), modern_workspace.end());
+            jl["modern_workspace"] = modern_workspace;
+        }
+            
+        if (listings[16][0] != "\"null\"") {
+            std::string gender_parity = listings[16][0];
+            gender_parity.erase(std::remove(gender_parity.begin(), gender_parity.end(), '\"'), gender_parity.end());
+            jl["gender_parity"] = gender_parity;
+        }
 
-	    if (listings[17][0] != "\"null\"")
-            jl["diverse_workforce"] = listings[17][0];
+	    if (listings[17][0] != "\"null\"") {
+            std::string diverse_workforce = listings[17][0];
+            diverse_workforce.erase(std::remove(diverse_workforce.begin(), diverse_workforce.end(), '\"'), diverse_workforce.end());
+            jl["diverse_workforce"] = diverse_workforce;
+        }
 
-	    if (listings[18][0] != "\"null\"")
-            jl["remote_option_available"] = listings[18][0];
+	    if (listings[18][0] != "\"null\"") {
+            std::string remote_option_available = listings[18][0];
+            remote_option_available.erase(std::remove(remote_option_available.begin(), remote_option_available.end(), '\"'), remote_option_available.end());
+            jl["remote_option_available"] = remote_option_available;
+        }
 
-	    if (listings[19][0] != "\"null\"")
-            jl["personality_types"] = listings[19][0];
+	    if (listings[19][0] != "\"null\"") {
+            std::string personality_types = listings[19][0];
+            personality_types.erase(std::remove(personality_types.begin(), personality_types.end(), '\"'), personality_types.end());
+            jl["personality_types"] = personality_types;
+        }
 
-	    if (listings[20][0] != "\"null\"")
-            jl["location"] = listings[20][0];
+	    if (listings[20][0] != "\"null\"") {
+            std::string location = listings[20][0];
+            location.erase(std::remove(location.begin(), location.end(), '\"'), location.end());
+            jl["location"] = location;
+        }
         
         std::vector<std::string> matched_words;
 

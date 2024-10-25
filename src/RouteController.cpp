@@ -201,7 +201,33 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
             jsonJL["field"] = std::get<std::string>(jl["field"]);
             jsonJL["position"] = std::get<std::string>(jl["position"]);
             jsonJL["job_description"] = std::get<std::string>(jl["job_description"]);
-            // skills...
+            // TODO: skills...
+            if (jl.find("pay") != jl.end()) {
+                jsonJL["pay"] = std::stoi(std::get<std::string>(jl["pay"]));
+            }
+            if (jl.find("flexibility") != jl.end()) {
+                jsonJL["flexibility"] = (std::get<std::string>(jl["flexibility"])=="true") ? true : false;
+            }
+            if (jl.find("modern_workspace") != jl.end()) {
+                jsonJL["modern_workspace"] = (std::get<std::string>(jl["modern_workspace"])=="true") ? true : false;
+            }
+            if (jl.find("gender_parity") != jl.end()) {
+                jsonJL["gender_parity"] = (std::get<std::string>(jl["gender_parity"])=="true") ? true : false;
+            }
+            if (jl.find("diverse_workforce") != jl.end()) {
+                jsonJL["diverse_workforce"] = (std::get<std::string>(jl["diverse_workforce"])=="true") ? true : false;
+            }
+            if (jl.find("remote_option_available") != jl.end()) {
+                jsonJL["remote_option_available"] = (std::get<std::string>(jl["remote_option_available"])=="true") ? true : false;
+            }
+            if (jl.find("personality_types") != jl.end()) {
+                jsonJL["personality_types"] = std::get<std::string>(jl["personality_types"]);
+            }
+            if (jl.find("location") != jl.end()) {
+                jsonJL["location"] = std::get<std::string>(jl["location"]);
+            }
+
+
             job_listings.push_back(jsonJL);
         }
         jsonRes["data"]["job_listings"] = std::move(job_listings);
