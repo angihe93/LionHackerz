@@ -1,5 +1,3 @@
-// Copyright 2024 LionHackerz
-
 /*Kelvin Kim sk4802*/
 /*Let's make a new user class!*/
 #ifndef USER_H
