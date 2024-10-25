@@ -1,0 +1,13 @@
+# .dockerignore
+external_libraries/boost*
+external_libraries/Crow*
+build/
+.git/
+*.o
+*.a
+*.so
+*.log
+.dockerignore
+.DS_Store
+.gitignore
+.vscode/*
