@@ -95,16 +95,14 @@ RUN cd /usr/src/googletest && \
     make && \
     make install
 
-WORKDIR /app
-# # Build the application and run cpplint
+# # Build the application
 WORKDIR /app/build
 
 RUN cmake .. && make
 
-RUN ./LionHackerzProject
-
 # # Expose the port your application uses
 EXPOSE 18080
 
+WORKDIR /app
 # # Set the entrypoint command to run your application
 CMD ["./build/LionHackerzProject"]
