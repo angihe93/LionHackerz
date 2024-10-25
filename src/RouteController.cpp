@@ -1,5 +1,8 @@
 // Copyright 2024 LionHackerz
 
+// to have returned wvalue key value pairs be sorted (using std::map)  https://crowcpp.org/master/guides/json/  
+#define CROW_JSON_USE_MAP
+
 #include "RouteController.h"
 #include "Database.h"
 #include "Matcher.h"
@@ -15,9 +18,6 @@
 #include <iostream>
 #include <typeinfo>
 #include "../external_libraries/Crow/include/crow.h"
-
-// to have returned wvalue key value pairs be sorted (using std::map)  https://crowcpp.org/master/guides/json/  
-#define CROW_JSON_USE_MAP
 
 void RouteController::index(crow::response &res)
 {
