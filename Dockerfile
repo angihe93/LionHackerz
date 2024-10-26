@@ -11,7 +11,8 @@ ENV TZ=Etc/UTC
 WORKDIR /app
 
 # Copy your source code into the container
-COPY . /app
+# COPY . /app
+COPY . .
 
 # Install necessary packages
 RUN apt-get update && \
