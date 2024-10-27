@@ -18,93 +18,116 @@
 // to have returned wvalue key value pairs be sorted (using std::map)  https://crowcpp.org/master/guides/json/  
 #define CROW_JSON_USE_MAP
 
+// Utility function to handle exceptions
+crow::response handleException(const std::exception& e) {
+    // std::cerr << "in handleException" << std::endl;
+    std::string response = "An error has occurred: ";
+    response += e.what();
+    std::cerr << e.what() << std::endl;
+    // return crow::response{500, "An error has occurred"}; // say e.what()?
+    return crow::response{500, response};
+}
+
+
 void RouteController::index(crow::response &res)
 {
-    res.write("Welcome, in order to make an API call direct your browser or Postman to an endpoint "
-              "\n\n This can be done using the following format: \n\n http://127.0.0.1:18080/endpoint?arg=value");
-    res.end();
-}
-
-void RouteController::signUp(const crow::request &req, crow::response &res) {
-
-    auto params = crow::query_string(req.url_params);
-    crow::json::wvalue jsonRes;
+    try {
+        res.write("Welcome, in order to make an API call direct your browser or Postman to an endpoint "
+            "\n\n This can be done using the following format: \n\n http://127.0.0.1:18080/endpoint?arg=value");
+        res.end();
     
-    std::string role;
-    if (params.get("role") != nullptr) {
-        role = params.get("role");
-    } else {
-        res.code = 400; 
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a role in the 'role' parameter.";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
+    } catch (const std::exception& e) {
+        res = handleException(e);
     }
-
-    if (role == "admin") {
-
-        Auth *a = new Auth(*db);
-        const auto& auth_header = req.get_header_value("Authorization");
-        if (auth_header.empty()) {
-            res.code = 400; 
-            jsonRes["error"]["code"] = res.code;
-            jsonRes["error"]["message"] = "No Authorization header found, it is required to proceed";
-            res.write(jsonRes.dump());
-            res.end();
-            return;
-        }
-        auto [username, password] = a->decodeBasicAuth(auth_header);
-        if (username == "" && password == "") {
-            res.code = 400; 
-            jsonRes["error"]["code"] = res.code;
-            jsonRes["error"]["message"] = "Invalid credentials";
-            res.write(jsonRes.dump());
-            res.end();
-            return;
-        }
-        
-        std::cout << "Username: " << username << ", Password: " << password << std::endl;
-        // check in database if this is admin, if so, issue admin api key
-        int resCount = 0;
-        std::vector<std::vector<std::string>> queryRes = db->query("Admin","*","username","eq",username,"password","eq",password,false,resCount);
-        if (resCount == 0) {
-            res.code = 400; 
-            jsonRes["error"]["code"] = res.code;
-            jsonRes["error"]["message"] = "Wrong username or password";
-            res.write(jsonRes.dump());
-            res.end();
-            return;
-        }
-
-        // gen api key
-        std::string retStr = a->genAPIKey(role);
-
-        size_t id_pos = retStr.find("Error:");
-        if (id_pos != std::string::npos) { // error
-            std::cout << retStr << std::endl;
-        }
-
-        res.code = 201; 
-        jsonRes["data"]["apikey"] = retStr;
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-
-    } else {
-        res.code = 400; 
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "Roles other than admin are yet implemented";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-    }
-
+    
 }
+
+// void RouteController::signUp(const crow::request &req, crow::response &res) {
+
+//     auto params = crow::query_string(req.url_params);
+//     crow::json::wvalue jsonRes;
+    
+//     std::string role;
+//     if (params.get("role") != nullptr) {
+//         role = params.get("role");
+//     } else {
+//         res.code = 400; 
+//         jsonRes["error"]["code"] = res.code;
+//         jsonRes["error"]["message"] = "You must specify a role in the 'role' parameter.";
+//         res.write(jsonRes.dump());
+//         res.end();
+//         return;
+//     }
+
+//     if (role == "admin") {
+
+//         Auth *a = new Auth(*db);
+//         const auto& auth_header = req.get_header_value("Authorization");
+//         if (auth_header.empty()) {
+//             res.code = 400; 
+//             jsonRes["error"]["code"] = res.code;
+//             jsonRes["error"]["message"] = "No Authorization header found, it is required to proceed";
+//             res.write(jsonRes.dump());
+//             res.end();
+//             return;
+//         }
+//         auto [username, password] = a->decodeBasicAuth(auth_header);
+//         if (username == "" && password == "") {
+//             res.code = 400; 
+//             jsonRes["error"]["code"] = res.code;
+//             jsonRes["error"]["message"] = "Invalid credentials";
+//             res.write(jsonRes.dump());
+//             res.end();
+//             return;
+//         }
+        
+//         std::cout << "Username: " << username << ", Password: " << password << std::endl;
+//         // check in database if this is admin, if so, issue admin api key
+//         int resCount = 0;
+//         std::vector<std::vector<std::string>> queryRes = db->query("Admin","*","username","eq",username,"password","eq",password,false,resCount);
+//         if (resCount == 0) {
+//             res.code = 400; 
+//             jsonRes["error"]["code"] = res.code;
+//             jsonRes["error"]["message"] = "Wrong username or password";
+//             res.write(jsonRes.dump());
+//             res.end();
+//             return;
+//         }
+
+//         // gen api key
+//         std::string retStr = a->genAPIKey(role);
+
+//         size_t id_pos = retStr.find("Error:");
+//         if (id_pos != std::string::npos) { // error
+//             std::cout << retStr << std::endl;
+//         }
+
+//         res.code = 201; 
+//         jsonRes["data"]["apikey"] = retStr;
+//         res.write(jsonRes.dump());
+//         res.end();
+//         return;
+
+//     } else {
+//         res.code = 400; 
+//         jsonRes["error"]["code"] = res.code;
+//         jsonRes["error"]["message"] = "Roles other than admin are yet implemented";
+//         res.write(jsonRes.dump());
+//         res.end();
+//         return;
+//     }
+
+// }
 
 void RouteController::setDatabase(Database *db)
 {
-    this->db = db;
+    try{
+        this->db = db;
+    } catch (const std::exception& e) {
+        handleException(e);
+        // res.end();
+    }
+    
 }
 
 
@@ -112,7 +135,8 @@ void RouteController::setDatabase(Database *db)
 
 void RouteController::getMatches(const crow::request &req, crow::response &res)
 {
-    auto params = crow::query_string(req.url_params);
+    try{
+        auto params = crow::query_string(req.url_params);
     crow::json::wvalue jsonRes;
 
     int uid = 0;
@@ -129,7 +153,9 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     }
 
     Matcher *m = new Matcher(*db);
+    std::cout << "in RouteController:getMatches() after new Matcher()" << std::endl;
     Listing *l = new Listing(*db);
+    std::cout << "in RouteController:getMatches() after new Listing()" << std::endl;
 
     if (uid != 1 && uid != 5)
     {
@@ -143,6 +169,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     else
     {
         std::string result = m->displayMatches(uid);
+        std::cout << "in RouteController:getMatches() after displayMatches()" << std::endl;
         res.code = 200;
         res.write(result);
         res.end();
@@ -150,12 +177,16 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 
     delete m;
     delete l;
-    return;
+    }  catch (const std::exception& e) {
+        res = handleException(e);
+        res.end();
+    }
 }
 
 
 void RouteController::getMatchesJSON(const crow::request &req, crow::response &res)
 {
+    try {
     auto params = crow::query_string(req.url_params);
     crow::json::wvalue jsonRes;
 
@@ -188,6 +219,7 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
     {
         res.code = 200;
         std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> match_resp = m->matchResponse(uid);
+        std::cout << "in RouteController::getMatchesJSON() after matchResponse()" << std::endl;
         jsonRes["data"]["summary"] = std::get<std::string>(match_resp["summary"]);
 
         std::vector<std::map<std::string, JobListingMapVariantType>> match_resp_listings = std::get<std::vector<std::map<std::string, JobListingMapVariantType>>>(match_resp["job_listings"]);
@@ -213,8 +245,14 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
 
     delete m;
     delete l;
-    return;
+
+    } catch (const std::exception& e) {
+        res = handleException(e);
+        res.end();
+    }
+
 }
+    
 
  /* LISTING ROUTES */
 
@@ -442,7 +480,7 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
     /* SELECT uname,email FROM User WHERE id = 1 */
     int resCount = 0;
     std::vector<std::vector<std::string>> req1 = db->query("User", "uname,email", "id", "eq", std::to_string(uid), true, resCount);
-
+    std::cout << "RouteController:dbtest after req1 User" << std::endl;
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
               << std::endl;
@@ -450,7 +488,7 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
     /* SELECT dim_id,weight_mod FROM Has_Augment WHERE id = 1 */
     std::vector<std::vector<std::string>> req2 =
         db->query("Has_Augment", "dim_id,weight_mod", "id", "eq", std::to_string(uid), true, resCount);
-
+    std::cout << "RouteController:dbtest after req2 Has_Augment" << std::endl;
     std::cout << std::endl
               << "-----------------------------------------" << std::endl
               << std::endl;
@@ -528,8 +566,11 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
 
         // Create and save the user
         Database *db = new Database();
+        std::cout << "in RouteController:makeUser() after new Database()" << std::endl;
         User user(name, email);
+        std::cout << "in RouteController:makeUser() after User user()" << std::endl;
         std::string save_result = user.save(*db);
+        std::cout << "in RouteController:makeUser() after user.save()" << std::endl;
         std::cout << save_result << std::endl;
 
         // Extract augmentations if provided
@@ -584,9 +625,9 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { index(res); });
 
-    CROW_ROUTE(app, "/signup")
-        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
-                                        { signUp(req, res); });
+    // CROW_ROUTE(app, "/signup")
+    //     .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
+    //                                     { signUp(req, res); });
 
     CROW_ROUTE(app, "/dbtest")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)

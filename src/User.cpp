@@ -22,13 +22,27 @@ std::string User::escapeJson(const std::string& input) {
 }
 
 std::string User::save(Database& db) {
-    // Construct JSON data for insertion
+    
+    try {
+        // Construct JSON data for insertion
     std::string data = "{\"uname\": \"" + escapeJson(name) + "\", \"email\": \"" + escapeJson(email) + "\"}";
 
-    // Insert into 'users' table
+    // // Insert into 'users' table
+    // std::string response = db.insert("User", data);
+    // std::cout << "Insert Response: " << response << std::endl;
+
+    try {
+    std::cout << "Data to insert: " << data << std::endl;
     std::string response = db.insert("User", data);
     std::cout << "Insert Response: " << response << std::endl;
-
+} catch (const std::exception &e) {
+    std::cerr << "Exception during insert: " << e.what() << std::endl;
+    throw;
+} catch (...) {
+    std::cerr << "Unknown exception occurred during insert." << std::endl;
+    throw;
+}
+std::string response = db.insert("User", data);
     // Parse the response to retrieve the user ID
     // Assuming response format: [{"id":2, "name":"Kelvin Kim", "email":"sk4802™columbia.edu"}]
     size_t id_pos = response.find("\"id\":");
@@ -51,4 +65,9 @@ std::string User::save(Database& db) {
     }
 
     return "User created with ID: " + std::to_string(id);
+
+    } catch(const std::exception& e) {
+        std::cerr << "error in User::save() " << e.what() << std::endl;
+    }
+    
 }

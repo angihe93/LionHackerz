@@ -13,6 +13,9 @@ WORKDIR /app
 # Copy your source code into the container
 COPY . /app
 
+# RUN --mount=type=secret,id=SUPABASE_URL \ 
+#     --mount=type=secret,id=SUPABASE_API_KEY
+
 # Install necessary packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -67,14 +70,14 @@ RUN TCL_CONFIG_DIR=$(find /usr/lib -name tclConfig.sh -printf '%h\n' | head -n1)
 
 WORKDIR /app/external_libraries
 
-RUN wget https://www.openssl.org/source/openssl-3.3.2.tar.gz && tar -xzf openssl-3.3.2.tar.gz && \
-    cd openssl-3.3.2 && \
-    ./Configure --prefix=/usr/local --openssldir=/usr/local/ssl && \
-    make && \
-    make install && \
-    cd .. && \
-    rm -rf openssl-3.3.2 && \
-    rm openssl-3.3.2.tar.gz
+# RUN wget https://www.openssl.org/source/openssl-3.3.2.tar.gz && tar -xzf openssl-3.3.2.tar.gz && \
+#     cd openssl-3.3.2 && \
+#     ./Configure --prefix=/usr/local --openssldir=/usr/local/ssl && \
+#     make && \
+#     make install && \
+#     cd .. && \
+#     rm -rf openssl-3.3.2 && \
+#     rm openssl-3.3.2.tar.gz
 
 
 WORKDIR /app/external_libraries
@@ -85,9 +88,23 @@ RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.86.0/source/boost_
     rm boost_1_86_0.tar.gz
 
 # Update library path
-ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/ssl/lib:${LD_LIBRARY_PATH}"
-ENV SUPABASE_URL="https://alcpkkevodekihwyjzvl.supabase.co"
-ENV SUPABASE_API_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsY3Bra2V2b2Rla2lod3lqenZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQxNDY2OCwiZXhwIjoyMDQzOTkwNjY4fQ.qQaXij0b6rgniZpmsImn4AIC6Oh2OGUxFwJgpHbdeu4"
+# ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/ssl/lib:${LD_LIBRARY_PATH}"
+# ENV SUPABASE_URL="https://alcpkkevodekihwyjzvl.supabase.co"
+# ENV SUPABASE_API_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsY3Bra2V2b2Rla2lod3lqenZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQxNDY2OCwiZXhwIjoyMDQzOTkwNjY4fQ.qQaXij0b6rgniZpmsImn4AIC6Oh2OGUxFwJgpHbdeu4"
+# ARG SUPABASE_URL="https://alcpkkevodekihwyjzvl.supabase.co"
+# ARG SUPABASE_API_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsY3Bra2V2b2Rla2lod3lqenZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQxNDY2OCwiZXhwIjoyMDQzOTkwNjY4fQ.qQaXij0b6rgniZpmsImn4AIC6Oh2OGUxFwJgpHbdeu4"
+# ENV SUPABASE_URL=$SUPABASE_URL
+# ENV SUPABASE_API_KEY=$SUPABASE_API_KEY
+
+# # Declare the secrets
+# RUN --mount=type=secret,id=supabase_url \
+#     --mount=type=secret,id=supabase_api_key \
+#     sh -c ' \
+#       SUPABASE_URL=$(cat /run/secrets/supabase_url) && \
+#       SUPABASE_API_KEY=$(cat /run/secrets/supabase_api_key) && \
+#       echo "Using Supabase URL: $SUPABASE_URL" && \
+#       echo "Using Supabase API Key: $SUPABASE_API_KEY" \
+#     '
 
 # Build and install Google Test
 RUN cd /usr/src/googletest && \
@@ -98,7 +115,32 @@ RUN cd /usr/src/googletest && \
 # # Build the application
 WORKDIR /app/build
 
-RUN cmake .. && make
+# RUN --mount=type=secret,id=SUPABASE_URL \
+#     --mount=type=secret,id=SUPABASE_API_KEY \
+#     sh -c 'export SUPABASE_URL=$(cat /run/secrets/SUPABASE_URL) && \
+#            export SUPABASE_API_KEY=$(cat /run/secrets/SUPABASE_API_KEY) && \
+#            cmake .. && make'
+
+# Use secrets without the 'env' key and add debugging steps
+RUN --mount=type=secret,id=SUPABASE_URL \
+    --mount=type=secret,id=SUPABASE_API_KEY \
+    sh -c 'cat /run/secrets/SUPABASE_URL && \
+           cat /run/secrets/SUPABASE_API_KEY && \
+           export SUPABASE_URL=$(cat /run/secrets/SUPABASE_URL) && \
+           export SUPABASE_API_KEY=$(cat /run/secrets/SUPABASE_API_KEY) && \
+           echo "SUPABASE_URL=$SUPABASE_URL" && \
+           echo "SUPABASE_API_KEY=$SUPABASE_API_KEY" && \
+           cmake .. && make clean && make'
+# build output shows can cat and echo the env vars
+
+# RUN --mount=type=secret,id=SUPABASE_URL \
+#     --mount=type=secret,id=SUPABASE_API_KEY
+
+# ENV SUPABASE_URL=$(cat /run/secrets/SUPABASE_URL)
+# ENV SUPABASE_API_KEY=$(cat /run/secrets/SUPABASE_API_KEY)
+
+# RUN cmake .. && make
+# LionHackerzProject
 
 # # Expose the port your application uses
 EXPOSE 18080

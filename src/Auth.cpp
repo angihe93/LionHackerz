@@ -16,35 +16,21 @@ Auth::Auth(Database &db)
 	this->db = &db;
 }
 
-std::string Auth::generateRandomHex(int length) {
-        unsigned char buffer[length];
+// std::string Auth::generateRandomHex(int length) {
+//         unsigned char buffer[length];
         
-        // Generate random bytes
-        if (RAND_bytes(buffer, sizeof(buffer)) != 1) {
-                throw std::runtime_error("Failed to generate random bytes");
-        }
-        
-        // Convert bytes to hex string
-        std::ostringstream hexStream;
-        for (unsigned char byte : buffer) {
-                hexStream << std::setw(2) << std::setfill('0') << std::hex << (int)byte;
-        }
-        
-        return hexStream.str();
-}
-
-// std::string Auth::escapeJson(const std::string& input) {
-//     std::string output;
-//     for (char c : input) {
-//         if (c == '\"') {
-//             output += "\\\"";
-//         } else if (c == '\\') {
-//             output += "\\\\";
-//         } else {
-//             output += c;
+//         // Generate random bytes
+//         if (RAND_bytes(buffer, sizeof(buffer)) != 1) {
+//                 throw std::runtime_error("Failed to generate random bytes");
 //         }
-//     }
-//     return output;
+        
+//         // Convert bytes to hex string
+//         std::ostringstream hexStream;
+//         for (unsigned char byte : buffer) {
+//                 hexStream << std::setw(2) << std::setfill('0') << std::hex << (int)byte;
+//         }
+        
+//         return hexStream.str();
 // }
 
 std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& auth) {
@@ -70,23 +56,23 @@ std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& aut
         return {username, password};
 }
 
-std::string Auth::genAPIKey(std::string role) {
+// std::string Auth::genAPIKey(std::string role) {
 
-        std::cout << "in Auth::genAPIKey" << std::endl;
+//         std::cout << "in Auth::genAPIKey" << std::endl;
 
-        if (role != "admin") {
-                std::cout << "Error: Roles other than admin are not yet implemented" << std::endl;
-                return "Error: Roles other than admin are not yet implemented";
-                // return "";
-        }
+//         if (role != "admin") {
+//                 std::cout << "Error: Roles other than admin are not yet implemented" << std::endl;
+//                 return "Error: Roles other than admin are not yet implemented";
+//                 // return "";
+//         }
 
-        std::string apikey = generateRandomHex(32);
-        // std::string data = "{\"apikey\": \"" + escapeJson(apikey) + "\", \"permission\": \"" + escapeJson(role) + "\"}";
-        std::string data = "{\"apikey\": \"" + apikey + "\", \"permission\": \"" + role + "\"}";
+//         std::string apikey = generateRandomHex(32);
+//         // std::string data = "{\"apikey\": \"" + escapeJson(apikey) + "\", \"permission\": \"" + escapeJson(role) + "\"}";
+//         std::string data = "{\"apikey\": \"" + apikey + "\", \"permission\": \"" + role + "\"}";
 
-        std::string insertRes = db->insert("Authentication",data);
-        std::cout << "insertRes: " << insertRes << std::endl;
+//         std::string insertRes = db->insert("Authentication",data);
+//         std::cout << "insertRes: " << insertRes << std::endl;
 
-        return apikey;
+//         return apikey;
 
-}
+// }

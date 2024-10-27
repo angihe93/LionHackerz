@@ -564,7 +564,9 @@ std::string Matcher::displayMatches(int uid)
     // TODO: deal with arrays of things later
 std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> Matcher::matchResponse(int uid) {
 
+    std::cout << "entering Matcher::matchResponse():" << std::endl;
     gatherRelevantDimensions(uid);
+    std::cout << "in Matcher::matchResponse() after gatherRelevantDimensions()" << std::endl;
     filterJobs();
     match(uid);
     filterMatches();

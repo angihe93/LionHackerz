@@ -137,77 +137,80 @@ target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL O
 # Add dependency to ensure the port is freed before building
 add_dependencies(LionHackerzProject unbind_port)
 
+# commented out for dockerfile debug
 # Enable testing
-enable_testing()
+# enable_testing()
 
-# Test executable
-add_executable(LionHackerzProjectTests
-    test/testMain.cpp
-    test/MatcherUnitTests.cpp
-    test/DatabaseUnitTests.cpp
-    test/ListingUnitTests.cpp
-    test/EmployerUnitTests.cpp
-    src/Matcher.cpp
-    src/Database.cpp
-    src/Listing.cpp
-    src/User.cpp
-    src/Augment.cpp
-    src/Employer.cpp
-)
+# # Test executable
+# add_executable(LionHackerzProjectTests
+#     test/testMain.cpp
+#     test/MatcherUnitTests.cpp
+#     test/DatabaseUnitTests.cpp
+#     test/ListingUnitTests.cpp
+#     test/EmployerUnitTests.cpp
+#     src/Matcher.cpp
+#     src/Database.cpp
+#     src/Listing.cpp
+#     src/User.cpp
+#     src/Augment.cpp
+#     src/Employer.cpp
+# )
 
-# Include directories for test executable
-target_include_directories(LionHackerzProjectTests PUBLIC ${INCLUDE_PATHS})
-target_link_libraries(LionHackerzProjectTests PRIVATE 
-     WN
-     CURL::libcurl
-     GTest::gtest
-     GTest::gtest_main
-     pthread)
+# # Include directories for test executable
+# target_include_directories(LionHackerzProjectTests PUBLIC ${INCLUDE_PATHS})
+# target_link_libraries(LionHackerzProjectTests PRIVATE 
+#      WN
+#      CURL::libcurl
+#      GTest::gtest
+#      GTest::gtest_main
+#      pthread)
 
-# Conditional handling of googletest
-if(APPLE)
-    include(FetchContent)
-    FetchContent_Declare(
-        googletest
-        URL https://github.com/google/googletest/archive/ff233bdd4cac0a0bf6e5cd45bda3406814cb2796.zip
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-    )
+# # Conditional handling of googletest
+# if(APPLE)
+#     include(FetchContent)
+#     FetchContent_Declare(
+#         googletest
+#         URL https://github.com/google/googletest/archive/ff233bdd4cac0a0bf6e5cd45bda3406814cb2796.zip
+#         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+#     )
 
-    # set(BUILD_GMOCK ON CACHE BOOL "Build gmock")
-    FetchContent_MakeAvailable(googletest)
+#     # set(BUILD_GMOCK ON CACHE BOOL "Build gmock")
+#     FetchContent_MakeAvailable(googletest)
 
-    include(GoogleTest)
-elseif(UNIX)
-    # Use the package manager's googletest on Linux
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
-endif()
+#     include(GoogleTest)
+# elseif(UNIX)
+#     # Use the package manager's googletest on Linux
+#     find_package(GTest REQUIRED)
+#     include_directories(${GTEST_INCLUDE_DIRS})
+# endif()
 
-# Register tests
-add_test(NAME LionHackerzProjectTests COMMAND LionHackerzProjectTests)
+# # Register tests
+# add_test(NAME LionHackerzProjectTests COMMAND LionHackerzProjectTests)
 
-# Custom target to run tests
-add_custom_target(run_tests ALL
-    COMMAND ctest --output-on-failure
-    COMMENT "Running tests"
-)
+# # Custom target to run tests
+# add_custom_target(run_tests ALL
+#     COMMAND ctest --output-on-failure
+#     COMMENT "Running tests"
+# )
 
-# Custom target to generate coverage report
-add_custom_target(gen_cov ALL
-    COMMAND lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
-    COMMAND lcov --rc lcov_branch_coverage=1 --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
-    COMMAND genhtml --branch-coverage coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating coverage report"
-)
+# # Custom target to generate coverage report
+# add_custom_target(gen_cov ALL
+#     COMMAND lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+#     COMMAND lcov --rc lcov_branch_coverage=1 --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
+#     COMMAND genhtml --branch-coverage coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+#     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+#     COMMENT "Generating coverage report"
+# )
 
-# Enable coverage reporting option
-option(COVERAGE "Enable coverage reporting" ON)
-if(COVERAGE)
-    message(STATUS "Code coverage enabled")
-    add_compile_options(--coverage)
-    add_link_options(--coverage)
-endif() 
+# # Enable coverage reporting option
+# option(COVERAGE "Enable coverage reporting" ON)
+# if(COVERAGE)
+#     message(STATUS "Code coverage enabled")
+#     add_compile_options(--coverage)
+#     add_link_options(--coverage)
+# endif() 
+
+# end of commented for dockerfile debug
 
 # Find the cpplint program
 find_program(CPPLINT cpplint)
