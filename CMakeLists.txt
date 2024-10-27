@@ -2,42 +2,54 @@ cmake_minimum_required(VERSION 3.15)
 
 project(LionHackerzProject)
 
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Define the port used by the application
 set(USED_PORT 18080)
 
-# Conditional paths based on OS
+# Initialize variables for include directories and library paths
+set(INCLUDE_PATHS 
+    ${PROJECT_SOURCE_DIR}/include
+    /usr/include
+    /usr/local/include
+    ${PROJECT_SOURCE_DIR}/external_libraries/Crow/include
+    ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/include
+)
+
+set(LINK_DIRECTORIES 
+    /usr/local/lib
+    ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/lib
+)
+
+# Add additional include paths and link directories based on the OS
 if(APPLE)
     # macOS-specific paths
-    set(INCLUDE_PATHS 
-        include/
-        external_libraries/boost_1_86_0
-        external_libraries/WordNet-3.0/include
-        external_libraries/Crow/include
-        external_libraries/openssl-3.3.2/include
+    list(APPEND INCLUDE_PATHS 
+        ${PROJECT_SOURCE_DIR}/external_libraries/boost_1_86_0
+        ${PROJECT_SOURCE_DIR}/external_libraries/openssl-3.3.2/include
         /opt/homebrew/Cellar/asio/1.30.2/include
     )
-    link_directories(
-        external_libraries/WordNet-3.0/lib
+    list(APPEND LINK_DIRECTORIES
         /opt/homebrew/lib
     )
 elseif(UNIX)
     # Linux-specific paths (e.g., Docker)
-    set(INCLUDE_PATHS 
-        include/
-        /usr/include
-        /usr/local/include
-        /opt/crow/include
-    )
-    link_directories(
-        /usr/local/lib
-    )
+    # Add any additional Linux-specific include or library paths here if needed
 endif()
+
+# Include directories for the project
+include_directories(${INCLUDE_PATHS})
+
+# Link directories for the project
+link_directories(${LINK_DIRECTORIES})
 
 # Add coverage flags for GCC/Clang
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage -fprofile-arcs")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g --coverage")
 
+# Custom target to free up the used port before running
 add_custom_target(unbind_port
     COMMAND lsof -t -i tcp:${USED_PORT} | xargs -r kill -9 || true
     COMMENT "Port ${USED_PORT} in use from earlier run. Killing process before running."
@@ -56,35 +68,85 @@ add_executable(LionHackerzProject
     src/Auth.cpp
 )
 
-# Include directories for main executable
-target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
-
-# Find and link with libcurl and OpenSSL
+# Find and link CURL
 find_package(CURL REQUIRED)
-find_package(OpenSSL REQUIRED)
-target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto)
+if(CURL_FOUND)
+    include_directories(${CURL_INCLUDE_DIRS})
+else()
+    message(FATAL_ERROR "CURL not found!")
+endif()
 
+# Find and link OpenSSL
+find_package(OpenSSL REQUIRED)
+if(OPENSSL_FOUND)
+    include_directories(${OPENSSL_INCLUDE_DIR})
+else()
+    message(FATAL_ERROR "OpenSSL not found!")
+endif()
+
+# Find WordNet headers and library
+find_path(WORDNET_INCLUDE_DIR wn.h 
+    PATHS 
+        /usr/local/include 
+        /app/external_libraries/WordNet-3.0/include 
+    NO_DEFAULT_PATH
+    REQUIRED
+)
+
+find_library(WORDNET_LIBRARY 
+    NAMES wn wordnet 
+    PATHS 
+        /usr/local/lib 
+        /app/external_libraries/WordNet-3.0/lib 
+    NO_DEFAULT_PATH
+    REQUIRED
+)
+
+if(NOT WORDNET_INCLUDE_DIR)
+    message(FATAL_ERROR "Cannot find WordNet include directory containing wn.h")
+endif()
+
+if(NOT WORDNET_LIBRARY)
+    message(FATAL_ERROR "Cannot find WordNet library (wn or wordnet)")
+endif()
+
+# Include WordNet directories
+include_directories(${WORDNET_INCLUDE_DIR})
+
+# Link WordNet library
+# Note: The library name is case-sensitive. It is usually lowercase.
+# Verify the actual name of the WordNet library in your installation.
+# Common names might be 'wn' or 'wordnet'. Adjust accordingly.
+target_link_libraries(LionHackerzProject PRIVATE 
+    ${WORDNET_LIBRARY} 
+    CURL::libcurl 
+    OpenSSL::SSL 
+    OpenSSL::Crypto
+)
+
+# Add dependency to ensure the port is freed before building
 add_dependencies(LionHackerzProject unbind_port)
 
+# Enable testing
 enable_testing()
 
 # Test executable
 add_executable(LionHackerzProjectTests
-   test/testMain.cpp
-   test/MatcherUnitTests.cpp
-   test/DatabaseUnitTests.cpp
-   test/ListingUnitTests.cpp
-   test/EmployerUnitTests.cpp
-   src/Matcher.cpp
-   src/Database.cpp
-   src/Listing.cpp
-   src/User.cpp
-   src/Augment.cpp
-   src/Employer.cpp
+    test/testMain.cpp
+    test/MatcherUnitTests.cpp
+    test/DatabaseUnitTests.cpp
+    test/ListingUnitTests.cpp
+    test/EmployerUnitTests.cpp
+    src/Matcher.cpp
+    src/Database.cpp
+    src/Listing.cpp
+    src/User.cpp
+    src/Augment.cpp
+    src/Employer.cpp
 )
 
-target_include_directories(LionHackerzProjectTests PRIVATE 
-     ${INCLUDE_PATHS})
+# Include directories for test executable
+target_include_directories(LionHackerzProjectTests PRIVATE ${INCLUDE_PATHS})
 
 # Conditional handling of googletest
 if(APPLE)
@@ -92,7 +154,7 @@ if(APPLE)
     include(FetchContent)
     FetchContent_Declare(
         googletest
-        URL https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz
+        URL https://github.com/google/googletest/archive/refs/tags/release-1.15.2.tar.gz
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
     FetchContent_MakeAvailable(googletest)
@@ -102,7 +164,6 @@ if(APPLE)
         gtest
         gtest_main
         pthread
-        # ... [Other libraries] ...
     )
 elseif(UNIX)
     # Use the package manager's googletest on Linux
@@ -114,17 +175,19 @@ elseif(UNIX)
         GTest::GTest
         GTest::Main
         pthread
-        # ... [Other libraries] ...
     )
 endif()
 
+# Register tests
 add_test(NAME LionHackerzProjectTests COMMAND LionHackerzProjectTests)
 
+# Custom target to run tests
 add_custom_target(run_tests ALL
     COMMAND ctest
     COMMENT "Running tests"
 )
 
+# Custom target to generate coverage report
 add_custom_target(gen_cov ALL
     COMMAND lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
     COMMAND lcov --rc lcov_branch_coverage=1 --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
@@ -133,6 +196,7 @@ add_custom_target(gen_cov ALL
     COMMENT "Generating coverage report"
 )
 
+# Enable coverage reporting option
 option(COVERAGE "Enable coverage reporting" ON)
 if(COVERAGE)
     message(STATUS "Code coverage enabled")

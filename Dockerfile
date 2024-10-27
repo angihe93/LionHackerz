@@ -59,8 +59,6 @@ RUN cp stubs.c WordNet-3.0/src
 # Find the tclConfig.sh and tkConfig.sh directories
 RUN TCL_CONFIG_DIR=$(find /usr/lib -name tclConfig.sh -printf '%h\n' | head -n1) && \
     TK_CONFIG_DIR=$(find /usr/lib -name tkConfig.sh -printf '%h\n' | head -n1) && \
-    echo "TCL_CONFIG_DIR=$TCL_CONFIG_DIR" && \
-    echo "TK_CONFIG_DIR=$TK_CONFIG_DIR" && \
     # Configure, build, and install WordNet
     cd WordNet-3.0 && \
     ./configure --disable-gui --with-tcl=$TCL_CONFIG_DIR --with-tk=$TK_CONFIG_DIR && \
