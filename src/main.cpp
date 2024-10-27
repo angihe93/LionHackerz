@@ -11,7 +11,7 @@
 int main()
 {
     crow::SimpleApp app; //define your crow application
-
+    app.loglevel(crow::LogLevel::Debug);
     RouteController routeController;
     routeController.initRoutes(app);
     Database *db = new Database();
