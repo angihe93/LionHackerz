@@ -15,20 +15,15 @@ set(INCLUDE_PATHS
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/external_libraries/Crow/include
     ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/include
-    usr/local/include
-    external_libraries/WordNet-3.0/include
-    external_libraries/Crow/include
+    /usr/local/include  # Corrected to absolute path
     external_libraries/boost_1_86_0
     external_libraries/openssl-3.3.2/include    
-    
 )
 
 set(LINK_DIRECTORIES 
     /usr/local/lib
     ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/lib
-
 )
-link_directories(external_libraries/WordNet-3.0/lib)
 
 # Add additional include paths and link directories based on the OS
 if(APPLE)
@@ -75,10 +70,21 @@ add_executable(LionHackerzProject
     src/Auth.cpp
 )
 
+# Specify include directories for the target
+target_include_directories(LionHackerzProject PRIVATE 
+    include
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/external_libraries/Crow/include
+    ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/include
+    /usr/local/include
+    external_libraries/boost_1_86_0
+    external_libraries/openssl-3.3.2/include
+)
+
 # Find and link CURL
 find_package(CURL REQUIRED)
 if(CURL_FOUND)
-    include_directories(${CURL_INCLUDE_DIRS})
+    target_include_directories(LionHackerzProject PRIVATE ${CURL_INCLUDE_DIRS})
 else()
     message(FATAL_ERROR "CURL not found!")
 endif()
@@ -86,53 +92,54 @@ endif()
 # Find and link OpenSSL
 find_package(OpenSSL REQUIRED)
 if(OPENSSL_FOUND)
-    include_directories(${OPENSSL_INCLUDE_DIR})
+    target_include_directories(LionHackerzProject PRIVATE ${OPENSSL_INCLUDE_DIR})
 else()
     message(FATAL_ERROR "OpenSSL not found!")
 endif()
-target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto)
-# # Find WordNet headers and library
-# find_path(WORDNET_INCLUDE_DIR wn.h
-#     PATHS 
-#         /usr/local/include 
-#         /app/external_libraries/WordNet-3.0/include
-#         ../external_libraries/WordNet-3.0/include
-#     NO_DEFAULT_PATH
-#     REQUIRED
-# )
 
-# find_library(WORDNET_LIBRARY 
-#     NAMES wn wordnet 
-#     PATHS 
-#         /usr/local/lib 
-#         /app/external_libraries/WordNet-3.0/lib 
-#         ../external_libraries/WordNet-3.0
+# Find WordNet headers
+find_path(WORDNET_INCLUDE_DIR wn.h
+    PATHS 
+        /usr/local/include 
+        ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/include
+        /usr/local/WordNet-3.0/include
+    NO_DEFAULT_PATH
+    REQUIRED
+)
 
-#     NO_DEFAULT_PATH
-#     REQUIRED
-# )
+if(NOT WORDNET_INCLUDE_DIR)
+    message(FATAL_ERROR "Cannot find WordNet include directory containing wn.h")
+endif()
 
-# if(NOT WORDNET_INCLUDE_DIR)
-#     message(FATAL_ERROR "Cannot find WordNet include directory containing wn.h")
-# endif()
+# Find WordNet library
+find_library(WORDNET_LIBRARY 
+    NAMES WN 
+    PATHS 
+        /usr/local/lib 
+        ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/lib 
+        /usr/local/WordNet-3.0/lib
+    NO_DEFAULT_PATH
+    REQUIRED
+)
 
-# if(NOT WORDNET_LIBRARY)
-#     message(FATAL_ERROR "Cannot find WordNet library (wn or wordnet)")
-# endif()
+if(NOT WORDNET_INCLUDE_DIR)
+    message(FATAL_ERROR "Cannot find WordNet include directory containing wn.h")
+endif()
 
-# # Include WordNet directories
-# include_directories(${WORDNET_INCLUDE_DIR})
+if(NOT WORDNET_LIBRARY)
+    message(FATAL_ERROR "Cannot find WordNet library (wn or wordnet)")
+endif()
 
-# # Link WordNet library
-# # Note: The library name is case-sensitive. It is usually lowercase.
-# # Verify the actual name of the WordNet library in your installation.
-# # Common names might be 'wn' or 'wordnet'. Adjust accordingly.
-# target_link_libraries(LionHackerzProject PRIVATE 
-#     ${WORDNET_LIBRARY} 
-#     CURL::libcurl 
-#     OpenSSL::SSL 
-#     OpenSSL::Crypto
-# )
+# Include WordNet directories
+target_include_directories(LionHackerzProject PRIVATE ${WORDNET_INCLUDE_DIR})
+
+# Link WordNet library
+target_link_libraries(LionHackerzProject PRIVATE 
+    ${WORDNET_LIBRARY} 
+    CURL::libcurl 
+    OpenSSL::SSL 
+    OpenSSL::Crypto
+)
 
 # Add dependency to ensure the port is freed before building
 add_dependencies(LionHackerzProject unbind_port)
@@ -157,12 +164,15 @@ add_executable(LionHackerzProjectTests
 
 # Include directories for test executable
 target_include_directories(LionHackerzProjectTests PUBLIC ${INCLUDE_PATHS})
+
+# Link libraries for test executable
 target_link_libraries(LionHackerzProjectTests PRIVATE 
-     WN
-     CURL::libcurl
-     GTest::gtest
-     GTest::gtest_main
-     pthread)
+     ${WORDNET_LIBRARY} 
+     CURL::libcurl 
+     GTest::gtest 
+     GTest::gtest_main 
+     pthread
+)
 
 # Conditional handling of googletest
 if(APPLE)
@@ -173,24 +183,26 @@ if(APPLE)
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
 
-    # set(BUILD_GMOCK ON CACHE BOOL "Build gmock")
     FetchContent_MakeAvailable(googletest)
 
     include(GoogleTest)
 elseif(UNIX)
     # Use the package manager's googletest on Linux
     find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
+    target_include_directories(LionHackerzProjectTests PRIVATE ${GTEST_INCLUDE_DIRS})
 endif()
 
 # Register tests
 add_test(NAME LionHackerzProjectTests COMMAND LionHackerzProjectTests)
 
 # Custom target to run tests
-add_custom_target(run_tests ALL
-    COMMAND ctest --output-on-failure
-    COMMENT "Running tests"
+# Custom target to run tests with verbose output and log results
+add_custom_target(run_tests
+    COMMAND ctest --output-on-failure -V | tee /app/build/test_results.log
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Running tests with verbose output and logging"
 )
+
 
 # Custom target to generate coverage report
 add_custom_target(gen_cov ALL

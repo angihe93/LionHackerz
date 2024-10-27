@@ -10,18 +10,21 @@
 #include <string>
 #include <vector>
 
-
 // using namespace std;
 
 Database::Database()
 {
-    char *url_char = std::getenv("SUPABASE_URL");
-    if (url_char == NULL) {
+    const char *S_URL = "https://alcpkkevodekihwyjzvl.supabase.co";
+    const char *S_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsY3Bra2V2b2Rla2lod3lqenZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQxNDY2OCwiZXhwIjoyMDQzOTkwNjY4fQ.qQaXij0b6rgniZpmsImn4AIC6Oh2OGUxFwJgpHbdeu4";
+    char *url_char = (char *)S_URL;
+    if (url_char == NULL)
+    {
         std::cout << "ERROR: did not find SUPABASE_URL, check it is set and accessible in the current environment" << std::endl;
     }
 
-    char *api_char = std::getenv("SUPABASE_API_KEY");
-    if (api_char == NULL) {
+    char *api_char = (char *)S_KEY;
+    if (api_char == NULL)
+    {
         std::cout << "ERROR: did not find SUPABASE_API_KEY, check it is set and accessible in the current environment" << std::endl;
     }
 
@@ -33,7 +36,6 @@ Database::Database()
     this->url = url;
     this->api_key = api;
 }
-
 
 Database::Database(const std::string url, const std::string api_key)
 {
@@ -60,7 +62,7 @@ std::string Database::request(const std::string &getPostPatch, const std::string
 
     struct curl_slist *headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
-    headers = curl_slist_append(headers, "Accept: application/json");    
+    headers = curl_slist_append(headers, "Accept: application/json");
     headers = curl_slist_append(headers, ("apikey: " + this->api_key).c_str());
     headers = curl_slist_append(headers, ("Authorization: Bearer " + this->api_key).c_str());
 
@@ -81,7 +83,7 @@ std::string Database::request(const std::string &getPostPatch, const std::string
         if (getPostPatch == "POST")
             curl_easy_setopt(curl, CURLOPT_POST, 1L);
         if (getPostPatch == "PATCH")
-            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");        
+            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
         headers = curl_slist_append(headers, "Prefer: return=representation");
         if (!insertData.empty())
         {
@@ -140,7 +142,6 @@ std::string Database::update(std::string table, std::string data, std::string co
     return status;
 }
 
-
 std::vector<std::vector<std::string>>
 Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn, std::string op,
@@ -149,12 +150,12 @@ Database::query(std::string table, std::string selectColumns,
     std::string statusCode = "";
 
     std::string url = this->url + "/rest/v1/" + table + "?" + "select=" +
-                 selectColumns + "&" + filterColumn + "=" + op + "." + value;
+                      selectColumns + "&" + filterColumn + "=" + op + "." + value;
 
     const std::string fURL = url;
 
-    const std::string& method = "GET";
-    const std::string& insertData = "";
+    const std::string &method = "GET";
+    const std::string &insertData = "";
 
     std::string result = request(method, fURL, insertData, statusCode);
 
@@ -206,8 +207,8 @@ Database::query(std::string table, std::string selectColumns,
 
     const std::string fURL = url;
 
-    const std::string& method = "GET";
-    const std::string& insertData = "";
+    const std::string &method = "GET";
+    const std::string &insertData = "";
 
     std::string result = request(method, fURL, insertData, statusCode);
 
@@ -264,8 +265,8 @@ Database::query(std::string table, std::string selectColumns,
 
     const std::string fURL = url;
 
-    const std::string& method = "GET";
-    const std::string& insertData = "";
+    const std::string &method = "GET";
+    const std::string &insertData = "";
 
     std::string result = request(method, fURL, insertData, statusCode);
 

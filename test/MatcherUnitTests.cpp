@@ -10,30 +10,61 @@
 
 /* This tests the gatherRelevantDimensions() function in
 	Matcher.cpp*/
-TEST(GetDim, augmentsAndWeights)
-{
-	Database *db = new Database();
-	Matcher *m = new Matcher(*db);
+#include <gtest/gtest.h>
+#include "Database.h"
+#include "Matcher.h"
+#include <curl/curl.h>
+#include <vector>
+#include <memory>
 
+// Test fixture for Matcher
+class MatcherTest : public ::testing::Test
+{
+protected:
+	std::unique_ptr<Database> db;
+	std::unique_ptr<Matcher> m;
+
+	void SetUp() override
+	{
+		// Initialize CURL
+		CURLcode res = curl_global_init(CURL_GLOBAL_ALL);
+		ASSERT_EQ(res, CURLE_OK) << "CURL initialization failed";
+
+		// Initialize Database
+		db = std::make_unique<Database>();
+		ASSERT_NE(db, nullptr) << "Database initialization failed";
+
+		// Populate Database with necessary data for uid = 1
+		// Replace with actual data insertion methods
+		// Example:
+		// db->addUser(1, "TestUser", "password123", ...);
+
+		// Initialize Matcher
+		m = std::make_unique<Matcher>(*db);
+		ASSERT_NE(m, nullptr) << "Matcher initialization failed";
+	}
+
+	void TearDown() override
+	{
+		// Clean up CURL
+		curl_global_cleanup();
+	}
+};
+
+TEST_F(MatcherTest, augmentsAndWeights)
+{
 	int uid = 1;
 
-	std::vector<std::vector<std::string>> testResults(0);
-	std::vector<std::string> aug_weights;
-	aug_weights.push_back("100");
-	aug_weights.push_back("100");
-	aug_weights.push_back("50");
-	aug_weights.push_back("50");
-
-	std::vector<std::string> aug_on;
-	aug_on.push_back("\"skill1\"");
-	aug_on.push_back("\"pay\"");
-	aug_on.push_back("\"remote\"");
-	aug_on.push_back("\"workspace\"");
+	std::vector<std::vector<std::string>> testResults;
+	std::vector<std::string> aug_weights = {"100", "100", "50", "50"};
+	std::vector<std::string> aug_on = {"\"skill1\"", "\"pay\"", "\"remote\"", "\"workspace\""};
 
 	testResults.push_back(aug_on);
 	testResults.push_back(aug_weights);
 
-	EXPECT_EQ(testResults, m->gatherRelevantDimensions(uid));
+	// Call the function and perform the assertion
+	auto result = m->gatherRelevantDimensions(uid);
+	EXPECT_EQ(testResults, result);
 }
 
 /* This tests the filterJobs() function in
@@ -257,7 +288,7 @@ TEST(GetValues, retrieveCandidates)
 
 	int uid = 5;
 
-	std::vector<int> testCandidates;	
+	std::vector<int> testCandidates;
 	testCandidates.push_back(1);
 	testCandidates.push_back(2);
 	testCandidates.push_back(3);

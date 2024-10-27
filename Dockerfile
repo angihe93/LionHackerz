@@ -62,7 +62,8 @@ RUN TCL_CONFIG_DIR=$(find /usr/lib -name tclConfig.sh -printf '%h\n' | head -n1)
     rm WordNet-3.0/src/stubs.c && cp stubs.c WordNet-3.0/src && \
     cd WordNet-3.0 && \
     make && \
-    make install
+    make install && \
+    ldconfig
 
 
 WORKDIR /app/external_libraries
@@ -72,6 +73,7 @@ RUN wget https://www.openssl.org/source/openssl-3.3.2.tar.gz && tar -xzf openssl
     ./Configure --prefix=/usr/local --openssldir=/usr/local/ssl && \
     make && \
     make install && \
+    ldconfig && \
     cd .. && \
     rm -rf openssl-3.3.2 && \
     rm openssl-3.3.2.tar.gz
