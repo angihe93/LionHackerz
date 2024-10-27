@@ -11,17 +11,24 @@ set(USED_PORT 18080)
 
 # Initialize variables for include directories and library paths
 set(INCLUDE_PATHS 
+    include
     ${PROJECT_SOURCE_DIR}/include
-    /usr/include
-    /usr/local/include
     ${PROJECT_SOURCE_DIR}/external_libraries/Crow/include
     ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/include
+    usr/local/include
+    external_libraries/WordNet-3.0/include
+    external_libraries/Crow/include
+    external_libraries/boost_1_86_0
+    external_libraries/openssl-3.3.2/include    
+    
 )
 
 set(LINK_DIRECTORIES 
     /usr/local/lib
     ${PROJECT_SOURCE_DIR}/external_libraries/WordNet-3.0/lib
+
 )
+link_directories(external_libraries/WordNet-3.0/lib)
 
 # Add additional include paths and link directories based on the OS
 if(APPLE)
@@ -83,46 +90,49 @@ if(OPENSSL_FOUND)
 else()
     message(FATAL_ERROR "OpenSSL not found!")
 endif()
+target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto)
+# # Find WordNet headers and library
+# find_path(WORDNET_INCLUDE_DIR wn.h
+#     PATHS 
+#         /usr/local/include 
+#         /app/external_libraries/WordNet-3.0/include
+#         ../external_libraries/WordNet-3.0/include
+#     NO_DEFAULT_PATH
+#     REQUIRED
+# )
 
-# Find WordNet headers and library
-find_path(WORDNET_INCLUDE_DIR wn.h 
-    PATHS 
-        /usr/local/include 
-        /app/external_libraries/WordNet-3.0/include 
-    NO_DEFAULT_PATH
-    REQUIRED
-)
+# find_library(WORDNET_LIBRARY 
+#     NAMES wn wordnet 
+#     PATHS 
+#         /usr/local/lib 
+#         /app/external_libraries/WordNet-3.0/lib 
+#         ../external_libraries/WordNet-3.0
 
-find_library(WORDNET_LIBRARY 
-    NAMES wn wordnet 
-    PATHS 
-        /usr/local/lib 
-        /app/external_libraries/WordNet-3.0/lib 
-    NO_DEFAULT_PATH
-    REQUIRED
-)
+#     NO_DEFAULT_PATH
+#     REQUIRED
+# )
 
-if(NOT WORDNET_INCLUDE_DIR)
-    message(FATAL_ERROR "Cannot find WordNet include directory containing wn.h")
-endif()
+# if(NOT WORDNET_INCLUDE_DIR)
+#     message(FATAL_ERROR "Cannot find WordNet include directory containing wn.h")
+# endif()
 
-if(NOT WORDNET_LIBRARY)
-    message(FATAL_ERROR "Cannot find WordNet library (wn or wordnet)")
-endif()
+# if(NOT WORDNET_LIBRARY)
+#     message(FATAL_ERROR "Cannot find WordNet library (wn or wordnet)")
+# endif()
 
-# Include WordNet directories
-include_directories(${WORDNET_INCLUDE_DIR})
+# # Include WordNet directories
+# include_directories(${WORDNET_INCLUDE_DIR})
 
-# Link WordNet library
-# Note: The library name is case-sensitive. It is usually lowercase.
-# Verify the actual name of the WordNet library in your installation.
-# Common names might be 'wn' or 'wordnet'. Adjust accordingly.
-target_link_libraries(LionHackerzProject PRIVATE 
-    ${WORDNET_LIBRARY} 
-    CURL::libcurl 
-    OpenSSL::SSL 
-    OpenSSL::Crypto
-)
+# # Link WordNet library
+# # Note: The library name is case-sensitive. It is usually lowercase.
+# # Verify the actual name of the WordNet library in your installation.
+# # Common names might be 'wn' or 'wordnet'. Adjust accordingly.
+# target_link_libraries(LionHackerzProject PRIVATE 
+#     ${WORDNET_LIBRARY} 
+#     CURL::libcurl 
+#     OpenSSL::SSL 
+#     OpenSSL::Crypto
+# )
 
 # Add dependency to ensure the port is freed before building
 add_dependencies(LionHackerzProject unbind_port)
@@ -146,36 +156,31 @@ add_executable(LionHackerzProjectTests
 )
 
 # Include directories for test executable
-target_include_directories(LionHackerzProjectTests PRIVATE ${INCLUDE_PATHS})
+target_include_directories(LionHackerzProjectTests PUBLIC ${INCLUDE_PATHS})
+target_link_libraries(LionHackerzProjectTests PRIVATE 
+     WN
+     CURL::libcurl
+     GTest::gtest
+     GTest::gtest_main
+     pthread)
 
 # Conditional handling of googletest
 if(APPLE)
-    # Fetch googletest using FetchContent on macOS
     include(FetchContent)
     FetchContent_Declare(
         googletest
-        URL https://github.com/google/googletest/archive/refs/tags/release-1.15.2.tar.gz
+        URL https://github.com/google/googletest/archive/ff233bdd4cac0a0bf6e5cd45bda3406814cb2796.zip
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
+
+    # set(BUILD_GMOCK ON CACHE BOOL "Build gmock")
     FetchContent_MakeAvailable(googletest)
-    
-    # Link googletest to your test executable
-    target_link_libraries(LionHackerzProjectTests PRIVATE
-        gtest
-        gtest_main
-        pthread
-    )
+
+    include(GoogleTest)
 elseif(UNIX)
     # Use the package manager's googletest on Linux
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
-    
-    # Link GTest to your test executable
-    target_link_libraries(LionHackerzProjectTests PRIVATE
-        GTest::GTest
-        GTest::Main
-        pthread
-    )
 endif()
 
 # Register tests
@@ -183,7 +188,7 @@ add_test(NAME LionHackerzProjectTests COMMAND LionHackerzProjectTests)
 
 # Custom target to run tests
 add_custom_target(run_tests ALL
-    COMMAND ctest
+    COMMAND ctest --output-on-failure
     COMMENT "Running tests"
 )
 

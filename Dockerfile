@@ -25,6 +25,7 @@ RUN apt-get update && \
     libssl-dev \
     libcurl4-openssl-dev \
     libboost-all-dev \
+    libasio-dev \
     lcov \
     python3 \
     python3-pip \
@@ -50,11 +51,6 @@ RUN wget http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz && \
     tar -xzf WordNet-3.0.tar.gz && \
     rm WordNet-3.0.tar.gz
 
-# Copy the fixed 'stubs.c' file into WordNet source
-# Ensure that stubs.c exists in external_libraries directory
-# If stubs.c is in your project directory, this will work
-RUN rm WordNet-3.0/src/stubs.c
-RUN cp stubs.c WordNet-3.0/src
 
 # Find the tclConfig.sh and tkConfig.sh directories
 RUN TCL_CONFIG_DIR=$(find /usr/lib -name tclConfig.sh -printf '%h\n' | head -n1) && \
@@ -62,10 +58,14 @@ RUN TCL_CONFIG_DIR=$(find /usr/lib -name tclConfig.sh -printf '%h\n' | head -n1)
     # Configure, build, and install WordNet
     cd WordNet-3.0 && \
     ./configure --disable-gui --with-tcl=$TCL_CONFIG_DIR --with-tk=$TK_CONFIG_DIR && \
+    cd .. && \
+    rm WordNet-3.0/src/stubs.c && cp stubs.c WordNet-3.0/src && \
+    cd WordNet-3.0 && \
     make && \
     make install
 
-WORKDIR /app
+
+WORKDIR /app/external_libraries
 
 RUN wget https://www.openssl.org/source/openssl-3.3.2.tar.gz && tar -xzf openssl-3.3.2.tar.gz && \
     cd openssl-3.3.2 && \
@@ -73,7 +73,8 @@ RUN wget https://www.openssl.org/source/openssl-3.3.2.tar.gz && tar -xzf openssl
     make && \
     make install && \
     cd .. && \
-    rm -rf openssl-3.3.2 openssl-3.3.2.tar.gz
+    rm -rf openssl-3.3.2 && \
+    rm openssl-3.3.2.tar.gz
 
 
 WORKDIR /app/external_libraries
@@ -85,7 +86,8 @@ RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.86.0/source/boost_
 
 # Update library path
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/ssl/lib:${LD_LIBRARY_PATH}"
-
+ENV SUPABASE_URL="https://alcpkkevodekihwyjzvl.supabase.co"
+ENV SUPABASE_API_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsY3Bra2V2b2Rla2lod3lqenZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODQxNDY2OCwiZXhwIjoyMDQzOTkwNjY4fQ.qQaXij0b6rgniZpmsImn4AIC6Oh2OGUxFwJgpHbdeu4"
 
 # Build and install Google Test
 RUN cd /usr/src/googletest && \

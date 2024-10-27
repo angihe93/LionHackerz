@@ -1,6 +1,9 @@
 # .dockerignore
-external_libraries/boost*
-external_libraries/Crow*
+external_libraries/boost_1_86_0
+external_libraries/Crow
+external_libraries/openssl-3.3.2
+external_libraries/WordNet-3.0
+
 build/
 .git/
 *.o
