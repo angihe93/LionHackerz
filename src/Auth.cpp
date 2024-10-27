@@ -10,28 +10,27 @@
 #include <vector>
 #include <boost/beast/core/detail/base64.hpp>
 
-
 Auth::Auth(Database &db)
 {
-	this->db = &db;
+        this->db = &db;
 }
 
-std::string Auth::generateRandomHex(int length) {
-        unsigned char buffer[length];
-        
-        // Generate random bytes
-        if (RAND_bytes(buffer, sizeof(buffer)) != 1) {
-                throw std::runtime_error("Failed to generate random bytes");
-        }
-        
-        // Convert bytes to hex string
-        std::ostringstream hexStream;
-        for (unsigned char byte : buffer) {
-                hexStream << std::setw(2) << std::setfill('0') << std::hex << (int)byte;
-        }
-        
-        return hexStream.str();
-}
+// std::string Auth::generateRandomHex(int length) {
+//         unsigned char buffer[length];
+
+//         // Generate random bytes
+//         if (RAND_bytes(buffer, sizeof(buffer)) != 1) {
+//                 throw std::runtime_error("Failed to generate random bytes");
+//         }
+
+//         // Convert bytes to hex string
+//         std::ostringstream hexStream;
+//         for (unsigned char byte : buffer) {
+//                 hexStream << std::setw(2) << std::setfill('0') << std::hex << (int)byte;
+//         }
+
+//         return hexStream.str();
+// }
 
 // std::string Auth::escapeJson(const std::string& input) {
 //     std::string output;
@@ -47,10 +46,12 @@ std::string Auth::generateRandomHex(int length) {
 //     return output;
 // }
 
-std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& auth) {
-        if (auth.substr(0, 6) != "Basic ") {
+std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string &auth)
+{
+        if (auth.substr(0, 6) != "Basic ")
+        {
                 std::cout << "Invalid Authorization header" << std::endl;
-                return {"",""};
+                return {"", ""};
                 // throw std::invalid_argument("Invalid Authorization header");
         }
 
@@ -58,9 +59,10 @@ std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& aut
         std::string decoded_credentials = crow::utility::base64decode(encoded_credentials, encoded_credentials.size());
 
         size_t delimiter_pos = decoded_credentials.find(':');
-        if (delimiter_pos == std::string::npos) {
+        if (delimiter_pos == std::string::npos)
+        {
                 std::cout << "Invalid credentials format" << std::endl;
-                return {"",""};
+                return {"", ""};
                 // throw std::invalid_argument("Invalid credentials format");
         }
 
@@ -70,23 +72,24 @@ std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& aut
         return {username, password};
 }
 
-std::string Auth::genAPIKey(std::string role) {
+// std::string Auth::genAPIKey(std::string role)
+// {
 
-        std::cout << "in Auth::genAPIKey" << std::endl;
+//         std::cout << "in Auth::genAPIKey" << std::endl;
 
-        if (role != "admin") {
-                std::cout << "Error: Roles other than admin are not yet implemented" << std::endl;
-                return "Error: Roles other than admin are not yet implemented";
-                // return "";
-        }
+//         if (role != "admin")
+//         {
+//                 std::cout << "Error: Roles other than admin are not yet implemented" << std::endl;
+//                 return "Error: Roles other than admin are not yet implemented";
+//                 // return "";
+//         }
 
-        std::string apikey = generateRandomHex(32);
-        // std::string data = "{\"apikey\": \"" + escapeJson(apikey) + "\", \"permission\": \"" + escapeJson(role) + "\"}";
-        std::string data = "{\"apikey\": \"" + apikey + "\", \"permission\": \"" + role + "\"}";
+//         std::string apikey = generateRandomHex(32);
+//         // std::string data = "{\"apikey\": \"" + escapeJson(apikey) + "\", \"permission\": \"" + escapeJson(role) + "\"}";
+//         std::string data = "{\"apikey\": \"" + apikey + "\", \"permission\": \"" + role + "\"}";
 
-        std::string insertRes = db->insert("Authentication",data);
-        std::cout << "insertRes: " << insertRes << std::endl;
+//         std::string insertRes = db->insert("Authentication", data);
+//         std::cout << "insertRes: " << insertRes << std::endl;
 
-        return apikey;
-
-}
+//         return apikey;
+// }

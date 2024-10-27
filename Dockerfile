@@ -68,15 +68,15 @@ RUN TCL_CONFIG_DIR=$(find /usr/lib -name tclConfig.sh -printf '%h\n' | head -n1)
 
 WORKDIR /app/external_libraries
 
-RUN wget https://www.openssl.org/source/openssl-3.3.2.tar.gz && tar -xzf openssl-3.3.2.tar.gz && \
-    cd openssl-3.3.2 && \
-    ./Configure --prefix=/usr/local --openssldir=/usr/local/ssl && \
-    make && \
-    make install && \
-    ldconfig && \
-    cd .. && \
-    rm -rf openssl-3.3.2 && \
-    rm openssl-3.3.2.tar.gz
+# RUN wget https://www.openssl.org/source/openssl-3.3.2.tar.gz && tar -xzf openssl-3.3.2.tar.gz && \
+#     cd openssl-3.3.2 && \
+#     ./Configure --prefix=/usr/local --openssldir=/usr/local/ssl && \
+#     make && \
+#     make install && \
+#     ldconfig && \
+#     cd .. && \
+#     rm -rf openssl-3.3.2 && \
+#     rm openssl-3.3.2.tar.gz
 
 
 WORKDIR /app/external_libraries

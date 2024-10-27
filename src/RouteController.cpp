@@ -15,7 +15,7 @@
 #include <iostream>
 #include "../external_libraries/Crow/include/crow.h"
 
-// to have returned wvalue key value pairs be sorted (using std::map)  https://crowcpp.org/master/guides/json/  
+// to have returned wvalue key value pairs be sorted (using std::map)  https://crowcpp.org/master/guides/json/
 #define CROW_JSON_USE_MAP
 
 void RouteController::index(crow::response &res)
@@ -25,88 +25,96 @@ void RouteController::index(crow::response &res)
     res.end();
 }
 
-void RouteController::signUp(const crow::request &req, crow::response &res) {
+// void RouteController::signUp(const crow::request &req, crow::response &res)
+// {
 
-    auto params = crow::query_string(req.url_params);
-    crow::json::wvalue jsonRes;
-    
-    std::string role;
-    if (params.get("role") != nullptr) {
-        role = params.get("role");
-    } else {
-        res.code = 400; 
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a role in the 'role' parameter.";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-    }
+//     auto params = crow::query_string(req.url_params);
+//     crow::json::wvalue jsonRes;
 
-    if (role == "admin") {
+//     std::string role;
+//     if (params.get("role") != nullptr)
+//     {
+//         role = params.get("role");
+//     }
+//     else
+//     {
+//         res.code = 400;
+//         jsonRes["error"]["code"] = res.code;
+//         jsonRes["error"]["message"] = "You must specify a role in the 'role' parameter.";
+//         res.write(jsonRes.dump());
+//         res.end();
+//         return;
+//     }
 
-        Auth *a = new Auth(*db);
-        const auto& auth_header = req.get_header_value("Authorization");
-        if (auth_header.empty()) {
-            res.code = 400; 
-            jsonRes["error"]["code"] = res.code;
-            jsonRes["error"]["message"] = "No Authorization header found, it is required to proceed";
-            res.write(jsonRes.dump());
-            res.end();
-            return;
-        }
-        auto [username, password] = a->decodeBasicAuth(auth_header);
-        if (username == "" && password == "") {
-            res.code = 400; 
-            jsonRes["error"]["code"] = res.code;
-            jsonRes["error"]["message"] = "Invalid credentials";
-            res.write(jsonRes.dump());
-            res.end();
-            return;
-        }
-        
-        std::cout << "Username: " << username << ", Password: " << password << std::endl;
-        // check in database if this is admin, if so, issue admin api key
-        int resCount = 0;
-        std::vector<std::vector<std::string>> queryRes = db->query("Admin","*","username","eq",username,"password","eq",password,false,resCount);
-        if (resCount == 0) {
-            res.code = 400; 
-            jsonRes["error"]["code"] = res.code;
-            jsonRes["error"]["message"] = "Wrong username or password";
-            res.write(jsonRes.dump());
-            res.end();
-            return;
-        }
+//     if (role == "admin")
+//     {
 
-        // gen api key
-        std::string retStr = a->genAPIKey(role);
+//         Auth *a = new Auth(*db);
+//         const auto &auth_header = req.get_header_value("Authorization");
+//         if (auth_header.empty())
+//         {
+//             res.code = 400;
+//             jsonRes["error"]["code"] = res.code;
+//             jsonRes["error"]["message"] = "No Authorization header found, it is required to proceed";
+//             res.write(jsonRes.dump());
+//             res.end();
+//             return;
+//         }
+//         auto [username, password] = a->decodeBasicAuth(auth_header);
+//         if (username == "" && password == "")
+//         {
+//             res.code = 400;
+//             jsonRes["error"]["code"] = res.code;
+//             jsonRes["error"]["message"] = "Invalid credentials";
+//             res.write(jsonRes.dump());
+//             res.end();
+//             return;
+//         }
 
-        size_t id_pos = retStr.find("Error:");
-        if (id_pos != std::string::npos) { // error
-            std::cout << retStr << std::endl;
-        }
+//         std::cout << "Username: " << username << ", Password: " << password << std::endl;
+//         // check in database if this is admin, if so, issue admin api key
+//         int resCount = 0;
+//         std::vector<std::vector<std::string>> queryRes = db->query("Admin", "*", "username", "eq", username, "password", "eq", password, false, resCount);
+//         if (resCount == 0)
+//         {
+//             res.code = 400;
+//             jsonRes["error"]["code"] = res.code;
+//             jsonRes["error"]["message"] = "Wrong username or password";
+//             res.write(jsonRes.dump());
+//             res.end();
+//             return;
+//         }
 
-        res.code = 201; 
-        jsonRes["data"]["apikey"] = retStr;
-        res.write(jsonRes.dump());
-        res.end();
-        return;
+//         // gen api key
+//         std::string retStr = a->genAPIKey(role);
 
-    } else {
-        res.code = 400; 
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "Roles other than admin are yet implemented";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-    }
+//         size_t id_pos = retStr.find("Error:");
+//         if (id_pos != std::string::npos)
+//         { // error
+//             std::cout << retStr << std::endl;
+//         }
 
-}
+//         res.code = 201;
+//         jsonRes["data"]["apikey"] = retStr;
+//         res.write(jsonRes.dump());
+//         res.end();
+//         return;
+//     }
+//     else
+//     {
+//         res.code = 400;
+//         jsonRes["error"]["code"] = res.code;
+//         jsonRes["error"]["message"] = "Roles other than admin are yet implemented";
+//         res.write(jsonRes.dump());
+//         res.end();
+//         return;
+//     }
+// }
 
 void RouteController::setDatabase(Database *db)
 {
     this->db = db;
 }
-
 
 /* MATCH ROUTE */
 
@@ -117,10 +125,13 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 
     int uid = 0;
 
-    if (params.get("uid") != nullptr) {
+    if (params.get("uid") != nullptr)
+    {
         uid = std::stoi(params.get("uid"));
-    } else {
-        res.code = 400;    
+    }
+    else
+    {
+        res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a user ID with '?uid=X' to retrieve job matches.";
         res.write(jsonRes.dump());
@@ -153,7 +164,6 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     return;
 }
 
-
 void RouteController::getMatchesJSON(const crow::request &req, crow::response &res)
 {
     auto params = crow::query_string(req.url_params);
@@ -161,10 +171,13 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
 
     int uid = 0;
 
-    if (params.get("uid") != nullptr) {
+    if (params.get("uid") != nullptr)
+    {
         uid = std::stoi(params.get("uid"));
-    } else {
-        res.code = 400;    
+    }
+    else
+    {
+        res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a user ID with '?uid=X' to retrieve job matches.";
         res.write(jsonRes.dump());
@@ -193,7 +206,8 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
         std::vector<std::map<std::string, JobListingMapVariantType>> match_resp_listings = std::get<std::vector<std::map<std::string, JobListingMapVariantType>>>(match_resp["job_listings"]);
 
         crow::json::wvalue::list job_listings = crow::json::wvalue::list();
-        for (auto& jl : match_resp_listings) {
+        for (auto &jl : match_resp_listings)
+        {
             crow::json::wvalue jsonJL;
             jsonJL["match_score"] = std::get<int>(jl["match_score"]);
             jsonJL["posted_by"] = std::get<std::string>(jl["posted_by"]);
@@ -208,7 +222,6 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
 
         res.write(jsonRes.dump());
         res.end();
-
     }
 
     delete m;
@@ -216,7 +229,7 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
     return;
 }
 
- /* LISTING ROUTES */
+/* LISTING ROUTES */
 
 void RouteController::changeField(const crow::request &req, crow::response &res)
 {
@@ -226,20 +239,26 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
     int lid = 0;
     std::string newField;
 
-    if (params.get("lid") != nullptr) {
+    if (params.get("lid") != nullptr)
+    {
         lid = std::stoi(params.get("lid"));
-    } else {
-        res.code = 400; 
+    }
+    else
+    {
+        res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'field' parameter.";
         res.write(jsonRes.dump());
         res.end();
         return;
     }
-    if (params.get("newField") != nullptr) {
+    if (params.get("newField") != nullptr)
+    {
         newField = params.get("newField");
-    } else {
-        res.code = 400; 
+    }
+    else
+    {
+        res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a value for the new field with 'newField=X'";
         res.write(jsonRes.dump());
@@ -266,9 +285,12 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
     int lid = 0;
     std::string newPosition;
 
-    if (params.get("lid") != nullptr) {
+    if (params.get("lid") != nullptr)
+    {
         lid = std::stoi(params.get("lid"));
-    } else {
+    }
+    else
+    {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'position' parameter.";
@@ -276,9 +298,12 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
         res.end();
         return;
     }
-    if (params.get("newPosition") != nullptr) {
+    if (params.get("newPosition") != nullptr)
+    {
         newPosition = params.get("newPosition");
-    } else {
+    }
+    else
+    {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a value for the new position with 'newPosition=X'";
@@ -306,9 +331,12 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     int lid = 0;
     std::string newDescription;
 
-    if (params.get("lid") != nullptr) {
+    if (params.get("lid") != nullptr)
+    {
         lid = std::stoi(params.get("lid"));
-    } else {
+    }
+    else
+    {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'position' parameter.";
@@ -316,9 +344,12 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
         res.end();
         return;
     }
-    if (params.get("newDescription") != nullptr) {
+    if (params.get("newDescription") != nullptr)
+    {
         newDescription = params.get("newDescription");
-    } else {
+    }
+    else
+    {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a value for the new job description with 'newDescription=X'";
@@ -345,9 +376,12 @@ void RouteController::changeFlex(const crow::request &req, crow::response &res)
 
     int lid = 0;
 
-    if (params.get("lid") != nullptr) {
+    if (params.get("lid") != nullptr)
+    {
         lid = std::stoi(params.get("lid"));
-    } else {
+    }
+    else
+    {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'job_flexibility' parameter.";
@@ -390,9 +424,12 @@ void RouteController::changeModernWorkspace(const crow::request &req, crow::resp
 
     int lid = 0;
 
-    if (params.get("lid") != nullptr) {
+    if (params.get("lid") != nullptr)
+    {
         lid = std::stoi(params.get("lid"));
-    } else {
+    }
+    else
+    {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
         jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'modern_building' parameter.";
@@ -460,7 +497,7 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
 
     /* examples of INSERT request: these have already been inserted, so will return some errors from the DB *
 
-    INSERT into User (uname, email) VALUES (TestUser, blah@blah.com) 
+    INSERT into User (uname, email) VALUES (TestUser, blah@blah.com)
             string req4 = db->insert("User", "{\"uname\": \"TestUser\", \"email\": \"blah@blah.com\"}");
             std::cout << req4 << std::endl << std::endl;
 
@@ -468,7 +505,7 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
             string req5 = db->insert("Skill", "{\"name\": \"drawing\", \"category\": \"art\"}");
             std::cout << req5 << std::endl << std::endl;
 
-    can insert using string literal: R"( data here, no escapes required )" 
+    can insert using string literal: R"( data here, no escapes required )"
         string insert_data = R"(
         {
             "field": "arts",
@@ -492,17 +529,20 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
     Listing *l = new Listing(*db);
     l->getListing(1);
 
-    res.code= 200;
+    res.code = 200;
     res.end();
 }
 
 /* USER ROUTE */
 
-void RouteController::makeUser(const crow::request &req, crow::response &res) {
-    try {
+void RouteController::makeUser(const crow::request &req, crow::response &res)
+{
+    try
+    {
         // Parse the JSON body
         auto body = crow::json::load(req.body);
-        if (!body) {
+        if (!body)
+        {
             crow::json::wvalue error;
             error["status"] = "error";
             error["message"] = "Invalid JSON.";
@@ -513,7 +553,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
         }
 
         // Extract name and email
-        if (!body.has("name") || !body.has("email")) {
+        if (!body.has("name") || !body.has("email"))
+        {
             crow::json::wvalue error;
             error["status"] = "error";
             error["message"] = "Missing 'name' or 'email' fields.";
@@ -534,20 +575,25 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
 
         // Extract augmentations if provided
         std::vector<AugmentInput> augments;
-        //Assumes that "augments" come in a list format
-        if (body.has("augments")) {
-            for (const auto& item : body["augments"]) {
-                if (!item.has("dim_id") || !item.has("importance")) {
+        // Assumes that "augments" come in a list format
+        if (body.has("augments"))
+        {
+            for (const auto &item : body["augments"])
+            {
+                if (!item.has("dim_id") || !item.has("importance"))
+                {
                     std::cerr << "Invalid augmentation entry. Skipping." << std::endl;
-                    continue;  // Skip invalid entries
+                    continue; // Skip invalid entries
                 }
                 AugmentInput ai;
-                try {
-                    ai.dim_id = std::stoi(item["dim_id"].s());  // Convert to integer
+                try
+                {
+                    ai.dim_id = std::stoi(item["dim_id"].s()); // Convert to integer
                 }
-                catch (...) {
+                catch (...)
+                {
                     std::cerr << "Invalid dim_id format. Skipping." << std::endl;
-                    continue;  // Skip if dim_id is not an integer
+                    continue; // Skip if dim_id is not an integer
                 }
                 ai.importance = item["importance"].s();
                 augments.emplace_back(ai);
@@ -555,7 +601,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
         }
 
         // Process augmentations
-        if (!augments.empty()) {
+        if (!augments.empty())
+        {
             std::string augment_result = processAugments(*db, user.id, augments);
             std::cout << augment_result << std::endl;
         }
@@ -568,7 +615,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res) {
         res.write(response.dump());
         res.end();
     }
-    catch (const std::exception& e) {
+    catch (const std::exception &e)
+    {
         crow::json::wvalue error;
         error["status"] = "error";
         error["message"] = e.what();
@@ -584,9 +632,9 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { index(res); });
 
-    CROW_ROUTE(app, "/signup")
-        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
-                                        { signUp(req, res); });
+    // CROW_ROUTE(app, "/signup")
+    //     .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
+    //                                     { signUp(req, res); });
 
     CROW_ROUTE(app, "/dbtest")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
@@ -617,13 +665,13 @@ void RouteController::initRoutes(crow::App<> &app)
     CROW_ROUTE(app, "/listing/changeFlex")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { changeFlex(req, res); });
-                                        
+
     CROW_ROUTE(app, "/listing/changeModernWorkspace")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
-                                        { changeModernWorkspace(req, res); });                                        
+                                        { changeModernWorkspace(req, res); });
 
     /* USER ROUTE */
     CROW_ROUTE(app, "/makeUser")
-        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response&res)
-                                        { makeUser(req, res); });
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
+                                         { makeUser(req, res); });
 }
