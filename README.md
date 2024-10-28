@@ -128,8 +128,17 @@ GET /listing/changePosition
 
 GET /listing/changeJobDescription
 
+GET /listing/changeFlex
+
+GET /listing/changeModernWorkspace
+
 GET /makeUser
 
+Note: Many of these endpoints are defined with the GET method for Crow in our RouteController,
+even those which change or update information.  These are implemented in the actual Database
+functions to pass in POST or PATCH methods as necessary. Please disregard the methods used by
+Crow in the endpoints and refer to individual functions to see the actual/correct
+HTTP methods used by cURL in processing a request.
 
 # Database Queries - For Team Members in Designing your Classes
 
