@@ -79,7 +79,6 @@ include(GoogleTest)
    src/Employer.cpp
  )
 
-find_package(GTest REQUIRED)
 
 target_include_directories(LionHackerzProjectTests PRIVATE 
      ${INCLUDE_PATHS} 

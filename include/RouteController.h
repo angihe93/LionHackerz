@@ -38,6 +38,8 @@ class RouteController {
         *       the user's stated preferences.  */
         void getMatches(const crow::request& req, crow::response &res);
 
+        void getMatchesJSON(const crow::request& req, crow::response &res);
+
         /* Route: /listing/changeField?lid=X&newField=Y
         *       This route updates the 'field' parameter of the job
         *       listing with listing ID lid and sets the field to
