@@ -31,12 +31,14 @@ std::string processAugments(Database& db, int user_id, const std::vector<Augment
         }
 
         // Construct json for insertion
-        std::string data = "{\"user_id\": " + std::to_string(user_id) +
+        std::string data = "{\"id\": " + std::to_string(user_id) +
                            ", \"dim_id\": " + std::to_string(augment.dim_id) +
                            ", \"weight_mod\": " + std::to_string(weight) + "}";
 
+        //std::cout << data << std::endl;
+
         // Insert into 'has_augment' table
-        std::string response = db.insert("has_augment", data);
+        std::string response = db.insert("Has_Augment", data);
         std::cout << "Augment Insert Response: " << response << std::endl;
     }
     return result;
