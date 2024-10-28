@@ -4,6 +4,10 @@ Our project tasks/to-do lists and completion can be found on Trello at:
 
  https://trello.com/b/tavRkgxR/job-matching-api
 
+ A deployed version can be found on the Google Cloud Platform at:
+
+ http://34.16.13.147:18080
+
 # Initial Setup
 
 This API makes use of PostgREST. To install, follow step 2 here:
