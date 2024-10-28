@@ -81,7 +81,13 @@ WORKDIR /app/external_libraries
 
 
 WORKDIR /app/external_libraries
-RUN git clone https://github.com/CrowCpp/Crow.git
+RUN git clone https://github.com/CrowCpp/Crow.git && \
+    cd Crow && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DCROW_BUILD_EXAMPLES=OFF -DCROW_BUILD_TESTS=OFF && \
+    make && \
+    make install
 
 RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.86.0/source/boost_1_86_0.tar.gz && \
     tar -xzf boost_1_86_0.tar.gz && \

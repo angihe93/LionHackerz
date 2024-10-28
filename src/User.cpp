@@ -35,15 +35,7 @@ std::string User::save(Database& db) {
     std::cout << "Data to insert: " << data << std::endl;
     std::string response = db.insert("User", data);
     std::cout << "Insert Response: " << response << std::endl;
-} catch (const std::exception &e) {
-    std::cerr << "Exception during insert: " << e.what() << std::endl;
-    throw;
-} catch (...) {
-    std::cerr << "Unknown exception occurred during insert." << std::endl;
-    throw;
-}
-std::string response = db.insert("User", data);
-    // Parse the response to retrieve the user ID
+     // Parse the response to retrieve the user ID
     // Assuming response format: [{"id":2, "name":"Kelvin Kim", "email":"sk4802™columbia.edu"}]
     size_t id_pos = response.find("\"id\":");
     if (id_pos == std::string::npos) {
@@ -69,5 +61,15 @@ std::string response = db.insert("User", data);
     } catch(const std::exception& e) {
         std::cerr << "error in User::save() " << e.what() << std::endl;
     }
+
+} catch (const std::exception &e) {
+    std::cerr << "Exception during save/insert: " << e.what() << std::endl;
+    throw;
+} catch (...) {
+    std::cerr << "Unknown exception occurred during save/insert." << std::endl;
+    throw;
+}
+// std::string response = db.insert("User", data);
+   
     
 }
