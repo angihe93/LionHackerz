@@ -18,36 +18,36 @@ Listing::Listing(Database &db)
 std::string Listing::changeField(int lid, std::string newField)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
 	std::string data = "{\"field\": \"" + newField + "\"}";
 	std::cout << data << std::endl;
-	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
+	std::string result = db->update("Listing_TEST", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
 std::string Listing::changePosition(int lid, std::string newPosition)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
 	std::string data = "{\"position\": \"" + newPosition + "\"}";
 	std::cout << data << std::endl;
-	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
+	std::string result = db->update("Listing_TEST", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
 std::string Listing::changeJobDescription(int lid, std::string newDescription)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
 	std::string data = "{\"job_description\": \"" + newDescription + "\"}";
 	std::cout << data << std::endl;
-	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
+	std::string result = db->update("Listing_TEST", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 

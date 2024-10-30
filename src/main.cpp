@@ -12,6 +12,8 @@ int main()
 {
     crow::SimpleApp app; //define your crow application
 
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+
     RouteController routeController;
     routeController.initRoutes(app);
     Database *db = new Database();

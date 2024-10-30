@@ -33,6 +33,11 @@ public:
      *      @para api_key - the API key needed to perform queries */
     Database(const std::string url, const std::string api_key);
 
+    /* Destructor:  Call cleanup on curl after database closed. */
+    ~Database() {
+	    curl_global_cleanup();
+    }    
+
     /* query(): Main query function with 1 filter column.
      * This function takes as input the name of a table in the database,
      * the name(s) of 1 or more columns to select from, the name of 1
@@ -152,11 +157,11 @@ public:
     int countResults(std::string results);
 
     /* helper function: tokenizes and listifies a query result string */
-    void tokenize(std::string res, int cR, int listCount,
+    std::vector<std::vector<std::string>> tokenize(const std::string& res, int cR, int listCount,
                   std::vector<std::vector<std::string> > &queryLists);
 
     /* helper function: iterates through and prints listified results of query lists */
-    void iterateLists(std::vector<std::vector<std::string> > queryLists);
+    void iterateLists(std::vector<std::vector<std::string> > &queryLists);
 
     /* Helper function for POST/GET/PATCH reqeusts.  This initializes cURL and performs
        the actual query but should not be called directly. See the

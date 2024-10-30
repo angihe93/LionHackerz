@@ -659,23 +659,24 @@ void RouteController::initRoutes(crow::App<> &app)
 
     /* LISTING ROUTES */
     CROW_ROUTE(app, "/listing/changeField")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                         { changeField(req, res); });
 
+
     CROW_ROUTE(app, "/listing/changePosition")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                         { changePosition(req, res); });
 
     CROW_ROUTE(app, "/listing/changeJobDescription")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                         { changeJobDescription(req, res); });
 
     CROW_ROUTE(app, "/listing/changeFlex")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                         { changeFlex(req, res); });
                                         
     CROW_ROUTE(app, "/listing/changeModernWorkspace")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                         { changeModernWorkspace(req, res); });                                        
 
     /* USER ROUTE */

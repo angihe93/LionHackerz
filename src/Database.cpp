@@ -44,12 +44,9 @@ Database::Database(const std::string url, const std::string api_key)
 std::string Database::request(const std::string &getPostPatch, const std::string url,
                               const std::string &insertData, std::string &httpStatusCode)
 {
-    CURL *curl;
+    CURL *curl = curl_easy_init();
     std::string response;
-
-    curl_global_init(CURL_GLOBAL_DEFAULT);
-    curl = curl_easy_init();
-
+   
     if (!curl)
     {
         std::cerr << "failed to initialize" << std::endl;
@@ -72,33 +69,32 @@ std::string Database::request(const std::string &getPostPatch, const std::string
         std::cout << "invalid option. please specify whether you wish to perform a GET or POST or PATCH"
                   << "request." << std::endl;
         curl_easy_cleanup(curl);
-        curl_global_cleanup();
+        httpStatusCode = "400";
         return "exiting request.";
     }
-
-    if (getPostPatch == "POST" || getPostPatch == "PATCH")
-    {
+    
         if (getPostPatch == "POST")
-            curl_easy_setopt(curl, CURLOPT_POST, 1L);
-        if (getPostPatch == "PATCH")
-            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");        
-        headers = curl_slist_append(headers, "Prefer: return=representation");
-        if (!insertData.empty())
-        {
+           	curl_easy_setopt(curl, CURLOPT_POST, 1L);
+	    else if (getPostPatch == "PATCH")
+            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
+        else if (getPostPatch == "GET")
+            curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+        
+        if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH"))
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
-        }
-    }
+
+    headers = curl_slist_append(headers, "Prefer: return=representation");    
 
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     CURLcode res = curl_easy_perform(curl);
 
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpStatusCode);
+    long response_code;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+    httpStatusCode = std::to_string(response_code);
 
     if (res != CURLE_OK)
-    {
         std::cerr << "cURL error: " << curl_easy_strerror(res) << std::endl;
-    }
 
     curl_slist_free_all(headers);
     curl_easy_cleanup(curl);
@@ -316,39 +312,49 @@ int Database::countResults(std::string results)
     return count;
 }
 
-void Database::tokenize(std::string res, int cR, int listCount, std::vector<std::vector<std::string>> &queryLists)
+std::vector<std::vector<std::string>> Database::tokenize(const std::string& res, int cR, int listCount, 
+    std::vector<std::vector<std::string>> &queryLists)
 {
+    std::string localRes = res;
     queryLists.resize(listCount);
+
+    for (int j = 0; j < listCount; j++)
+	    queryLists[j].resize(cR);
+
     for (int i = 0; i < cR; i++)
     {
         for (int j = 0; j < listCount; j++)
         {
-            res.erase(0, res.find(":") + 1);
+	    int delim_pos = localRes.find(":");
+	    if (delim_pos == std::string::npos) break;
+	    
+            localRes.erase(0, delim_pos + 1);
 
-            std::string token = res.substr(0, res.find(","));
+            std::string token = localRes.substr(0, localRes.find(","));
 
-            if (token[token.size() - 1] == '}')
-                token = token.substr(0, token.size() - 1);
+	    if (!token.empty()) {
+		if (token.back() == ']')
+		token.pop_back();
+            if (token.back() == '}')
+		    token.pop_back();
+		}
 
-            if (token[token.size() - 1] == ']')
-                token = token.substr(0, token.size() - 2);
-
-            if (token == "null")
+           if (token == "null")
                 token = "\"null\"";
 
             if (token == "true")
                 token = "\"true\"";
 
             if (token == "false")
-                token = "\"false\"";
-
-            queryLists[j].push_back(token);
+                token = "\"false\""; 
+            queryLists[j][i] = token;
         }
     }
-    return;
+    return queryLists;
 }
 
-void Database::iterateLists(std::vector<std::vector<std::string>> queryLists)
+
+void Database::iterateLists(std::vector<std::vector<std::string>> &queryLists)
 {
     int listCount = 0;
     std::cout << "\nTokenized and listified: " << std::endl;
