@@ -122,17 +122,17 @@ GET /dbtest
 
 GET /getMatches
 
-GET /listing/changeField
+PATCH /listing/changeField
 
-GET /listing/changePosition
+PATCH /listing/changePosition
 
-GET /listing/changeJobDescription
+PATCH /listing/changeJobDescription
 
-GET /listing/changeFlex
+PATCH /listing/changeFlex
 
-GET /listing/changeModernWorkspace
+PATCH /listing/changeModernWorkspace
 
-GET /makeUser
+POST /makeUser
 
 Postman tests for these routes can be found on our Trello board located here:
 
