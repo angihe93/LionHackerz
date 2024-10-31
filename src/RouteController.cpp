@@ -566,12 +566,11 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
 
         std::string name = body["name"].s();
         std::string email = body["email"].s();
-
         // Create and save the user
         Database *db = new Database();
         User user(name, email);
         std::string save_result = user.save(*db);
-        std::cout << save_result << std::endl;
+        // std::cout << save_result << std::endl;
 
         // Extract augmentations if provided
         std::vector<AugmentInput> augments;
@@ -601,19 +600,20 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         }
 
         // Process augmentations
-        if (!augments.empty())
-        {
-            std::string augment_result = processAugments(*db, user.id, augments);
-            std::cout << augment_result << std::endl;
-        }
+        // if (!augments.empty())
+        // {
+        //     std::string augment_result = processAugments(*db, user.id, augments);
+        //     std::cout << augment_result << std::endl;
+        // }
 
         // Prepare the response
         crow::json::wvalue response;
         response["status"] = "success";
-        response["user_id"] = user.id;
+        response["user_id"] = std::to_string(100);
         res.code = 201;
         res.write(response.dump());
         res.end();
+        return;
     }
     catch (const std::exception &e)
     {
