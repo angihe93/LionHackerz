@@ -15,6 +15,7 @@
 
 Database::Database()
 {
+    openai_api_key = "";
     char *url_char = std::getenv("SUPABASE_URL");
     if (url_char == NULL) {
         std::cout << "ERROR: did not find SUPABASE_URL, check it is set and accessible in the current environment" << std::endl;
@@ -27,18 +28,22 @@ Database::Database()
 
     char *openai_api_char = std::getenv("OPENAI_API_KEY");
     if (openai_api_char == NULL) {
-        std::cout << "ERROR: did not find OPENAI_API_KEY, check it is set and accessible in teh current environment" << std::endl;
+        std::cout << "ERROR: did not find OPENAI_API_KEY, check it is set and accessible in thh current environment." << std::endl
+                  << "Continuing without AI." << std::endl;
     }
 
     const std::string url = url_char;
-     std::cout << "in Database(), url: " << url << std::endl;
+   //  std::cout << "in Database(), url: " << url << std::endl;
     const std::string api = api_char;
-     std::cout << "in Database(), api: " << api << std::endl;
-    const std::string openai_api = openai_api_char; 
+   //  std::cout << "in Database(), api: " << api << std::endl;
+    if (openai_api_char != NULL) {
+        const std::string openai_api = openai_api_char; 
+        this->openai_api_key = openai_api; 
+    }
 
     this->url = url;
     this->api_key = api;
-    this->openai_api_key = openai_api; 
+
 }
 
 
@@ -51,6 +56,12 @@ Database::Database(const std::string url, const std::string api_key)
 std::string Database::request(const std::string &getPostPatch, const std::string url,
                               const std::string &insertData, std::string &httpStatusCode)
 {
+    if (getPostPatch == "AI" && this->openai_api_key == "") {
+        std::cout << "You must have an Open AI API key set as an environmental variable to use" 
+                  << "any AI-related functions.  Please set this and try again." << std::endl;
+                  return "";
+    }
+
     CURL *curl = curl_easy_init();
     std::string response;
    

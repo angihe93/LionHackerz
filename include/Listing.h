@@ -60,6 +60,53 @@ class Listing {
 		*	 @param resCode			Status code to return depending on query results. */
 	std::string changeModernWorkspace(int lid, int &resCode);
 
+		/* Change the boolean value of the 'mixed_gender' column in the
+		*  job listing.  If null to begin with, sets to true.  If true,
+		*  sets to false. If false, sets to true. 
+		*
+		*	 @param lid				The listing id of the listing
+		*
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeGender(int lid, int &resCode);
+
+		/* Change the boolean value of the 'diverse_workforce' column in the
+		*  job listing.  If null to begin with, sets to true.  If true,
+		*  sets to false. If false, sets to true. 
+		*
+		*	 @param lid				The listing id of the listing
+		*
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeDiversity(int lid, int &resCode);
+
+		/* Change the boolean value of the 'remote_available' column in the
+		*  job listing.  If null to begin with, sets to true.  If true,
+		*  sets to false. If false, sets to true. 
+		*
+		*	 @param lid				The listing id of the listing
+		*
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeRemote(int lid, int &resCode);
+
+		/* Change the value of the 'location' column in the
+		*  job listing.   
+		*
+		*	 @param lid				The listing id of the listing
+		*	
+		*	 @param newLocation		The new value of 'location' to set to.
+		*
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeLocation(int lid, std::string newLocation, int &resCode);
+
+		/* Change the value of the 'personality_types' column in the
+		*  job listing.   
+		*
+		*	 @param lid				The listing id of the listing
+		*	
+		*	 @param newMBTI		The new value of 'personality_types' to set to.
+		*
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeMBTI(int lid, std::string newMBTI, int &resCode);
+	
 		/* Generate n listings via AI and insert them into the Listing_AI table in the
 		 * database.  This enables a quick way to populate the listings in the
 		 * database with test data.  It will eventually be used to assist the employer
@@ -78,7 +125,8 @@ class Listing {
 		 * 
 		 * 	 @param listingList		A string representing the generated AI
 		 * 							listings from generateAIListing() */
-	void parseAI(const std::string listingList);
+	void parseAI(const std::string listingList, int n);
+
 	/* 
 	// description
 	*/

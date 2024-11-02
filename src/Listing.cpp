@@ -74,6 +74,113 @@ std::string Listing::changeFlex(int lid, int &resCode)
 }
 
 
+std::string Listing::changeGender(int lid, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string setVal = R"({"mixed_gender" : true})";
+	if (listing[16][0] == "\"true\"")
+		setVal = R"({"mixed_gender" : false})";
+
+	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,mixed_gender", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+std::string Listing::changeDiversity(int lid, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string setVal = R"({"diverse_workforce" : true})";
+	if (listing[17][0] == "\"true\"")
+		setVal = R"({"diverse_workforce" : false})";
+
+	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,diverse_workforce", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+std::string Listing::changeRemote(int lid, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string setVal = R"({"remote_available" : true})";
+	if (listing[18][0] == "\"true\"")
+		setVal = R"({"remote_available" : false})";
+
+	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,remote_available", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+std::string Listing::changeLocation(int lid, std::string newLocation, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string setVal = "{\"location\": \"" + newLocation + "\"}";
+
+	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,location", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+std::string Listing::changeMBTI(int lid, std::string newMBTI, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string setVal = "{\"personality_types\": \"" + newMBTI + "\"}";
+
+	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,personality_types", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+
 std::string Listing::changeModernWorkspace(int lid, int &resCode)
 {
 	int resCount = 0;
@@ -100,9 +207,9 @@ std::string Listing::getListing(int lid)
 {
 	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
+	std::vector<std::vector<std::string>> listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
 
 	std::ostringstream oss;
 
@@ -171,7 +278,7 @@ std::string data = R"({
         },
         {
             "role": "user",
-            "content": "Generate a job listing with the following fields: area/field (industry), job title/position, job description, pay (as a decimal with no text or $), required skill 1, required skill 2, required skill 3, required skill 4, required skill 5, location (city), personality type (MBTI type suited for the type of job), job flexibility, modern building, mixed_gender_workforce, diverse_workforce, remote_availability. The fields from job_flexibility onward can be boolean values true or false (random choice). Print the results for the entry on one line with each field separated by a semicolon with no space after the semicolon. Generate )" + n + R"( such job listings all on one line, with each listing separated by parentheses (). I prefer a wide range of fields, very diverse, not just typical jobs."
+            "content": "Generate a job listing with the following fields: area/field (industry), job title/position, job description, annual pay (as a decimal with no text or $), required skill 1, required skill 2, required skill 3, required skill 4, required skill 5, location (city), personality type (MBTI type suited for the type of job), job flexibility, modern building, mixed_gender_workforce, diverse_workforce, remote_availability. The fields from job_flexibility onward can be boolean values true or false (random choice). Print the results for the entry on one line with each field separated by a semicolon with no space after the semicolon. Do not include the field names, just the values. Generate )" + n + R"( such job listings all on one line, with each listing separated by parentheses (). I prefer a wide range of fields, very diverse, not just typical jobs.  Separately, generate a list of company names and company sizes (small, medium, large) for each of these listings with the same format (name and size separated by semicolon, each company for each listing in its own parentheses, all on one line. Do not list the titles 'job listing' and 'company listing' just start listing them."
         }
     ]
 })";
@@ -185,16 +292,17 @@ std::string data = R"({
 	std::string starting_junk = listing_list.substr(0, listing_list.find("\"content\":"));
 	listing_list.erase(0, starting_junk.length() + 12);
 	listing_list = listing_list.substr(0, listing_list.find("\"refusal\": null"));
-	listing_list.pop_back();
-	listing_list.pop_back(); 
 
-	parseAI(listing_list);
+	std::cout << listing_list << std::endl;
+
+	parseAI(listing_list, stoi(n));
 	return listing_list;
 }
 
-void Listing::parseAI(const std::string listings) 
+void Listing::parseAI(const std::string listings, int n) 
 {
 
+	std::cout << n << std::endl;
 	std::string localListings = listings;
 
 	std::string jobField;
@@ -213,9 +321,17 @@ void Listing::parseAI(const std::string listings)
 	std::string remote;
 	std::string gender;
 	std::string diverse;
+	std::string company;
+	std::string co_size;
 
-	while (localListings.find("(") != std::string::npos)
+	std::vector<int> lids;
+	std::vector<int> eids;
+
+	int count = 0;
+
+	while (count < n)
 	{
+		count++;
 
 	if (localListings[0] == '\"' || localListings[0] == ' ')
 		localListings.erase(0, 2);
@@ -264,6 +380,45 @@ void Listing::parseAI(const std::string listings)
 		
 
 	std::cout << db->insert("Listing_AI", data) << std::endl;
+	int resCount = 0;
+	std::vector<std::vector<std::string>> lidQ = db->query("Listing_AI", "lid", "order", "lid", "desc", false, resCount);
+	lids.push_back(stoi(lidQ[0][0]));
+
+	}
+
+	std::string localCompanies = localListings.substr(listings.find('(') + 1, std::string::npos);
+
+	while (localCompanies[0] != '(')
+		localCompanies.erase(0, 1);
+
+	count = 0;
+
+	while (count < n)
+	{
+		count++;
+
+		if (localCompanies[0] == '\"' || localCompanies[0] == ' ')
+			localCompanies.erase(0, 2);
+		else
+			localCompanies.erase(0,1);
+
+		company = localCompanies.substr(0, localCompanies.find(';'));
+		localCompanies.erase(0, company.length() +1);			
+		co_size = localCompanies.substr(0, localCompanies.find(')'));
+		localCompanies.erase(0, co_size.length() +1);
+
+		std::string data = "{\"company_name\": \"" + company + "\", \"size\": \"" + co_size + "\"}";
+
+		std::cout << db->insert("Employer_AI", data) << std::endl;
+		int resCount = 0;
+		std::vector<std::vector<std::string>> eidQ = db->query("Employer_AI", "eid", "order", "eid", "desc", false, resCount);
+		eids.push_back(stoi(eidQ[0][0]));
+
+	}
+
+	for (int i = 0; i < n; i++) {
+			std::string data = "{\"eid\": " + std::to_string(eids[i]) + ", \"lid\": " + std::to_string(lids[i]) + "}";
+			std::cout << db->insert("Created_AI", data) << std::endl;
 	}
 		
 	return;

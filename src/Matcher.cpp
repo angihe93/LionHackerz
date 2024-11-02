@@ -78,7 +78,7 @@ std::vector<int> Matcher::filterJobs()
 {
     int resCount = 0;
 
-    std::vector<std::vector<std::string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
+    std::vector<std::vector<std::string>> lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
 
     this->all_listings = lists;
 
@@ -159,7 +159,7 @@ std::vector<int> Matcher::match(int uid)
 
         if (locU == locE)
         {
-            candidateScore += 150;
+            candidateScore += 75;
 
             for (auto &d : dimensions)
             {
@@ -344,7 +344,7 @@ std::vector<int> Matcher::match(int uid)
 
         if (gendU == gendE && gendU != "\"null\"")
         {
-            candidateScore += 25;
+            candidateScore += 15;
 
             for (auto &d : dimensions)
             {
@@ -361,7 +361,7 @@ std::vector<int> Matcher::match(int uid)
         auto divE = all_listings[17][cInd];
         if (divU == divE && divU != "\"null\"")
         {
-            candidateScore += 25;
+            candidateScore += 15;
 
             for (auto &d : dimensions)
             {
@@ -396,7 +396,7 @@ std::vector<int> Matcher::match(int uid)
 
         if (flexU == flexE && flexU != "\"null\"")
         {
-            candidateScore += 50;
+            candidateScore += 15;
 
             for (auto &d : dimensions)
             {
@@ -413,7 +413,7 @@ std::vector<int> Matcher::match(int uid)
         auto remE = all_listings[18][cInd];
         if (remU == remE && remU != "\"null\"")
         {
-            candidateScore += 50;
+            candidateScore += 15;
 
             for (auto &d : dimensions)
             {
@@ -431,7 +431,7 @@ std::vector<int> Matcher::match(int uid)
 
         if (modernU == modernE && modernU != "\"null\"")
         {
-            candidateScore += 25;
+            candidateScore += 15;
 
             for (auto &d : dimensions)
             {
@@ -533,12 +533,12 @@ std::string Matcher::displayMatches(int uid)
     Listing *l = new Listing(*db);
 
     for (int i = 0; i < candidates.size(); i++)
-    {
+    {   std::cout << "i = " << i << std::endl;
         oss << "Listing " << candidates[i] << ":  Match score " << scores[count] << "   ";
-
+        std::cout << "listing: " << candidates[i] << ", score: " << scores[count] << std::endl;
         int bars = scores[count] / 25;
 
-        for (int i = 0; i < bars; i++)
+        for (int j = 0; j < bars; j++)
             oss << "=";
 
         oss << std::endl
@@ -556,7 +556,7 @@ std::string Matcher::displayMatches(int uid)
             << std::endl;
         count++;
     }
-
+    std::cout << "displaying matches 3" << std::endl;
     return oss.str();
 }
 

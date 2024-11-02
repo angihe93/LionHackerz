@@ -400,6 +400,15 @@ void RouteController::generateAIListing(const crow::request &req, crow::response
     auto params = crow::query_string(req.url_params);
     crow::json::wvalue jsonRes;
 
+    if (this->db->getAIkey() == "") {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must have an Open AI API key set as an environmental variable to use AI.  Please set this and try again.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;        
+    }
+
 
     if (params.get("n") == nullptr) {
         res.code = 400;
