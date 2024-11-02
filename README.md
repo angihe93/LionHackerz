@@ -23,8 +23,6 @@ For coverage report generation, you will need lcov, which can be installed with:
 
 	brew install lcov
 
-NEW:
-
 The matching algorithm uses WordNet 3.0 to build a list of synonyms for word
 comparison between user profile and job listing.  To install this, download
 WordNet 3.0 from:
@@ -84,6 +82,13 @@ To build project: go to /build and run: `cmake ..` and then `make`, which will g
 
 To run app: go to /build and run: ./LionHackerzProject.
 
+# AI Features
+
+This API integrates with OpenAI's ChatGPT for optional AI-generated job listings.  In order to use this feature, an API key from OpenAI is necessary.  For more on this, see:
+
+	https://platform.openai.com/docs/quickstart
+
+With an API key set as an environmental variable and an active balance with OpenAI, functions which make use of AI will be available to perform queries and return AI-generated results.
 
 # API Entry Points
 
