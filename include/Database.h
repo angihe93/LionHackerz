@@ -171,6 +171,7 @@ public:
     const std::string &insertData, std::string &httpStatusCode);
 
 private:
+    std::string openai_api_key;
     std::string api_key;
     std::string url;
 };

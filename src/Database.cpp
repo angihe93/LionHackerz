@@ -25,13 +25,20 @@ Database::Database()
         std::cout << "ERROR: did not find SUPABASE_API_KEY, check it is set and accessible in the current environment" << std::endl;
     }
 
+    char *openai_api_char = std::getenv("OPENAI_API_KEY");
+    if (openai_api_char == NULL) {
+        std::cout << "ERROR: did not find OPENAI_API_KEY, check it is set and accessible in teh current environment" << std::endl;
+    }
+
     const std::string url = url_char;
-    // std::cout << "in Database(), url: " << url << std::endl;
+     std::cout << "in Database(), url: " << url << std::endl;
     const std::string api = api_char;
-    // std::cout << "in Database(), api: " << api << std::endl;
+     std::cout << "in Database(), api: " << api << std::endl;
+    const std::string openai_api = openai_api_char; 
 
     this->url = url;
     this->api_key = api;
+    this->openai_api_key = openai_api; 
 }
 
 
@@ -59,12 +66,16 @@ std::string Database::request(const std::string &getPostPatch, const std::string
     headers = curl_slist_append(headers, "Content-Type: application/json");
     headers = curl_slist_append(headers, "Accept: application/json");    
     headers = curl_slist_append(headers, ("apikey: " + this->api_key).c_str());
-    headers = curl_slist_append(headers, ("Authorization: Bearer " + this->api_key).c_str());
+
+    if (getPostPatch == "AI")
+        headers = curl_slist_append(headers, ("Authorization: Bearer " + this->openai_api_key).c_str());
+    else
+        headers = curl_slist_append(headers, ("Authorization: Bearer " + this->api_key).c_str());
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
-    if (getPostPatch != "POST" && getPostPatch != "GET" && getPostPatch != "PATCH")
+    if (getPostPatch != "POST" && getPostPatch != "GET" && getPostPatch != "PATCH" && getPostPatch != "AI")
     {
         std::cout << "invalid option. please specify whether you wish to perform a GET or POST or PATCH"
                   << "request." << std::endl;
@@ -72,16 +83,19 @@ std::string Database::request(const std::string &getPostPatch, const std::string
         httpStatusCode = "400";
         return "exiting request.";
     }
-    
-        if (getPostPatch == "POST")
+
+
+        if (getPostPatch == "POST" || getPostPatch == "AI")
            	curl_easy_setopt(curl, CURLOPT_POST, 1L);
 	    else if (getPostPatch == "PATCH")
             curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
-        else if (getPostPatch == "GET")
+        else if (getPostPatch == "GET" || getPostPatch == "AI")
             curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
         
-        if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH"))
+        if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH" || getPostPatch == "AI"))
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
+
+
 
     headers = curl_slist_append(headers, "Prefer: return=representation");    
 
