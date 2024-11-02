@@ -533,7 +533,7 @@ std::string Matcher::displayMatches(int uid)
     Listing *l = new Listing(*db);
 
     for (int i = 0; i < candidates.size(); i++)
-    {   std::cout << "i = " << i << std::endl;
+    {   
         oss << "Listing " << candidates[i] << ":  Match score " << scores[count] << "   ";
         std::cout << "listing: " << candidates[i] << ", score: " << scores[count] << std::endl;
         int bars = scores[count] / 25;
@@ -546,17 +546,19 @@ std::string Matcher::displayMatches(int uid)
 
         oss << l->getListing(candidates[i]) << std::endl;
 
-        oss << "\t\tMatched Words: ";
+        if (!matchedWords[0].empty()) {
+            oss << "\t\tMatched Words: ";
 
-        for (std::string &mw : matchedWords[count])
-            oss << mw << ", ";
+            for (std::string &mw : matchedWords[count])
+                oss << mw << ", ";
+        }
 
         oss << std::endl
             << std::endl
             << std::endl;
         count++;
     }
-    std::cout << "displaying matches 3" << std::endl;
+
     return oss.str();
 }
 
