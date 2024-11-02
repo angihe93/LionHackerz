@@ -394,6 +394,63 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     return;
 }
 
+void RouteController::generateAIListing(const crow::request &req, crow::response &res)
+{
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    if (this->db->getAIkey() == "") {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must have an Open AI API key set as an environmental variable to use AI.  Please set this and try again.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;        
+    }
+
+
+    if (params.get("n") == nullptr) {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify how many listings to generate with '?n=X'";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    } 
+    
+        std::string n = params.get("n");
+     if (!std::all_of(n.begin(), n.end(), ::isdigit)) {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "The number n specified to generate must be a numeric value.'";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+    
+     if (stoi(n) > 20 || stoi(n) < 1 ) {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "The number n to generate must be between 1-20 listings.'";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    } 
+
+    Listing *l = new Listing(*db);
+    
+    std::string newListings = l->generateAIListing(n);
+        res.code = 200;
+        jsonRes["success"]["code"] = res.code;
+        res.write(newListings);
+        res.end();
+
+    delete l;
+    return;
+
+}
+
 void RouteController::changeFlex(const crow::request &req, crow::response &res)
 {
     auto params = crow::query_string(req.url_params);
@@ -678,6 +735,10 @@ void RouteController::initRoutes(crow::App<> &app)
     CROW_ROUTE(app, "/listing/changeModernWorkspace")
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                         { changeModernWorkspace(req, res); });                                        
+
+    CROW_ROUTE(app, "/listing/generateAI")
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
+                                        { generateAIListing(req, res); });                                        
 
     /* USER ROUTE */
     CROW_ROUTE(app, "/makeUser")

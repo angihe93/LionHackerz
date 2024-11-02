@@ -170,7 +170,10 @@ public:
     std::string request(const std::string &getPostPatch, const std::string url, 
     const std::string &insertData, std::string &httpStatusCode);
 
+    std::string getAIkey() { return openai_api_key; }
+
 private:
+    std::string openai_api_key;
     std::string api_key;
     std::string url;
 };

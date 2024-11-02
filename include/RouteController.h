@@ -73,7 +73,15 @@ class RouteController {
         *       and true if previously false.  Multiple calls cycle
         *       between setting true and false. */
         void changeModernWorkspace(const crow::request &req, crow::response &res);
-        
+
+        /* Route: /listing/generateAIListing?n=X
+        *       This route generates n new listings in the database generated
+        *       by AI.  The listings are from random fields with random
+        *       dimensions generated via the AI but corresponding to 
+        *       values one would expect from real jobs.  n must be
+        *       between 1-20. Listings are generated in Listing_AI. */
+        void generateAIListing(const crow::request &req, crow::response &res);
+
         /* Route: /dbtest
          *      This route tests the functionality of the database class and
          *      provides examples of queries and inserts. Not intended for
