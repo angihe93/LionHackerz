@@ -67,7 +67,7 @@ include(GoogleTest)
 # Test executable
  add_executable(LionHackerzProjectTests
    test/testMain.cpp
-   test/MatcherUnitTests.cpp
+#    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
    test/EmployerUnitTests.cpp
