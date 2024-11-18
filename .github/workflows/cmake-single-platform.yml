@@ -84,6 +84,26 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: make
 
+    - name: Run style check
+      working-directory: ${{github.workspace}}/build
+      run: make cpplint > cpplint_output.txt
+
+    - name: Upload cpplint output
+      uses: actions/upload-artifact@v3
+      with:
+        name: cpplint-output
+        path: ${{github.workspace}}/build/cpplint_output.txt
+
+    - name: Run static analysis
+      working-directory: ${{github.workspace}}/build
+      run: cppcheck ../src > cppcheck_output.txt
+
+    - name: Upload cppcheck output
+      uses: actions/upload-artifact@v3
+      with:
+        name: cppcheck-output
+        path: ${{github.workspace}}/build/cppcheck_output.txt
+
     - name: Test
       working-directory: ${{github.workspace}}/build
     #   # Execute tests defined by the CMake configuration.
