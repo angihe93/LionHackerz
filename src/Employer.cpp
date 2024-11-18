@@ -248,3 +248,30 @@ int Employer::postListing(int eid, std::map<std::string, std::string> basicInfo,
 
         return insertedLid;
 }
+
+int Employer::createEmployer(std::string company_name, std::string size) {
+        std::string data = "{\"company_name\": \"" + company_name + "\", \"size\": \"" + size + "\"}";
+        std::string res = db->insert("Employer", data);
+        std::cout << "createEmployer res: " << res << std::endl;
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return -1;
+        }
+
+        id_pos = res.find("eid");
+        if (id_pos == std::string::npos) {
+                std::cout << "\"eid\" not found, pos: " << id_pos << std::endl;
+                return -1;
+        } else {
+                std::cout << "\"eid\" found at position: " << id_pos << std::endl;
+        }
+        
+        size_t eid_start_id = id_pos + 5; // start of eid
+        size_t eid_end_id = res.find(",", eid_start_id); // end of eid
+
+        int eid = std::stoi(res.substr(eid_start_id, eid_end_id - eid_start_id));
+        std::cout << "return eid: " << eid << std::endl;
+        return eid;
+
+}

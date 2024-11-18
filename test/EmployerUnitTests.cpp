@@ -317,3 +317,19 @@ TEST(EmployerPostListing, checkPostListing) {
         delete db;
         delete e;
 }
+
+/* Tests Employer::createEmployer() function in Employer.cpp */
+TEST(EmployerCreate, checkCreateEmployer) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        std::string company_name = "MediMetrics"; 
+        std::string size = "Medium";
+
+        int res = e->createEmployer(company_name, size);
+        EXPECT_GT(res, 0);
+
+        delete db;
+        delete e;
+}

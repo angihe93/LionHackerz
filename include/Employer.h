@@ -138,9 +138,19 @@ class Employer {
                  */
                 int postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int64_t pay, std::map<std::string, bool> boolFields);
 
+                // change all employer's listings at once
+
+
                 // delete listing
 
-                // create new emplpyer
+                /**
+                 * Create a new employer and insert into database
+                 * 
+                 * @param company_name   Employer's company name
+                 * @param size   Employer's company size
+                 * @return   eid (int) for the created employer, or -1 on failure
+                 */
+                int createEmployer(std::string company_name, std::string size);
 
 
         private:
