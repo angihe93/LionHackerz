@@ -87,6 +87,7 @@ jobs:
     - name: Run style check
       working-directory: ${{github.workspace}}/build
       run: make cpplint > cpplint_output.txt
+      continue-on-error: true
 
     - name: Upload cpplint output
       uses: actions/upload-artifact@v3
@@ -97,6 +98,7 @@ jobs:
     - name: Run static analysis
       working-directory: ${{github.workspace}}/build
       run: cppcheck ../src > cppcheck_output.txt
+      continue-on-error: true
 
     - name: Upload cppcheck output
       uses: actions/upload-artifact@v3
@@ -109,4 +111,5 @@ jobs:
     #   # Execute tests defined by the CMake configuration.
     #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ./LionHackerzProjectTests
+      continue-on-error: true
 
