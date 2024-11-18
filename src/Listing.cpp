@@ -207,9 +207,15 @@ std::string Listing::getListing(int lid)
 {
 	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
+
+	// using previous table for workflow tests
+	// std::vector<std::vector<std::string>> listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
+	// std::vector<std::vector<std::string>> eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+	// std::vector<std::vector<std::string>> company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
+	std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
+
 
 	std::ostringstream oss;
 

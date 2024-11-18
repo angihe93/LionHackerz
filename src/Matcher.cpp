@@ -78,7 +78,10 @@ std::vector<int> Matcher::filterJobs()
 {
     int resCount = 0;
 
-    std::vector<std::vector<std::string>> lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
+    // using previous table for workflow tests
+    // std::vector<std::vector<std::string>> lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
+    std::vector<std::vector<std::string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
+
 
     this->all_listings = lists;
 
