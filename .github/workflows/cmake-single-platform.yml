@@ -35,13 +35,23 @@ jobs:
     - name: Install lcov
       run: brew install lcov
 
+    - name: Install Crow
+      working-directory: ${{github.workspace}}/external_libraries
+      run: git clone https://github.com/CrowCpp/Crow.git
+
+    - name: Install boost
+      working-directory: ${{github.workspace}}/external_libraries
+      run: |
+        brew install wget
+        wget https://boostorg.jfrog.io/artifactory/main/release/1.86.0/source/boost_1_86_0.tar.gz
+        tar -xzf boost_1_86_0.tar.gz && rm boost_1_86_0.tar.gz
+
     - name: Install tcl-tk
       run: brew install tcl-tk
 
     - name: Install Wordnet
       working-directory: ${{github.workspace}}/external_libraries
       run: |
-        brew install wget
         wget http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz
         tar -xzf WordNet-3.0.tar.gz && rm WordNet-3.0.tar.gz
         cd WordNet-3.0
