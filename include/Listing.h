@@ -136,7 +136,7 @@ class Listing {
 	// input for pay
 	// input map for bool fields: job_flexibility, modern_building, mixed_gender, diverse_workforce, remote_available
 
-	int insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality,int8_t pay, std::map<std::string, bool> boolFields); 
+	int insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality,int64_t pay, std::map<std::string, bool> boolFields); 
 	// should return the lid in DB so employer has it and can use it to change/delete listing later
 	
 	// delete listing

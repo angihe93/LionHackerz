@@ -432,7 +432,7 @@ void Listing::parseAI(const std::string listings, int n)
 }
 
 
-int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int8_t pay, std::map<std::string, bool> boolFields)
+int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int64_t pay, std::map<std::string, bool> boolFields)
 {
 	std::cout << "in Listing::insertListing" << std::endl;
 
