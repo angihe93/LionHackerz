@@ -28,7 +28,8 @@ jobs:
     - name: Install cppcheck
       run: brew install cppcheck
 
-    # pip3 install cpplint??
+    - name: Install cpplint
+      run: pip3 install cpplint
 
     - name: Install lcov
       run: brew install lcov
@@ -36,16 +37,19 @@ jobs:
     - name: Install tcl-tk
       run: brew install tcl-tk
 
-    # brew install wget
     - name: Install Wordnet
+      working-directory: ${{github.workspace}}/external_libraries
       run: |
         brew install wget
         wget http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz
         tar -xzf WordNet-3.0.tar.gz && rm WordNet-3.0.tar.gz
-        find /opt/homebrew/Cellar -name tclConfig.sh
+        cd WordNet-3.0
+        ./configure --with-tcl=/opt/homebrew/Cellar/tcl-tk/8.6.15/lib --with-tk=/opt/homebrew/Cellar/tcl-tk/8.6.15/lib
+        sudo cp ../stubs.c src/stubs.c
+        sudo make
+        sudo make install
 
-    # - name: Build WordNet
-    #   run: 
+    # workflow can find OpenSSL 3.3.2
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
