@@ -28,11 +28,24 @@ jobs:
     - name: Install cppcheck
       run: brew install cppcheck
 
+    # pip3 install cpplint??
+
     - name: Install lcov
       run: brew install lcov
 
     - name: Install tcl-tk
-      run: brew install tcl-tk
+      run: brew install tcl-tk@8
+
+    # brew install wget
+    - name: Install Wordnet
+      run: |
+        brew install wget
+        wget http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz
+        tar -xzf WordNet-3.0.tar.gz && rm WordNet-3.0.tar.gz
+        find /opt/homebrew/Cellar -name tclConfig.sh
+
+    # - name: Build WordNet
+    #   run: 
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
