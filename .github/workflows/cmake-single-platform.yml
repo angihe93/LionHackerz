@@ -29,7 +29,8 @@ jobs:
       run: brew install cppcheck
 
     - name: Install cpplint
-      run: pip3 install cpplint
+      run: brew install cpplint
+        # pip3 install cpplint
 
     - name: Install lcov
       run: brew install lcov
