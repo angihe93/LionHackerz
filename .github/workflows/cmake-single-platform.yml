@@ -30,7 +30,6 @@ jobs:
 
     - name: Install cpplint
       run: brew install cpplint
-        # pip3 install cpplint
 
     - name: Install lcov
       run: brew install lcov
@@ -74,9 +73,9 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: make
 
-    # - name: Test
-    #   working-directory: ${{github.workspace}}/build
+    - name: Test
+      working-directory: ${{github.workspace}}/build
     #   # Execute tests defined by the CMake configuration.
     #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-    #   run: ./
+      run: ./LionHackerzTests
 
