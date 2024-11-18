@@ -114,8 +114,8 @@ jobs:
       continue-on-error: true
 
     - name: Upload test output
-    uses: actions/upload-artifact@v3
-    with:
-      name: test-output
-      path: ${{github.workspace}}/build/test_output.txt
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-output
+        path: ${{github.workspace}}/build/test_output.txt
 
