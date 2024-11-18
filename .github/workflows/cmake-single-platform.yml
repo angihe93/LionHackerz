@@ -19,8 +19,19 @@ jobs:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: macos-latest
 
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
     steps:
     - uses: actions/checkout@v4
+
+    - name: Set up environment
+      run: |
+        echo "SUPABASE_URL=${SUPABASE_URL}" >> $GITHUB_ENV
+        echo "SUPABASE_API_KEY=${SUPABASE_API_KEY}" >> $GITHUB_ENV
+        echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> $GITHUB_ENV
 
     - name: Install asio
       run: brew install asio
