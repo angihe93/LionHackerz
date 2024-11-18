@@ -34,7 +34,7 @@ public:
     Database(const std::string url, const std::string api_key);
 
     /* Destructor:  Call cleanup on curl after database closed. */
-    ~Database() {
+    virtual ~Database() {
 	    curl_global_cleanup();
     }    
 
@@ -116,7 +116,7 @@ public:
      *                          that contains the data for each column you are
      *                          inserting.
      */
-    std::string insert(std::string table, std::string data);
+    virtual std::string insert(std::string table, std::string data);
 
     /* update():  This function allows you to update an existing entry in the database.
      * It takes 2 arguments, both strings, the first being the table where the entry is
@@ -178,4 +178,33 @@ private:
     std::string url;
 };
 
-#endif
+/*
+ * Mock database class for testing.
+
+ * NOTE:  This class is used for testing purposes only.  It is a subclass of
+    * the Database class and overrides insert(), ...
+ */
+class MockDatabase : public Database
+{
+    public:
+
+        // Constructors 
+        MockDatabase() {Database();};
+        // ~MockDatabase();
+
+        /**
+         * insert() overrides the insert() method in Database to use the _TEST tables
+         * 
+         * @param table   The table you are inserting data into
+         * @param data   A JSON formatted string ("{ "col1": "val1", ... }") that contains the data for each column you are inserting.
+         * @return std::string 
+         */
+        std::string insert(std::string table, std::string data) override {
+            // Use the test table suffix _TEST
+            std::string testTable = table + "_TEST";
+            return Database::insert(testTable, data);
+        }
+
+};
+
+#endif // DATABASE_H

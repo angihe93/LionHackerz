@@ -228,3 +228,10 @@ bool Employer::changeModernWorkspace(int eid, int lid, int &resCode) {
         return true;                     
 }
                 
+int Employer::postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int8_t pay, std::map<std::string, bool> boolFields) {
+        Listing *l = new Listing(*db);
+        int res = l->insertListing(basicInfo, skillsPersonality, pay, boolFields);
+        // check success, if so add to created table
+
+        return res;
+}

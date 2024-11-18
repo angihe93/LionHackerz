@@ -10,6 +10,7 @@
 #include <curl/curl.h>
 #include <string>
 #include <vector>
+#include <map>
 #include "Database.h"
 
 class Listing {
@@ -130,7 +131,16 @@ class Listing {
 	/* 
 	// description
 	*/
-	int postListing(); // should return the lid in DB so employer has it and can use it to change/delete listing later
+// an input map for basic info: field, position, job_description, location
+	// an input map for skills & personality: skill1_req, ..., skill5_req, personality_types
+	// input for pay
+	// input map for bool fields: job_flexibility, modern_building, mixed_gender, diverse_workforce, remote_available
+
+	int insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality,int8_t pay, std::map<std::string, bool> boolFields); 
+	// should return the lid in DB so employer has it and can use it to change/delete listing later
+	
+	// delete listing
+	
 	private:
 		Database *db;
 

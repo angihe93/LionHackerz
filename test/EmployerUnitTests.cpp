@@ -37,6 +37,11 @@ TEST(EmployerChangeField, checkChangeField) {
         bool expected = false;
         EXPECT_EQ(res, expected);
 
+        // case where change field should fail
+        res = e->changeField(1, 9999, "Computer science");
+        expected = false;
+        EXPECT_EQ(res, expected);
+
         // case where change field should succeed
         res = e->changeField(1, 1, "Computer science");
         expected = true;
@@ -57,6 +62,11 @@ TEST(EmployerChangePosition, checkChangePosition) {
         bool expected = false;
         EXPECT_EQ(res, expected);
 
+        // case where change position should fail
+        res = e->changePosition(2, 9999, "Lead Engineer");
+        expected = false;
+        EXPECT_EQ(res, expected);
+
         // case where change position should succeed
         res = e->changePosition(2, 2, "Lead Engineer");
         expected = true;
@@ -75,6 +85,11 @@ TEST(EmployerChangeJobDescription, checkChangeJobDescription) {
         // case where change job description should fail
         bool res = e->changeJobDescription(3, 5, "blank");
         bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change job description should fail
+        res = e->changeJobDescription(3, 9999, "We are looking for a few new programmers to round off our team.  Students welcome to apply.");
+        expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change job description should succeed
@@ -98,6 +113,11 @@ TEST(EmployerChangeFlex, checkChangeFlex) {
         bool expected = false;
         EXPECT_EQ(res, expected);
 
+        // case where change flex should fail
+        res = e->changeFlex(4, 9999, resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
+
         // case where change flex should succeed
         res = e->changeFlex(4, 4, resCode);
         expected = true;
@@ -119,6 +139,11 @@ TEST(EmployerChangeGender, checkChangeGender) {
         bool expected = false;
         EXPECT_EQ(res, expected);
 
+        // case where change gender should fail
+        res = e->changeGender(5, 9999, resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
+
         // case where change gender should succeed
         res = e->changeGender(7, 6, resCode);
         expected = true;
@@ -138,6 +163,11 @@ TEST(EmployerChangeDiversity, checkChangeDiversity) {
         int resCode = 0;
         bool res = e->changeDiversity(1, 2, resCode);
         bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change diversity should fail
+        res = e->changeDiversity(1, 9999, resCode);
+        expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change diversity should succeed
@@ -162,6 +192,11 @@ TEST(EmployerChangeRemote, checkChangeRemote) {
         EXPECT_EQ(res, expected);
 
         // case where change remote should succeed
+        res = e->changeRemote(1, 9999, resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change remote should succeed
         res = e->changeRemote(1, 1, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
@@ -180,6 +215,11 @@ TEST(EmployerChangeLocation, checkChangeLocation) {
         int resCode = 0;
         bool res = e->changeLocation(1, 2, "blank", resCode);
         bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change location should fail
+        res = e->changeLocation(1, 9999, "San Francisco", resCode);
+        expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change location should succeed
@@ -203,6 +243,11 @@ TEST(EmployerChangeMBTI, checkChangeMBTI) {
         bool expected = false;
         EXPECT_EQ(res, expected);
 
+        // case where change MBTI should fail
+        res = e->changeMBTI(1, 9999, "INTJ", resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
+
         // case where change MBTI should succeed
         res = e->changeMBTI(2, 2, "INTJ", resCode);
         expected = true;
@@ -222,6 +267,11 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
         int resCode = 0;
         bool res = e->changeModernWorkspace(1, 2, resCode);
         bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change modern workspace should fail
+        res = e->changeModernWorkspace(1, 9999, resCode);
+        expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change modern workspace should succeed

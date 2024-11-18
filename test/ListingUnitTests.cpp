@@ -5,6 +5,7 @@
 #include "Listing.h"
 #include <curl/curl.h>
 #include <vector>
+#include <map>
 
 /* tests Listing::getListing() function in Listing.cpp */
 TEST(ListingGet, checkGetListing) {
@@ -59,6 +60,12 @@ TEST(ListingChange, checkChangeListing) {
         // cout << "changeRes: " << changeRes << endl;
         EXPECT_EQ(changeRes, expected);
 
+        // changeJobDescription - Invalid Listing ID
+        changeRes = l->changeJobDescription(9999, "Microsoft is currently looking for an experienced candidate to lead our engineering team.");
+        expected = "Error: The listing ID you provided does not exist in the database.";
+        // cout << "changeRes: " << changeRes << endl;
+        EXPECT_EQ(changeRes, expected);
+
         // changeFlex - Success
         int resCount = 0;
         std::vector<std::vector<std::string>> curVal = db->query("Listing_TEST", "job_flexibility", "lid", "eq", "1", false, resCount);
@@ -91,7 +98,50 @@ TEST(ListingChange, checkChangeListing) {
         expected = "Error: The listing ID you provided does not exist in the database.";
         EXPECT_EQ(changeRes, expected);
 
+        // changeGender - Success
+        resCount = 0;
+        curVal = db->query("Listing_TEST", "mixed_gender", "lid", "eq", "1", false, resCount);
+        val_before_change = curVal[0][0];
+        changeRes = l->changeGender(1, resCount);
+        if (val_before_change == "\"null\"" || val_before_change == "\"false\"")
+                expected = "\"true\"";
+        else if (val_before_change == "\"true\"")
+                expected = "\"false\"";
+        EXPECT_EQ(changeRes, expected);
+
+        // changeGender - Invalid listing ID
+        changeRes = l->changeGender(9999, resCount);
+        expected = "Error: The listing ID you provided does not exist in the database.";
+        EXPECT_EQ(changeRes, expected);
+
+        // changeDiversity - Success
+        resCount = 0;
+        curVal = db->query("Listing_TEST", "diverse_workforce", "lid", "eq", "1", false, resCount);
+        val_before_change = curVal[0][0];
+        changeRes = l->changeDiversity(1, resCount);
+        if (val_before_change == "\"null\"" || val_before_change == "\"false\"")
+                expected = "\"true\"";
+        else if (val_before_change == "\"true\"")
+                expected = "\"false\"";
+        EXPECT_EQ(changeRes, expected);
+
+        // changeDiversity - Invalid listing ID
+        changeRes = l->changeDiversity(9999, resCount);
+        expected = "Error: The listing ID you provided does not exist in the database.";
+        EXPECT_EQ(changeRes, expected);
+
         delete db;
         delete l;
 }
 
+/* tests Listing::insertListing() function in Listing.cpp */
+TEST(ListingInsert, checkInsertListing) {
+        // use MockDatabase for testing
+        Database *db = new MockDatabase();
+        Listing *l = new Listing(*db);
+        std::map<std::string, std::string> basicInfo = {{"field", "HealthTech"}, {"position", "Healthcare Data Analyst"}, {"job_description", "Analyze and interpret healthcare data to aid in decision-making"}, {"location", "Boston"}};
+        std::map<std::string, std::string> skillsPersonality = {{"skill1_req", "Data Analysis"}, {"skill2_req", "SQL"}, {"skill3_req", "Healthcare Industry Knowledge"}, {"skill4_req", "Problem-solving"}, {"skill5_req", "Communication"}, {"personality_types", "INTJ"}};
+        std::map<std::string, bool> boolFields = {{"job_flexibility", false}, {"modern_building", true}, {"mixed_gender", true}, {"diverse_workforce", true}, {"remote_available", false}};
+        int8_t pay = 75000;
+        int insertRes = l->insertListing(basicInfo, skillsPersonality, pay, boolFields);
+}

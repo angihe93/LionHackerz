@@ -126,7 +126,16 @@ class Employer {
                  */
                 bool changeModernWorkspace(int eid, int lid, int &resCode);
                 
-                // int postListing(...);
+                //
+                int postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int8_t pay, std::map<std::string, bool> boolFields);
+
+
+                // bool postListing(int eid, )
+                // make postlisting in Listing class first and use that here
+
+                // delete listing
+
+                // create emplpyer
 
 
         private:

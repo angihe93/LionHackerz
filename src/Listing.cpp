@@ -339,56 +339,56 @@ void Listing::parseAI(const std::string listings, int n)
 	{
 		count++;
 
-	if (localListings[0] == '\"' || localListings[0] == ' ')
-		localListings.erase(0, 2);
-	else
-		localListings.erase(0,1);
+		if (localListings[0] == '\"' || localListings[0] == ' ')
+			localListings.erase(0, 2);
+		else
+			localListings.erase(0,1);
 
-	jobField = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, jobField.length() +1);
-	jobPosition = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, jobPosition.length() +1);
-	jobDescription = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, jobDescription.length() +1);
-	payStr = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, payStr.length() +1);
-	payStr = payStr.substr(0, payStr.find('.'));
-	skill1 = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, skill1.length() +1);	
-	skill2 = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, skill2.length() +1);	
-	skill3 = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, skill3.length() +1);	
-	skill4 = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, skill4.length() +1);	
-	skill5 = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, skill5.length() +1);	
-	location = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, location.length() +1);
-	personality = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, personality.length() +1);
-	flex = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, flex.length() +1);
-	modern = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, modern.length() + 1);
-	gender = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, gender.length() +1);
-	diverse = localListings.substr(0, localListings.find(';'));
-	localListings.erase(0, diverse.length() +1);
-	remote = localListings.substr(0, localListings.find(')'));
-	localListings.erase(0, remote.length() +1);
+		jobField = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, jobField.length() +1);
+		jobPosition = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, jobPosition.length() +1);
+		jobDescription = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, jobDescription.length() +1);
+		payStr = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, payStr.length() +1);
+		payStr = payStr.substr(0, payStr.find('.'));
+		skill1 = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, skill1.length() +1);	
+		skill2 = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, skill2.length() +1);	
+		skill3 = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, skill3.length() +1);	
+		skill4 = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, skill4.length() +1);	
+		skill5 = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, skill5.length() +1);	
+		location = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, location.length() +1);
+		personality = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, personality.length() +1);
+		flex = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, flex.length() +1);
+		modern = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, modern.length() + 1);
+		gender = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, gender.length() +1);
+		diverse = localListings.substr(0, localListings.find(';'));
+		localListings.erase(0, diverse.length() +1);
+		remote = localListings.substr(0, localListings.find(')'));
+		localListings.erase(0, remote.length() +1);
 
-	std::string data = "{\"field\": \"" + jobField + "\", \"position\": \"" + jobPosition + "\", \"job_description\": \"" + jobDescription + 
-	"\", \"skill1_req\": \"" + skill1 + "\", \"skill2_req\": \"" + skill2 + "\", \"skill3_req\": \"" + skill3 + "\", \"skill4_req\": \""+ 
-		skill4 + "\", \"skill5_req\": \"" + skill5 + "\", \"location\": \"" + location + "\", \"personality_types\": \"" + personality + 
-		"\", \"job_flexibility\":" + flex + ", \"remote_available\": " + remote + ", \"diverse_workforce\": " + diverse + ", \"mixed_gender\": " +
-		gender + ", \"modern_building\": " + modern + ", \"pay\": " + payStr + "}";
-		
+		std::string data = "{\"field\": \"" + jobField + "\", \"position\": \"" + jobPosition + "\", \"job_description\": \"" + jobDescription + 
+		"\", \"skill1_req\": \"" + skill1 + "\", \"skill2_req\": \"" + skill2 + "\", \"skill3_req\": \"" + skill3 + "\", \"skill4_req\": \""+ 
+			skill4 + "\", \"skill5_req\": \"" + skill5 + "\", \"location\": \"" + location + "\", \"personality_types\": \"" + personality + 
+			"\", \"job_flexibility\":" + flex + ", \"remote_available\": " + remote + ", \"diverse_workforce\": " + diverse + ", \"mixed_gender\": " +
+			gender + ", \"modern_building\": " + modern + ", \"pay\": " + payStr + "}";
+			
 
-	std::cout << db->insert("Listing_AI", data) << std::endl;
-	int resCount = 0;
-	std::vector<std::vector<std::string>> lidQ = db->query("Listing_AI", "lid", "order", "lid", "desc", false, resCount);
-	lids.push_back(stoi(lidQ[0][0]));
+		std::cout << db->insert("Listing_AI", data) << std::endl;
+		int resCount = 0;
+		std::vector<std::vector<std::string>> lidQ = db->query("Listing_AI", "lid", "order", "lid", "desc", false, resCount);
+		lids.push_back(stoi(lidQ[0][0]));
 
 	}
 
@@ -432,9 +432,47 @@ void Listing::parseAI(const std::string listings, int n)
 }
 
 
-int Listing::postListing()
+int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int8_t pay, std::map<std::string, bool> boolFields)
 {
+	std::cout << "in Listing::insertListing" << std::endl;
+	
+	std::string jobField = basicInfo["field"];
+	std::string jobPosition = basicInfo["position"];
+	std::string jobDescription = basicInfo["job_description"];
+	std::string skill1 = skillsPersonality["skill1_req"];
+	std::string skill2 = skillsPersonality["skill2_req"];
+	std::string skill3 = skillsPersonality["skill3_req"];
+	std::string skill4 = skillsPersonality["skill4_req"];
+	std::string skill5 = skillsPersonality["skill5_req"];
+	std::string location = basicInfo["location"];
+	std::string personality = skillsPersonality["personality_types"];
+	std::string flex = boolFields["job_flexibility"] ? "true" : "false";
+	std::string remote = boolFields["remote_available"] ? "true" : "false";
+	std::string diverse = boolFields["diverse_workforce"] ? "true" : "false";
+	std::string gender = boolFields["mixed_gender"] ? "true" : "false";
+	std::string modern = boolFields["modern_building"] ? "true" : "false";
+	std::string payStr = std::to_string(pay);
+
+	std::string data = "{\"field\": \"" + jobField + "\", \"position\": \"" + jobPosition + "\", \"job_description\": \"" + jobDescription + 
+		"\", \"skill1_req\": \"" + skill1 + "\", \"skill2_req\": \"" + skill2 + "\", \"skill3_req\": \"" + skill3 + "\", \"skill4_req\": \""+ 
+			skill4 + "\", \"skill5_req\": \"" + skill5 + "\", \"location\": \"" + location + "\", \"personality_types\": \"" + personality + 
+			"\", \"job_flexibility\":" + flex + ", \"remote_available\": " + remote + ", \"diverse_workforce\": " + diverse + ", \"mixed_gender\": " +
+			gender + ", \"modern_building\": " + modern + ", \"pay\": " + payStr + "}";
+			
+
+	std::cout << db->insert("Listing", data) << std::endl;
+	int resCount = 0;
+	std::vector<std::vector<std::string>> lidQ = db->query("Listing_AI", "lid", "order", "lid", "desc", false, resCount);
+	std::cout << "resCount: " << resCount << std::endl;
+
+	// insert to Created
+	// or do this in employer postlisting??
+	if (resCount == 1) {
+
+	}
+
+
 	// return true for success, false for error
-	// db->insert
+
 	return 0;
 }
