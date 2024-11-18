@@ -71,6 +71,8 @@ std::string Database::request(const std::string &getPostPatch, const std::string
         return "";
     }
 
+    // debug
+    std::cout << "url: " << url << std::endl;
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     struct curl_slist *headers = NULL;
