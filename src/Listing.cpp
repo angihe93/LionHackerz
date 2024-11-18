@@ -18,43 +18,43 @@ Listing::Listing(Database &db)
 std::string Listing::changeField(int lid, std::string newField)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
 	std::string data = "{\"field\": \"" + newField + "\"}";
 	std::cout << data << std::endl;
-	std::string result = db->update("Listing_TEST", data, "lid", "eq", std::to_string(lid));
+	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
 std::string Listing::changePosition(int lid, std::string newPosition)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
 	std::string data = "{\"position\": \"" + newPosition + "\"}";
 	std::cout << data << std::endl;
-	std::string result = db->update("Listing_TEST", data, "lid", "eq", std::to_string(lid));
+	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
 std::string Listing::changeJobDescription(int lid, std::string newDescription)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid), false, resCount);
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
 		return "Error: The listing ID you provided does not exist in the database.";
 	std::string data = "{\"job_description\": \"" + newDescription + "\"}";
 	std::cout << data << std::endl;
-	std::string result = db->update("Listing_TEST", data, "lid", "eq", std::to_string(lid));
+	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
 std::string Listing::changeFlex(int lid, int &resCode)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
 	if (resCount == 0)
 	{
@@ -66,8 +66,8 @@ std::string Listing::changeFlex(int lid, int &resCode)
 	if (listing[14][0] == "\"true\"")
 		setVal = R"({"job_flexibility" : false})";
 
-	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
-	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,job_flexibility", "lid", "eq",
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,job_flexibility", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
 	return result[1][0];
@@ -77,7 +77,7 @@ std::string Listing::changeFlex(int lid, int &resCode)
 std::string Listing::changeGender(int lid, int &resCode)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
 	if (resCount == 0)
 	{
@@ -89,8 +89,8 @@ std::string Listing::changeGender(int lid, int &resCode)
 	if (listing[16][0] == "\"true\"")
 		setVal = R"({"mixed_gender" : false})";
 
-	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
-	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,mixed_gender", "lid", "eq",
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,mixed_gender", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
 	return result[1][0];
@@ -99,7 +99,7 @@ std::string Listing::changeGender(int lid, int &resCode)
 std::string Listing::changeDiversity(int lid, int &resCode)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
 	if (resCount == 0)
 	{
@@ -111,8 +111,8 @@ std::string Listing::changeDiversity(int lid, int &resCode)
 	if (listing[17][0] == "\"true\"")
 		setVal = R"({"diverse_workforce" : false})";
 
-	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
-	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,diverse_workforce", "lid", "eq",
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,diverse_workforce", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
 	return result[1][0];
@@ -121,7 +121,7 @@ std::string Listing::changeDiversity(int lid, int &resCode)
 std::string Listing::changeRemote(int lid, int &resCode)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
 	if (resCount == 0)
 	{
@@ -133,8 +133,8 @@ std::string Listing::changeRemote(int lid, int &resCode)
 	if (listing[18][0] == "\"true\"")
 		setVal = R"({"remote_available" : false})";
 
-	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
-	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,remote_available", "lid", "eq",
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,remote_available", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
 	return result[1][0];
@@ -143,7 +143,7 @@ std::string Listing::changeRemote(int lid, int &resCode)
 std::string Listing::changeLocation(int lid, std::string newLocation, int &resCode)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
 	if (resCount == 0)
 	{
@@ -153,8 +153,8 @@ std::string Listing::changeLocation(int lid, std::string newLocation, int &resCo
 
 	std::string setVal = "{\"location\": \"" + newLocation + "\"}";
 
-	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
-	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,location", "lid", "eq",
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,location", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
 	return result[1][0];
@@ -163,7 +163,7 @@ std::string Listing::changeLocation(int lid, std::string newLocation, int &resCo
 std::string Listing::changeMBTI(int lid, std::string newMBTI, int &resCode)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
 	if (resCount == 0)
 	{
@@ -173,8 +173,8 @@ std::string Listing::changeMBTI(int lid, std::string newMBTI, int &resCode)
 
 	std::string setVal = "{\"personality_types\": \"" + newMBTI + "\"}";
 
-	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
-	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,personality_types", "lid", "eq",
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,personality_types", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
 	return result[1][0];
@@ -184,7 +184,7 @@ std::string Listing::changeMBTI(int lid, std::string newMBTI, int &resCode)
 std::string Listing::changeModernWorkspace(int lid, int &resCode)
 {
 	int resCount = 0;
-	std::vector<std::vector<std::string>> listing = db->query("Listing_TEST", "", "lid", "eq", std::to_string(lid),
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
 	if (resCount == 0)
 	{
@@ -196,8 +196,8 @@ std::string Listing::changeModernWorkspace(int lid, int &resCode)
 	if (listing[15][0] == "\"true\"")
 		setVal = R"({"modern_building" : false})";
 
-	db->update("Listing_TEST", setVal, "lid", "eq", std::to_string(lid));
-	std::vector<std::vector<std::string>> result = db->query("Listing_TEST", "lid,modern_building", "lid", "eq",
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,modern_building", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
 	return result[1][0];
@@ -435,7 +435,7 @@ void Listing::parseAI(const std::string listings, int n)
 int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int8_t pay, std::map<std::string, bool> boolFields)
 {
 	std::cout << "in Listing::insertListing" << std::endl;
-	
+
 	std::string jobField = basicInfo["field"];
 	std::string jobPosition = basicInfo["position"];
 	std::string jobDescription = basicInfo["job_description"];

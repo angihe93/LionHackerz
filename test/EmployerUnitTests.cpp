@@ -6,10 +6,12 @@
 #include <curl/curl.h>
 #include <vector>
 
+// use MockDatabase for testing
+
 /* tests Employer::checkHasListing() function in Employer.cpp */
 TEST(EmployerCheckHasListing, checkHasListing) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where employer does not have the listing
@@ -29,7 +31,7 @@ TEST(EmployerCheckHasListing, checkHasListing) {
 /* tests Employer::changeField() function in Employer.cpp */
 TEST(EmployerChangeField, checkChangeField) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change field should fail
@@ -54,7 +56,7 @@ TEST(EmployerChangeField, checkChangeField) {
 /* tests Employer::changePosition() function in Employer.cpp */
 TEST(EmployerChangePosition, checkChangePosition) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change position should fail
@@ -79,7 +81,7 @@ TEST(EmployerChangePosition, checkChangePosition) {
 /* tests Employer::changeJobDescription() function in Employer.cpp */
 TEST(EmployerChangeJobDescription, checkChangeJobDescription) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change job description should fail
@@ -104,7 +106,7 @@ TEST(EmployerChangeJobDescription, checkChangeJobDescription) {
 /* tests Employer::changeFlex() function in Employer.cpp */
 TEST(EmployerChangeFlex, checkChangeFlex) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change flex should fail
@@ -122,6 +124,9 @@ TEST(EmployerChangeFlex, checkChangeFlex) {
         res = e->changeFlex(4, 4, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
+        // revert change if success
+        if (res == expected) 
+                e->changeFlex(4, 4, resCode);
 
         delete db;
         delete e;
@@ -130,7 +135,7 @@ TEST(EmployerChangeFlex, checkChangeFlex) {
 /* tests Employer::changeGender() function in Employer.cpp */
 TEST(EmployerChangeGender, checkChangeGender) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change gender should fail
@@ -148,6 +153,9 @@ TEST(EmployerChangeGender, checkChangeGender) {
         res = e->changeGender(7, 6, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
+        // revert change if success
+        if (res == expected) 
+                e->changeGender(7, 6, resCode);
 
         delete db;
         delete e;
@@ -156,7 +164,7 @@ TEST(EmployerChangeGender, checkChangeGender) {
 /* Tests Employer::changeDiversity() function in Employer.cpp */
 TEST(EmployerChangeDiversity, checkChangeDiversity) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change diversity should fail
@@ -174,6 +182,9 @@ TEST(EmployerChangeDiversity, checkChangeDiversity) {
         res = e->changeDiversity(1, 1, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
+        // revert change if success
+        if (res == expected) 
+                e->changeDiversity(1, 1, resCode);
 
         delete db;
         delete e;
@@ -182,7 +193,7 @@ TEST(EmployerChangeDiversity, checkChangeDiversity) {
 /* Tests Employer::changeRemote() function in Employer.cpp */
 TEST(EmployerChangeRemote, checkChangeRemote) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change remote should fail
@@ -191,7 +202,7 @@ TEST(EmployerChangeRemote, checkChangeRemote) {
         bool expected = false;
         EXPECT_EQ(res, expected);
 
-        // case where change remote should succeed
+        // case where change remote should fail
         res = e->changeRemote(1, 9999, resCode);
         expected = false;
         EXPECT_EQ(res, expected);
@@ -200,6 +211,9 @@ TEST(EmployerChangeRemote, checkChangeRemote) {
         res = e->changeRemote(1, 1, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
+        // revert change if success
+        if (res == expected) 
+                e->changeRemote(1, 1, resCode);
 
         delete db;
         delete e;
@@ -208,7 +222,7 @@ TEST(EmployerChangeRemote, checkChangeRemote) {
 /* Tests Employer::changeLocation() function in Employer.cpp */
 TEST(EmployerChangeLocation, checkChangeLocation) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change location should fail
@@ -234,7 +248,7 @@ TEST(EmployerChangeLocation, checkChangeLocation) {
 /* Tests Employer::changeMBTI() function in Employer.cpp */
 TEST(EmployerChangeMBTI, checkChangeMBTI) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change MBTI should fail
@@ -260,7 +274,7 @@ TEST(EmployerChangeMBTI, checkChangeMBTI) {
 /* Tests Employer::changeModernWorkspace() function in Employer.cpp */
 TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
 
-        Database *db = new Database();
+        Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where change modern workspace should fail
@@ -278,6 +292,9 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
         res = e->changeModernWorkspace(1, 1, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
+        // revert change if success
+        if (res == expected) 
+                e->changeModernWorkspace(1, 1, resCode);
 
         delete db;
         delete e;

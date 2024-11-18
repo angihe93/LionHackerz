@@ -71,7 +71,7 @@ public:
      * In terms of the SQL query, this function is equivalent to:
      *      SELECT selectColumns FROM table WHERE filterColumn op value
      */
-    std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
+    virtual std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
                                                 std::string filterColumn, std::string op, 
                                                 std::string value,
                                                 bool printResults, int &resCount);
@@ -79,7 +79,7 @@ public:
     /* Overloaded query function:  Same as above, but with 2 filters
      *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
      *              AND filterColumn2 op2 value2 */
-    std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
+    virtual std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
                                                 std::string filterColumn1, std::string op1, 
                                                 std::string value1,
                                                 std::string filterColumn2, std::string op2, 
@@ -89,7 +89,7 @@ public:
     /* Overloaded query function:  Same as above, but with 3 filters
      *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
      *              AND filterColumn2 op2 value2 AND filterColumn3 op3 value3 */
-    std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
+    virtual std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
                                                 std::string filterColumn1, std::string op1, 
                                                 std::string value1,
                                                 std::string filterColumn2, std::string op2, 
@@ -143,7 +143,7 @@ public:
      * 
      *     @param value         Value of the filter column to select on for update.
      */
-    std::string update(std::string table, std::string data, std::string column, 
+    virtual std::string update(std::string table, std::string data, std::string column, 
                        std::string op, std::string val);
 
     /* Used for returning the query results.  Do not call directly or modify. */
@@ -182,7 +182,7 @@ private:
  * Mock database class for testing.
 
  * NOTE:  This class is used for testing purposes only.  It is a subclass of
-    * the Database class and overrides insert(), ...
+    * the Database class and overrides insert(), update(), query(), ...
  */
 class MockDatabase : public Database
 {
@@ -204,6 +204,100 @@ class MockDatabase : public Database
             std::string testTable = table + "_TEST";
             return Database::insert(testTable, data);
         }
+
+        /**
+         * update() overrides the update() method in Database to use the _TEST tables
+         * 
+         * @param table   The table you are updating data in
+         * @param data   A JSON formatted string ("{ "col1": "val1", ... }") that contains the data for each column you are updating.
+         * @param column   The filter column you wish to use for an update, i.e., listing ID, user ID, usually the primary key in the database for this table.
+         * @param op   Logical operator, e.g., "eq", "is", "lt"
+         * @param val   Value of the filter column to select on for update.
+         * @return std::string 
+         */
+        std::string update(std::string table, std::string data, std::string column, std::string op, std::string val) override {
+            // Use the test table suffix _TEST
+            std::string testTable = table + "_TEST";
+            return Database::update(testTable, data, column, op, val);
+        }
+
+        /**
+         * query() overrides the query() method in Database to use the _TEST tables
+         * 
+         * @param table   The table you are querying data from
+         * @param selectColumns   One or more columns to select from, separated by commas
+         * @param filterColumn   The column name to filter on
+         * @param op   A comparison operation (=, >, <, !=, etc.)
+         * @param value   A value to filter on
+         * @param printResults   True to print results, false otherwise
+         * @param resCount   The number of results returned
+         * @return std::vector<std::vector<std::string>> 
+         */
+        std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
+                                                std::string filterColumn, std::string op, 
+                                                std::string value,
+                                                bool printResults, int &resCount) override {
+            // Use the test table suffix _TEST
+            std::string testTable = table + "_TEST";
+            return Database::query(testTable, selectColumns, filterColumn, op, value, printResults, resCount);
+        }
+
+        /**
+         * query() overrides the query() method in Database to use the _TEST tables
+         * 
+         * @param table   The table you are querying data from
+         * @param selectColumns   One or more columns to select from, separated by commas
+         * @param filterColumn1   The first column name to filter on
+         * @param op1   The comparison operation for the first filter column
+         * @param value1   The value to filter on for the first filter column
+         * @param filterColumn2   The second column name to filter on
+         * @param op2   The comparison operation for the second filter column
+         * @param value2   The value to filter on for the second filter column
+         * @param printResults   True to print results, false otherwise
+         * @param resCount   The number of results returned
+         */
+        std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
+                                                std::string filterColumn1, std::string op1, 
+                                                std::string value1,
+                                                std::string filterColumn2, std::string op2, 
+                                                std::string value2,
+                                                bool printResults, int &resCount) override {
+            // Use the test table suffix _TEST
+            std::string testTable = table + "_TEST";
+            return Database::query(testTable, selectColumns, filterColumn1, op1, value1, filterColumn2, op2, value2, printResults, resCount);
+        }
+
+        /**
+         * query() overrides the query() method in Database to use the _TEST tables
+         * 
+         * @param table   The table you are querying data from
+         * @param selectColumns   One or more columns to select from, separated by commas
+         * @param filterColumn1   The first column name to filter on
+         * @param op1   The comparison operation for the first filter column
+         * @param value1   The value to filter on for the first filter column
+         * @param filterColumn2   The second column name to filter on
+         * @param op2   The comparison operation for the second filter column
+         * @param value2   The value to filter on for the second filter column
+         * @param filterColumn3   The third column name to filter on
+         * @param op3   The comparison operation for the third filter column
+         * @param value3   The value to filter on for the third filter column
+         * @param printResults   True to print results, false otherwise
+         * @param resCount   The number of results returned
+         */
+        std::vector<std::vector<std::string> > query(std::string table, std::string selectColumns,
+                                                std::string filterColumn1, std::string op1, 
+                                                std::string value1,
+                                                std::string filterColumn2, std::string op2, 
+                                                std::string value2,
+                                                std::string filterColumn3, std::string op3, 
+                                                std::string value3,
+                                                bool printResults, int &resCount) override {
+            // Use the test table suffix _TEST
+            std::string testTable = table + "_TEST";
+            return Database::query(testTable, selectColumns, filterColumn1, op1, value1, filterColumn2, op2, value2, filterColumn3, op3, value3, printResults, resCount);
+        }
+
+
 
 };
 
