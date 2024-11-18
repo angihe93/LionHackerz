@@ -47,7 +47,7 @@ jobs:
         cd WordNet-3.0
         ./configure --with-tcl=/opt/homebrew/Cellar/tcl-tk/8.6.15/lib --with-tk=/opt/homebrew/Cellar/tcl-tk/8.6.15/lib
         sudo cp ../stubs.c src/stubs.c
-        sed -i '' '42s/.*/int main(int argc,char *argv[])/' src/wn.c
+        sed -i '' '132s/.*/int main(int argc,char *argv[])/' src/wn.c
         sudo make
         sudo make install
 
