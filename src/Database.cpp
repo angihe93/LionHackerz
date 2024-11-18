@@ -41,7 +41,10 @@ Database::Database()
         this->openai_api_key = openai_api; 
     }
 
-    this->url = url;
+    // for ci workflow debug
+    this->url = "https://alcpkkevodekihwyjzvl.supabase.co";
+    
+    // this->url = url;
     this->api_key = api;
 
 }
