@@ -462,17 +462,14 @@ int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::ma
 
 	std::cout << db->insert("Listing", data) << std::endl;
 	int resCount = 0;
-	std::vector<std::vector<std::string>> lidQ = db->query("Listing_AI", "lid", "order", "lid", "desc", false, resCount);
-	std::cout << "resCount: " << resCount << std::endl;
-
-	// insert to Created
-	// or do this in employer postlisting??
-	if (resCount == 1) {
-
+	std::vector<std::vector<std::string>> lidQ = db->query("Listing", "lid", "order", "lid", "desc", false, resCount);
+	std::cout << "resCount: " << resCount << "  lidQ[0][0]: " << lidQ[0][0] << std::endl;
+	
+	// return lid of inserted listing
+	if (resCount > 0) {
+		int lid = std::stoi(lidQ[0][0]);
+		return lid;
 	}
 
-
-	// return true for success, false for error
-
-	return 0;
+	return -1;
 }

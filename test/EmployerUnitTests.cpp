@@ -300,4 +300,20 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
         delete e;
 }
 
-// test post listing
+/* Tests Employer::postListing() function in Employer.cpp */
+TEST(EmployerPostListing, checkPostListing) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        std::map<std::string, std::string> basicInfo = {{"field", "Education"}, {"position", "Education Consultant"}, {"job_description", "Develop and implement educational programs for schools and other institutions, providing guidance on curriculum and teaching strategies"}, {"location", "Boston"}};
+        std::map<std::string, std::string> skillsPersonality = {{"skill1_req", "Curriculum Development"}, {"skill2_req", "Teaching Experience"}, {"skill3_req", "Instructional Design"}, {"skill4_req", "Project Management"}, {"skill5_req", "Communication"}, {"personality_types", "ENFJ"}};
+        std::map<std::string, bool> boolFields = {{"job_flexibility", false}, {"modern_building", true}, {"mixed_gender", true}, {"diverse_workforce", true}, {"remote_available", false}};
+        int64_t pay = 65000;
+
+        int resLid = e->postListing(7, basicInfo, skillsPersonality, pay, boolFields);
+        EXPECT_GT(resLid, 0);
+
+        delete db;
+        delete e;
+}

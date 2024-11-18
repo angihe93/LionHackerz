@@ -128,16 +128,16 @@ class Listing {
 		 * 							listings from generateAIListing() */
 	void parseAI(const std::string listingList, int n);
 
-	/* 
-	// description
-	*/
-// an input map for basic info: field, position, job_description, location
-	// an input map for skills & personality: skill1_req, ..., skill5_req, personality_types
-	// input for pay
-	// input map for bool fields: job_flexibility, modern_building, mixed_gender, diverse_workforce, remote_available
-
+	/**
+	 * @ Insert a job listing into the database 
+	 * 
+	 * @param basicInfo  map (string:string) of basic info for the listing, including field, position, job_description, location
+	 * @param skillsPersonality  map (string:string) of skills and personality types required for the listing, including skill1_req, ..., skill5_req, personality_types
+	 * @param pay   int64_t of the pay for the listing
+	 * @param boolFields   map (string:bool) of boolean fields for the listing, including job_flexibility, modern_building, mixed_gender, diverse_workforce, remote_available
+	 * @return  lid (int) for the created listing in the database, or -1 on failure
+	 */
 	int insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality,int64_t pay, std::map<std::string, bool> boolFields); 
-	// should return the lid in DB so employer has it and can use it to change/delete listing later
 	
 	// delete listing
 	

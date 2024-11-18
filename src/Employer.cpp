@@ -228,10 +228,23 @@ bool Employer::changeModernWorkspace(int eid, int lid, int &resCode) {
         return true;                     
 }
                 
-int Employer::postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int8_t pay, std::map<std::string, bool> boolFields) {
+int Employer::postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int64_t pay, std::map<std::string, bool> boolFields) {
         Listing *l = new Listing(*db);
-        int res = l->insertListing(basicInfo, skillsPersonality, pay, boolFields);
-        // check success, if so add to created table
+        int insertedLid = l->insertListing(basicInfo, skillsPersonality, pay, boolFields);
+        
+        if (insertedLid == -1) {
+                std::cout << "error inserting listing" << std::endl;
+                return -1;
+        }
+        
+        // insert to Created table
+        std::string data = "{\"eid\": " + std::to_string(eid) + ", \"lid\": " + std::to_string(insertedLid) + "}";
+        std::string res = db->insert("Created", data);
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return -1;
+        }
 
-        return res;
+        return insertedLid;
 }

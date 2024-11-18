@@ -154,11 +154,17 @@ TEST(ListingChange, checkChangeListing) {
 
 /* tests Listing::insertListing() function in Listing.cpp */
 TEST(ListingInsert, checkInsertListing) {
+
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
+
         std::map<std::string, std::string> basicInfo = {{"field", "HealthTech"}, {"position", "Healthcare Data Analyst"}, {"job_description", "Analyze and interpret healthcare data to aid in decision-making"}, {"location", "Boston"}};
         std::map<std::string, std::string> skillsPersonality = {{"skill1_req", "Data Analysis"}, {"skill2_req", "SQL"}, {"skill3_req", "Healthcare Industry Knowledge"}, {"skill4_req", "Problem-solving"}, {"skill5_req", "Communication"}, {"personality_types", "INTJ"}};
         std::map<std::string, bool> boolFields = {{"job_flexibility", false}, {"modern_building", true}, {"mixed_gender", true}, {"diverse_workforce", true}, {"remote_available", false}};
         int64_t pay = 75000;
         int insertRes = l->insertListing(basicInfo, skillsPersonality, pay, boolFields);
+        EXPECT_GT(insertRes, 0);
+
+        delete db;
+        delete l;
 }

@@ -126,16 +126,21 @@ class Employer {
                  */
                 bool changeModernWorkspace(int eid, int lid, int &resCode);
                 
-                //
-                int postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int8_t pay, std::map<std::string, bool> boolFields);
-
-
-                // bool postListing(int eid, )
-                // make postlisting in Listing class first and use that here
+                /**
+                 * Allows an employer to post a new listing
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param basicInfo   map (string:string) of basic info for the listing, including field, position, job_description, location
+                 * @param skillsPersonality   map (string:string) of skills and personality types required for the listing, including skill1_req, ..., skill5_req, personality_types
+                 * @param pay   int64_t of the pay for the listing
+                 * @param boolFields   map (string:bool) of boolean fields for the listing, including job_flexibility, modern_building, mixed_gender, diverse_workforce, remote_available
+                 * @return   lid (int) for the created listing, or -1 on failure
+                 */
+                int postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int64_t pay, std::map<std::string, bool> boolFields);
 
                 // delete listing
 
-                // create emplpyer
+                // create new emplpyer
 
 
         private:
