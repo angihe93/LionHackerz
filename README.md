@@ -8,6 +8,8 @@ Our project tasks/to-do lists and completion can be found on Trello at:
 
  http://34.16.13.147:18080
 
+ CI is set up to build and run tests, coverage, static analysis, and style check on push and pull requests. It is set up in Actions as a workflow named "CMake on a single platform". Click on a workflow run and scroll down to Artifacts section to download reports and outputs produced during runtime. Some reports and outputs may also be uploaded to some repo directory before final submission.
+
 # Initial Setup
 
 This API makes use of PostgREST. To install, follow step 2 here:
