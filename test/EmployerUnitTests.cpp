@@ -85,3 +85,150 @@ TEST(EmployerChangeJobDescription, checkChangeJobDescription) {
         delete db;
         delete e;
 }
+
+/* tests Employer::changeFlex() function in Employer.cpp */
+TEST(EmployerChangeFlex, checkChangeFlex) {
+
+        Database *db = new Database();
+        Employer *e = new Employer(*db);
+
+        // case where change flex should fail
+        int resCode = 0;
+        bool res = e->changeFlex(4, 3, resCode);
+        bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change flex should succeed
+        res = e->changeFlex(4, 4, resCode);
+        expected = true;
+        EXPECT_EQ(res, expected);
+
+        delete db;
+        delete e;
+}
+
+/* tests Employer::changeGender() function in Employer.cpp */
+TEST(EmployerChangeGender, checkChangeGender) {
+
+        Database *db = new Database();
+        Employer *e = new Employer(*db);
+
+        // case where change gender should fail
+        int resCode = 0;
+        bool res = e->changeGender(5, 6, resCode);
+        bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change gender should succeed
+        res = e->changeGender(7, 6, resCode);
+        expected = true;
+        EXPECT_EQ(res, expected);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeDiversity() function in Employer.cpp */
+TEST(EmployerChangeDiversity, checkChangeDiversity) {
+
+        Database *db = new Database();
+        Employer *e = new Employer(*db);
+
+        // case where change diversity should fail
+        int resCode = 0;
+        bool res = e->changeDiversity(1, 2, resCode);
+        bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change diversity should succeed
+        res = e->changeDiversity(1, 1, resCode);
+        expected = true;
+        EXPECT_EQ(res, expected);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeRemote() function in Employer.cpp */
+TEST(EmployerChangeRemote, checkChangeRemote) {
+
+        Database *db = new Database();
+        Employer *e = new Employer(*db);
+
+        // case where change remote should fail
+        int resCode = 0;
+        bool res = e->changeRemote(1, 2, resCode);
+        bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change remote should succeed
+        res = e->changeRemote(1, 1, resCode);
+        expected = true;
+        EXPECT_EQ(res, expected);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeLocation() function in Employer.cpp */
+TEST(EmployerChangeLocation, checkChangeLocation) {
+
+        Database *db = new Database();
+        Employer *e = new Employer(*db);
+
+        // case where change location should fail
+        int resCode = 0;
+        bool res = e->changeLocation(1, 2, "blank", resCode);
+        bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change location should succeed
+        res = e->changeLocation(7, 6, "San Francisco", resCode);
+        expected = true;
+        EXPECT_EQ(res, expected);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeMBTI() function in Employer.cpp */
+TEST(EmployerChangeMBTI, checkChangeMBTI) {
+
+        Database *db = new Database();
+        Employer *e = new Employer(*db);
+
+        // case where change MBTI should fail
+        int resCode = 0;
+        bool res = e->changeMBTI(1, 2, "blank", resCode);
+        bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change MBTI should succeed
+        res = e->changeMBTI(2, 2, "INTJ", resCode);
+        expected = true;
+        EXPECT_EQ(res, expected);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeModernWorkspace() function in Employer.cpp */
+TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
+
+        Database *db = new Database();
+        Employer *e = new Employer(*db);
+
+        // case where change modern workspace should fail
+        int resCode = 0;
+        bool res = e->changeModernWorkspace(1, 2, resCode);
+        bool expected = false;
+        EXPECT_EQ(res, expected);
+
+        // case where change modern workspace should succeed
+        res = e->changeModernWorkspace(1, 1, resCode);
+        expected = true;
+        EXPECT_EQ(res, expected);
+
+        delete db;
+        delete e;
+}

@@ -37,11 +37,11 @@ bool Employer::changeField(int eid, int lid, std::string newField) {
         Listing *l = new Listing(*db);
         std::string res =l->changeField(lid, newField);
 
-        // size_t id_pos = res.find("Error:");
-        // if (id_pos != std::string::npos) {
-        //         std::cout << res << std::endl;
-        //         return false;
-        // }
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
         
         return true;
 }
@@ -57,11 +57,11 @@ bool Employer::changePosition(int eid, int lid, std::string newPosition) {
         Listing *l = new Listing(*db);
         std::string res =l->changePosition(lid, newPosition);
 
-        // size_t id_pos = res.find("Error:");
-        // if (id_pos != std::string::npos) {
-        //         std::cout << res << std::endl;
-        //         return false;
-        // }
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
         
         return true;
 }
@@ -77,12 +77,154 @@ bool Employer::changeJobDescription(int eid, int lid, std::string newDescription
         Listing *l = new Listing(*db);
         std::string res =l->changeJobDescription(lid, newDescription);
 
-        // size_t id_pos = res.find("Error:");
-        // if (id_pos != std::string::npos) {
-        //         std::cout << res << std::endl;
-        //         return false;
-        // }
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
         
         return true;
 
 }
+
+bool Employer::changeFlex(int eid, int lid, int &resCode){
+
+        bool hasListing = checkHasListing(eid,lid);
+        if (!hasListing) {
+                std::cout << "Error: The listing ID is not associated with the employer ID." << std::endl;
+                return false;
+        }
+
+        Listing *l = new Listing(*db);
+        std::string res =l->changeFlex(lid, resCode);
+
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
+        
+        return true;
+}
+
+
+bool Employer::changeGender(int eid, int lid, int &resCode) {
+        
+        bool hasListing = checkHasListing(eid,lid);
+        if (!hasListing) {
+                std::cout << "Error: The listing ID is not associated with the employer ID." << std::endl;
+                return false;
+        }
+
+        Listing *l = new Listing(*db);
+        std::string res =l->changeGender(lid, resCode);
+
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
+        
+        return true;
+}
+
+bool Employer::changeDiversity(int eid, int lid, int &resCode) {
+        
+        bool hasListing = checkHasListing(eid,lid);
+        if (!hasListing) {
+                std::cout << "Error: The listing ID is not associated with the employer ID." << std::endl;
+                return false;
+        }
+
+        Listing *l = new Listing(*db);
+        std::string res =l->changeDiversity(lid, resCode);
+
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
+        
+        return true;
+}
+
+bool Employer::changeRemote(int eid, int lid, int &resCode) {
+                
+        bool hasListing = checkHasListing(eid,lid);
+        if (!hasListing) {
+                std::cout << "Error: The listing ID is not associated with the employer ID." << std::endl;
+                return false;
+        }
+
+        Listing *l = new Listing(*db);
+        std::string res =l->changeRemote(lid, resCode);
+
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
+        
+        return true;
+}
+
+bool Employer::changeLocation(int eid, int lid, std::string newLocation, int &resCode) {
+                
+        bool hasListing = checkHasListing(eid,lid);
+        if (!hasListing) {
+                std::cout << "Error: The listing ID is not associated with the employer ID." << std::endl;
+                return false;
+        }
+
+        Listing *l = new Listing(*db);
+        std::string res =l->changeLocation(lid, newLocation, resCode);
+
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
+        
+        return true;
+}
+
+bool Employer::changeMBTI(int eid, int lid, std::string newMBTI, int &resCode) {
+                        
+        bool hasListing = checkHasListing(eid,lid);
+        if (!hasListing) {
+                std::cout << "Error: The listing ID is not associated with the employer ID." << std::endl;
+                return false;
+        }
+
+        Listing *l = new Listing(*db);
+        std::string res =l->changeMBTI(lid, newMBTI, resCode);
+
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
+        
+        return true;
+}
+
+bool Employer::changeModernWorkspace(int eid, int lid, int &resCode) {
+                                
+        bool hasListing = checkHasListing(eid,lid);
+        if (!hasListing) {
+                std::cout << "Error: The listing ID is not associated with the employer ID." << std::endl;
+                return false;
+        }
+
+        Listing *l = new Listing(*db);
+        std::string res =l->changeModernWorkspace(lid, resCode);
+
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return false;
+        }
+        
+        return true;                     
+}
+                
