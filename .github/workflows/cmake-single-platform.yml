@@ -34,7 +34,7 @@ jobs:
       run: brew install lcov
 
     - name: Install tcl-tk
-      run: brew install tcl-tk@8
+      run: brew install tcl-tk
 
     # brew install wget
     - name: Install Wordnet
