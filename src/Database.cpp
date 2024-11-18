@@ -42,9 +42,8 @@ Database::Database()
     }
 
     // for ci workflow debug
-    this->url = "https://alcpkkevodekihwyjzvl.supabase.co";
-    
-    // this->url = url;
+    // this->url = "https://alcpkkevodekihwyjzvl.supabase.co";
+    this->url = url;
     this->api_key = api;
 
 }
