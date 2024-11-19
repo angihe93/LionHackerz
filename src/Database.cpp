@@ -100,13 +100,13 @@ std::string Database::request(const std::string &getPostPatch, const std::string
     }
 
 
-        if (getPostPatch == "POST" || getPostPatch == "AI")
+        if (getPostPatch == "POST" || getPostPatch == "AI") {
            	curl_easy_setopt(curl, CURLOPT_POST, 1L);
-	    else if (getPostPatch == "PATCH")
+        } else if (getPostPatch == "PATCH") {
             curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
-        else if (getPostPatch == "GET" || getPostPatch == "AI")
+        } else if (getPostPatch == "GET" || getPostPatch == "AI") {
             curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
-        
+        }
         if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH" || getPostPatch == "AI"))
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
 
@@ -118,7 +118,7 @@ std::string Database::request(const std::string &getPostPatch, const std::string
 
     CURLcode res = curl_easy_perform(curl);
 
-    long response_code;
+    int16_t response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
     httpStatusCode = std::to_string(response_code);
 
@@ -362,10 +362,12 @@ std::vector<std::vector<std::string>> Database::tokenize(const std::string& res,
             std::string token = localRes.substr(0, localRes.find(","));
 
 	    if (!token.empty()) {
-		if (token.back() == ']')
-		token.pop_back();
-            if (token.back() == '}')
-		    token.pop_back();
+            if (token.back() == ']') {
+                token.pop_back();
+            }
+            if (token.back() == '}') {
+                token.pop_back();
+            }
 		}
 
            if (token == "null")

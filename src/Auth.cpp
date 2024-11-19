@@ -2,10 +2,10 @@
 
 #include "Auth.h"
 #include "Database.h"
-#include <string>
 #include <crow.h>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 #include <boost/beast/core/detail/base64.hpp>
@@ -27,7 +27,7 @@ std::string Auth::generateRandomHex(int length) {
         // Convert bytes to hex string
         std::ostringstream hexStream;
         for (unsigned char byte : buffer) {
-                hexStream << std::setw(2) << std::setfill('0') << std::hex << (int)byte;
+                hexStream << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(byte);
         }
         
         return hexStream.str();

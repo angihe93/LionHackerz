@@ -1,3 +1,4 @@
+// Copyright 2024 LionHackerz
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "User.h"

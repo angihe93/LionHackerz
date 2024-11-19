@@ -375,19 +375,19 @@ std::string Listing::getListing(int lid)
 
 std::string Listing::generateAIListing(std::string n)
 {
-std::string data = R"({
-    "model": "gpt-4o",
-    "messages": [
-        {
-            "role": "system",
-            "content": "You are a helpful assistant."
-        },
-        {
-            "role": "user",
-            "content": "Generate a job listing with the following fields: area/field (industry), job title/position, job description, annual pay (as a decimal with no text or $), required skill 1, required skill 2, required skill 3, required skill 4, required skill 5, location (city), personality type (MBTI type suited for the type of job), job flexibility, modern building, mixed_gender_workforce, diverse_workforce, remote_availability. The fields from job_flexibility onward can be boolean values true or false (random choice). Print the results for the entry on one line with each field separated by a semicolon with no space after the semicolon. Do not include the field names, just the values. Generate )" + n + R"( such job listings all on one line, with each listing separated by parentheses (). I prefer a wide range of fields, very diverse, not just typical jobs.  Separately, generate a list of company names and company sizes (small, medium, large) for each of these listings with the same format (name and size separated by semicolon, each company for each listing in its own parentheses, all on one line. Do not list the titles 'job listing' and 'company listing' just start listing them."
-        }
-    ]
-})";
+	std::string data = R"({
+		"model": "gpt-4o",
+		"messages": [
+			{
+				"role": "system",
+				"content": "You are a helpful assistant."
+			},
+			{
+				"role": "user",
+				"content": "Generate a job listing with the following fields: area/field (industry), job title/position, job description, annual pay (as a decimal with no text or $), required skill 1, required skill 2, required skill 3, required skill 4, required skill 5, location (city), personality type (MBTI type suited for the type of job), job flexibility, modern building, mixed_gender_workforce, diverse_workforce, remote_availability. The fields from job_flexibility onward can be boolean values true or false (random choice). Print the results for the entry on one line with each field separated by a semicolon with no space after the semicolon. Do not include the field names, just the values. Generate )" + n + R"( such job listings all on one line, with each listing separated by parentheses (). I prefer a wide range of fields, very diverse, not just typical jobs.  Separately, generate a list of company names and company sizes (small, medium, large) for each of these listings with the same format (name and size separated by semicolon, each company for each listing in its own parentheses, all on one line. Do not list the titles 'job listing' and 'company listing' just start listing them."
+			}
+		]
+	})";
 
 	const std::string insertData = data;
 	const std::string url = "https://api.openai.com/v1/chat/completions";
