@@ -52,6 +52,14 @@ class Listing {
 		*	 @param resCode			Status code to return depending on query results. */
 	std::string changeFlex(int lid, int &resCode);
 
+		/* Change the boolean value of the 'job_flexbility' column in the
+		*  job listing to a specified bool value.   
+		*
+		*	 @param lid				The listing id of the listing
+		*    @param newFlex			The new value of 'job_flexibility' to set to
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeFlex(int lid, bool newFlex, int resCode);
+
 		/* Change the boolean value of the 'modern_building' column in the
 		*  job listing.  If null to begin with, sets to true.  If true,
 		*  sets to false. If false, sets to true. 
@@ -60,6 +68,14 @@ class Listing {
 		*
 		*	 @param resCode			Status code to return depending on query results. */
 	std::string changeModernWorkspace(int lid, int &resCode);
+
+		/* Change the boolean value of the 'modern_building' column in the
+		*  job listing to a specified bool value. 
+		*
+		*	 @param lid				The listing id of the listing
+		*    @param newValue			The new value of 'modern_building' to set to
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeModernWorkspace(int lid, bool newValue, int &resCode);
 
 		/* Change the boolean value of the 'mixed_gender' column in the
 		*  job listing.  If null to begin with, sets to true.  If true,
@@ -70,6 +86,14 @@ class Listing {
 		*	 @param resCode			Status code to return depending on query results. */
 	std::string changeGender(int lid, int &resCode);
 
+	/* Change the boolean value of the 'mixed_gender' column in the
+		*  job listing to a specified bool value
+		*
+		*	 @param lid				The listing id of the listing
+		*    @param newValue			The new value of 'mixed_gender' to set to
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeGender(int lid, bool newValue, int &resCode);
+
 		/* Change the boolean value of the 'diverse_workforce' column in the
 		*  job listing.  If null to begin with, sets to true.  If true,
 		*  sets to false. If false, sets to true. 
@@ -79,6 +103,14 @@ class Listing {
 		*	 @param resCode			Status code to return depending on query results. */
 	std::string changeDiversity(int lid, int &resCode);
 
+	/* Change the boolean value of the 'diverse_workforce' column in the
+		*  job listing to a specified bool value. 
+		*
+		*	 @param lid				The listing id of the listing
+		*    @param newValue 			The new value of 'diverse_workforce' to set to
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeDiversity(int lid, bool newValue, int &resCode);
+
 		/* Change the boolean value of the 'remote_available' column in the
 		*  job listing.  If null to begin with, sets to true.  If true,
 		*  sets to false. If false, sets to true. 
@@ -87,6 +119,14 @@ class Listing {
 		*
 		*	 @param resCode			Status code to return depending on query results. */
 	std::string changeRemote(int lid, int &resCode);
+
+	/* Change the boolean value of the 'remote_available' column in the
+		*  job listing to a specified bool value.
+		*
+		*	 @param lid				The listing id of the listing
+		*    @param newValue			The new value of 'remote_available' to set to
+		*	 @param resCode			Status code to return depending on query results. */
+	std::string changeRemote(int lid, bool newValue, int &resCode);
 
 		/* Change the value of the 'location' column in the
 		*  job listing.   

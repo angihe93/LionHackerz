@@ -61,6 +61,17 @@ class Employer {
                 bool changeFlex(int eid, int lid, int &resCode);
 
                 /**
+                 * Allows an employer to change the job flexibility boolean value of a listing to a specified value
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param lid   The listing id of the listing
+                 * @param newFlex   The new bool value for the job flexibility
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeFlex(int eid, int lid, bool newFlex, int &resCode);
+
+                /**
                  * Allows an employer to change the boolean value of the 'mixed_gender' field of the
 		*  job listing
                  * 
@@ -70,6 +81,18 @@ class Employer {
                  * @return true if changed successfully, false otherwise
                  */
                 bool changeGender(int eid, int lid, int &resCode);
+
+                /**
+                 * Allows an employer to change the boolean value of the 'mixed_gender' field of the
+		*  job listing to a specified bool value
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param lid   The listing id of the listing
+                 * @param newValue   The new bool value for the mixed_gender field
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeGender(int eid, int lid, bool newValue, int &resCode);
 
                 /**
                  * Allows an employer to change the boolean value of the 'diverse_workforce' field of the
@@ -83,6 +106,18 @@ class Employer {
                 bool changeDiversity(int eid, int lid, int &resCode);
 
                 /**
+                 * Allows an employer to change the boolean value of the 'diverse_workforce' field of the
+                 * job listing to a specified bool value
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param lid   The listing id of the listing
+                 * @param newValue   The new bool value for the diverse_workforce field
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeDiversity(int eid, int lid, bool newValue, int &resCode);
+
+                /**
                  * Allows an employer to change the boolean value of the 'remote_available' field of the
                  * job listing
                  * 
@@ -92,6 +127,18 @@ class Employer {
                  * @return true if changed successfully, false otherwise
                  */
                 bool changeRemote(int eid, int lid, int &resCode);
+
+                /**
+                 * Allows an employer to change the boolean value of the 'remote_available' field of the
+                 * job listing to a specified bool value.
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param lid   The listing id of the listing
+                 * @param newValue   The new bool value for the remote_available field
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeRemote(int eid, int lid, bool newValue, int &resCode);
 
                 /**
                  * Allows an employer to change the location field of the job listing
@@ -125,7 +172,93 @@ class Employer {
                  * @return true if changed successfully, false otherwise
                  */
                 bool changeModernWorkspace(int eid, int lid, int &resCode);
+
+                /**
+                 * Allows an employer to change the boolean value of the 'modern_building' field of the
+                 * job listing to a specified value
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param lid   The listing id of the listing
+                 * @param newValue   The new value of 'modern_building' to set to
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeModernWorkspace(int eid, int lid, bool newValue, int &resCode);
                 
+
+                // change all employer's listings at once
+
+                /**
+                 * Allows an employer to change the field of all its listings
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param newField   The new data for the field
+                 * @return true if all listings' fields were changed successfully, false otherwise
+                 */
+                bool changeFieldAll(int eid, std::string newField);
+
+                /**
+                 * Allows an employer to change the position of all its listings
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param newPosition   The new data for the position
+                 * @return true if all listings' positions were changed successfully, false otherwise
+                 */
+                bool changePositionAll(int eid, std::string newPosition);
+
+                // changeDescriptionAll probably not needed, not a likely use case
+
+                /**
+                 * Allows an employer to change the job flexibility boolean value of all its listings
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param newFlex   The new bool value for the job flexibility
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if all listings' job flexibility were changed successfully, false otherwise
+                 */
+                bool changeFlexAll(int eid, bool newFlex, int &resCode);
+
+                /**
+                 * Allows an employer to change the boolean value of the 'modern_building' field of all its listings
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param newValue   The new value of 'modern_building' to set to
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeModernWorkspaceAll(int eid, bool newValue, int &resCode);
+
+                /**
+                 * Allows an employer to change the boolean value of the 'mixed_gender' field of all its listings
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param newValue   The new value of 'mixed_gender' to set to
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeGenderAll(int eid,  bool newValue, int &resCode);
+
+                /**
+                 * Allows an employer to change the boolean value of the 'diverse_workforce' field of all its listings
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param newValue   The new value of 'diverse_workforce' to set to
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeDiversityAll(int eid, bool newValue, int &resCode);
+
+
+                /**
+                 * Allows an employer to change the boolean value of the 'remote_available' field of all its listings
+                 * 
+                 * @param eid   The employer id of the employer
+                 * @param newValue   The new value of 'remote_available' to set to
+                 * @param resCode   Status code to return depending on query results
+                 * @return true if changed successfully, false otherwise
+                 */
+                bool changeRemoteAll(int eid, bool newValue, int &resCode);
+
                 /**
                  * Allows an employer to post a new listing
                  * 
@@ -137,8 +270,6 @@ class Employer {
                  * @return   lid (int) for the created listing, or -1 on failure
                  */
                 int postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int64_t pay, std::map<std::string, bool> boolFields);
-
-                // change all employer's listings at once
 
 
                 // delete listing

@@ -73,6 +73,25 @@ std::string Listing::changeFlex(int lid, int &resCode)
 	return result[1][0];
 }
 
+std::string Listing::changeFlex(int lid, bool newFlex, int resCode) {
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string newFlexStr = newFlex ? "true" : "false";
+	std::string setVal = R"({"job_flexibility" : )" + newFlexStr + "}";
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,job_flexibility", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
 
 std::string Listing::changeGender(int lid, int &resCode)
 {
@@ -90,6 +109,26 @@ std::string Listing::changeGender(int lid, int &resCode)
 		setVal = R"({"mixed_gender" : false})";
 
 	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,mixed_gender", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+std::string Listing::changeGender(int lid, bool newValue, int &resCode) {
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string newGenderStr = newValue ? "true" : "false";
+	std::string setVal = R"({"mixed_gender" : )" + newGenderStr + "}";
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+
 	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,mixed_gender", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
@@ -118,6 +157,26 @@ std::string Listing::changeDiversity(int lid, int &resCode)
 	return result[1][0];
 }
 
+std::string Listing::changeDiversity(int lid, bool newValue, int &resCode) {
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string newDiversityStr = newValue ? "true" : "false";
+	std::string setVal = R"({"diverse_workforce" : )" + newDiversityStr + "}";
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,diverse_workforce", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
 std::string Listing::changeRemote(int lid, int &resCode)
 {
 	int resCount = 0;
@@ -134,6 +193,26 @@ std::string Listing::changeRemote(int lid, int &resCode)
 		setVal = R"({"remote_available" : false})";
 
 	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,remote_available", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+std::string Listing::changeRemote(int lid, bool newValue, int &resCode) {
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string newRemoteStr = newValue ? "true" : "false";
+	std::string setVal = R"({"remote_available" : )" + newRemoteStr + "}";
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+
 	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,remote_available", "lid", "eq",
 															 std::to_string(lid), false, resCount);
 	resCode = 200;
@@ -195,6 +274,27 @@ std::string Listing::changeModernWorkspace(int lid, int &resCode)
 	std::string setVal = R"({"modern_building" : true})";
 	if (listing[15][0] == "\"true\"")
 		setVal = R"({"modern_building" : false})";
+
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,modern_building", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+
+std::string Listing::changeModernWorkspace(int lid, bool newValue, int &resCode)
+{
+	int resCount = 0;
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
+															  false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string newBool = newValue ? "true" : "false";
+	std::string setVal = R"({"modern_building" : )" + newBool + "}";
 
 	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
 	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,modern_building", "lid", "eq",

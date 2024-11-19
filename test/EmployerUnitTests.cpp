@@ -300,6 +300,106 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
         delete e;
 }
 
+/* Tests Employer::changeFieldAll() function in Employer.cpp */
+TEST(EmployerChangeFieldAll, checkChangeFieldAll) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        bool res = e->changeFieldAll(4, "Arts");
+        // std::cout << "res from changeFieldAll: " << res << std::endl;
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+
+}
+
+/* Tests Employer::changePositionAll() function in Employer.cpp */
+TEST(EmployerChangePositionAll, checkChangePositionAll) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        bool res = e->changePositionAll(3, "Programmer");
+        // std::cout << "res from changePositionAll: " << res << std::endl;
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeFlexAll() function in Employer.cpp */
+TEST(EmployerChangeFlexAll, checkChangeFlexAll) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->changeFlexAll(7, true, resCode);
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeModernWorkspaceAll() function in Employer.cpp */
+TEST(EmployerChangeModernWorkspaceAll, checkChangeModernWorkspaceAll) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->changeModernWorkspaceAll(7, true, resCode);
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeGenderAll() function in Employer.cpp */
+TEST(EmployerChangeGenderAll, checkChangeGenderAll) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->changeGenderAll(7, true, resCode);
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeDiversityAll() function in Employer.cpp */
+TEST(EmployerChangeDiversityAll, checkChangeDiversityAll) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->changeDiversityAll(7, true, resCode);
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changeRemoteAll() function in Employer.cpp */
+TEST(EmployerChangeRemoteAll, checkChangeRemoteAll) {
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->changeRemoteAll(7, false, resCode);
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+
 /* Tests Employer::postListing() function in Employer.cpp */
 TEST(EmployerPostListing, checkPostListing) {
 
