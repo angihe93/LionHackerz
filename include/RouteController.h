@@ -4,8 +4,9 @@
 #define ROUTECONTROLLER_H
 
 #include "crow.h"
-// #include "Globals.h"
 #include "Database.h"
+#include <cpp_redis/cpp_redis>
+#include "Global.h"
 
 class RouteController {
     private:
@@ -14,7 +15,6 @@ class RouteController {
     public:
         void initRoutes(crow::App<>& app);
         void setDatabase(Database* db);
-
 
         /**
         * Redirects to the homepage.

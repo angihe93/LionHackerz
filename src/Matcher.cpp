@@ -12,6 +12,7 @@
 #include <list>
 #include <string>
 #include <sstream>
+#include <crow.h>
 #define BINSEARCH_THRESHOLD 5
 
 /* Matcher class for pairing job seekers with employers */
@@ -79,11 +80,67 @@ std::vector<int> Matcher::filterJobs()
     int resCount = 0;
 
     // using previous table for workflow tests
-    // std::vector<std::vector<std::string>> lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
-    std::vector<std::vector<std::string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
+    std::vector<std::vector<std::string>> lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
+    // std::vector<std::vector<std::string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
 
+    /* check for listings in redis cache */
+    auto redis_future = redis_client.get("listings_cache");
+    redis_client.sync_commit();
 
-    this->all_listings = lists;
+    auto redis_reply = redis_future.get();
+
+    if (redis_reply.is_string())
+    {
+        try
+        {
+            // Deserialize cached JSON into std::vector<std::vector<std::string>>
+            auto json_listings = nlohmann::json::parse(redis_reply.as_string());
+            std::vector<std::vector<std::string>> raw_listings;
+
+            for (const auto &row : json_listings)
+            {
+                raw_listings.emplace_back(row.get<std::vector<std::string>>());
+            }
+
+            all_listings = raw_listings;
+            std::cout << "Successfully loaded listings from cache" << std::endl;
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error processing cached data: " << e.what() << std::endl;
+        }
+    }
+    else
+    {
+        /* no cache, get listings from db */
+        std::cout << "No valid cache found. Fetching from database..." << std::endl;
+        lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
+
+        /* store them in redis cache for future requests */
+        try
+        {
+            nlohmann::json json_cache = nlohmann::json::array();
+            for (const auto &row : lists)
+            {
+                json_cache.push_back(row);
+            }
+
+            redis_client.set("listings_cache", json_cache.dump(), [](cpp_redis::reply &reply)
+                             {
+            if (reply.is_error()) {
+                std::cerr << "Error caching listings: " << reply.error() << std::endl;
+            } });
+            redis_client.expire("listings_cache", 600); // store for 10 minutes
+            redis_client.sync_commit();
+
+            std::cout << "Cached listings successfully" << std::endl;
+            all_listings = lists;
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error serializing or caching listings: " << e.what() << std::endl;
+        }
+    }
 
     std::vector<int> nonNullCount(resCount, 0);
 
@@ -519,7 +576,7 @@ std::vector<std::vector<int>> Matcher::sortMatches()
     return results;
 }
 
-std::string Matcher::displayMatches(int uid)
+std::vector<JobMatch> Matcher::displayMatches(int uid)
 {
     gatherRelevantDimensions(uid);
     filterJobs();
@@ -527,58 +584,73 @@ std::string Matcher::displayMatches(int uid)
     filterMatches();
     sortMatches();
 
-    std::ostringstream oss;
-    oss << "There are a total of " << candidates.size() << " matches out of " << all_listings[0].size()
-        << " total listings for User " << uid << std::endl
-        << std::endl;
+    struct JobMatch matchRes;
 
     int count = 0;
     Listing *l = new Listing(*db);
+    std::vector<JobMatch> allMatches;
 
+    /* store matches in struct JobMatch */
     for (int i = 0; i < candidates.size(); i++)
-    {   
-        oss << "Listing " << candidates[i] << ":  Match score " << scores[count] << "   ";
-        std::cout << "listing: " << candidates[i] << ", score: " << scores[count] << std::endl;
-        int bars = scores[count] / 25;
+    {
+        matchRes.listingId = candidates[i];
+        matchRes.score = scores[count];
 
-        for (int j = 0; j < bars; j++)
-            oss << "=";
+        std::vector<std::string> listingResult = l->getListing(candidates[i]);
 
-        oss << std::endl
-            << std::endl;
+        matchRes.company = listingResult[0];
+        matchRes.time_created = listingResult[1];
+        matchRes.field = listingResult[2];
+        matchRes.position = listingResult[3];
+        matchRes.description = listingResult[4];
+        matchRes.skill1 = listingResult[5];
+        matchRes.skill2 = listingResult[6];
+        matchRes.skill3 = listingResult[7];
+        matchRes.skill4 = listingResult[8];
+        matchRes.skill5 = listingResult[9];
+        matchRes.pay = stoi(listingResult[10]);
+        matchRes.flex = listingResult[11];
+        matchRes.modern = listingResult[12];
+        matchRes.gender = listingResult[13];
+        matchRes.diversity = listingResult[14];
+        matchRes.remote = listingResult[15];
+        matchRes.personality = listingResult[16];
+        matchRes.location = listingResult[17];
 
-        oss << l->getListing(candidates[i]) << std::endl;
+        allMatches.push_back(matchRes);
 
-        if (!matchedWords[0].empty()) {
-            oss << "\t\tMatched Words: ";
+        std::string matchW;
+
+        if (!matchedWords[0].empty())
+        {
 
             for (std::string &mw : matchedWords[count])
-                oss << mw << ", ";
+                matchW = matchW + ", ";
         }
 
-        oss << std::endl
-            << std::endl
-            << std::endl;
+        matchRes.matchedWords = matchW;
+
         count++;
     }
 
-    return oss.str();
+    return allMatches;
 }
 
- /* Helper functions for generating API's returned JSON objects*/
-    // TODO: deal with arrays of things later
-std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> Matcher::matchResponse(int uid) {
+/* Helper functions for generating API's returned JSON objects*/
+// TODO: deal with arrays of things later
+std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> Matcher::matchResponse(int uid)
+{
 
     gatherRelevantDimensions(uid);
     filterJobs();
     match(uid);
     filterMatches();
     sortMatches();
-    
+
     std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> map;
     map["summary"] = "There are a total of " + std::to_string(candidates.size()) + " matches out of " + std::to_string(all_listings[0].size()) + " total listings for User " + std::to_string(uid) + ".";
     std::vector<std::map<std::string, JobListingMapVariantType>> job_listings;
-    
+
     int count = 0;
     for (int i = 0; i < candidates.size(); i++)
     {
@@ -590,7 +662,7 @@ std::map<std::string, std::variant<std::string, std::vector<std::map<std::string
         std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
         std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
         std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
-        
+
         jl["match_score"] = scores[count];
 
         std::string company_ = company[0][0];
@@ -613,32 +685,37 @@ std::map<std::string, std::variant<std::string, std::vector<std::map<std::string
         job_description.erase(std::remove(job_description.begin(), job_description.end(), '\"'), job_description.end());
         jl["job_description"] = job_description;
 
-        // doing list fields like skills one by one because std::vector causes issue for JSON 
-        if (listings[8][0] != "\"null\"") {
+        // doing list fields like skills one by one because std::vector causes issue for JSON
+        if (listings[8][0] != "\"null\"")
+        {
             std::string skill = listings[8][0];
             skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
             jl["skill1"] = skill;
         }
 
-        if (listings[9][0] != "\"null\"") {
+        if (listings[9][0] != "\"null\"")
+        {
             std::string skill = listings[9][0];
             skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
             jl["skill2"] = skill;
         }
 
-        if (listings[10][0] != "\"null\"") {
+        if (listings[10][0] != "\"null\"")
+        {
             std::string skill = listings[10][0];
             skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
             jl["skill3"] = skill;
         }
 
-        if (listings[11][0] != "\"null\"") {
+        if (listings[11][0] != "\"null\"")
+        {
             std::string skill = listings[11][0];
             skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
             jl["skill4"] = skill;
         }
 
-        if (listings[12][0] != "\"null\"") {
+        if (listings[12][0] != "\"null\"")
+        {
             std::string skill = listings[12][0];
             skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
             jl["skill5"] = skill;
@@ -647,56 +724,64 @@ std::map<std::string, std::variant<std::string, std::vector<std::map<std::string
         if (listings[13][0] != "\"null\"")
             jl["pay"] = listings[13][0];
 
-        if (listings[14][0] != "\"null\"") {
+        if (listings[14][0] != "\"null\"")
+        {
             std::string flexibility = listings[14][0];
             flexibility.erase(std::remove(flexibility.begin(), flexibility.end(), '\"'), flexibility.end());
             jl["flexibility"] = flexibility;
         }
 
-        if (listings[15][0] != "\"null\"") {
+        if (listings[15][0] != "\"null\"")
+        {
             std::string modern_workspace = listings[15][0];
             modern_workspace.erase(std::remove(modern_workspace.begin(), modern_workspace.end(), '\"'), modern_workspace.end());
             jl["modern_workspace"] = modern_workspace;
         }
-            
-        if (listings[16][0] != "\"null\"") {
+
+        if (listings[16][0] != "\"null\"")
+        {
             std::string gender_parity = listings[16][0];
             gender_parity.erase(std::remove(gender_parity.begin(), gender_parity.end(), '\"'), gender_parity.end());
             jl["gender_parity"] = gender_parity;
         }
 
-	    if (listings[17][0] != "\"null\"") {
+        if (listings[17][0] != "\"null\"")
+        {
             std::string diverse_workforce = listings[17][0];
             diverse_workforce.erase(std::remove(diverse_workforce.begin(), diverse_workforce.end(), '\"'), diverse_workforce.end());
             jl["diverse_workforce"] = diverse_workforce;
         }
 
-	    if (listings[18][0] != "\"null\"") {
+        if (listings[18][0] != "\"null\"")
+        {
             std::string remote_option_available = listings[18][0];
             remote_option_available.erase(std::remove(remote_option_available.begin(), remote_option_available.end(), '\"'), remote_option_available.end());
             jl["remote_option_available"] = remote_option_available;
         }
 
-	    if (listings[19][0] != "\"null\"") {
+        if (listings[19][0] != "\"null\"")
+        {
             std::string personality_types = listings[19][0];
             personality_types.erase(std::remove(personality_types.begin(), personality_types.end(), '\"'), personality_types.end());
             jl["personality_types"] = personality_types;
         }
 
-	    if (listings[20][0] != "\"null\"") {
+        if (listings[20][0] != "\"null\"")
+        {
             std::string location = listings[20][0];
             location.erase(std::remove(location.begin(), location.end(), '\"'), location.end());
             jl["location"] = location;
         }
 
         std::string matched_words = "";
-        for (std::string mw : matchedWords[count]) {
+        for (std::string mw : matchedWords[count])
+        {
             matched_words += mw;
             matched_words += ";";
         }
         matched_words.erase(std::remove(matched_words.begin(), matched_words.end(), '\"'), matched_words.end());
         jl["matched_words"] = matched_words;
-            
+
         job_listings.push_back(jl);
         count++;
     }
@@ -704,9 +789,7 @@ std::map<std::string, std::variant<std::string, std::vector<std::map<std::string
     map["job_listings"] = job_listings;
 
     return map;
-
 }
-
 
 void Matcher::iterateList(std::vector<std::string> l)
 {
@@ -842,20 +925,20 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
             int i = 0;
 
             /* sort the synset */
-            std::sort(synset->words, synset->words + synset->wcount, [](const char* a, const char* b) {
-                return std::strcmp(a, b) < 0; 
-            });
+            std::sort(synset->words, synset->words + synset->wcount, [](const char *a, const char *b)
+                      { return std::strcmp(a, b) < 0; });
             while (i < synset->wcount)
-            {                
+            {
                 int wordCount = 0;
-              
+
                 for (std::string &wE : fieldVecE)
                 {
                     wordCount++;
 
                     /* range check on synset - if word out of range, move on to next */
-                    if (synset->words[i][0] > std::tolower(wE[0]) || 
-                        synset->words[synset->wcount - 1][0] < std::tolower(wE[0])) {
+                    if (synset->words[i][0] > std::tolower(wE[0]) ||
+                        synset->words[synset->wcount - 1][0] < std::tolower(wE[0]))
+                    {
                         continue;
                     }
 
@@ -863,7 +946,7 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
                     int i = binSearch(synset, 0, synset->wcount - 1, std::tolower(wE[0]));
 
                     /* binary search results: not found.  Move on to next word */
-                    if (i == -1) 
+                    if (i == -1)
                         continue;
 
                     /* else: compare words */
@@ -908,29 +991,28 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
         else
             synset2 = findtheinfo_ds(const_cast<char *>(wE.c_str()), NOUN, SYNS, ALLSENSES);
 
-
         while (synset2 != NULL)
         {
             int i = 0;
 
             /* sort the synset */
-            std::sort(synset2->words, synset2->words + synset2->wcount, [](const char* a, const char* b) {
-                return std::strcmp(a, b) < 0; 
-            });
+            std::sort(synset2->words, synset2->words + synset2->wcount, [](const char *a, const char *b)
+                      { return std::strcmp(a, b) < 0; });
 
             while (i < synset2->wcount)
             {
-                bool indexFound = false;                
+                bool indexFound = false;
 
-                int wordCount = 0;              
+                int wordCount = 0;
 
                 for (std::string &wU : fieldVecU)
                 {
                     wordCount++;
 
                     /* range check on synset - if word out of range, move on to next */
-                    if (synset2->words[i][0] > std::tolower(wU[0]) || 
-                        synset2->words[synset2->wcount - 1][0] < std::tolower(wU[0])) {
+                    if (synset2->words[i][0] > std::tolower(wU[0]) ||
+                        synset2->words[synset2->wcount - 1][0] < std::tolower(wU[0]))
+                    {
                         continue;
                     }
 
@@ -938,7 +1020,7 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
                     int i = binSearch(synset2, 0, synset2->wcount - 1, std::tolower(wU[0]));
 
                     /* binary search results: not found. Move on to next word. */
-                    if (i == -1) 
+                    if (i == -1)
                         continue;
 
                     /* else: compare words */
@@ -989,7 +1071,8 @@ int Matcher::binSearch(SynsetPtr s, int left, int right, char val)
         return binSearch(s, left, mp - 1, val);
 
     /* if found, backtrack to first entry */
-    if (s->words[mp][0] == val) {
+    if (s->words[mp][0] == val)
+    {
         while (mp >= 0 && s->words[mp][0] == val)
             mp--;
         return ++mp;
@@ -997,4 +1080,3 @@ int Matcher::binSearch(SynsetPtr s, int left, int right, char val)
 
     return 0;
 }
-

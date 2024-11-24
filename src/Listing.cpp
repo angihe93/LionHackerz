@@ -303,74 +303,55 @@ std::string Listing::changeModernWorkspace(int lid, bool newValue, int &resCode)
 	return result[1][0];
 }
 
-std::string Listing::getListing(int lid)
+std::vector<std::string> Listing::getListing(int lid)
 {
 	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
 
 	// using previous table for workflow tests
-	// std::vector<std::vector<std::string>> listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
-	// std::vector<std::vector<std::string>> eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-	// std::vector<std::vector<std::string>> company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
-	std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
+	 std::vector<std::vector<std::string>> listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
+	 std::vector<std::vector<std::string>> eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+	 std::vector<std::vector<std::string>> company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
+	//std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	//std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+	//std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
 
-
-	std::ostringstream oss;
-
-	oss << "\tPosted by: " << company[0][0] << std::endl
-		<< std::endl;
-	oss << "\tCreated on: " << listings[1][0] << std::endl
-		<< std::endl;
-	oss << "\tField:  " << listings[5][0] << std::endl
-		<< std::endl;
-	oss << "\tPosition: " << listings[6][0] << std::endl
-		<< std::endl;
-	oss << "\tJob Description: " << listings[7][0] << std::endl
-		<< std::endl;
-	oss << "\tSkills required: ";
+	std::vector<std::string> listingResults;
+	listingResults.push_back(company[0][0]);
+	listingResults.push_back(listings[1][0]);
+	listingResults.push_back(listings[5][0]);
+	listingResults.push_back(listings[6][0]);
+	listingResults.push_back(listings[7][0]);
 
 	for (int i = 8; i < 13; i++)
 		if (listings[i][0] != "\"null\"")
-		{
-			oss << listings[i][0];
-			if (i != 12)
-				oss << ", ";
-		}
-
-	oss << std::endl
-		<< std::endl;
+			listingResults.push_back(listings[i][0]);
 
 	if (listings[13][0] != "\"null\"")
-		oss << "\tPay: " << listings[13][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[13][0]);
 
 	if (listings[14][0] != "\"null\"")
-		oss << "\tFlexibility: " << listings[14][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[14][0]);
 
 	if (listings[15][0] != "\"null\"")
-		oss << "\tModern Workspace: " << listings[15][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[15][0]);
+
 	if (listings[16][0] != "\"null\"")
-		oss << "\tGender Parity: " << listings[16][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[16][0]);
 
 	if (listings[17][0] != "\"null\"")
-		oss << "\tDiverse Workforce: " << listings[17][0] << std::endl
-			<< std::endl;
-	if (listings[18][0] != "\"null\"")
-		oss << "\tRemote Option Available: " << listings[18][0] << std::endl
-			<< std::endl;
-	if (listings[19][0] != "\"null\"")
-		oss << "\tPersonality Types: " << listings[19][0] << std::endl
-			<< std::endl;
-	if (listings[20][0] != "\"null\"")
-		oss << "\tLocation: " << listings[20][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[17][0]);
 
-	return oss.str();
+	if (listings[18][0] != "\"null\"")
+		listingResults.push_back(listings[18][0]);
+
+	if (listings[19][0] != "\"null\"")
+		listingResults.push_back(listings[19][0]);
+		
+	if (listings[20][0] != "\"null\"")
+		listingResults.push_back(listings[20][0]);	
+
+	return listingResults;
 }
 
 std::string Listing::generateAIListing(std::string n)

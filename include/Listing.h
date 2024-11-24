@@ -20,7 +20,7 @@ class Listing {
 		/* Returns the details of the job listing 
 		*
 		*	@param lid		The listing id of the listing */
-		std::string getListing(int lid);
+		std::vector<std::string> getListing(int lid);
 
 		/* Updates the value of the 'field' column in the job listing 
 		*

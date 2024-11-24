@@ -12,7 +12,61 @@
 #include <variant>
 #include <curl/curl.h>
 #include <wn.h>
+#include "Global.h"
+#include <string>
+#include <regex>
+#include <cpp_redis/cpp_redis>
 #include "Database.h"
+#include <nlohmann/json.hpp>
+
+/* struct for holding a listing match */
+struct JobMatch {
+    int listingId;
+    int pay;
+    int score;
+    std::string company;
+    std::string time_created;
+    std::string field;
+    std::string position;
+    std::string description;
+    std::string skill1;
+    std::string skill2;
+    std::string skill3;
+    std::string skill4;
+    std::string skill5;
+    std::string flex;
+    std::string modern;
+    std::string gender;
+    std::string diversity;
+    std::string remote;
+    std::string personality;
+    std::string location;
+    std::string matchedWords;
+
+nlohmann::json to_json() const {
+            return {
+                {"company", company},
+                {"time_created", time_created},
+                {"field", field},
+                {"position", position},
+                {"description", description},
+                {"skill1", skill1},
+                {"skill2", skill2},
+                {"skill3", skill3},
+                {"skill4", skill4},
+                {"skill5", skill5},
+                {"pay", pay},
+                {"flex", flex},
+                {"modern", modern},
+                {"gender", gender},
+                {"diversity", diversity},
+                {"remote", remote},
+                {"personality", personality},
+                {"location", location}
+            };
+    }
+
+};
 
 /* Matcher class for pairing job seekers with employers */
 
@@ -35,7 +89,7 @@ public:
      * corresponding match scores in descending order when called.
      * When the Listing class is created, more details can be
      * included. */
-    std::string displayMatches(int uid);
+    std::vector<JobMatch> displayMatches(int uid);
 
     /* If user has preferences for certain match criteria,
      * select those to apply augments to those dimensions.

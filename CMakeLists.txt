@@ -14,13 +14,14 @@ set(INCLUDE_PATHS
     external_libraries/WordNet-3.0/include
     external_libraries/Crow/include
     external_libraries/openssl-3.3.2/include
+    /usr/local/include
     /opt/homebrew/Cellar/asio/1.30.2/include)
 
 # Add coverage flags for GCC/Clang
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage -fprofile-arcs")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g --coverage")
 
-link_directories(external_libraries/WordNet-3.0/lib)
+link_directories(external_libraries/WordNet-3.0/lib /usr/local/lib)
 
 add_custom_target(unbind_port
     COMMAND lsof -t -i tcp:${USED_PORT} | xargs -r kill -9 || true
@@ -38,6 +39,7 @@ add_executable(LionHackerzProject
     src/Augment.cpp
     src/Employer.cpp
     src/Auth.cpp
+    src/Worker.cpp
 )
 
 
@@ -47,7 +49,7 @@ target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
 # Find and link with libcurl
 find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
-target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto cpp_redis tacopie)
 
 add_dependencies(LionHackerzProject unbind_port)
 
