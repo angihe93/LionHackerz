@@ -194,6 +194,9 @@ std::vector<int> Matcher::match(int uid)
 
     int cNum = 0;
 
+    int upd_prog_interval = ceil(candidates.size() / 45);
+    int progress = 30;
+
     /* for each candidate, calculate the match score based on all dimensions */
     for (auto &c : candidates)
     {
@@ -504,6 +507,14 @@ std::vector<int> Matcher::match(int uid)
         }
         std::cout << "score: " << candidateScore << std::endl;
         scores.push_back(candidateScore);
+
+        if (cNum % upd_prog_interval == 0) {
+            progress++;
+            if (progress < 75) {
+                redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": " + std::to_string(progress) + "}");
+                redis_client.commit();
+            }
+        }
         cNum++;
     }
 
@@ -579,10 +590,24 @@ std::vector<std::vector<int>> Matcher::sortMatches()
 std::vector<JobMatch> Matcher::displayMatches(int uid)
 {
     gatherRelevantDimensions(uid);
+    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 20}");
+    redis_client.commit();
+    
     filterJobs();
+    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 30}");
+    redis_client.commit();
+    
     match(uid);
+    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 75}");
+    redis_client.commit();
+
     filterMatches();
+    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 85}");
+    redis_client.commit();
+    
     sortMatches();
+    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 95}");
+    redis_client.commit();
 
     struct JobMatch matchRes;
 

@@ -877,6 +877,36 @@ void RouteController::initRoutes(crow::App<> &app)
                 }
                 getMatches(req, res);
             });
+    /* get the progress of a job match while processing in queue */
+
+    CROW_ROUTE(app, "/progress/<string>")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res, 
+        const std::string& user_id) {
+
+
+        auto future_reply = redis_client.get("progress:" + user_id);
+        redis_client.commit();
+
+        cpp_redis::reply reply = future_reply.get();
+
+        if (!reply.is_string()) {
+            res.code = 404;
+            res.write("Progress not found.");
+            res.end();
+            return;
+        }
+
+
+                res.add_header("Access-Control-Allow-Origin", "*");
+                res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+                res.add_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+                res.add_header("Content-Type", "application/json");
+        res.code = 200;
+        res.write(reply.as_string());
+        res.end();
+        return;
+    });
+
 
     CROW_ROUTE(app, "/getMatchesJSON")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)

@@ -45,6 +45,8 @@ struct JobMatch {
 
 nlohmann::json to_json() const {
             return {
+                {"score", score},
+                {"listing_id", listingId},
                 {"company", company},
                 {"time_created", time_created},
                 {"field", field},

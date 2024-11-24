@@ -36,14 +36,6 @@ void Worker::process_tasks()
 			int uid = std::stoi(user_id);
 			std::cout << "Processing task for UID: " << uid << std::endl;
 
-			// Simulate processing and update progress
-			for (int i = 1; i <= 100; ++i)
-			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Simulate work
-				redis_client.set("progress:" + user_id, "{\"status\": \"processing\", \"progress\": " + std::to_string(i) + "}");
-				redis_client.commit();
-			}
-
 			// Perform matching algorithm
 			auto matches = m->displayMatches(uid);
 
