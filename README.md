@@ -77,10 +77,10 @@ If you run into errors, try installing tacopie first:
 
 	git clone https://github.com/cylix/tacopie.git
  	cd tacopie
-  	mkdir build && cd build
-   	cmake ..
-    	make
-     	sudo make install
+	mkdir build && cd build
+ 	cmake ..
+  	make
+   	sudo make install
 
 Once that is installed, follow the instructions above for installing cpp_redis again.
 
