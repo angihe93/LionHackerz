@@ -12,7 +12,109 @@
 #include <variant>
 #include <curl/curl.h>
 #include <wn.h>
+#include "Global.h"
+#include <string>
+#include <regex>
+#include <cpp_redis/cpp_redis>
 #include "Database.h"
+#include <nlohmann/json.hpp>
+
+/* struct for holding a listing match */
+struct JobMatch {
+    int listingId;
+    int pay;
+    int score;
+    std::string company;
+    std::string time_created;
+    std::string field;
+    std::string position;
+    std::string description;
+    std::string skill1;
+    std::string skill2;
+    std::string skill3;
+    std::string skill4;
+    std::string skill5;
+    std::string flex;
+    std::string modern;
+    std::string gender;
+    std::string diversity;
+    std::string remote;
+    std::string personality;
+    std::string location;
+    std::string matchedWords;
+
+nlohmann::json to_json() const {
+            return {
+                {"score", score},
+                {"listing_id", listingId},
+                {"company", company},
+                {"time_created", time_created},
+                {"field", field},
+                {"position", position},
+                {"description", description},
+                {"skill1", skill1},
+                {"skill2", skill2},
+                {"skill3", skill3},
+                {"skill4", skill4},
+                {"skill5", skill5},
+                {"pay", pay},
+                {"flex", flex},
+                {"modern", modern},
+                {"gender", gender},
+                {"diversity", diversity},
+                {"remote", remote},
+                {"personality", personality},
+                {"location", location}
+            };
+    }
+    void print() const {
+        std::cout << "{ "
+                  << "listingId: " << listingId << ", "
+                  << "pay: " << pay << ", "
+                  << "score: " << score << ", "
+                  << "company: \"" << company << "\", "
+                  << "time_created: \"" << time_created << "\", "
+                  << "field: \"" << field << "\", "
+                  << "position: \"" << position << "\", "
+                  << "description: \"" << description << "\", "
+                  << "skill1: \"" << skill1 << "\", "
+                  << "skill2: \"" << skill2 << "\", "
+                  << "skill3: \"" << skill3 << "\", "
+                  << "skill4: \"" << skill4 << "\", "
+                  << "skill5: \"" << skill5 << "\", "
+                  << "flex: \"" << flex << "\", "
+                  << "modern: \"" << modern << "\", "
+                  << "gender: \"" << gender << "\", "
+                  << "diversity: \"" << diversity << "\", "
+                  << "remote: \"" << remote << "\", "
+                  << "personality: \"" << personality << "\", "
+                  << "location: \"" << location << "\""
+                  << " }" << std::endl;
+    }
+    bool operator==(const JobMatch& other) const {
+        return listingId == other.listingId &&
+               company == other.company &&
+               description == other.description &&
+               field == other.field &&
+               position == other.position &&
+               location == other.location &&
+               pay == other.pay &&
+               time_created == other.time_created &&
+               skill1 == other.skill1 &&
+               skill2 == other.skill2 &&
+               skill3 == other.skill3 &&
+               skill4 == other.skill4 &&
+               skill5 == other.skill5 &&
+               score == other.score &&
+               remote == other.remote &&
+               gender == other.gender &&
+               diversity == other.diversity &&
+               personality == other.personality &&
+               modern == other.modern &&
+               flex == other.flex;
+    }
+
+};
 
 /* Matcher class for pairing job seekers with employers */
 
@@ -35,7 +137,7 @@ public:
      * corresponding match scores in descending order when called.
      * When the Listing class is created, more details can be
      * included. */
-    std::string displayMatches(int uid);
+    std::vector<JobMatch> displayMatches(int uid, bool test);
 
     /* If user has preferences for certain match criteria,
      * select those to apply augments to those dimensions.
@@ -54,7 +156,7 @@ public:
      * to the job seeker is not present in the listing.
      *
      *  Returns the list of filtered listings 'candidates' */
-    std::vector<int> filterJobs();
+    std::vector<int> filterJobs(bool test);
 
     /* After filtering jobs with filterJobs() to get candidates, the
      * match() function will calculate scores for each listing based on

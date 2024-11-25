@@ -73,7 +73,8 @@ std::string Listing::changeFlex(int lid, int &resCode)
 	return result[1][0];
 }
 
-std::string Listing::changeFlex(int lid, bool newFlex, int resCode) {
+std::string Listing::changeFlex(int lid, bool newFlex, int resCode)
+{
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
@@ -91,7 +92,6 @@ std::string Listing::changeFlex(int lid, bool newFlex, int resCode) {
 	resCode = 200;
 	return result[1][0];
 }
-
 
 std::string Listing::changeGender(int lid, int &resCode)
 {
@@ -115,7 +115,8 @@ std::string Listing::changeGender(int lid, int &resCode)
 	return result[1][0];
 }
 
-std::string Listing::changeGender(int lid, bool newValue, int &resCode) {
+std::string Listing::changeGender(int lid, bool newValue, int &resCode)
+{
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
@@ -157,7 +158,8 @@ std::string Listing::changeDiversity(int lid, int &resCode)
 	return result[1][0];
 }
 
-std::string Listing::changeDiversity(int lid, bool newValue, int &resCode) {
+std::string Listing::changeDiversity(int lid, bool newValue, int &resCode)
+{
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
@@ -199,7 +201,8 @@ std::string Listing::changeRemote(int lid, int &resCode)
 	return result[1][0];
 }
 
-std::string Listing::changeRemote(int lid, bool newValue, int &resCode) {
+std::string Listing::changeRemote(int lid, bool newValue, int &resCode)
+{
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid),
 															  false, resCount);
@@ -259,7 +262,6 @@ std::string Listing::changeMBTI(int lid, std::string newMBTI, int &resCode)
 	return result[1][0];
 }
 
-
 std::string Listing::changeModernWorkspace(int lid, int &resCode)
 {
 	int resCount = 0;
@@ -303,74 +305,122 @@ std::string Listing::changeModernWorkspace(int lid, bool newValue, int &resCode)
 	return result[1][0];
 }
 
-std::string Listing::getListing(int lid)
+std::vector<std::string> Listing::getListing(int lid, bool test)
 {
 	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
 
-	// using previous table for workflow tests
-	// std::vector<std::vector<std::string>> listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
-	// std::vector<std::vector<std::string>> eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-	// std::vector<std::vector<std::string>> company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
-	std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-	std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
+	std::vector<std::vector<std::string>> listings;
+	std::vector<std::vector<std::string>> eid;
+	std::vector<std::vector<std::string>> company;
 
+	if (!test)
+	{
+		listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
+		eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+		company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
+	}
+	else
+	{
+		listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+		eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+		company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
 
-	std::ostringstream oss;
+		std::ostringstream oss;
 
-	oss << "\tPosted by: " << company[0][0] << std::endl
-		<< std::endl;
-	oss << "\tCreated on: " << listings[1][0] << std::endl
-		<< std::endl;
-	oss << "\tField:  " << listings[5][0] << std::endl
-		<< std::endl;
-	oss << "\tPosition: " << listings[6][0] << std::endl
-		<< std::endl;
-	oss << "\tJob Description: " << listings[7][0] << std::endl
-		<< std::endl;
-	oss << "\tSkills required: ";
+		oss << "\tPosted by: " << company[0][0] << std::endl
+			<< std::endl;
+		oss << "\tCreated on: " << listings[1][0] << std::endl
+			<< std::endl;
+		oss << "\tField:  " << listings[5][0] << std::endl
+			<< std::endl;
+		oss << "\tPosition: " << listings[6][0] << std::endl
+			<< std::endl;
+		oss << "\tJob Description: " << listings[7][0] << std::endl
+			<< std::endl;
+		oss << "\tSkills required: ";
+
+		for (int i = 8; i < 13; i++)
+			if (listings[i][0] != "\"null\"")
+			{
+				oss << listings[i][0];
+				if (i != 12)
+					oss << ", ";
+			}
+
+		oss << std::endl
+			<< std::endl;
+
+		if (listings[13][0] != "\"null\"")
+			oss << "\tPay: " << listings[13][0] << std::endl
+				<< std::endl;
+
+		if (listings[14][0] != "\"null\"")
+			oss << "\tFlexibility: " << listings[14][0] << std::endl
+				<< std::endl;
+
+		if (listings[15][0] != "\"null\"")
+			oss << "\tModern Workspace: " << listings[15][0] << std::endl
+				<< std::endl;
+		if (listings[16][0] != "\"null\"")
+			oss << "\tGender Parity: " << listings[16][0] << std::endl
+				<< std::endl;
+
+		if (listings[17][0] != "\"null\"")
+			oss << "\tDiverse Workforce: " << listings[17][0] << std::endl
+				<< std::endl;
+		if (listings[18][0] != "\"null\"")
+			oss << "\tRemote Option Available: " << listings[18][0] << std::endl
+				<< std::endl;
+		if (listings[19][0] != "\"null\"")
+			oss << "\tPersonality Types: " << listings[19][0] << std::endl
+				<< std::endl;
+		if (listings[20][0] != "\"null\"")
+			oss << "\tLocation: " << listings[20][0] << std::endl
+				<< std::endl;
+
+		std::cout << "returning " << oss.str() << std::endl;
+		std::vector<std::string> res;
+		res.push_back(oss.str());
+		return res;
+	}
+
+	std::vector<std::string> listingResults;
+	listingResults.push_back(company[0][0]);
+	listingResults.push_back(listings[1][0]);
+	listingResults.push_back(listings[5][0]);
+	listingResults.push_back(listings[6][0]);
+	listingResults.push_back(listings[7][0]);
 
 	for (int i = 8; i < 13; i++)
 		if (listings[i][0] != "\"null\"")
-		{
-			oss << listings[i][0];
-			if (i != 12)
-				oss << ", ";
-		}
-
-	oss << std::endl
-		<< std::endl;
+			listingResults.push_back(listings[i][0]);
 
 	if (listings[13][0] != "\"null\"")
-		oss << "\tPay: " << listings[13][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[13][0]);
 
 	if (listings[14][0] != "\"null\"")
-		oss << "\tFlexibility: " << listings[14][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[14][0]);
 
 	if (listings[15][0] != "\"null\"")
-		oss << "\tModern Workspace: " << listings[15][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[15][0]);
+
 	if (listings[16][0] != "\"null\"")
-		oss << "\tGender Parity: " << listings[16][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[16][0]);
 
 	if (listings[17][0] != "\"null\"")
-		oss << "\tDiverse Workforce: " << listings[17][0] << std::endl
-			<< std::endl;
-	if (listings[18][0] != "\"null\"")
-		oss << "\tRemote Option Available: " << listings[18][0] << std::endl
-			<< std::endl;
-	if (listings[19][0] != "\"null\"")
-		oss << "\tPersonality Types: " << listings[19][0] << std::endl
-			<< std::endl;
-	if (listings[20][0] != "\"null\"")
-		oss << "\tLocation: " << listings[20][0] << std::endl
-			<< std::endl;
+		listingResults.push_back(listings[17][0]);
 
-	return oss.str();
+	if (listings[18][0] != "\"null\"")
+		listingResults.push_back(listings[18][0]);
+
+	if (listings[19][0] != "\"null\"")
+		listingResults.push_back(listings[19][0]);
+
+	if (listings[20][0] != "\"null\"")
+		listingResults.push_back(listings[20][0]);
+
+	return listingResults;
 }
 
 std::string Listing::generateAIListing(std::string n)
@@ -384,7 +434,8 @@ std::string Listing::generateAIListing(std::string n)
 			},
 			{
 				"role": "user",
-				"content": "Generate a job listing with the following fields: area/field (industry), job title/position, job description, annual pay (as a decimal with no text or $), required skill 1, required skill 2, required skill 3, required skill 4, required skill 5, location (city), personality type (MBTI type suited for the type of job), job flexibility, modern building, mixed_gender_workforce, diverse_workforce, remote_availability. The fields from job_flexibility onward can be boolean values true or false (random choice). Print the results for the entry on one line with each field separated by a semicolon with no space after the semicolon. Do not include the field names, just the values. Generate )" + n + R"( such job listings all on one line, with each listing separated by parentheses (). I prefer a wide range of fields, very diverse, not just typical jobs.  Separately, generate a list of company names and company sizes (small, medium, large) for each of these listings with the same format (name and size separated by semicolon, each company for each listing in its own parentheses, all on one line. Do not list the titles 'job listing' and 'company listing' just start listing them."
+				"content": "Generate a job listing with the following fields: area/field (industry), job title/position, job description, annual pay (as a decimal with no text or $), required skill 1, required skill 2, required skill 3, required skill 4, required skill 5, location (city), personality type (MBTI type suited for the type of job), job flexibility, modern building, mixed_gender_workforce, diverse_workforce, remote_availability. The fields from job_flexibility onward can be boolean values true or false (random choice). Print the results for the entry on one line with each field separated by a semicolon with no space after the semicolon. Do not include the field names, just the values. Generate )" +
+					   n + R"( such job listings all on one line, with each listing separated by parentheses (). I prefer a wide range of fields, very diverse, not just typical jobs.  Separately, generate a list of company names and company sizes (small, medium, large) for each of these listings with the same format (name and size separated by semicolon, each company for each listing in its own parentheses, all on one line. Do not list the titles 'job listing' and 'company listing' just start listing them."
 			}
 		]
 	})";
@@ -405,7 +456,7 @@ std::string Listing::generateAIListing(std::string n)
 	return listing_list;
 }
 
-void Listing::parseAI(const std::string listings, int n) 
+void Listing::parseAI(const std::string listings, int n)
 {
 
 	std::cout << n << std::endl;
@@ -442,54 +493,52 @@ void Listing::parseAI(const std::string listings, int n)
 		if (localListings[0] == '\"' || localListings[0] == ' ')
 			localListings.erase(0, 2);
 		else
-			localListings.erase(0,1);
+			localListings.erase(0, 1);
 
 		jobField = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, jobField.length() +1);
+		localListings.erase(0, jobField.length() + 1);
 		jobPosition = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, jobPosition.length() +1);
+		localListings.erase(0, jobPosition.length() + 1);
 		jobDescription = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, jobDescription.length() +1);
+		localListings.erase(0, jobDescription.length() + 1);
 		payStr = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, payStr.length() +1);
+		localListings.erase(0, payStr.length() + 1);
 		payStr = payStr.substr(0, payStr.find('.'));
 		skill1 = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, skill1.length() +1);	
+		localListings.erase(0, skill1.length() + 1);
 		skill2 = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, skill2.length() +1);	
+		localListings.erase(0, skill2.length() + 1);
 		skill3 = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, skill3.length() +1);	
+		localListings.erase(0, skill3.length() + 1);
 		skill4 = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, skill4.length() +1);	
+		localListings.erase(0, skill4.length() + 1);
 		skill5 = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, skill5.length() +1);	
+		localListings.erase(0, skill5.length() + 1);
 		location = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, location.length() +1);
+		localListings.erase(0, location.length() + 1);
 		personality = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, personality.length() +1);
+		localListings.erase(0, personality.length() + 1);
 		flex = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, flex.length() +1);
+		localListings.erase(0, flex.length() + 1);
 		modern = localListings.substr(0, localListings.find(';'));
 		localListings.erase(0, modern.length() + 1);
 		gender = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, gender.length() +1);
+		localListings.erase(0, gender.length() + 1);
 		diverse = localListings.substr(0, localListings.find(';'));
-		localListings.erase(0, diverse.length() +1);
+		localListings.erase(0, diverse.length() + 1);
 		remote = localListings.substr(0, localListings.find(')'));
-		localListings.erase(0, remote.length() +1);
+		localListings.erase(0, remote.length() + 1);
 
-		std::string data = "{\"field\": \"" + jobField + "\", \"position\": \"" + jobPosition + "\", \"job_description\": \"" + jobDescription + 
-		"\", \"skill1_req\": \"" + skill1 + "\", \"skill2_req\": \"" + skill2 + "\", \"skill3_req\": \"" + skill3 + "\", \"skill4_req\": \""+ 
-			skill4 + "\", \"skill5_req\": \"" + skill5 + "\", \"location\": \"" + location + "\", \"personality_types\": \"" + personality + 
-			"\", \"job_flexibility\":" + flex + ", \"remote_available\": " + remote + ", \"diverse_workforce\": " + diverse + ", \"mixed_gender\": " +
-			gender + ", \"modern_building\": " + modern + ", \"pay\": " + payStr + "}";
-			
+		std::string data = "{\"field\": \"" + jobField + "\", \"position\": \"" + jobPosition + "\", \"job_description\": \"" + jobDescription +
+						   "\", \"skill1_req\": \"" + skill1 + "\", \"skill2_req\": \"" + skill2 + "\", \"skill3_req\": \"" + skill3 + "\", \"skill4_req\": \"" +
+						   skill4 + "\", \"skill5_req\": \"" + skill5 + "\", \"location\": \"" + location + "\", \"personality_types\": \"" + personality +
+						   "\", \"job_flexibility\":" + flex + ", \"remote_available\": " + remote + ", \"diverse_workforce\": " + diverse + ", \"mixed_gender\": " +
+						   gender + ", \"modern_building\": " + modern + ", \"pay\": " + payStr + "}";
 
 		std::cout << db->insert("Listing_AI", data) << std::endl;
 		int resCount = 0;
 		std::vector<std::vector<std::string>> lidQ = db->query("Listing_AI", "lid", "order", "lid", "desc", false, resCount);
 		lids.push_back(stoi(lidQ[0][0]));
-
 	}
 
 	std::string localCompanies = localListings.substr(listings.find('(') + 1, std::string::npos);
@@ -506,12 +555,12 @@ void Listing::parseAI(const std::string listings, int n)
 		if (localCompanies[0] == '\"' || localCompanies[0] == ' ')
 			localCompanies.erase(0, 2);
 		else
-			localCompanies.erase(0,1);
+			localCompanies.erase(0, 1);
 
 		company = localCompanies.substr(0, localCompanies.find(';'));
-		localCompanies.erase(0, company.length() +1);			
+		localCompanies.erase(0, company.length() + 1);
 		co_size = localCompanies.substr(0, localCompanies.find(')'));
-		localCompanies.erase(0, co_size.length() +1);
+		localCompanies.erase(0, co_size.length() + 1);
 
 		std::string data = "{\"company_name\": \"" + company + "\", \"size\": \"" + co_size + "\"}";
 
@@ -519,18 +568,16 @@ void Listing::parseAI(const std::string listings, int n)
 		int resCount = 0;
 		std::vector<std::vector<std::string>> eidQ = db->query("Employer_AI", "eid", "order", "eid", "desc", false, resCount);
 		eids.push_back(stoi(eidQ[0][0]));
-
 	}
 
-	for (int i = 0; i < n; i++) {
-			std::string data = "{\"eid\": " + std::to_string(eids[i]) + ", \"lid\": " + std::to_string(lids[i]) + "}";
-			std::cout << db->insert("Created_AI", data) << std::endl;
+	for (int i = 0; i < n; i++)
+	{
+		std::string data = "{\"eid\": " + std::to_string(eids[i]) + ", \"lid\": " + std::to_string(lids[i]) + "}";
+		std::cout << db->insert("Created_AI", data) << std::endl;
 	}
-		
+
 	return;
-
 }
-
 
 int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int64_t pay, std::map<std::string, bool> boolFields)
 {
@@ -553,20 +600,20 @@ int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::ma
 	std::string modern = boolFields["modern_building"] ? "true" : "false";
 	std::string payStr = std::to_string(pay);
 
-	std::string data = "{\"field\": \"" + jobField + "\", \"position\": \"" + jobPosition + "\", \"job_description\": \"" + jobDescription + 
-		"\", \"skill1_req\": \"" + skill1 + "\", \"skill2_req\": \"" + skill2 + "\", \"skill3_req\": \"" + skill3 + "\", \"skill4_req\": \""+ 
-			skill4 + "\", \"skill5_req\": \"" + skill5 + "\", \"location\": \"" + location + "\", \"personality_types\": \"" + personality + 
-			"\", \"job_flexibility\":" + flex + ", \"remote_available\": " + remote + ", \"diverse_workforce\": " + diverse + ", \"mixed_gender\": " +
-			gender + ", \"modern_building\": " + modern + ", \"pay\": " + payStr + "}";
-			
+	std::string data = "{\"field\": \"" + jobField + "\", \"position\": \"" + jobPosition + "\", \"job_description\": \"" + jobDescription +
+					   "\", \"skill1_req\": \"" + skill1 + "\", \"skill2_req\": \"" + skill2 + "\", \"skill3_req\": \"" + skill3 + "\", \"skill4_req\": \"" +
+					   skill4 + "\", \"skill5_req\": \"" + skill5 + "\", \"location\": \"" + location + "\", \"personality_types\": \"" + personality +
+					   "\", \"job_flexibility\":" + flex + ", \"remote_available\": " + remote + ", \"diverse_workforce\": " + diverse + ", \"mixed_gender\": " +
+					   gender + ", \"modern_building\": " + modern + ", \"pay\": " + payStr + "}";
 
 	std::cout << db->insert("Listing", data) << std::endl;
 	int resCount = 0;
 	std::vector<std::vector<std::string>> lidQ = db->query("Listing", "lid", "order", "lid", "desc", false, resCount);
 	std::cout << "resCount: " << resCount << "  lidQ[0][0]: " << lidQ[0][0] << std::endl;
-	
+
 	// return lid of inserted listing
-	if (resCount > 0) {
+	if (resCount > 0)
+	{
 		int lid = std::stoi(lidQ[0][0]);
 		return lid;
 	}

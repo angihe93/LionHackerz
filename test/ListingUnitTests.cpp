@@ -13,12 +13,13 @@
 TEST(ListingGet, checkGetListing) {
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
-        std::string getRes = l->getListing(1);
+        std::vector<std::string> res = l->getListing(1, true);
+        std::string getRes = res[0];
         std::cout << "getRes: " << getRes << std::endl;
         std::string expected = "\tPosted by: \"Google\"\n\n\tCreated on: \"2024-10-12T22:19:23.396145+00:00\"\n\n\tField:  \"Computer science\"\n\n\tPosition: \"Software Engineer\"\n\n\tJob Description: \"Looking for a code monkey.\"\n\n\tSkills required: \"C++\", \"Python\", \n\n\tFlexibility: \"true\"\n\n\tModern Workspace: \"true\"\n\n\tGender Parity: \"true\"\n\n\tDiverse Workforce: \"true\"\n\n\tRemote Option Available: \"false\"\n\n";
         EXPECT_EQ(getRes, expected);
 
-        getRes = l->getListing(2);
+        getRes = (l->getListing(2, true))[0];
         std::cout << "getRes: " << getRes << std::endl;
         expected = "\tPosted by: \"Microsoft\"\n\n\tCreated on: \"2024-10-12T22:21:39.955097+00:00\"\n\n\tField:  \"Software Development\"\n\n\tPosition: \"Lead Engineer\"\n\n\tJob Description: \"Microsoft is currently looking for an experienced candidate to lead our engineering team.\"\n\n\tSkills required: \"Leadership\", \"Communication\", \"Programming languages\", \n\n\tPay: 175000\n\n\tFlexibility: \"true\"\n\n\tModern Workspace: \"true\"\n\n\tGender Parity: \"true\"\n\n\tDiverse Workforce: \"true\"\n\n\tRemote Option Available: \"true\"\n\n\tPersonality Types: \"INTJ\"\n\n";
         EXPECT_EQ(getRes, expected);

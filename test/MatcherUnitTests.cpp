@@ -46,16 +46,13 @@ TEST(FilterListings, discardTooManyNull)
 	int uid = 5;
 
 	std::vector<int> candidates;
-	candidates.push_back(1);
-	candidates.push_back(2);
-	candidates.push_back(3);
-	candidates.push_back(4);
-	candidates.push_back(5);
-	candidates.push_back(6);
+	for (int i = 1; i < 7; i++)
+		candidates.push_back(i);
+
 
 	std::vector<std::vector<std::string>> dimensions;
 	dimensions.push_back(m->gatherRelevantDimensions(uid)[0]);
-	std::vector<int> filter = m->filterJobs();
+	std::vector<int> filter = m->filterJobs(true);
 
 	EXPECT_EQ(candidates, filter);
 }
@@ -72,14 +69,14 @@ TEST(FilterListings, calculateScores)
 	std::vector<int> scores;
 	scores.push_back(0);
 	scores.push_back(0);
-	scores.push_back(0);
+	scores.push_back(0);		
+	scores.push_back(600);
 	scores.push_back(800);
-	scores.push_back(800);
-	scores.push_back(900);
+	scores.push_back(825);
 
 	std::vector<std::vector<std::string>> dimensions;
 	dimensions.push_back(m->gatherRelevantDimensions(uid)[0]);
-	std::vector<int> filter = m->filterJobs();
+	std::vector<int> filter = m->filterJobs(true);
 	std::vector<int> sc = m->match(uid);
 
 	EXPECT_EQ(scores, sc);
@@ -100,16 +97,16 @@ TEST(FilterListings, elimLowScores)
 	candidates.push_back(5);
 	candidates.push_back(6);
 	std::vector<int> scores;
+	scores.push_back(600);
 	scores.push_back(800);
-	scores.push_back(800);
-	scores.push_back(900);
+	scores.push_back(825);
 
 	std::vector<std::vector<int>> testResults;
 	testResults.push_back(candidates);
 	testResults.push_back(scores);
 
 	m->gatherRelevantDimensions(uid);
-	m->filterJobs();
+	m->filterJobs(true);
 	m->match(uid);
 	std::vector<std::vector<int>> filteredMatches = m->filterMatches();
 
@@ -126,19 +123,19 @@ TEST(Sort, sortMatches)
 
 	std::vector<int> candidates;
 	candidates.push_back(6);
-	candidates.push_back(4);
 	candidates.push_back(5);
+	candidates.push_back(4);
 	std::vector<int> scores;
-	scores.push_back(900);
+	scores.push_back(825);
 	scores.push_back(800);
-	scores.push_back(800);
+	scores.push_back(600);
 
 	std::vector<std::vector<int>> testResults;
 	testResults.push_back(candidates);
 	testResults.push_back(scores);
 
 	m->gatherRelevantDimensions(uid);
-	m->filterJobs();
+	m->filterJobs(true);
 	m->match(uid);
 	m->filterMatches();
 	std::vector<std::vector<int>> sortedMatches = m->sortMatches();
@@ -155,97 +152,40 @@ TEST(Display, displayMatches)
 
 	int uid = 5;
 
-	std::string display = m->displayMatches(uid);
+	std::vector<JobMatch> display = m->displayMatches(uid, true);
 
-	std::string matchList = R"(There are a total of 3 matches out of 6 total listings for User 5
+	display[0].print();
 
-Listing 6:  Match score 900   ====================================
+	std::vector<JobMatch> matchList;
 
-	Posted by: "City of San Francisco"
+	struct JobMatch match1;
 
-	Created on: "2024-10-18T12:04:51.757878+00:00"
+	match1.listingId = 6;
+	match1.company = "\"TechForge\"";
+	match1.description = "\"Develop and maintain software applications\"";
+	match1.field = "\"Information Technology\"";
+	match1.position = "\"Software Developer\"";
+	match1.location = "\"Austin\"";
+	match1.pay = 80000;
+	match1.time_created = "\"2024-11-02T03:33:40.506159+00:00\"";
+	match1.skill1 = "\"JavaScript\"";
+	match1.skill2 = "\"React\"";
+	match1.skill3 = "\"Node.js\"";
+	match1.skill4 = "\"Problem-solving\"";
+	match1.skill5 = "\"Teamwork\"";
+	match1.score = 825;
+	match1.remote = "\"true\"";
+	match1.gender = "\"true\"";
+	match1.diversity = "\"true\"";
+	match1.personality = "\"INTP\"";
+	match1.modern = "\"true\"";
+	match1.flex = "\"true\"";
 
-	Field:  "Public Works"
+	match1.print();
 
-	Position: "Sculptor"
-
-	Job Description: "The city is looking for a skilled artisan familiar with sculpting and manipulating stone to work on a public project.  "
-
-	Skills required: "carving", "sculpting", "stonework", "statue making", 
-
-	Pay: 275000
-
-	Remote Option Available: "false"
-
-	Personality Types: "Artist"
-
-	Location: "San Francisco"
-
-
-		Matched Words: "sculpting", "stonework", 
-
-
-Listing 4:  Match score 800   ================================
-
-	Posted by: "Art School"
-
-	Created on: "2024-10-13T16:23:25.000676+00:00"
-
-	Field:  "arts"
-
-	Position: "professor of art"
-
-	Job Description: "We are looking for a skilled artist who also has the capacity for teaching."
-
-	Skills required: "drawing", "painting", "sculpting", "teaching", 
-
-	Pay: 75000
-
-	Flexibility: "true"
-
-	Modern Workspace: "true"
-
-	Personality Types: "INFP"
-
-	Location: "New York"
-
-
-		Matched Words: art, "sculpting", "drawing", 
-
-
-Listing 5:  Match score 800   ================================
-
-	Posted by: "Art School"
-
-	Created on: "2024-10-13T16:30:19.209194+00:00"
-
-	Field:  "Art History"
-
-	Position: "Exhibit Curator"
-
-	Job Description: "The MoMA is looking for an experienced art historian to curator a new exhibit on a specific modern artist.  Experience with previous curation a plus."
-
-	Skills required: "drawing", "painting", "sculpting", "teaching", 
-
-	Pay: 75000
-
-	Flexibility: "true"
-
-	Modern Workspace: "true"
-
-	Personality Types: "INFP"
-
-	Location: "New York"
-
-
-		Matched Words: art, "sculpting", "drawing", 
-
-
-)";
-
-	std::cout << display << std::endl;
-
-	EXPECT_EQ(matchList, display);
+	matchList.push_back(match1);
+	
+	EXPECT_EQ(match1, display[0]);
 }
 
 /* This tests the getCandidates() function, a basic
@@ -266,7 +206,7 @@ TEST(GetValues, retrieveCandidates)
 	testCandidates.push_back(6);
 
 	m->gatherRelevantDimensions(uid);
-	m->filterJobs();
+	m->filterJobs(true);
 
 	EXPECT_EQ(testCandidates, m->getCandidates());
 }
@@ -288,7 +228,7 @@ TEST(GetValues, retrieveMatchedWords)
 	testMatchedWords.push_back(w2);
 
 	m->gatherRelevantDimensions(uid);
-	m->filterJobs();
+	m->filterJobs(true);
 	m->match(uid);
 	m->filterMatches();
 	m->sortMatches();
