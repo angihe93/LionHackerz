@@ -88,7 +88,9 @@ target_include_directories(LionHackerzProjectTests PRIVATE
 
 target_link_libraries(LionHackerzProjectTests PRIVATE 
      WN
-     CURL::libcurl
+     CURL::libcurl 
+     cpp_redis
+     tacopie
      GTest::gtest
      GTest::gtest_main
      pthread)
@@ -131,6 +133,7 @@ if (CPPLINT)
         src/User.cpp
         src/Augment.cpp
         src/Employer.cpp
+        src/Worker.cpp
         src/Auth.cpp
         test/MatcherUnitTests.cpp
         test/DatabaseUnitTests.cpp

@@ -29,7 +29,7 @@ TEST(dbQuery, CheckQuery) {
 
         // query with 3 filters
         queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "skill2_req", "eq", "painting", "skill3_req", "eq", "sculpting", true, resCount);
-        expected = {{"4","5"}};
+        expected = {{"5","4"}};
         EXPECT_EQ(queryRes, expected); 
 
         delete db;

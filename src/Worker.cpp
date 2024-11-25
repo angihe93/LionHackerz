@@ -37,16 +37,24 @@ void Worker::process_tasks()
 			std::cout << "Processing task for UID: " << uid << std::endl;
 
 			// Perform matching algorithm
-			auto matches = m->displayMatches(uid);
+			auto matches = m->displayMatches(uid, false);
 
+			int upd_interv = matches.size() / 10;
+			int progress = 85;
+			int count = 0;
 			nlohmann::json jsonArray = nlohmann::json::array();
 		    for (const auto& match : matches) {
+				if (count % upd_interv == 0 && progress < 95) {
+					progress++;
+					redis_client.set("progress:" + user_id, "{\"status\": \"completed\", \"progress\": " + std::to_string(progress) + "}");
+					redis_client.commit();
+				}
         		jsonArray.push_back(match.to_json());
     		}
 
 			// Cache match results in Redis with expiration
 			redis_client.set("matches:" + user_id, jsonArray.dump());
-			redis_client.expire("matches:" + user_id, 600);
+			redis_client.expire("matches:" + user_id, 3600);
 			redis_client.commit();
 
 			// Mark task as completed

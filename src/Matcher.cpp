@@ -75,70 +75,78 @@ std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
     return results;
 }
 
-std::vector<int> Matcher::filterJobs()
+std::vector<int> Matcher::filterJobs(bool test)
 {
     int resCount = 0;
-
-    // using previous table for workflow tests
-    std::vector<std::vector<std::string>> lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
-    // std::vector<std::vector<std::string>> lists = this->db->query("Listing", "", "", "", "", false, resCount);
-
-    /* check for listings in redis cache */
-    auto redis_future = redis_client.get("listings_cache");
-    redis_client.sync_commit();
-
-    auto redis_reply = redis_future.get();
-
-    if (redis_reply.is_string())
-    {
-        try
-        {
-            // Deserialize cached JSON into std::vector<std::vector<std::string>>
-            auto json_listings = nlohmann::json::parse(redis_reply.as_string());
-            std::vector<std::vector<std::string>> raw_listings;
-
-            for (const auto &row : json_listings)
-            {
-                raw_listings.emplace_back(row.get<std::vector<std::string>>());
-            }
-
-            all_listings = raw_listings;
-            std::cout << "Successfully loaded listings from cache" << std::endl;
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << "Error processing cached data: " << e.what() << std::endl;
-        }
-    }
-    else
-    {
-        /* no cache, get listings from db */
-        std::cout << "No valid cache found. Fetching from database..." << std::endl;
+    std::vector<std::vector<std::string>> lists;
+    
+    if (!test)
         lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
+    else {
+        lists = this->db->query("Listing", "", "", "", "", false, resCount);
+        all_listings = lists;
+    }
 
-        /* store them in redis cache for future requests */
-        try
+    if (!test)
+    {
+        /* check for listings in redis cache */
+        auto redis_future = redis_client.get("listings_cache");
+        redis_client.sync_commit();
+
+        auto redis_reply = redis_future.get();
+
+        if (redis_reply.is_string())
         {
-            nlohmann::json json_cache = nlohmann::json::array();
-            for (const auto &row : lists)
+            try
             {
-                json_cache.push_back(row);
-            }
+                // Deserialize cached JSON into std::vector<std::vector<std::string>>
+                auto json_listings = nlohmann::json::parse(redis_reply.as_string());
+                std::vector<std::vector<std::string>> raw_listings;
 
-            redis_client.set("listings_cache", json_cache.dump(), [](cpp_redis::reply &reply)
-                             {
+                for (const auto &row : json_listings)
+                {
+                    raw_listings.emplace_back(row.get<std::vector<std::string>>());
+                }
+
+                all_listings = raw_listings;
+
+                std::cout << "Successfully loaded listings from cache" << std::endl;
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error processing cached data: " << e.what() << std::endl;
+            }
+        }
+        else
+        {
+            /* no cache, get listings from db */
+            std::cout << "No valid cache found. Fetching from database..." << std::endl;
+            lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
+
+            /* store them in redis cache for future requests */
+            try
+            {
+                nlohmann::json json_cache = nlohmann::json::array();
+                for (const auto &row : lists)
+                {
+                    json_cache.push_back(row);
+                }
+
+                redis_client.set("listings_cache", json_cache.dump(), [](cpp_redis::reply &reply)
+                                 {
             if (reply.is_error()) {
                 std::cerr << "Error caching listings: " << reply.error() << std::endl;
             } });
-            redis_client.expire("listings_cache", 600); // store for 10 minutes
-            redis_client.sync_commit();
+                redis_client.expire("listings_cache", 600); // store for 10 minutes
+                redis_client.sync_commit();
 
-            std::cout << "Cached listings successfully" << std::endl;
-            all_listings = lists;
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << "Error serializing or caching listings: " << e.what() << std::endl;
+                std::cout << "Cached listings successfully" << std::endl;
+                all_listings = lists;
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error serializing or caching listings: " << e.what() << std::endl;
+            }
         }
     }
 
@@ -231,7 +239,7 @@ std::vector<int> Matcher::match(int uid)
                 uAug++;
             }
             uAug = 0;
-            std::cout << "\tScore on location: " << candidateScore << std::endl;
+            //     std::cout << "\tScore on location: " << candidateScore << std::endl;
         }
 
         /* score on field + augment if applicable */
@@ -248,7 +256,7 @@ std::vector<int> Matcher::match(int uid)
                 uAug++;
             }
             uAug = 0;
-            std::cout << "\tScore on field: " << candidateScore << std::endl;
+            //  std::cout << "\tScore on field: " << candidateScore << std::endl;
         }
 
         /* score on skills + augment if applicable */
@@ -308,7 +316,7 @@ std::vector<int> Matcher::match(int uid)
                         uAug++;
                     }
                     uAug = 0;
-                    std::cout << "\tScore on skill " << wU << ": " << candidateScore << std::endl;
+                    //    std::cout << "\tScore on skill " << wU << ": " << candidateScore << std::endl;
                     break;
                 }
             }
@@ -369,7 +377,7 @@ std::vector<int> Matcher::match(int uid)
                         uAug++;
                     }
                     uAug = 0;
-                    std::cout << "\tScore on interest " << wU << ": " << candidateScore << std::endl;
+                    //     std::cout << "\tScore on interest " << wU << ": " << candidateScore << std::endl;
                     break;
                 }
             }
@@ -397,7 +405,7 @@ std::vector<int> Matcher::match(int uid)
                 }
                 uAug++;
             }
-            std::cout << "\tScore on pay" << ": " << candidateScore << std::endl;
+            //  std::cout << "\tScore on pay" << ": " << candidateScore << std::endl;
             uAug = 0;
         }
 
@@ -415,7 +423,7 @@ std::vector<int> Matcher::match(int uid)
                     candidateScore += augments[uAug];
                 uAug++;
             }
-            std::cout << "\tScore on gender: " << candidateScore << std::endl;
+            //   std::cout << "\tScore on gender: " << candidateScore << std::endl;
             uAug = 0;
         }
 
@@ -432,7 +440,7 @@ std::vector<int> Matcher::match(int uid)
                     candidateScore += augments[uAug];
                 uAug++;
             }
-            std::cout << "\tScore on diversity: " << candidateScore << std::endl;
+            //  std::cout << "\tScore on diversity: " << candidateScore << std::endl;
             uAug = 0;
         }
 
@@ -450,7 +458,7 @@ std::vector<int> Matcher::match(int uid)
                 uAug++;
             }
             uAug = 0;
-            std::cout << "\tScore on mbti: " << candidateScore << std::endl;
+            //  std::cout << "\tScore on mbti: " << candidateScore << std::endl;
         }
 
         /* score on flexibility + augment if applicable */
@@ -468,7 +476,7 @@ std::vector<int> Matcher::match(int uid)
                 uAug++;
             }
             uAug = 0;
-            std::cout << "\tScore on flexibility: " << candidateScore << std::endl;
+            //   std::cout << "\tScore on flexibility: " << candidateScore << std::endl;
         }
 
         /* score on remote + augment if applicable */
@@ -485,7 +493,7 @@ std::vector<int> Matcher::match(int uid)
                 uAug++;
             }
             uAug = 0;
-            std::cout << "\tScore on remote: " << candidateScore << std::endl;
+            //   std::cout << "\tScore on remote: " << candidateScore << std::endl;
         }
 
         /* score on workspace + augment if applicable */
@@ -503,14 +511,16 @@ std::vector<int> Matcher::match(int uid)
                 uAug++;
             }
             uAug = 0;
-            std::cout << "\tScore on workspace: " << candidateScore << std::endl;
+            //  std::cout << "\tScore on workspace: " << candidateScore << std::endl;
         }
         std::cout << "score: " << candidateScore << std::endl;
         scores.push_back(candidateScore);
 
-        if (cNum % upd_prog_interval == 0) {
+        if (cNum % upd_prog_interval == 0)
+        {
             progress++;
-            if (progress < 75) {
+            if (progress < 75)
+            {
                 redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": " + std::to_string(progress) + "}");
                 redis_client.commit();
             }
@@ -587,26 +597,29 @@ std::vector<std::vector<int>> Matcher::sortMatches()
     return results;
 }
 
-std::vector<JobMatch> Matcher::displayMatches(int uid)
+std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
 {
     gatherRelevantDimensions(uid);
+    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 10}");
+    redis_client.commit();
+
+    if (test)
+        filterJobs(true);
+    else
+        filterJobs(false);
     redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 20}");
     redis_client.commit();
-    
-    filterJobs();
-    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 30}");
-    redis_client.commit();
-    
+
     match(uid);
     redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 75}");
     redis_client.commit();
 
     filterMatches();
-    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 85}");
+    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 80}");
     redis_client.commit();
-    
+
     sortMatches();
-    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 95}");
+    redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": 85}");
     redis_client.commit();
 
     struct JobMatch matchRes;
@@ -621,7 +634,7 @@ std::vector<JobMatch> Matcher::displayMatches(int uid)
         matchRes.listingId = candidates[i];
         matchRes.score = scores[count];
 
-        std::vector<std::string> listingResult = l->getListing(candidates[i]);
+        std::vector<std::string> listingResult = l->getListing(candidates[i], false);
 
         matchRes.company = listingResult[0];
         matchRes.time_created = listingResult[1];
@@ -648,7 +661,6 @@ std::vector<JobMatch> Matcher::displayMatches(int uid)
 
         if (!matchedWords[0].empty())
         {
-
             for (std::string &mw : matchedWords[count])
                 matchW = matchW + ", ";
         }
@@ -665,9 +677,8 @@ std::vector<JobMatch> Matcher::displayMatches(int uid)
 // TODO: deal with arrays of things later
 std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> Matcher::matchResponse(int uid)
 {
-
     gatherRelevantDimensions(uid);
-    filterJobs();
+    filterJobs(true);
     match(uid);
     filterMatches();
     sortMatches();
@@ -1004,79 +1015,6 @@ bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
         }
     }
 
-    /* listing synonyms vs. user */
-    for (std::string &wE : fieldVecE)
-    {
-        for (char &c : wE)
-            c = std::tolower(static_cast<unsigned char>(c));
-        char *wb = morphword(const_cast<char *>(wE.c_str()), NOUN);
-        SynsetPtr synset2;
-        if (wb != NULL)
-            synset2 = findtheinfo_ds(wb, NOUN, SYNS, ALLSENSES);
-        else
-            synset2 = findtheinfo_ds(const_cast<char *>(wE.c_str()), NOUN, SYNS, ALLSENSES);
-
-        while (synset2 != NULL)
-        {
-            int i = 0;
-
-            /* sort the synset */
-            std::sort(synset2->words, synset2->words + synset2->wcount, [](const char *a, const char *b)
-                      { return std::strcmp(a, b) < 0; });
-
-            while (i < synset2->wcount)
-            {
-                bool indexFound = false;
-
-                int wordCount = 0;
-
-                for (std::string &wU : fieldVecU)
-                {
-                    wordCount++;
-
-                    /* range check on synset - if word out of range, move on to next */
-                    if (synset2->words[i][0] > std::tolower(wU[0]) ||
-                        synset2->words[synset2->wcount - 1][0] < std::tolower(wU[0]))
-                    {
-                        continue;
-                    }
-
-                    /* if in range, find optimal index to start comparing using binary search */
-                    int i = binSearch(synset2, 0, synset2->wcount - 1, std::tolower(wU[0]));
-
-                    /* binary search results: not found. Move on to next word. */
-                    if (i == -1)
-                        continue;
-
-                    /* else: compare words */
-                    if (wE == wU)
-                    {
-                        bool alreadyStored = false;
-                        for (std::string &mw : matchedWords[c])
-                            if (mw == wE)
-                                alreadyStored = true;
-                        if (!alreadyStored)
-                            matchedWords[c].push_back(wE);
-                        return true;
-                    }
-                    for (char &c : wU)
-                        c = std::tolower(static_cast<unsigned char>(c));
-                    if (wU == synset2->words[i])
-                    {
-                        bool alreadyStored = false;
-                        for (std::string &mw : matchedWords[c])
-                            if (mw == wU)
-                                alreadyStored = true;
-                        if (!alreadyStored)
-                            matchedWords[c].push_back(wU);
-                        return true;
-                    }
-                }
-                i++;
-            }
-            synset2 = synset2->nextss;
-        }
-    }
     return false;
 }
 

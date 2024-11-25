@@ -67,6 +67,52 @@ nlohmann::json to_json() const {
                 {"location", location}
             };
     }
+    void print() const {
+        std::cout << "{ "
+                  << "listingId: " << listingId << ", "
+                  << "pay: " << pay << ", "
+                  << "score: " << score << ", "
+                  << "company: \"" << company << "\", "
+                  << "time_created: \"" << time_created << "\", "
+                  << "field: \"" << field << "\", "
+                  << "position: \"" << position << "\", "
+                  << "description: \"" << description << "\", "
+                  << "skill1: \"" << skill1 << "\", "
+                  << "skill2: \"" << skill2 << "\", "
+                  << "skill3: \"" << skill3 << "\", "
+                  << "skill4: \"" << skill4 << "\", "
+                  << "skill5: \"" << skill5 << "\", "
+                  << "flex: \"" << flex << "\", "
+                  << "modern: \"" << modern << "\", "
+                  << "gender: \"" << gender << "\", "
+                  << "diversity: \"" << diversity << "\", "
+                  << "remote: \"" << remote << "\", "
+                  << "personality: \"" << personality << "\", "
+                  << "location: \"" << location << "\""
+                  << " }" << std::endl;
+    }
+    bool operator==(const JobMatch& other) const {
+        return listingId == other.listingId &&
+               company == other.company &&
+               description == other.description &&
+               field == other.field &&
+               position == other.position &&
+               location == other.location &&
+               pay == other.pay &&
+               time_created == other.time_created &&
+               skill1 == other.skill1 &&
+               skill2 == other.skill2 &&
+               skill3 == other.skill3 &&
+               skill4 == other.skill4 &&
+               skill5 == other.skill5 &&
+               score == other.score &&
+               remote == other.remote &&
+               gender == other.gender &&
+               diversity == other.diversity &&
+               personality == other.personality &&
+               modern == other.modern &&
+               flex == other.flex;
+    }
 
 };
 
@@ -91,7 +137,7 @@ public:
      * corresponding match scores in descending order when called.
      * When the Listing class is created, more details can be
      * included. */
-    std::vector<JobMatch> displayMatches(int uid);
+    std::vector<JobMatch> displayMatches(int uid, bool test);
 
     /* If user has preferences for certain match criteria,
      * select those to apply augments to those dimensions.
@@ -110,7 +156,7 @@ public:
      * to the job seeker is not present in the listing.
      *
      *  Returns the list of filtered listings 'candidates' */
-    std::vector<int> filterJobs();
+    std::vector<int> filterJobs(bool test);
 
     /* After filtering jobs with filterJobs() to get candidates, the
      * match() function will calculate scores for each listing based on

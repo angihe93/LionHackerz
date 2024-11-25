@@ -746,7 +746,7 @@ void RouteController::dbtest(const crow::request &req, crow::response &res)
             std::cout << req6 << std::endl << std::endl; */
 
     Listing *l = new Listing(*db);
-    l->getListing(1);
+    l->getListing(1, false);
 
     res.code = 200;
     res.end();
