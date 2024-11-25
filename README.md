@@ -68,6 +68,13 @@ This should complete the WordNet library installation.
 
 NEW:
 
+This API makes use of cpp_redis for task queueing instances of the job matcher.  To install, follow the instructions
+found here:
+
+	https://github.com/cpp-redis/cpp_redis/wiki/Installation
+
+NEW:
+
 This app uses OpenSSL for API key generation. To install, download version 3.3.2 from https://openssl-library.org/source/, then go to openssl-3.3.2/, run `./Configure` and then `make`.
 
 # Building and runing a local instance of the API Server
