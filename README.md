@@ -73,6 +73,17 @@ found here:
 
 	https://github.com/cpp-redis/cpp_redis/wiki/Installation
 
+If you run into errors, try installing tacopie first:
+
+	git clone https://github.com/cylix/tacopie.git
+ 	cd tacopie
+  	mkdir build && cd build
+   	cmake ..
+    	make
+     	sudo make install
+
+Once that is installed, follow the instructions above for installing cpp_redis again.
+
 NEW:
 
 This app uses OpenSSL for API key generation. To install, download version 3.3.2 from https://openssl-library.org/source/, then go to openssl-3.3.2/, run `./Configure` and then `make`.
