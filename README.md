@@ -66,7 +66,7 @@ Finally, run:
 
 This should complete the WordNet library installation. 
 
-NEW:
+NEW (11/25/2024):
 
 This API makes use of cpp_redis for task queueing instances of the job matcher.  To install, follow the instructions
 found here:
