@@ -2,11 +2,15 @@
 
 Our project tasks/to-do lists and completion can be found on Trello at:
 
- https://trello.com/b/tavRkgxR/job-matching-api
+	https://trello.com/b/tavRkgxR/job-matching-api
 
  A deployed version can be found on the Google Cloud Platform at:
+ 	
+  	http://34.16.13.147:18080
 
- http://34.16.13.147:18080
+A demoable app/client can be found in the following repo:
+
+	https://github.com/ds4015/w4156-app
 
  CI is set up to build and run tests, coverage, static analysis, and style check on push and pull requests. It is set up in Actions as a workflow named "CMake on a single platform". Click on a workflow run and scroll down to Artifacts section to download reports and outputs produced during runtime. Some reports and outputs may also be uploaded to some repo directory before final submission.
 
