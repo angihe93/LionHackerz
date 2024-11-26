@@ -82,7 +82,7 @@ After that, you can install cpp_redis:
 
 	https://github.com/cpp-redis/cpp_redis/wiki/Installation
 
-If you run into errors about EXPOORT, you can ignore if you've instlled tacopie first
+If you run into errors about EXPORT(tacopie...), you can ignore if you've instlled tacopie first
 and just run make followed by sudo make install.  It should still install this way. 
 
 	git clone https://github.com/cylix/tacopie.git
