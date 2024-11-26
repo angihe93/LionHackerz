@@ -73,11 +73,17 @@ This should complete the WordNet library installation.
 NEW (11/25/2024):
 
 This API makes use of cpp_redis for task queueing instances of the job matcher.  To install, follow the instructions
-found here:
+found below.  Even though cpp_redis contains tacopie, it may be better to install tacopie first on its own before cpp_redis
+to avoid errors:
+
+	https://github.com/Cylix/tacopie/wiki/Installation
+
+After that, you can install cpp_redis:
 
 	https://github.com/cpp-redis/cpp_redis/wiki/Installation
 
-If you run into errors, try installing tacopie first:
+If you run into errors about EXPOORT, you can ignore if you've instlled tacopie first
+and just run make followed by sudo make install.  It should still install this way. 
 
 	git clone https://github.com/cylix/tacopie.git
  	cd tacopie
@@ -86,7 +92,16 @@ If you run into errors, try installing tacopie first:
   	make
    	sudo make install
 
-Once that is installed, follow the instructions above for installing cpp_redis again.
+If you run into an error about ::client::connect, simply remove the "::client" part of the main redis
+connection function in main.cpp and test/testMain.cpp and it should work.
+
+cpp_redis makes use of the nlohmann json package.  It can be installed on macOS with:
+
+	brew intall nlohmann-json
+
+For other platforms, see:
+
+	https://github.com/nlohmann/json
 
 NEW:
 
