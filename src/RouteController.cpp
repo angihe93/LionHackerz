@@ -835,6 +835,36 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         std::string dimension_result = dimension.save(*db);
         std::cout << dimension_result << std::endl;
 
+         // Process skills if provided
+        if (body.has("skills"))
+        {
+            std::vector<SkillInput> skills;
+            std::string skillError = parseSkills(body["skills"], skills);
+            if (!skillError.empty())
+            {
+                returnError(res, 400, skillError);
+                return;
+            }
+
+            std::string skill_result = processSkills(db, user.id, skills);
+            std::cout << skill_result << std::endl;
+        }
+
+        // Process interests if provided
+        if (body.has("interests"))
+        {
+            std::vector<InterestInput> interests;
+            std::string interestError = parseInterests(body["interests"], interests);
+            if (!interestError.empty())
+            {
+                returnError(res, 400, interestError);
+                return;
+            }
+
+            std::string interest_result = processInterests(db, user.id, interests);
+            std::cout << interest_result << std::endl;
+        }
+
         // Extract augmentations if provided
         std::vector<AugmentInput> augments;
         // Assumes that "augments" come in a list format
