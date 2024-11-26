@@ -4,9 +4,9 @@ Our project tasks/to-do lists and completion can be found on Trello at:
 
 	https://trello.com/b/tavRkgxR/job-matching-api
 
- A deployed version can be found on the Google Cloud Platform at:
+ A deployed version (running app) can be found on the Google Cloud Platform at:
  	
-  	http://34.16.13.147:18080
+  	http://34.69.114.32/
 
 A demoable app/client can be found in the following repo:
 
