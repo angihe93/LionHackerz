@@ -14,6 +14,7 @@
 #include <wn.h>
 #include "Global.h"
 #include <string>
+#include <mutex>
 #include <regex>
 #include <cpp_redis/cpp_redis>
 #include "Database.h"
@@ -201,7 +202,8 @@ private:
     std::vector<std::vector<std::string>> matchedWords; /* words that were matched for 
                                                             successful matches*/
     int payReq;
-    
+    std::mutex mutex_;
+
     /* helper functions */
     void iterateList(std::vector<std::string> l); /* prints list */
     std::vector<std::string> tokenize(const std::string& input); /* tokenize input */

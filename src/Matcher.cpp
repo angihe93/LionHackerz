@@ -96,65 +96,69 @@ std::vector<int> Matcher::filterJobs(bool test)
         all_listings = lists;
     }
 
-    if (!test)
     {
-        /* check for listings in redis cache */
-        auto redis_future = redis_client.get("listings_cache");
-        redis_client.sync_commit();
+    std::lock_guard<std::mutex> lock(mutex_);
 
-        auto redis_reply = redis_future.get();
-
-        if (redis_reply.is_string())
+        if (!test)
         {
-            try
-            {
-                // Deserialize cached JSON into std::vector<std::vector<std::string>>
-                auto json_listings = nlohmann::json::parse(redis_reply.as_string());
-                std::vector<std::vector<std::string>> raw_listings;
+            /* check for listings in redis cache */
+            auto redis_future = redis_client.get("listings_cache");
+            redis_client.sync_commit();
 
-                for (const auto &row : json_listings)
+            auto redis_reply = redis_future.get();
+
+            if (redis_reply.is_string())
+            {
+                try
                 {
-                    raw_listings.emplace_back(row.get<std::vector<std::string>>());
+                    // Deserialize cached JSON into std::vector<std::vector<std::string>>
+                    auto json_listings = nlohmann::json::parse(redis_reply.as_string());
+                    std::vector<std::vector<std::string>> raw_listings;
+
+                    for (const auto &row : json_listings)
+                    {
+                        raw_listings.emplace_back(row.get<std::vector<std::string>>());
+                    }
+
+                    all_listings = raw_listings;
+
+                    std::cout << "Successfully loaded listings from cache" << std::endl;
                 }
-
-                all_listings = raw_listings;
-
-                std::cout << "Successfully loaded listings from cache" << std::endl;
-            }
-            catch (const std::exception &e)
-            {
-                std::cerr << "Error processing cached data: " << e.what() << std::endl;
-            }
-        }
-        else
-        {
-            /* no cache, get listings from db */
-            std::cout << "No valid cache found. Fetching from database..." << std::endl;
-            lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
-
-            /* store them in redis cache for future requests */
-            try
-            {
-                nlohmann::json json_cache = nlohmann::json::array();
-                for (const auto &row : lists)
+                catch (const std::exception &e)
                 {
-                    json_cache.push_back(row);
+                    std::cerr << "Error processing cached data: " << e.what() << std::endl;
                 }
-
-                redis_client.set("listings_cache", json_cache.dump(), [](cpp_redis::reply &reply)
-                                 {
-            if (reply.is_error()) {
-                std::cerr << "Error caching listings: " << reply.error() << std::endl;
-            } });
-                redis_client.expire("listings_cache", 600); // store for 10 minutes
-                redis_client.sync_commit();
-
-                std::cout << "Cached listings successfully" << std::endl;
-                all_listings = lists;
             }
-            catch (const std::exception &e)
+            else
             {
-                std::cerr << "Error serializing or caching listings: " << e.what() << std::endl;
+                /* no cache, get listings from db */
+                std::cout << "No valid cache found. Fetching from database..." << std::endl;
+                lists = this->db->query("Listing_AI", "", "", "", "", false, resCount);
+
+                /* store them in redis cache for future requests */
+                try
+                {
+                    nlohmann::json json_cache = nlohmann::json::array();
+                    for (const auto &row : lists)
+                    {
+                        json_cache.push_back(row);
+                    }
+
+                    redis_client.set("listings_cache", json_cache.dump(), [](cpp_redis::reply &reply)
+                                    {
+                if (reply.is_error()) {
+                    std::cerr << "Error caching listings: " << reply.error() << std::endl;
+                } });
+                    redis_client.expire("listings_cache", 600); // store for 10 minutes
+                    redis_client.sync_commit();
+
+                    std::cout << "Cached listings successfully" << std::endl;
+                    all_listings = lists;
+                }
+                catch (const std::exception &e)
+                {
+                    std::cerr << "Error serializing or caching listings: " << e.what() << std::endl;
+                }
             }
         }
     }
@@ -193,19 +197,23 @@ std::vector<int> Matcher::filterJobs(bool test)
         }
     }
 
-    candidates.clear();
+   {
+        std::lock_guard<std::mutex> lock(mutex_);
+        candidates.clear();
 
-    /* with these tallies for each listing, discard listings where less than 25% of the
-        user's preferred dimensions are not present in the listing - all others go into candidates */
-    int l = 0;
-    for (auto &lid : lists[0])
-    {
-        if (static_cast<float>(nonNullCount[l]) / static_cast<float>(prefDimCount) > 0.25)
-            candidates.push_back(stoi(lid));
-        l++;
-    }
-    sort(candidates.begin(), candidates.end());
-    return candidates;
+        /* with these tallies for each listing, discard listings where less than 25% of the
+            user's preferred dimensions are not present in the listing - all others go into candidates */
+        int l = 0;
+        for (auto &lid : lists[0])
+        {
+            if (static_cast<float>(nonNullCount[l]) / static_cast<float>(prefDimCount) > 0.25)
+                candidates.push_back(stoi(lid));
+            l++;
+        }
+        sort(candidates.begin(), candidates.end());
+        return candidates;
+   }
+    
 }
 
 std::vector<int> Matcher::match(int uid)
@@ -224,7 +232,10 @@ std::vector<int> Matcher::match(int uid)
 
     int resCount = 0;
 
-    matchedWords.resize(candidates.size());
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        matchedWords.resize(candidates.size());
+    }
 
     std::vector<std::vector<std::string>> userVals = this->db->query("Has_Dimension", "", "id", "eq",
                                                                      std::to_string(uid), false, resCount);
@@ -235,10 +246,11 @@ std::vector<int> Matcher::match(int uid)
     int progress = 30;
 
     scores.clear();
-
+    
     /* for each candidate, calculate the match score based on all dimensions */
     for (auto &c : candidates)
     {
+        std::lock_guard<std::mutex> lock(mutex_);
         int lid = c;
         int cInd = 0;
         std::cout << "Listing #" << c << std::endl;
@@ -567,6 +579,9 @@ std::vector<int> Matcher::match(int uid)
 
 std::vector<std::vector<int>> Matcher::filterMatches()
 {
+
+    std::lock_guard<std::mutex> lock(mutex_);
+    
     int count = 0;
     std::vector<int> filteredCandidates;
     std::vector<int> filteredScores;
@@ -585,14 +600,16 @@ std::vector<std::vector<int>> Matcher::filterMatches()
         }
         count++;
     }
+
     int offset = 0;
     for (auto &i : ind)
-        matchedWords.erase(matchedWords.begin() + i - offset++);
+    matchedWords.erase(matchedWords.begin() + i - offset++);
 
     candidates = filteredCandidates;
     scores = filteredScores;
 
     std::vector<std::vector<int>> result;
+
     result.push_back(candidates);
     result.push_back(scores);
 
@@ -601,6 +618,8 @@ std::vector<std::vector<int>> Matcher::filterMatches()
 
 std::vector<std::vector<int>> Matcher::sortMatches()
 {
+    std::lock_guard<std::mutex> lock(mutex_);
+
     std::vector<int> indices;
 
     for (int i = 0; i < scores.size(); i++)

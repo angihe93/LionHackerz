@@ -54,7 +54,7 @@ void Worker::process_tasks()
 
 			// Cache match results in Redis with expiration
 			redis_client.set("matches:" + user_id, jsonArray.dump());
-			redis_client.expire("matches:" + user_id, 3600);
+			redis_client.expire("matches:" + user_id, 100);
 			redis_client.commit();
 
 			// Mark task as completed
