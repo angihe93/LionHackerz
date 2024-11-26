@@ -32,6 +32,7 @@ add_custom_target(unbind_port
 add_executable(LionHackerzProject 
     src/main.cpp 
     src/Database.cpp
+    src/Dimension.cpp
     src/Matcher.cpp
     src/RouteController.cpp
     src/Listing.cpp
@@ -127,6 +128,7 @@ if (CPPLINT)
     set(SOURCE_FILES
         src/main.cpp 
         src/Database.cpp
+        src/Dimension.cpp
         src/Matcher.cpp
         src/RouteController.cpp
         src/Listing.cpp

@@ -214,38 +214,6 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         return;
     }
 
-    // Query Redis cache
-    /* 
-    redis_client.get("matches:" + std::to_string(uid), [res_ptr, uid, this](cpp_redis::reply &reply)
-                     {
-        auto &res = *res_ptr;
-
-        if (reply.is_error())
-        {
-            std::cerr << "Redis error: " << reply.error() << std::endl;
-            res.code = 500;
-            res.write("{\"error\": \"Redis error: " + reply.error() + "\"}");
-            res.end();
-            return;
-        }        
-        else if (reply.is_string())
-        {
-            // Cached result found, return it
-            std::cout << "Cache found for UID " << uid << std::endl;
-
-            std::string cached_matches = reply.as_string();  
-            cached_matches = std::regex_replace(cached_matches, std::regex("\\\\\\\\"), "\\"); // \\ -> 
-            cached_matches = std::regex_replace(cached_matches, std::regex("\\\""), "\"");
-
-            cached_matches = std::regex_replace(cached_matches, std::regex("\\\\\""), "");
-
-            std::cout << cached_matches << std::endl;
-
-            res.write(cached_matches);
-            res.end();
-            return;
-        } */
-
         // No cached result, queue the task for processing
         std::cout << "No cache found for UID " << uid << ". Adding task to queue." << std::endl;
 
@@ -846,7 +814,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
                 return;
             }
 
-            std::string skill_result = processSkills(db, user.id, skills);
+            std::string skill_result = processSkills(*db, user.id, skills);
             std::cout << skill_result << std::endl;
         }
 
@@ -861,7 +829,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
                 return;
             }
 
-            std::string interest_result = processInterests(db, user.id, interests);
+            std::string interest_result = processInterests(*db, user.id, interests);
             std::cout << interest_result << std::endl;
         }
 
@@ -928,17 +896,6 @@ void RouteController::returnError(crow::response &res, int code, const std::stri
     res.end();
 }
 
-struct SkillInput
-{
-    std::string name;
-    std::optional<int> rank;
-};
-
-struct InterestInput
-{
-    std::string name;
-    int rank;
-};
 
 std::string RouteController::parseSkills(const crow::json::rvalue &skills_json, std::vector<SkillInput> &skills)
 {

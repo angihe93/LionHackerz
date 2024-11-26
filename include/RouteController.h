@@ -8,6 +8,18 @@
 #include <cpp_redis/cpp_redis>
 #include "Global.h"
 
+struct SkillInput
+{
+    std::string name;
+    std::optional<int> rank;
+};
+
+struct InterestInput
+{
+    std::string name;
+    int rank;
+};
+
 class RouteController {
     private:
         Database* db;
@@ -89,6 +101,11 @@ class RouteController {
         void dbtest(const crow::request& req, crow::response& res);
 
         void makeUser(const crow::request &req, crow::response &res);
+        void returnError(crow::response &res, int code, const std::string &message);
+        std::string parseSkills(const crow::json::rvalue &skills_json, std::vector<SkillInput> &skills);
+        std::string parseInterests(const crow::json::rvalue &interests_json, std::vector<InterestInput> &interests);
+        std::string processSkills(Database &db, int user_id, const std::vector<SkillInput> &skills);
+        std::string processInterests(Database &db, int user_id, const std::vector<InterestInput> &interests);
 };
 
 #endif 

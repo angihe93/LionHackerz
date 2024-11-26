@@ -10,6 +10,7 @@
 #include <curl/curl.h>
 #include <string>
 #include <vector>
+#include "crow.h"
 
 /*
  * Class for querying the database.
