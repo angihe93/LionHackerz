@@ -928,6 +928,71 @@ void RouteController::returnError(crow::response &res, int code, const std::stri
     res.end();
 }
 
+struct SkillInput
+{
+    std::string name;
+    int rank;
+};
+
+struct InterestInput
+{
+    std::string name;
+    int rank;
+};
+
+std::string RouteController::parseSkills(const crow::json::rvalue &skills_json, std::vector<SkillInput> &skills)
+{
+    Database db;
+
+    for (const auto &item : skills_json)
+    {
+        if (!item.has("name") || !item.has("rank"))
+        {
+            return "Each skill must have 'name' and 'rank'.";
+        }
+
+        SkillInput si;
+        si.name = item["name"].s();
+        si.rank = item["rank"].i();
+
+        // Validate that the skill exists in the 'skill' table
+        if (!db.skillExists(si.name))
+        {
+            return "Skill '" + si.name + "' does not exist.";
+        }
+
+        skills.emplace_back(si);
+    }
+
+    return "";
+}
+
+std::string RouteController::parseInterests(const crow::json::rvalue &interests_json, std::vector<InterestInput> &interests)
+{
+    Database db;
+
+    for (const auto &item : interests_json)
+    {
+        if (!item.has("name") || !item.has("rank"))
+        {
+            return "Each interest must have 'name' and 'rank'.";
+        }
+
+        InterestInput ii;
+        ii.name = item["name"].s();
+        ii.rank = item["rank"].i();
+
+        // Validate that the interest exists in the 'interest' table
+        if (!db.interestExists(ii.name))
+        {
+            return "Interest '" + ii.name + "' does not exist.";
+        }
+
+        interests.emplace_back(ii);
+    }
+
+    return "";
+}
 
 void RouteController::initRoutes(crow::App<> &app)
 {
