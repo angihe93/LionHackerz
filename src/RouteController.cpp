@@ -10,6 +10,7 @@
 #include "User.h"
 #include "Augment.h"
 #include "Auth.h"
+#include "Dimension.h"
 #include <map>
 #include <set>
 #include <string>
@@ -795,11 +796,10 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         }
 
         // Extract name and email
-        if (!body.has("name") || !body.has("email"))
-        {
+        if (!body.has("name") || !body.has("email") || !body.has("dimensions")) {
             crow::json::wvalue error;
             error["status"] = "error";
-            error["message"] = "Missing 'name' or 'email' fields.";
+            error["message"] = "Missing 'name' or 'email' or 'dimension' fields.";
             res.code = 400;
             res.write(error.dump());
             res.end();
@@ -809,11 +809,61 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         std::string name = body["name"].s();
         std::string email = body["email"].s();
 
+        // Extract dimensions
+        auto dimensions_json = body["dimensions"];
+        if (!dimensions_json) {
+            returnError(res, 400, "Invalid 'dimensions' format.");
+            return;
+        }
+
+        // Validate and extract dimension fields
+        Dimension dimension;
+        std::string dimensionError = dimension.fromJson(dimensions_json);
+        if (!dimensionError.empty()) {
+            returnError(res, 400, dimensionError);
+            return;
+        }
+
         // Create and save the user
         Database *db = new Database();
         User user(name, email);
         std::string save_result = user.save(*db);
         std::cout << save_result << std::endl;
+
+        // Save dimensions with the user's ID
+        dimension.user_id = user.id;
+        std::string dimension_result = dimension.save(*db);
+        std::cout << dimension_result << std::endl;
+
+         // Process skills if provided
+        if (body.has("skills"))
+        {
+            std::vector<SkillInput> skills;
+            std::string skillError = parseSkills(body["skills"], skills);
+            if (!skillError.empty())
+            {
+                returnError(res, 400, skillError);
+                return;
+            }
+
+            std::string skill_result = processSkills(db, user.id, skills);
+            std::cout << skill_result << std::endl;
+        }
+
+        // Process interests if provided
+        if (body.has("interests"))
+        {
+            std::vector<InterestInput> interests;
+            std::string interestError = parseInterests(body["interests"], interests);
+            if (!interestError.empty())
+            {
+                returnError(res, 400, interestError);
+                return;
+            }
+
+            std::string interest_result = processInterests(db, user.id, interests);
+            std::cout << interest_result << std::endl;
+        }
 
         // Extract augmentations if provided
         std::vector<AugmentInput> augments;
@@ -867,6 +917,134 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         res.end();
     }
 }
+void RouteController::returnError(crow::response &res, int code, const std::string &message)
+{
+    crow::json::wvalue error;
+    error["status"] = "error";
+    error["message"] = message;
+    res.code = code;
+    res.set_header("Content-Type", "application/json");
+    res.write(error.dump());
+    res.end();
+}
+
+struct SkillInput
+{
+    std::string name;
+    std::optional<int> rank;
+};
+
+struct InterestInput
+{
+    std::string name;
+    int rank;
+};
+
+std::string RouteController::parseSkills(const crow::json::rvalue &skills_json, std::vector<SkillInput> &skills)
+{
+    Database db;
+
+    for (const auto &item : skills_json)
+    {
+        if (!item.has("name"))
+        {
+            return "Each skill must have a 'name'.";
+        }
+
+        SkillInput si;
+        si.name = item["name"].s();
+
+        // Validate that the skill exists in the 'skill' table
+        if (!db.skillExists(si.name))
+        {
+            return "Skill '" + si.name + "' does not exist.";
+        }
+
+        // Check if 'rank' is provided
+        if (item.has("rank"))
+        {
+            si.rank = item["rank"].i();
+        }
+        else
+        {
+            // Rank is not provided; leave si.rank as std::nullopt
+            si.rank = std::nullopt;
+        }
+
+        skills.emplace_back(si);
+    }
+
+    return "";
+}
+
+std::string RouteController::parseInterests(const crow::json::rvalue &interests_json, std::vector<InterestInput> &interests)
+{
+    Database db;
+
+    for (const auto &item : interests_json)
+    {
+        if (!item.has("name"))
+        {
+            return "Each interest must have 'name'.";
+        }
+
+        InterestInput ii;
+        ii.name = item["name"].s();
+
+        // Validate that the interest exists in the 'interest' table
+        if (!db.interestExists(ii.name))
+        {
+            return "Interest '" + ii.name + "' does not exist.";
+        }
+
+        interests.emplace_back(ii);
+    }
+
+    return "";
+}
+
+std::string RouteController::processSkills(Database &db, int user_id, const std::vector<SkillInput> &skills)
+{
+    for (const auto &skill : skills)
+    {
+        std::string data = "{";
+        data += "\"id\": " + std::to_string(user_id) + ",";
+        data += "\"name\": \"" + db.escapeString(skill.name) + "\"";
+
+        // Include 'rank' if provided
+        if (skill.rank.has_value())
+        {
+            data += ",\"rank\": " + std::to_string(skill.rank.value());
+        }
+        else
+        {
+            data += ",\"rank\": null";  // Otherwise, just gonna explicitly set 'rank' to null
+        }
+
+        data += "}";
+
+        std::string response = db.insert("Has_Skill", data);
+        std::cout << "Skill Insert Response: " << response << std::endl;
+    }
+    return "Skills processed successfully.";
+}
+
+
+std::string RouteController::processInterests(Database &db, int user_id, const std::vector<InterestInput> &interests)
+{
+    for (const auto &interest : interests)
+    {
+        std::string data = "{";
+        data += "\"id\": " + std::to_string(user_id) + ",";
+        data += "\"name\": \"" + db.escapeString(interest.name) + "\",";
+        data += "}";
+
+        std::string response = db.insert("Has_Interest", data);
+        std::cout << "Interest Insert Response: " << response << std::endl;
+    }
+    return "Interests processed successfully.";
+}
+
 
 void RouteController::initRoutes(crow::App<> &app)
 {

@@ -172,6 +172,10 @@ public:
 
     std::string getAIkey() { return openai_api_key; }
 
+    bool skillExists(const std::string &skillName);
+    bool interestExists(const std::string &interestName);
+    std::string escapeString(const std::string &input);
+
 private:
     std::string openai_api_key;
     std::string api_key;
