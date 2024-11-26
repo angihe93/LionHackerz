@@ -795,11 +795,10 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         }
 
         // Extract name and email
-        if (!body.has("name") || !body.has("email"))
-        {
+        if (!body.has("name") || !body.has("email") || !body.has("dimensions")) {
             crow::json::wvalue error;
             error["status"] = "error";
-            error["message"] = "Missing 'name' or 'email' fields.";
+            error["message"] = "Missing 'name' or 'email' or 'dimension' fields.";
             res.code = 400;
             res.write(error.dump());
             res.end();
@@ -809,11 +808,31 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         std::string name = body["name"].s();
         std::string email = body["email"].s();
 
+        // Extract dimensions
+        auto dimensions_json = body["dimensions"];
+        if (!dimensions_json) {
+            returnError(res, 400, "Invalid 'dimensions' format.");
+            return;
+        }
+
+        // Validate and extract dimension fields
+        Dimension dimension;
+        std::string dimensionError = dimension.fromJson(dimensions_json);
+        if (!dimensionError.empty()) {
+            returnError(res, 400, dimensionError);
+            return;
+        }
+
         // Create and save the user
         Database *db = new Database();
         User user(name, email);
         std::string save_result = user.save(*db);
         std::cout << save_result << std::endl;
+
+        // Save dimensions with the user's ID
+        dimension.user_id = user.id;
+        std::string dimension_result = dimension.save(*db);
+        std::cout << dimension_result << std::endl;
 
         // Extract augmentations if provided
         std::vector<AugmentInput> augments;
@@ -867,6 +886,17 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         res.end();
     }
 }
+void RouteController::returnError(crow::response &res, int code, const std::string &message)
+{
+    crow::json::wvalue error;
+    error["status"] = "error";
+    error["message"] = message;
+    res.code = code;
+    res.set_header("Content-Type", "application/json");
+    res.write(error.dump());
+    res.end();
+}
+
 
 void RouteController::initRoutes(crow::App<> &app)
 {
