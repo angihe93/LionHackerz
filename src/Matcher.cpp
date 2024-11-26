@@ -12,6 +12,8 @@
 #include <list>
 #include <string>
 #include <sstream>
+#include <unordered_set>
+#include <cctype>
 #include <crow.h>
 #define BINSEARCH_THRESHOLD 5
 
@@ -58,6 +60,13 @@ std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
         int resCount2 = 0;
         std::vector<std::vector<std::string>> dimName = db->query("Dimension", "name", "dim_id", "eq", l, false, resCount2);
         dimNames.push_back(dimName[0][0]);
+    }
+
+    resCount = 0;
+    /* store min pay requirement */
+    std::vector<std::vector<std::string>> payPref = db->query("Has_Dimension", "pay", "id", "eq", std::to_string(uid), false, resCount);
+    if (!payPref.empty()) {
+        payReq = stoi(payPref[0][0]);
     }
 
     /* get weights for each augment */
@@ -161,7 +170,7 @@ std::vector<int> Matcher::filterJobs(bool test)
             d != "\"interest5\"")
         {
             prefDimCount++;
-            int listNo = matchDimensions(d) - 1;
+            int listNo = matchDimensions(d);
             int l = 0;
 
             /* get that dimension for all listings */
@@ -170,10 +179,21 @@ std::vector<int> Matcher::filterJobs(bool test)
                 /* for each listing, increment tally if the matching dimension is not null */
                 if (v != "\"null\"")
                     nonNullCount[l]++;
+
+                if (!test) {
+                    /* exclude listings with pay not commensurate with user preference */
+                    if (d == "\"pay\"") {
+                        if (payReq - payReq * 0.25 > stoi(v))
+                            nonNullCount[l] = -10;
+                    }
+                }
+        
                 l++;
             }
         }
     }
+
+    candidates.clear();
 
     /* with these tallies for each listing, discard listings where less than 25% of the
         user's preferred dimensions are not present in the listing - all others go into candidates */
@@ -191,7 +211,16 @@ std::vector<int> Matcher::filterJobs(bool test)
 std::vector<int> Matcher::match(int uid)
 {
 
-    wninit(); // Initialize WordNet
+    if (!OpenDB) {
+            printf("Initializing WordNet...\n");
+            if (wninit() == 0) {
+                printf("WordNet initialized successfully.\n");
+            } else {
+                printf("Failed to initialize WordNet.\n");
+            }
+        } else {
+            printf("WordNet is already initialized.\n");
+        }
 
     int resCount = 0;
 
@@ -204,6 +233,8 @@ std::vector<int> Matcher::match(int uid)
 
     int upd_prog_interval = ceil(candidates.size() / 45);
     int progress = 30;
+
+    scores.clear();
 
     /* for each candidate, calculate the match score based on all dimensions */
     for (auto &c : candidates)
@@ -245,9 +276,10 @@ std::vector<int> Matcher::match(int uid)
         /* score on field + augment if applicable */
         auto fieldU = userVals[2][0];
         auto fieldE = all_listings[5][cInd];
-        if (wordMatchFound(fieldU, fieldE, cNum))
+        int fieldMatches = wordMatchFound(fieldU, fieldE, cNum);
+        if (fieldMatches || fieldU == fieldE)
         {
-            candidateScore += 200;
+            candidateScore += (300 + 5 * fieldMatches);
 
             for (auto &d : dimensions)
             {
@@ -285,7 +317,8 @@ std::vector<int> Matcher::match(int uid)
                 skillAugments.push_back("\"skill5\"");
             for (std::string &wE : listingSkills)
             {
-                if (wU == wE || wordMatchFound(wU, wE, cNum))
+                int skillMatches = wordMatchFound(wU, wE, cNum);
+                if (wU == wE || skillMatches)
                 {
                     if (wU == wE)
                     {
@@ -301,7 +334,7 @@ std::vector<int> Matcher::match(int uid)
                             matchedWords[cNum].push_back(wE);
                     }
 
-                    candidateScore += 100;
+                    candidateScore += (150 + 5 * skillMatches);
 
                     for (auto &d : dimensions)
                     {
@@ -350,7 +383,8 @@ std::vector<int> Matcher::match(int uid)
 
             for (std::string &wE : listingInterests)
             {
-                if (wU == wE || wordMatchFound(wU, wE, cNum))
+                int interestMatches = wordMatchFound(wU, wE, cNum);
+                if (wU == wE || interestMatches)
                 {
 
                     if (wU == wE)
@@ -363,7 +397,7 @@ std::vector<int> Matcher::match(int uid)
                             matchedWords[cNum].push_back(wE);
                     }
 
-                    candidateScore += 100;
+                    candidateScore += (150 + 5 * interestMatches);
 
                     for (auto &d : dimensions)
                     {
@@ -395,7 +429,7 @@ std::vector<int> Matcher::match(int uid)
             payListing = stoi(payE);
         if (payListing >= payUser && payListing != 0)
         {
-            candidateScore += 50;
+            candidateScore += 100;
 
             for (auto &d : dimensions)
             {
@@ -449,7 +483,7 @@ std::vector<int> Matcher::match(int uid)
         auto mbtiE = all_listings[19][cInd];
         if (wordMatchFound(mbtiU, mbtiE, cNum))
         {
-            candidateScore += 25;
+            candidateScore += 15;
 
             for (auto &d : dimensions)
             {
@@ -484,7 +518,7 @@ std::vector<int> Matcher::match(int uid)
         auto remE = all_listings[18][cInd];
         if (remU == remE && remU != "\"null\"")
         {
-            candidateScore += 15;
+            candidateScore += 25;
 
             for (auto &d : dimensions)
             {
@@ -540,7 +574,7 @@ std::vector<std::vector<int>> Matcher::filterMatches()
     std::vector<std::vector<std::string>> filteredMatchedWords;
     for (int &c : candidates)
     {
-        if (scores[count] > 100)
+        if (scores[count] > 190)
         {
             filteredCandidates.push_back(c);
             filteredScores.push_back(scores[count]);
@@ -628,9 +662,17 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
     Listing *l = new Listing(*db);
     std::vector<JobMatch> allMatches;
 
+    int progress = 85;
+    int store_interv = candidates.size() / 15;
     /* store matches in struct JobMatch */
     for (int i = 0; i < candidates.size(); i++)
     {
+        if (i % store_interv == 0 && progress < 99) {
+            progress++;
+            redis_client.set("progress:" + std::to_string(uid), "{\"status\": \"processing\", \"progress\": " + std::to_string(progress) + "}");
+            redis_client.commit();
+        }
+
         matchRes.listingId = candidates[i];
         matchRes.score = scores[count];
 
@@ -914,108 +956,67 @@ std::vector<std::string> Matcher::getMatchedWords(int lid)
     return matchedWords[lid];
 }
 
-bool Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
+int Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
 {
-    /* tokenize strings */
-    fieldU.erase(remove(fieldU.begin(), fieldU.end(), '\"'), fieldU.end());
-    fieldE.erase(remove(fieldE.begin(), fieldE.end(), '\"'), fieldE.end());
     std::vector<std::string> fieldVecU;
     std::vector<std::string> fieldVecE;
-    int delim = 0;
-    int pos = 0;
-    while ((delim = fieldU.find(' ', pos)) != std::string::npos)
-    {
-        fieldVecU.push_back(fieldU.substr(pos, delim - pos));
-        pos = delim + 1;
-    }
-    if (pos < fieldU.size())
-        fieldVecU.push_back(fieldU.substr(pos));
-    delim = 0;
-    pos = 0;
-    while ((delim = fieldE.find(' ', pos)) != std::string::npos)
-    {
-        fieldVecE.push_back(fieldE.substr(pos, delim - pos));
-        pos = delim + 1;
-    }
-    if (pos < fieldE.size())
-        fieldVecE.push_back(fieldE.substr(pos));
+    /* tokenize strings */
+    fieldVecU = tokenize(fieldU);
+    fieldVecE = tokenize(fieldE);
 
+    std::unordered_set<std::string> fieldSetE(fieldVecE.begin(), fieldVecE.end());
+    std::unordered_set<std::string> normalizedFieldSetE;
+    for (const std::string& word : fieldSetE) {
+        std::string normalizedWord = word;
+        std::transform(normalizedWord.begin(), normalizedWord.end(), normalizedWord.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+        normalizedFieldSetE.insert(normalizedWord);
+    }
     /* compare words */
-
+    int matchCount = 0;
     /* user synonms vs. listing */
     for (std::string &w : fieldVecU)
     {
-        for (char &c : w)
-            c = std::tolower(static_cast<unsigned char>(c));
-        char *wb = morphword(const_cast<char *>(w.c_str()), NOUN);
-
-        SynsetPtr synset;
-        if (wb != NULL)
-            synset = findtheinfo_ds(wb, NOUN, SYNS, ALLSENSES);
-        else
-            synset = findtheinfo_ds(const_cast<char *>(w.c_str()), NOUN, SYNS, ALLSENSES);
-
-        while (synset != NULL)
-        {
-
-            int i = 0;
-
-            /* sort the synset */
-            std::sort(synset->words, synset->words + synset->wcount, [](const char *a, const char *b)
-                      { return std::strcmp(a, b) < 0; });
-            while (i < synset->wcount)
-            {
-                int wordCount = 0;
-
-                for (std::string &wE : fieldVecE)
-                {
-                    wordCount++;
-
-                    /* range check on synset - if word out of range, move on to next */
-                    if (synset->words[i][0] > std::tolower(wE[0]) ||
-                        synset->words[synset->wcount - 1][0] < std::tolower(wE[0]))
-                    {
-                        continue;
-                    }
-
-                    /* if within range, find optimal index to start comparing using binary search */
-                    int i = binSearch(synset, 0, synset->wcount - 1, std::tolower(wE[0]));
-
-                    /* binary search results: not found.  Move on to next word */
-                    if (i == -1)
-                        continue;
-
-                    /* else: compare words */
-                    if (w == wE)
-                    {
-                        bool alreadyStored = false;
-                        for (std::string &mw : matchedWords[c])
-                            if (mw == wE)
-                                alreadyStored = true;
-                        if (!alreadyStored)
-                            matchedWords[c].push_back(wE);
-                        return true;
-                    }
-                    for (char &c : wE)
-                        c = std::tolower(static_cast<unsigned char>(c));
-                    if (wE == synset->words[i])
-                    {
-                        bool alreadyStored = false;
-                        for (std::string &mw : matchedWords[c])
-                            if (mw == wE)
-                                alreadyStored = true;
-                        if (!alreadyStored)
-                            matchedWords[c].push_back(wE);
-                        return true;
-                    }
-                }
-                i++;
+        std::transform(w.begin(), w.end(), w.begin(), [](unsigned char c) { return std::tolower(c); });
+        if (fieldSetE.find(w) != fieldSetE.end()) {
+            bool alreadyStored = std::find(matchedWords[c].begin(), matchedWords[c].end(), w) != matchedWords[c].end();
+            if (!alreadyStored) {
+                matchedWords[c].push_back(w);
             }
+            ++matchCount;
+        }
+
+        // Check for matches in synsets
+        char* wb = morphword(const_cast<char*>(w.c_str()), NOUN);
+        SynsetPtr synset = (wb != NULL) ? findtheinfo_ds(wb, NOUN, SYNS, ALLSENSES) 
+                                        : findtheinfo_ds(const_cast<char*>(w.c_str()), NOUN, SYNS, ALLSENSES);
+
+        while (synset != NULL) {
+            // Create an unordered_set for synset words
+            std::unordered_set<std::string> synsetWords;
+            for (int i = 0; i < synset->wcount; ++i) {
+                std::string synsetWord(synset->words[i]);
+                std::transform(synsetWord.begin(), synsetWord.end(), synsetWord.begin(),
+                               [](unsigned char c) { return std::tolower(c); });
+                synsetWords.insert(synsetWord);
+            }
+
+            // Check for matches in fieldSetE
+            for (const std::string& wE : fieldSetE) {
+                if (synsetWords.find(wE) != synsetWords.end()) {
+                    bool alreadyStored = std::find(matchedWords[c].begin(), matchedWords[c].end(), wE) != matchedWords[c].end();
+                    if (!alreadyStored) {
+                        matchedWords[c].push_back(wE);
+                    }
+                    ++matchCount;
+                }
+            }
+
+            // Move to the next synset
             synset = synset->nextss;
         }
     }
-
-    return false;
+    return matchCount;
 }
 
 int Matcher::binSearch(SynsetPtr s, int left, int right, char val)
@@ -1042,4 +1043,16 @@ int Matcher::binSearch(SynsetPtr s, int left, int right, char val)
     }
 
     return 0;
+}
+
+std::vector<std::string> Matcher::tokenize(const std::string& input) {
+    std::istringstream stream(input);
+    std::vector<std::string> tokens;
+    std::string token;
+    while (stream >> token) {
+        token.erase(std::remove(token.begin(), token.end(), '\"'), token.end());
+        token.erase(std::remove(token.begin(), token.end(), ','), token.end());        
+        tokens.push_back(token);
+    }
+    return tokens;
 }

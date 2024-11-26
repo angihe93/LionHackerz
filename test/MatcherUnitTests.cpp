@@ -46,8 +46,10 @@ TEST(FilterListings, discardTooManyNull)
 	int uid = 5;
 
 	std::vector<int> candidates;
-	for (int i = 1; i < 7; i++)
-		candidates.push_back(i);
+	for (int i = 1; i < 7; i++) {
+		if (i != 3)
+			candidates.push_back(i);
+	}
 
 
 	std::vector<std::vector<std::string>> dimensions;
@@ -68,11 +70,10 @@ TEST(FilterListings, calculateScores)
 
 	std::vector<int> scores;
 	scores.push_back(0);
-	scores.push_back(0);
-	scores.push_back(0);		
-	scores.push_back(600);
-	scores.push_back(800);
-	scores.push_back(825);
+	scores.push_back(200);
+	scores.push_back(995);		
+	scores.push_back(995);
+	scores.push_back(1045);
 
 	std::vector<std::vector<std::string>> dimensions;
 	dimensions.push_back(m->gatherRelevantDimensions(uid)[0]);
@@ -93,13 +94,15 @@ TEST(FilterListings, elimLowScores)
 	int uid = 5;
 
 	std::vector<int> candidates;
+	candidates.push_back(2);
 	candidates.push_back(4);
 	candidates.push_back(5);
 	candidates.push_back(6);
 	std::vector<int> scores;
-	scores.push_back(600);
-	scores.push_back(800);
-	scores.push_back(825);
+	scores.push_back(200);
+	scores.push_back(995);
+	scores.push_back(995);
+	scores.push_back(1045);
 
 	std::vector<std::vector<int>> testResults;
 	testResults.push_back(candidates);
@@ -123,12 +126,14 @@ TEST(Sort, sortMatches)
 
 	std::vector<int> candidates;
 	candidates.push_back(6);
-	candidates.push_back(5);
 	candidates.push_back(4);
+	candidates.push_back(5);
+	candidates.push_back(2);
 	std::vector<int> scores;
-	scores.push_back(825);
-	scores.push_back(800);
-	scores.push_back(600);
+	scores.push_back(1045);
+	scores.push_back(995);
+	scores.push_back(995);
+	scores.push_back(200);
 
 	std::vector<std::vector<int>> testResults;
 	testResults.push_back(candidates);
@@ -173,7 +178,7 @@ TEST(Display, displayMatches)
 	match1.skill3 = "\"Node.js\"";
 	match1.skill4 = "\"Problem-solving\"";
 	match1.skill5 = "\"Teamwork\"";
-	match1.score = 825;
+	match1.score = 1045;
 	match1.remote = "\"true\"";
 	match1.gender = "\"true\"";
 	match1.diversity = "\"true\"";
@@ -200,7 +205,6 @@ TEST(GetValues, retrieveCandidates)
 	std::vector<int> testCandidates;	
 	testCandidates.push_back(1);
 	testCandidates.push_back(2);
-	testCandidates.push_back(3);
 	testCandidates.push_back(4);
 	testCandidates.push_back(5);
 	testCandidates.push_back(6);

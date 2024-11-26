@@ -154,9 +154,11 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         res.end();
         return;
     }
-
-    /* check for test UIDs */
-    if (uid != 1 && uid != 5)
+    
+    int resCount = 0;
+    /* check if user ID exists */
+    std::vector<std::vector<std::string>> userExists = db->query("User", "", "id", "eq", std::to_string(uid), false, resCount);
+    if (userExists.empty())
     {
         std::cerr << "Invalid UID: " << uid << std::endl;
         res.code = 404;
@@ -165,7 +167,21 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         res.write(jsonRes.dump());
         res.end();
         return;
-    }
+    } 
+    resCount = 0;
+
+    /* check if user has dimensions to compare on */
+    std::vector<std::vector<std::string>> hasDim = db->query("Has_Dimensions", "", "id", "eq", std::to_string(uid), false, resCount);
+    if (hasDim.empty())
+    {
+        std::cerr << "User ID: " << uid << std::endl;
+        res.code = 404;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "That user doesn't have any dimensions stored for matching.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    } 
 
     std::cout << "Valid UID: " << uid << std::endl;
 
@@ -198,6 +214,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     }
 
     // Query Redis cache
+    /* 
     redis_client.get("matches:" + std::to_string(uid), [res_ptr, uid, this](cpp_redis::reply &reply)
                      {
         auto &res = *res_ptr;
@@ -226,7 +243,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
             res.write(cached_matches);
             res.end();
             return;
-        }
+        } */
 
         // No cached result, queue the task for processing
         std::cout << "No cache found for UID " << uid << ". Adding task to queue." << std::endl;
@@ -247,10 +264,16 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         redis_client.commit(); /* commit task push */
 
         res.code = 202;
-        res.write("{\"status\": \"queued\", \"message\": \"Task queued for processing.\"}");
-        res.end(); });
+        jsonRes["success"]["code"] = res.code;
+        jsonRes["success"]["message"] = "Task was added to the job queue. Check back soon for results.";   
+        res.write(jsonRes.dump());
 
-        crow::json::wvalue response;
+        /* add CORS headers */
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+
+        res.end(); 
 
     redis_client.commit();
 }

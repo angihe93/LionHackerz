@@ -200,11 +200,14 @@ private:
     std::vector<int> scores; /* scores for candidates (same indices as candidates) */
     std::vector<std::vector<std::string>> matchedWords; /* words that were matched for 
                                                             successful matches*/
+    int payReq;
+    
     /* helper functions */
     void iterateList(std::vector<std::string> l); /* prints list */
+    std::vector<std::string> tokenize(const std::string& input); /* tokenize input */
     void iterateList(std::vector<int> l);         /* prints list */
     int binSearch(SynsetPtr s, int left, int right, char val); /* binary search for index */
-    bool wordMatchFound(std::string fieldU, std::string fieldE, int c);
+    int wordMatchFound(std::string fieldU, std::string fieldE, int c);
                                                 /* matches words using WordNet synonyms */
     int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */
 };
