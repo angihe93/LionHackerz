@@ -10,6 +10,7 @@
 #include "User.h"
 #include "Augment.h"
 #include "Auth.h"
+#include "Dimension.h"
 #include <map>
 #include <set>
 #include <string>
