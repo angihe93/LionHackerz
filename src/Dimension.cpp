@@ -54,7 +54,7 @@ std::string Dimension::escapeJson(const std::string &input)
 
 std::string Dimension::save(Database &db) {
     std::string data = "{";
-    data += "\"user_id\": " + std::to_string(user_id) + ",";
+    data += "\"id\": " + std::to_string(user_id) + ",";
     data += "\"loc\": \"" + escapeJson(loc) + "\",";
     data += "\"field\": \"" + escapeJson(field) + "\",";
     data += "\"pay\": " + std::to_string(pay) + ",";
