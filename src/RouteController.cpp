@@ -931,7 +931,7 @@ void RouteController::returnError(crow::response &res, int code, const std::stri
 struct SkillInput
 {
     std::string name;
-    int rank;
+    std::optional<int> rank;
 };
 
 struct InterestInput
@@ -946,19 +946,29 @@ std::string RouteController::parseSkills(const crow::json::rvalue &skills_json, 
 
     for (const auto &item : skills_json)
     {
-        if (!item.has("name") || !item.has("rank"))
+        if (!item.has("name"))
         {
-            return "Each skill must have 'name' and 'rank'.";
+            return "Each skill must have a 'name'.";
         }
 
         SkillInput si;
         si.name = item["name"].s();
-        si.rank = item["rank"].i();
 
         // Validate that the skill exists in the 'skill' table
         if (!db.skillExists(si.name))
         {
             return "Skill '" + si.name + "' does not exist.";
+        }
+
+        // Check if 'rank' is provided
+        if (item.has("rank"))
+        {
+            si.rank = item["rank"].i();
+        }
+        else
+        {
+            // Rank is not provided; leave si.rank as std::nullopt
+            si.rank = std::nullopt;
         }
 
         skills.emplace_back(si);
@@ -973,14 +983,13 @@ std::string RouteController::parseInterests(const crow::json::rvalue &interests_
 
     for (const auto &item : interests_json)
     {
-        if (!item.has("name") || !item.has("rank"))
+        if (!item.has("name"))
         {
-            return "Each interest must have 'name' and 'rank'.";
+            return "Each interest must have 'name'.";
         }
 
         InterestInput ii;
         ii.name = item["name"].s();
-        ii.rank = item["rank"].i();
 
         // Validate that the interest exists in the 'interest' table
         if (!db.interestExists(ii.name))
@@ -993,6 +1002,49 @@ std::string RouteController::parseInterests(const crow::json::rvalue &interests_
 
     return "";
 }
+
+std::string RouteController::processSkills(Database &db, int user_id, const std::vector<SkillInput> &skills)
+{
+    for (const auto &skill : skills)
+    {
+        std::string data = "{";
+        data += "\"id\": " + std::to_string(user_id) + ",";
+        data += "\"name\": \"" + db.escapeString(skill.name) + "\"";
+
+        // Include 'rank' if provided
+        if (skill.rank.has_value())
+        {
+            data += ",\"rank\": " + std::to_string(skill.rank.value());
+        }
+        else
+        {
+            data += ",\"rank\": null";  // Otherwise, just gonna explicitly set 'rank' to null
+        }
+
+        data += "}";
+
+        std::string response = db.insert("Has_Skill", data);
+        std::cout << "Skill Insert Response: " << response << std::endl;
+    }
+    return "Skills processed successfully.";
+}
+
+
+std::string RouteController::processInterests(Database &db, int user_id, const std::vector<InterestInput> &interests)
+{
+    for (const auto &interest : interests)
+    {
+        std::string data = "{";
+        data += "\"id\": " + std::to_string(user_id) + ",";
+        data += "\"name\": \"" + db.escapeString(interest.name) + "\",";
+        data += "}";
+
+        std::string response = db.insert("Has_Interest", data);
+        std::cout << "Interest Insert Response: " << response << std::endl;
+    }
+    return "Interests processed successfully.";
+}
+
 
 void RouteController::initRoutes(crow::App<> &app)
 {

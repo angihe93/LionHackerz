@@ -404,3 +404,48 @@ void Database::iterateLists(std::vector<std::vector<std::string>> &queryLists)
         std::cout << ")" << std::endl;
     }
 }
+
+std::string Database::escapeString(const std::string &input)
+{
+     std::string output;
+    for (char c : input) {
+        if (c == '\"') {
+            output += "\\\"";
+        } else if (c == '\\') {
+            output += "\\\\";
+        } else {
+            output += c;
+        }
+    }
+    return output;
+}
+
+bool Database::skillExists(const std::string &skillName)
+{
+    std::string full_url = url + "/rest/v1/skill?name=eq." + escapeString(skillName);
+    std::string statusCode;
+    std::string response = request("GET", full_url, "", statusCode);
+
+    // Check if response contains at least one entry
+    crow::json::rvalue json_response = crow::json::load(response);
+    if (json_response && json_response.size() > 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Database::interestExists(const std::string &interestName)
+{
+    std::string full_url = url + "/rest/v1/interest?name=eq." + escapeString(interestName);
+    std::string statusCode;
+    std::string response = request("GET", full_url, "", statusCode);
+
+    // Check if response contains at least one entry
+    crow::json::rvalue json_response = crow::json::load(response);
+    if (json_response && json_response.size() > 0)
+    {
+        return true;
+    }
+    return false;
+}
