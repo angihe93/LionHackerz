@@ -52,7 +52,7 @@ target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
 find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(nlohmann_json REQUIRED)
-target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto cpp_redis tacopie)
+target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto cpp_redis tacopie nlohmann_json::nlohmann_json)
 
 add_dependencies(LionHackerzProject unbind_port)
 
@@ -96,7 +96,8 @@ target_link_libraries(LionHackerzProjectTests PRIVATE
      tacopie
      GTest::gtest
      GTest::gtest_main
-     pthread)
+     pthread
+     nlohmann_json::nlohmann_json)
 
 add_custom_target(run_tests
     COMMAND ctest
