@@ -57,7 +57,7 @@ jobs:
         tar -xzf boost_1_86_0.tar.gz && rm boost_1_86_0.tar.gz
 
     - name: Install tcl-tk
-      run: brew install tcl-tk
+      run: brew install tcl-tk@8
 
     - name: Install Wordnet
       working-directory: ${{github.workspace}}/external_libraries
@@ -65,7 +65,9 @@ jobs:
         wget http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz
         tar -xzf WordNet-3.0.tar.gz && rm WordNet-3.0.tar.gz
         cd WordNet-3.0
-        ./configure --with-tcl=/opt/homebrew/Cellar/tcl-tk/8.6.15/lib --with-tk=/opt/homebrew/Cellar/tcl-tk/8.6.15/lib
+        TCL_CONFIG_DIR=$(find /opt/homebrew -name tclConfig.sh -exec dirname {} \; | head -n1)
+        TK_CONFIG_DIR=$(find /opt/homebrew -name tkConfig.sh -exec dirname {} \; | head -n1)
+        ./configure --with-tcl=$TCL_CONFIG_DIR --with-tk=$TK_CONFIG_DIR
         sudo cp ../stubs.c src/stubs.c
         sed -i '' '132s/.*/int main(int argc,char *argv[])/' src/wn.c
         sudo make
