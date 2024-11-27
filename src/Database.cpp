@@ -10,44 +10,45 @@
 #include <string>
 #include <vector>
 
-
 // using namespace std;
 
 Database::Database()
 {
     openai_api_key = "";
     char *url_char = std::getenv("SUPABASE_URL");
-    if (url_char == NULL) {
+    if (url_char == NULL)
+    {
         std::cout << "ERROR: did not find SUPABASE_URL, check it is set and accessible in the current environment" << std::endl;
     }
 
     char *api_char = std::getenv("SUPABASE_API_KEY");
-    if (api_char == NULL) {
+    if (api_char == NULL)
+    {
         std::cout << "ERROR: did not find SUPABASE_API_KEY, check it is set and accessible in the current environment" << std::endl;
     }
 
     char *openai_api_char = std::getenv("OPENAI_API_KEY");
-    if (openai_api_char == NULL) {
+    if (openai_api_char == NULL)
+    {
         std::cout << "ERROR: did not find OPENAI_API_KEY, check it is set and accessible in thh current environment." << std::endl
                   << "Continuing without AI." << std::endl;
     }
 
     const std::string url = url_char;
-   //  std::cout << "in Database(), url: " << url << std::endl;
+    //  std::cout << "in Database(), url: " << url << std::endl;
     const std::string api = api_char;
-   //  std::cout << "in Database(), api: " << api << std::endl;
-    if (openai_api_char != NULL) {
-        const std::string openai_api = openai_api_char; 
-        this->openai_api_key = openai_api; 
+    //  std::cout << "in Database(), api: " << api << std::endl;
+    if (openai_api_char != NULL)
+    {
+        const std::string openai_api = openai_api_char;
+        this->openai_api_key = openai_api;
     }
 
     // for ci workflow debug
     // this->url = "https://alcpkkevodekihwyjzvl.supabase.co";
     this->url = url;
     this->api_key = api;
-
 }
-
 
 Database::Database(const std::string url, const std::string api_key)
 {
@@ -55,18 +56,46 @@ Database::Database(const std::string url, const std::string api_key)
     this->api_key = api_key;
 }
 
+/**
+ * Performs an HTTP request using the specified method, URL, and data payload.
+ *
+ * @param getPostPatch   The HTTP method to use ("GET", "POST", "PATCH", or "AI").
+ *                       "AI" is treated similarly to POST/GET and requires an OpenAI API key.
+ * @param url            The target URL for the request.
+ * @param insertData     The data payload to include in the request body (used for POST, PATCH, and AI).
+ *                       Leave empty for GET requests.
+ * @param httpStatusCode A reference to a string where the HTTP status code (e.g., "200", "404") will be stored.
+ * @return               A string containing the server's response body, or an empty string on failure.
+ *
+ * @details
+ * - Initializes a CURL session to send the HTTP request.
+ * - Sets headers, including "Content-Type" and "Authorization".
+ * - Configures the HTTP method based on the value of `getPostPatch`.
+ * - For "AI" requests, includes an OpenAI API key in the Authorization header.
+ * - Handles HTTP response codes, storing them in the `httpStatusCode` parameter.
+ * - Cleans up all allocated resources before returning the response or an error message.
+ *
+ * @errors
+ * - Returns an empty string and logs an error if:
+ *   - CURL initialization fails.
+ *   - An unsupported HTTP method is provided.
+ *   - A required API key (for "AI" requests) is missing.
+ * - Logs CURL errors if the request fails.
+ */
+
 std::string Database::request(const std::string &getPostPatch, const std::string url,
                               const std::string &insertData, std::string &httpStatusCode)
 {
-    if (getPostPatch == "AI" && this->openai_api_key == "") {
-        std::cout << "You must have an Open AI API key set as an environmental variable to use" 
+    if (getPostPatch == "AI" && this->openai_api_key == "")
+    {
+        std::cout << "You must have an Open AI API key set as an environmental variable to use"
                   << "any AI-related functions.  Please set this and try again." << std::endl;
-                  return "";
+        return "";
     }
 
     CURL *curl = curl_easy_init();
     std::string response;
-   
+
     if (!curl)
     {
         std::cerr << "failed to initialize" << std::endl;
@@ -79,7 +108,7 @@ std::string Database::request(const std::string &getPostPatch, const std::string
 
     struct curl_slist *headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
-    headers = curl_slist_append(headers, "Accept: application/json");    
+    headers = curl_slist_append(headers, "Accept: application/json");
     headers = curl_slist_append(headers, ("apikey: " + this->api_key).c_str());
 
     if (getPostPatch == "AI")
@@ -99,20 +128,22 @@ std::string Database::request(const std::string &getPostPatch, const std::string
         return "exiting request.";
     }
 
+    if (getPostPatch == "POST" || getPostPatch == "AI")
+    {
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+    }
+    else if (getPostPatch == "PATCH")
+    {
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
+    }
+    else if (getPostPatch == "GET")
+    {
+        curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+    }
+    if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH" || getPostPatch == "AI"))
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
 
-        if (getPostPatch == "POST" || getPostPatch == "AI") {
-           	curl_easy_setopt(curl, CURLOPT_POST, 1L);
-        } else if (getPostPatch == "PATCH") {
-            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
-        } else if (getPostPatch == "GET" || getPostPatch == "AI") {
-            curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
-        }
-        if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH" || getPostPatch == "AI"))
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
-
-
-
-    headers = curl_slist_append(headers, "Prefer: return=representation");    
+    headers = curl_slist_append(headers, "Prefer: return=representation");
 
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
@@ -130,6 +161,14 @@ std::string Database::request(const std::string &getPostPatch, const std::string
 
     return response;
 }
+
+/**
+ * Inserts a new entity into the database
+ *
+ * @param table   The name of the table being updated
+ * @param data    The entity to be inserted
+ * @return true if the pay was updated successfully, false otherwise
+ */
 
 std::string Database::insert(std::string table, std::string data)
 {
@@ -165,7 +204,6 @@ std::string Database::update(std::string table, std::string data, std::string co
     return status;
 }
 
-
 std::vector<std::vector<std::string>>
 Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn, std::string op,
@@ -174,12 +212,12 @@ Database::query(std::string table, std::string selectColumns,
     std::string statusCode = "";
 
     std::string url = this->url + "/rest/v1/" + table + "?" + "select=" +
-                 selectColumns + "&" + filterColumn + "=" + op + "." + value;
+                      selectColumns + "&" + filterColumn + "=" + op + "." + value;
 
     const std::string fURL = url;
 
-    const std::string& method = "GET";
-    const std::string& insertData = "";
+    const std::string &method = "GET";
+    const std::string &insertData = "";
 
     std::string result = request(method, fURL, insertData, statusCode);
 
@@ -231,8 +269,8 @@ Database::query(std::string table, std::string selectColumns,
 
     const std::string fURL = url;
 
-    const std::string& method = "GET";
-    const std::string& insertData = "";
+    const std::string &method = "GET";
+    const std::string &insertData = "";
 
     std::string result = request(method, fURL, insertData, statusCode);
 
@@ -289,8 +327,8 @@ Database::query(std::string table, std::string selectColumns,
 
     const std::string fURL = url;
 
-    const std::string& method = "GET";
-    const std::string& insertData = "";
+    const std::string &method = "GET";
+    const std::string &insertData = "";
 
     std::string result = request(method, fURL, insertData, statusCode);
 
@@ -341,49 +379,52 @@ int Database::countResults(std::string results)
     return count;
 }
 
-std::vector<std::vector<std::string>> Database::tokenize(const std::string& res, int cR, int listCount, 
-    std::vector<std::vector<std::string>> &queryLists)
+std::vector<std::vector<std::string>> Database::tokenize(const std::string &res, int cR, int listCount,
+                                                         std::vector<std::vector<std::string>> &queryLists)
 {
     std::string localRes = res;
     queryLists.resize(listCount);
 
     for (int j = 0; j < listCount; j++)
-	    queryLists[j].resize(cR);
+        queryLists[j].resize(cR);
 
     for (int i = 0; i < cR; i++)
     {
         for (int j = 0; j < listCount; j++)
         {
-	    int delim_pos = localRes.find(":");
-	    if (delim_pos == std::string::npos) break;
-	    
+            int delim_pos = localRes.find(":");
+            if (delim_pos == std::string::npos)
+                break;
+
             localRes.erase(0, delim_pos + 1);
 
             std::string token = localRes.substr(0, localRes.find(","));
 
-	    if (!token.empty()) {
-            if (token.back() == ']') {
-                token.pop_back();
+            if (!token.empty())
+            {
+                if (token.back() == ']')
+                {
+                    token.pop_back();
+                }
+                if (token.back() == '}')
+                {
+                    token.pop_back();
+                }
             }
-            if (token.back() == '}') {
-                token.pop_back();
-            }
-		}
 
-           if (token == "null")
+            if (token == "null")
                 token = "\"null\"";
 
             if (token == "true")
                 token = "\"true\"";
 
             if (token == "false")
-                token = "\"false\""; 
+                token = "\"false\"";
             queryLists[j][i] = token;
         }
     }
     return queryLists;
 }
-
 
 void Database::iterateLists(std::vector<std::vector<std::string>> &queryLists)
 {
@@ -407,13 +448,19 @@ void Database::iterateLists(std::vector<std::vector<std::string>> &queryLists)
 
 std::string Database::escapeString(const std::string &input)
 {
-     std::string output;
-    for (char c : input) {
-        if (c == '\"') {
+    std::string output;
+    for (char c : input)
+    {
+        if (c == '\"')
+        {
             output += "\\\"";
-        } else if (c == '\\') {
+        }
+        else if (c == '\\')
+        {
             output += "\\\\";
-        } else {
+        }
+        else
+        {
             output += c;
         }
     }
