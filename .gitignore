@@ -10,3 +10,5 @@ build/*
 .DS_Store
 .vscode/settings.json
 external_libraries/.DS_Store
+external_libraries/cpp_redis
+external_libraries/tacopie

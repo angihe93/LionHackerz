@@ -9,6 +9,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <iomanip>
+#include <cctype>
 
 
 // using namespace std;
@@ -422,11 +425,19 @@ std::string Database::escapeString(const std::string &input)
 
 bool Database::skillExists(const std::string &skillName)
 {
-    std::string full_url = url + "/rest/v1/skill?name=eq." + escapeString(skillName);
+    // URL-encoding
+    std::string encodedSkill = urlEncode(skillName);
+
+    std::string full_url = url + "/rest/v1/Skill?name=eq." + encodedSkill;
+
+    std::cout << "Checking if skill exists with URL: " << full_url << std::endl;
+
     std::string statusCode;
     std::string response = request("GET", full_url, "", statusCode);
 
-    // Check if response contains at least one entry
+    std::cout << "Response: " << response << std::endl;
+    std::cout << "Status Code: " << statusCode << std::endl;
+
     crow::json::rvalue json_response = crow::json::load(response);
     if (json_response && json_response.size() > 0)
     {
@@ -437,15 +448,47 @@ bool Database::skillExists(const std::string &skillName)
 
 bool Database::interestExists(const std::string &interestName)
 {
-    std::string full_url = url + "/rest/v1/interest?name=eq." + escapeString(interestName);
+    // URL-encoding
+    std::string encodedInterest = urlEncode(interestName);
+
+    std::string full_url = url + "/rest/v1/Interest?name=eq." + encodedInterest;
+
+    std::cout << "Checking if interest exists with URL: " << full_url << std::endl;
+
     std::string statusCode;
     std::string response = request("GET", full_url, "", statusCode);
 
-    // Check if response contains at least one entry
+    std::cout << "Response: " << response << std::endl;
+    std::cout << "Status Code: " << statusCode << std::endl;
+
+    // Parse the JSON response
     crow::json::rvalue json_response = crow::json::load(response);
     if (json_response && json_response.size() > 0)
     {
         return true;
     }
     return false;
+}
+
+std::string Database::urlEncode(const std::string &value)
+{
+    std::ostringstream escaped;
+    escaped.fill('0');
+    escaped << std::hex << std::uppercase;
+
+    for (const char &c : value)
+    {
+        // Keep alphanumeric and other accepted characters intact
+        if (isalnum(static_cast<unsigned char>(c)) || c == '-' || c == '_' || c == '.' || c == '~')
+        {
+            escaped << c;
+        }
+        else
+        {
+            // Any other characters are percent-encoded
+            escaped << '%' << std::setw(2) << int((unsigned char)c);
+        }
+    }
+
+    return escaped.str();
 }
