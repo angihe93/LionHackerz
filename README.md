@@ -103,6 +103,12 @@ For other platforms, see:
 
 	https://github.com/nlohmann/json
 
+When building the service in /build, if you get error such as "terminating due to uncaught exception of type cpp_redis::redis_error: connect() failure", then make sure redis is installed and running:
+
+`brew install redis`
+
+`brew services start redis`
+
 NEW:
 
 This app uses OpenSSL for API key generation. To install, download version 3.3.2 from https://openssl-library.org/source/, then go to openssl-3.3.2/, run `./Configure` and then `make`.
