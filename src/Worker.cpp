@@ -2,9 +2,11 @@
 #include "Worker.h"
 #include <iostream>
 #include <chrono>
+#include <mutex>
 
-Worker::Worker(cpp_redis::client &redis, Matcher *matcher)
-	: redis_client(redis), m(matcher) {}
+
+Worker::Worker(cpp_redis::client &redis, Matcher *matcher, std::mutex &mutex)
+	: redis_client(redis), m(matcher), redis_mutex(mutex) {}
 
 void Worker::process_tasks()
 {
@@ -12,6 +14,7 @@ void Worker::process_tasks()
 	{
 		try
 		{
+			std::lock_guard<std::mutex> lock(redis_mutex);
 			// Fetch a task from the queue
 			auto future_reply = redis_client.rpop("task_queue");
 			redis_client.commit();

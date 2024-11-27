@@ -7,9 +7,12 @@
 #include "Worker.h"
 #include <string>
 #include <iostream>
+#include <mutex>
 #include <cpp_redis/cpp_redis>
 #include <cstdlib>
 #include "../external_libraries/Crow/include/crow.h"
+
+std::mutex redis_mutex;
 
 cpp_redis::client redis_client;
 
@@ -37,7 +40,7 @@ int main()
     routeController.setDatabase(db);
 
     Matcher m(*db);
-    Worker worker(redis_client, &m);
+    Worker worker(redis_client, &m, redis_mutex);
 
     /* start task queue */
     worker.start_worker_pool(4); 

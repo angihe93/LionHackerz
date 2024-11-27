@@ -12,9 +12,9 @@ private:
     cpp_redis::client &redis_client; 
     Matcher *m;       
     std::vector<std::thread> worker_threads;
-
+    std::mutex &redis_mutex;
 public:
-    Worker(cpp_redis::client &redis, Matcher *matcher);
+    Worker(cpp_redis::client &redis, Matcher *matcher, std::mutex &mutex);
 
     /* Starts the worker pool */
 	void start_worker_pool(int num_threads);
