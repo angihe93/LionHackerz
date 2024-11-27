@@ -51,7 +51,8 @@ target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
 # Find and link with libcurl
 find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
-target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto cpp_redis tacopie)
+find_package(nlohmann_json REQUIRED)
+target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto cpp_redis tacopie nlohmann_json::nlohmann_json)
 
 add_dependencies(LionHackerzProject unbind_port)
 
@@ -75,12 +76,14 @@ include(GoogleTest)
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
    test/EmployerUnitTests.cpp
+   test/AuthUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
    src/User.cpp
    src/Augment.cpp
    src/Employer.cpp
+   src/Auth.cpp
  )
 
 
@@ -91,11 +94,14 @@ target_include_directories(LionHackerzProjectTests PRIVATE
 target_link_libraries(LionHackerzProjectTests PRIVATE 
      WN
      CURL::libcurl 
+     OpenSSL::SSL 
+     OpenSSL::Crypto
      cpp_redis
      tacopie
      GTest::gtest
      GTest::gtest_main
-     pthread)
+     pthread
+     nlohmann_json::nlohmann_json)
 
 add_custom_target(run_tests
     COMMAND ctest
@@ -144,6 +150,7 @@ if (CPPLINT)
         test/testMain.cpp
         test/EmployerUnitTests.cpp
         test/UserUnitTests.cpp
+        test/AuthUnitTests.cpp
     )
 
     # Custom target to run cpplint

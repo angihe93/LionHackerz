@@ -15,8 +15,8 @@ cpp_redis::client redis_client;
 
 /* redis task queue initialization */
 void setup_redis() {
-    redis_client.connect("127.0.0.1", 6379, [](const std::string& host, std::size_t port, cpp_redis::client::connect_state status) {
-        if (status == cpp_redis::client::connect_state::dropped) {
+    redis_client.connect("127.0.0.1", 6379, [](const std::string& host, std::size_t port, cpp_redis::connect_state status) {
+        if (status == cpp_redis::connect_state::dropped) {
             std::cerr << "Redis connection lost to " << host << ":" << port << std::endl;
         }
     });

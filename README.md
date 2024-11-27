@@ -93,7 +93,7 @@ and just run make followed by sudo make install.  It should still install this w
    	sudo make install
 
 If you run into an error about ::client::connect, simply remove the "::client" part of the main redis
-connection function in main.cpp and test/testMain.cpp and it should work.
+connection function in the API sourece files main.cpp and test/testMain.cpp and it should work.
 
 cpp_redis makes use of the nlohmann json package.  It can be installed on macOS with:
 
@@ -102,6 +102,12 @@ cpp_redis makes use of the nlohmann json package.  It can be installed on macOS 
 For other platforms, see:
 
 	https://github.com/nlohmann/json
+
+When building the service in /build, if you get error such as "terminating due to uncaught exception of type cpp_redis::redis_error: connect() failure", then make sure redis is installed and running:
+
+`brew install redis`
+
+`brew services start redis`
 
 NEW:
 
