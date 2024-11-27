@@ -130,7 +130,7 @@ int Auth::getAid(std::string apiKey) {
         }
         int resCount = 0;
         // std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,apikey", "apikey", "eq", apiKey, true, resCount);
-        apiKey = "\'" + apiKey + "\'";
+        // apiKey = "\'" + apiKey + "\'";
         std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,apikey", "apikey", "eq", apiKey, true, resCount);
         std::cout << "in getAid, resCount: " << resCount << std::endl;
         if (resCount == 0) {

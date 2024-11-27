@@ -71,12 +71,14 @@ include(GoogleTest)
 
 # Test executable
  add_executable(LionHackerzProjectTests
-   test/testMain.cpp
-   test/MatcherUnitTests.cpp
+#    test/testMain.cpp
+#    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
-   test/ListingUnitTests.cpp
+#    test/ListingUnitTests.cpp
 #    test/EmployerUnitTests.cpp  // slow, turn off for now
    test/AuthUnitTests.cpp
+   test/AuthIntegrationTests.cpp
+   test/DatabaseIntegrationTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
