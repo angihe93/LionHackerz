@@ -110,7 +110,7 @@ std::string Auth::genAPIKey(std::string role, int uid) {
         }
 
         std::string apikey = generateRandomHex(32);
-        std::string data = "{\"apikey\": \"" + apikey + "\", \"permission\": \"" + role + "\", \"uid\": \"" + std::to_string(uid) +"\"}";
+        std::string data = "{\"apikey\": \"" + apikey + "\", \"role\": \"" + role + "\", \"uid\": \"" + std::to_string(uid) +"\"}";
 
         std::string insertRes = db->insert("Authentication",data);
         std::cout << "insertRes: " << insertRes << std::endl;
@@ -122,4 +122,44 @@ std::string Auth::genAPIKey(std::string role, int uid) {
 
         return apikey;
 
+}
+
+int Auth::getAid(std::string apiKey) {
+        if (apiKey.empty()) {
+                return -1; 
+        }
+        int resCount = 0;
+        std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid", "apikey", "eq", apiKey, false, resCount);
+        if (resCount == 0) {
+                std::cout << "Error: API key does not exist, please check the input" << std::endl;
+                return -1;
+        }
+        int aid = std::stoi(queryRes[0][0]);
+        return aid;
+}
+
+            
+std::string Auth::getRole(int aid) {
+        int resCount = 0;
+        std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "role", "aid", "eq", std::to_string(aid), false, resCount);
+        if (resCount == 0) {
+                std::cout << "Error: aid does not exist, please check the input" << std::endl;
+                return "Error: aid does not exist, please check the input";
+        }
+        std::string role = queryRes[0][0];
+
+        // remove leading and trailing quotation marks
+        if (!role.empty() && role.front() == '\"') {
+                role.erase(0, 1);
+        }
+        if (!role.empty() && role.back() == '\"') {
+                role.erase(role.size() - 1);
+        }
+        // remove backslashes
+        size_t pos = 0;
+        while ((pos = role.find("\\\"", pos)) != std::string::npos) {
+                role.replace(pos, 2, "\"");
+                pos += 1; // Move past the replaced character
+        }
+        return role;
 }
