@@ -77,6 +77,7 @@ include(GoogleTest)
    test/ListingUnitTests.cpp
    test/EmployerUnitTests.cpp
    test/AuthUnitTests.cpp
+   test/AuthIntegrationTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
