@@ -57,7 +57,7 @@ jobs:
         tar -xzf boost_1_86_0.tar.gz && rm boost_1_86_0.tar.gz
 
     - name: Install tcl-tk
-      run: brew install tcl-tk
+      run: brew install tcl-tk@8
 
     - name: Install Wordnet
       working-directory: ${{github.workspace}}/external_libraries
