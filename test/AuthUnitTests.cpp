@@ -83,3 +83,43 @@ TEST(AuthGenAPIKey, checkGenAPIKey) {
         delete db;
         delete a;
 }
+
+/* tests Auth::getAid() function in Auth.cpp */
+TEST(AuthGetAid, checkGetAid) {
+
+    Database *db = new MockDatabase();
+    Auth *a = new Auth(*db);
+
+    // get aid should fail
+    std::string apiKey = "";
+    int aid = a->getAid(apiKey);
+    EXPECT_EQ(aid, -1);
+
+    // get aid should succeed
+    apiKey = "75497150f67ac7b1f721d3333e397bc134e40ebd9c95cf0b9d03a030ef390c58";
+    aid = a->getAid(apiKey);
+    EXPECT_EQ(aid, 1);
+    
+    delete db;
+    delete a;
+}
+
+/* tests Auth::getRole() function in Auth.cpp */
+TEST(AuthGetRole, checkGetRole) {
+
+    Database *db = new MockDatabase();
+    Auth *a = new Auth(*db);
+
+    // get role should fail
+    int aid = -1;
+    std::string role = a->getRole(aid);
+    EXPECT_EQ(role, "Error: aid does not exist, please check the input");
+
+    // get role should succeed
+    aid = 1;
+    role = a->getRole(aid);
+    EXPECT_EQ(role, "admin");
+
+    delete db;
+    delete a;
+}

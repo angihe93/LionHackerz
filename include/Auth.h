@@ -42,6 +42,14 @@ class Auth {
                  */
                 std::string genAPIKey(std::string role, int uid);
 
+                // get the aid for the api key
+                // return -1 on error, aid on success
+                int getAid(std::string apiKey);
+
+                // get the role for the aid
+
+                std::string getRole(int aid);
+
         private:
                 Database *db;
 
@@ -52,7 +60,6 @@ class Auth {
                 * @return a string of random bytes for use as API key
                 */
                 std::string generateRandomHex(int length);
-                
 };
 
 #endif

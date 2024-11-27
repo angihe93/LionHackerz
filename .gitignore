@@ -5,6 +5,8 @@ build/*
 !build/README.txt
 !build/coverage_report
 !external_libraries/README.txt
+!external_libraries/cmake/cpp_redis/CMakeLists.txt
+!external_libraries/cmake/tacopie/CMakeLists.txt
 .DS_Store
 .vscode/settings.json
 external_libraries/.DS_Store
