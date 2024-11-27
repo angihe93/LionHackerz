@@ -43,6 +43,14 @@ class RouteController {
          */
         void signUp(const crow::request& req, crow::response &res);
 
+        /**
+         * Check Auth Headers for API credentials 
+         * 
+         * @param req
+         * @param res
+         */
+        bool checkAuthHeaders(const crow::request &req, crow::response &res);
+
         /* Route: /getMatches?uid=X 
         *       This route checks all job listings and performs
         *       the matching algorithm in the Matcher.cpp class,
