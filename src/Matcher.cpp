@@ -7,6 +7,7 @@
 #include <curl/curl.h>
 #include <wn.h>
 #include <crow.h>
+#include <cpp_redis/cpp_redis>
 #include <cctype>
 #include <cstdio>
 #include <cstring>

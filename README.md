@@ -188,6 +188,39 @@ Postman tests for these routes can be found on our Trello board located here:
 
     https://trello.com/c/2X1naGF8/29-postman-tests-export
 
+### User Creation
+
+The user is created using a JSON request to the /makeUser endpoint. The request body will need to have a name and email. The request needs to have a "dimensions" parameter, which contains the information about the user's desired pay, field, gender, etc. The user may or may not indicate their skills and interests, and they may or may not include information about their "augments" which specifies how important certain things like location, pay, etc for a job is to a user and this will be used in the matching algorithm.
+
+Sample Request:
+{
+  "name": "SampleUser",
+  "email": "sampleuser@email.com",
+  "dimensions": {
+    "loc": "New York",
+    "field": "Software Engineering",
+    "pay": 120000,
+    "gender": true,
+    "diversity": true,
+    "mbti": "INTJ",
+    "flexibility": true,
+    "remote": true,
+    "workspace": false
+  },
+  "skills": [
+    { "name": "python" }
+  ],
+  "interests": [
+    { "name": "drawing", "rank": 3 },
+    { "name": "software development", "rank": 5 }
+  ],
+  "augments": [
+    { "dim_id": "1", "importance": "very" },
+    { "dim_id": "2", "importance": "somewhat" }
+  ]
+}
+
+
 # Database Queries - For Team Members in Designing your Classes
 
 Queries are performed using cURL formatted URLs to the database. You don't need
