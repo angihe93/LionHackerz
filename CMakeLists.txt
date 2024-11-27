@@ -51,6 +51,7 @@ target_include_directories(LionHackerzProject PUBLIC ${INCLUDE_PATHS})
 # Find and link with libcurl
 find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(nlohmann_json REQUIRED)
 target_link_libraries(LionHackerzProject PRIVATE WN CURL::libcurl OpenSSL::SSL OpenSSL::Crypto cpp_redis tacopie)
 
 add_dependencies(LionHackerzProject unbind_port)
