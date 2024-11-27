@@ -95,8 +95,15 @@ TEST(AuthGetAid, checkGetAid) {
     int aid = a->getAid(apiKey);
     EXPECT_EQ(aid, -1);
 
+    // get aid should fail
+    apiKey = "kkjffthfhgfvhkjgvjhgkuyfk";
+    std::cout << "testing apiKey: " << apiKey << std::endl;
+    aid = a->getAid(apiKey);
+    EXPECT_EQ(aid, -1);
+
     // get aid should succeed
     apiKey = "75497150f67ac7b1f721d3333e397bc134e40ebd9c95cf0b9d03a030ef390c58";
+    std::cout << "testing apiKey: " << apiKey << std::endl;
     aid = a->getAid(apiKey);
     EXPECT_EQ(aid, 1);
     

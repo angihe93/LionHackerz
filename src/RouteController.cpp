@@ -193,7 +193,9 @@ const auto &auth_header = req.get_header_value("Authorization");
 
     // get aid from api key, check it belongs to an admin or matching platform
     std::string apiKey = username;
+    std::cout << "in checkAuthHeaders apiKey: " << apiKey << std::endl;
     int aid = a->getAid(apiKey);
+    std::cout << "in checkAuthHeaders aid: " << aid << std::endl;
     if (aid == -1)
     {
         crow::json::wvalue error;
@@ -205,7 +207,7 @@ const auto &auth_header = req.get_header_value("Authorization");
         delete a;
         return false;
     }
-    std::cout << "in checkAuhHeaders aid: " << aid << std::endl;
+    
     std::string role = a->getRole(aid);
     std::cout << "in checkAuthHeaders role: " << role << std::endl;
     if (role != "admin" && role != "matching_platform") {
