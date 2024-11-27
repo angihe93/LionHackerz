@@ -14,6 +14,7 @@ set(INCLUDE_PATHS
     external_libraries/WordNet-3.0/include
     external_libraries/Crow/include
     external_libraries/openssl-3.3.2/include
+    external_libraries/cpp_redis/includes
     /usr/local/include
     /opt/homebrew/Cellar/asio/1.30.2/include)
 
