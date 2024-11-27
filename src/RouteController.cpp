@@ -49,12 +49,8 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
         return;
     }
 
-    if (role == "admin")
-    {
-
-        Auth *a = new Auth(*db);
-        const auto &auth_header = req.get_header_value("Authorization");
-        if (auth_header.empty())
+    const auto &auth_header = req.get_header_value("Authorization");
+    if (auth_header.empty())
         {
             res.code = 400;
             jsonRes["error"]["code"] = res.code;
@@ -63,17 +59,35 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
             res.end();
             return;
         }
-        auto [username, password] = a->decodeBasicAuth(auth_header);
-        if (username == "" && password == "")
+
+    Auth *a = new Auth(*db);
+    auto [username, password] = a->decodeBasicAuth(auth_header);
+    if (username == "" || password == "")
         {
             res.code = 400;
             jsonRes["error"]["code"] = res.code;
             jsonRes["error"]["message"] = "Invalid credentials";
             res.write(jsonRes.dump());
             res.end();
+            delete a;
             return;
         }
 
+    // if username email not in API_User table yet, add it and get the created user id
+    int uid = a->createAPIUser(username, password);
+    if (uid == -1)
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "Error creating or looking up API user";
+        res.write(jsonRes.dump());
+        res.end();
+        delete a;
+        return;
+    }
+
+    if (role == "admin")
+    {
         std::cout << "Username: " << username << ", Password: " << password << std::endl;
         // check in database if this is admin, if so, issue admin api key
         int resCount = 0;
@@ -85,31 +99,67 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
             jsonRes["error"]["message"] = "Wrong username or password";
             res.write(jsonRes.dump());
             res.end();
+            delete a;
             return;
         }
 
         // gen api key
-        std::string retStr = a->genAPIKey(role);
+        std::string retStr = a->genAPIKey(role, uid);
 
         size_t id_pos = retStr.find("Error:");
         if (id_pos != std::string::npos)
         { // error
             std::cout << retStr << std::endl;
+            res.code = 500;
+            jsonRes["error"]["code"] = res.code;
+            jsonRes["error"]["message"] = "Error generating API key";
+            res.write(jsonRes.dump());
+            res.end();
+            delete a;
+            return;
         }
 
         res.code = 201;
         jsonRes["data"]["apikey"] = retStr;
         res.write(jsonRes.dump());
         res.end();
+        delete a;
         return;
+    }
+    else if (role == "matching_platform") {
+   
+        // gen api key
+        std::string retStr = a->genAPIKey(role, uid);
+
+        size_t id_pos = retStr.find("Error:");
+        if (id_pos != std::string::npos)
+        { // error
+            std::cout << retStr << std::endl;
+            res.code = 500;
+            jsonRes["error"]["code"] = res.code;
+            jsonRes["error"]["message"] = "Error generating API key";
+            res.write(jsonRes.dump());
+            res.end();
+            delete a;
+            return;
+        }
+
+        res.code = 201;
+        jsonRes["data"]["apikey"] = retStr;
+        res.write(jsonRes.dump());
+        res.end();
+        delete a;
+        return;
+
     }
     else
     {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "Roles other than admin are yet implemented";
+        jsonRes["error"]["message"] = "Other roles are not yet implemented";
         res.write(jsonRes.dump());
         res.end();
+        delete a;
         return;
     }
 }

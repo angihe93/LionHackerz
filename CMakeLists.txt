@@ -76,12 +76,14 @@ include(GoogleTest)
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
    test/EmployerUnitTests.cpp
+   test/AuthUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
    src/User.cpp
    src/Augment.cpp
    src/Employer.cpp
+   src/Auth.cpp
  )
 
 
@@ -92,6 +94,8 @@ target_include_directories(LionHackerzProjectTests PRIVATE
 target_link_libraries(LionHackerzProjectTests PRIVATE 
      WN
      CURL::libcurl 
+     OpenSSL::SSL 
+     OpenSSL::Crypto
      cpp_redis
      tacopie
      GTest::gtest
@@ -146,6 +150,7 @@ if (CPPLINT)
         test/testMain.cpp
         test/EmployerUnitTests.cpp
         test/UserUnitTests.cpp
+        test/AuthUnitTests.cpp
     )
 
     # Custom target to run cpplint
