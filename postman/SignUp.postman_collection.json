@@ -1,0 +1,439 @@
+{
+	"info": {
+		"_postman_id": "306b2739-8684-46bb-a556-b6f61eabae76",
+		"name": "SignUp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28999626",
+		"_collection_link": "https://interstellar-shuttle-26423.postman.co/workspace/LionHackerz~4010c7da-71ab-40b4-b3ee-104cd08ffa03/collection/28999626-306b2739-8684-46bb-a556-b6f61eabae76?action=share&source=collection_link&creator=28999626"
+	},
+	"item": [
+		{
+			"name": "no-role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json(); // Parse the response JSON using pm.response.json()",
+							"    pm.expect(response.error.message).to.eql(\"You must specify a role in the 'role' parameter.\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/signup",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin-no-auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json(); // Parse the response JSON using pm.response.json()",
+							"    pm.expect(response.error.message).to.eql(\"No Authorization header found, it is required to proceed\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/signup?role=admin",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"signup"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin-empty-auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json(); // Parse the response JSON using pm.response.json()",
+							"    pm.expect(response.error.message).to.eql(\"Invalid credentials\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/signup?role=admin",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"signup"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin-email-exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json(); // Parse the response JSON using pm.response.json()",
+							"    pm.expect(response.error.message).to.eql(\"Wrong username or password\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"",
+							"const username = pm.variables.replaceIn('{{$randomEmail}}')",
+							"pm.variables.set(\"s-tmp-username\", username)",
+							"const password = pm.variables.replaceIn('{{$randomPassword}}')",
+							"pm.variables.set(\"s-tmp-pwd\", password)",
+							"",
+							"// Encode username and password in Base64",
+							"const credentials = `${username}:${password}`;",
+							"const encodedCredentials = btoa(credentials);",
+							"",
+							"// Use the encoded credentials in the Authorization header",
+							"pm.sendRequest({",
+							"    url: `${pm.variables.get(\"serverUrl\")}/singup?role=admin`, // Replace with your URL",
+							"    method: 'POST',",
+							"    header: {",
+							"        'Authorization': `Basic ${encodedCredentials}`, // Basic Authentication header",
+							"        'Content-Type': 'application/json', // Add other headers if needed",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            key1: 'value1', // Replace with your JSON payload",
+							"            key2: 'value2',",
+							"        }),",
+							"    },",
+							"}, function (err, response) {",
+							"    if (err) {",
+							"        console.log('Error:', err); // Log errors",
+							"    } else {",
+							"        console.log('Response Status:', response.status); // Log response status",
+							"        console.log('Response Body:', response.json()); // Log response body",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{s-tmp-pwd}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{s-tmp-username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/signup?role=admin",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"signup"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin-ok",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"",
+							"const username = pm.variables.replaceIn('{{$randomEmail}}')",
+							"pm.variables.set(\"s-tmp-username\", username)",
+							"const password = pm.variables.replaceIn('{{$randomPassword}}')",
+							"pm.variables.set(\"s-tmp-pwd\", password)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{pwd}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/signup?role=admin",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"signup"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "matching-platform-ok",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"",
+							"const username = pm.variables.replaceIn('{{$randomEmail}}')",
+							"pm.variables.set(\"s-tmp-username\", username)",
+							"const password = pm.variables.replaceIn('{{$randomPassword}}')",
+							"pm.variables.set(\"s-tmp-pwd\", password)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{pwd}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/signup?role=matching_platform",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"signup"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "matching_platform"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "other-role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json(); // Parse the response JSON using pm.response.json()",
+							"    pm.expect(response.error.message).to.eql(\"Other roles are not yet implemented\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{pwd}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/signup?role=new-role",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"signup"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "new-role"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

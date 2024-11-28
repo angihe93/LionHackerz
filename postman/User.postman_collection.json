@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "f017ff46-8b23-4d21-8e1d-0c5e8beedde6",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28999626",
+		"_collection_link": "https://interstellar-shuttle-26423.postman.co/workspace/LionHackerz~4010c7da-71ab-40b4-b3ee-104cd08ffa03/collection/28999626-f017ff46-8b23-4d21-8e1d-0c5e8beedde6?action=share&source=collection_link&creator=28999626"
+	},
+	"item": [
+		{
+			"name": "makeUser",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"const userData = {",
+							"      name: pm.variables.replaceIn('{{$randomFirstName}}'),",
+							"      email: pm.variables.replaceIn('{{$randomEmail}}'),",
+							"      dimensions: {",
+							"        field: \"Computer Science\",",
+							"        pay: 20000,",
+							"        mbti: \"INFP\",",
+							"        loc: \"New York\",",
+							"        gender: true,",
+							"        diversity: true,",
+							"        flexibility: true,",
+							"        remote: true,",
+							"        workspace: true,",
+							"      },",
+							"      skills:",
+							"        [{\"name\":\"python\"},{\"name\":\"algorithms\"}],",
+							"      interests:",
+							"        [{\"name\":\"anatomy\"}],",
+							"      augments: [{\"dim_id\": \"18\", \"importance\":\"very\"},{\"dim_id\": \"19\", \"importance\":\"very\"}, {\"dim_id\": \"4\", \"importance\":\"very\"},{\"dim_id\": \"13\", \"importance\":\"very\"}, {\"dim_id\": \"3\", \"importance\":\"somewhat\"},{\"dim_id\": \"8\", \"importance\":\"somewhat\"},{\"dim_id\": \"16\", \"importance\":\"somewhat\"},{\"dim_id\": \"1\", \"importance\":\"somewhat\"} ],",
+							"    };",
+							"",
+							"    pm.variables.set('userData', JSON.stringify(userData));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "368ca6ef48ce334200225e3b0066b553ecb98c83794d976f7d6aabf17bf077cb",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{userData}}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverUrl}}/makeUser",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"makeUser"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
