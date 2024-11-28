@@ -23,6 +23,7 @@ TEST(dbIntegration, CheckDbIntegration) {
     EXPECT_EQ(queryRes, expected);
 
     // query a non-existent dimension
+    queryRes = db->query("Dimension", "name", "", "", "", true, resCount);
     std::string next_id = std::to_string(resCount+1);
     queryRes = db->query("Dimension", "name", "dim_id", "eq", next_id, true, resCount);
     EXPECT_EQ(resCount, 0);
@@ -40,7 +41,7 @@ TEST(dbIntegration, CheckDbIntegration) {
     std::string data = "{\"def_weight\": \"70\"}";
     std::string updateRes = db->update("Dimension", data, "dim_id", "eq", next_id);
     std::cout << "updateRes: " << updateRes << std::endl;
-    std::string expected_update =  R"([{"dim_id":)" + next_id + R"(,"name":"dimension name","def_weight":"70"}])";
+    std::string expected_update =  R"([{"dim_id":)" + next_id + R"(,"name":"dimension name","def_weight":70}])";
     EXPECT_EQ(updateRes, expected_update);
 
     delete db;
