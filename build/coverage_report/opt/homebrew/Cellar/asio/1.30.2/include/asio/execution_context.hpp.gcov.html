@@ -1,0 +1,473 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverageN.info - opt/homebrew/Cellar/asio/1.30.2/include/asio/execution_context.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory /opt/homebrew/Cellar/asio/1.30.2/include/asio">/opt/homebrew/Cellar/asio/1.30.2/include/asio</a> - execution_context.hpp<span style="font-size: 80%;"> (source / <a href="execution_context.hpp.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverageN.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2024-11-28 00:01:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">11</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : //</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             : // execution_context.hpp</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             : // ~~~~~~~~~~~~~~~~~~~~~</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             : //</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             : // Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             : //</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             : // Distributed under the Boost Software License, Version 1.0. (See accompanying</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             : // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             : //</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             : </span>
+<span id="L11"><span class="lineNum">      11</span>                 :             : #ifndef ASIO_EXECUTION_CONTEXT_HPP</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             : #define ASIO_EXECUTION_CONTEXT_HPP</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : </span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #if defined(_MSC_VER) &amp;&amp; (_MSC_VER &gt;= 1200)</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : # pragma once</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #endif // defined(_MSC_VER) &amp;&amp; (_MSC_VER &gt;= 1200)</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : </span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;asio/detail/config.hpp&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;cstddef&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;stdexcept&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;typeinfo&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;asio/detail/noncopyable.hpp&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;asio/detail/push_options.hpp&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : namespace asio {</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : </span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : class execution_context;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : class io_context;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #if !defined(GENERATING_DOCUMENTATION)</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : template &lt;typename Service&gt; Service&amp; use_service(execution_context&amp;);</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : template &lt;typename Service&gt; Service&amp; use_service(io_context&amp;);</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : template &lt;typename Service&gt; void add_service(execution_context&amp;, Service*);</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : template &lt;typename Service&gt; bool has_service(execution_context&amp;);</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : #endif // !defined(GENERATING_DOCUMENTATION)</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : </span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : namespace detail { class service_registry; }</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : /// A context for function object execution.</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : /**</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :  * An execution context represents a place where function objects will be</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :  * executed. An @c io_context is an example of an execution context.</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :  *</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :  * @par The execution_context class and services</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :  *</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :  * Class execution_context implements an extensible, type-safe, polymorphic set</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :  * of services, indexed by service type.</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :  *</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :  * Services exist to manage the resources that are shared across an execution</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :  * context. For example, timers may be implemented in terms of a single timer</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :  * queue, and this queue would be stored in a service.</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :  *</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :  * Access to the services of an execution_context is via three function</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :  * templates, use_service(), add_service() and has_service().</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :  *</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :  * In a call to @c use_service&lt;Service&gt;(), the type argument chooses a service,</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :  * making available all members of the named type. If @c Service is not present</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :  * in an execution_context, an object of type @c Service is created and added</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :  * to the execution_context. A C++ program can check if an execution_context</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :  * implements a particular service with the function template @c</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :  * has_service&lt;Service&gt;().</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :  *</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :  * Service objects may be explicitly added to an execution_context using the</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :  * function template @c add_service&lt;Service&gt;(). If the @c Service is already</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :  * present, the service_already_exists exception is thrown. If the owner of the</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :  * service is not the same object as the execution_context parameter, the</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :  * invalid_service_owner exception is thrown.</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :  *</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :  * Once a service reference is obtained from an execution_context object by</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :  * calling use_service(), that reference remains usable as long as the owning</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :  * execution_context object exists.</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :  *</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :  * All service implementations have execution_context::service as a public base</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :  * class. Custom services may be implemented by deriving from this class and</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :  * then added to an execution_context using the facilities described above.</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :  *</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :  * @par The execution_context as a base class</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :  *</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :  * Class execution_context may be used only as a base class for concrete</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             :  * execution context types. The @c io_context is an example of such a derived</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :  * type.</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :  *</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :  * On destruction, a class that is derived from execution_context must perform</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :  * &lt;tt&gt;execution_context::shutdown()&lt;/tt&gt; followed by</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :  * &lt;tt&gt;execution_context::destroy()&lt;/tt&gt;.</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :  *</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :  * This destruction sequence permits programs to simplify their resource</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :  * management by using @c shared_ptr&lt;&gt;. Where an object's lifetime is tied to</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :  * the lifetime of a connection (or some other sequence of asynchronous</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :  * operations), a @c shared_ptr to the object would be bound into the handlers</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :  * for all asynchronous operations associated with it. This works as follows:</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :  *</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :  * @li When a single connection ends, all associated asynchronous operations</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :  * complete. The corresponding handler objects are destroyed, and all @c</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :  * shared_ptr references to the objects are destroyed.</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :  *</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :  * @li To shut down the whole program, the io_context function stop() is called</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :  * to terminate any run() calls as soon as possible. The io_context destructor</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :  * calls @c shutdown() and @c destroy() to destroy all pending handlers,</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :  * causing all @c shared_ptr references to all connection objects to be</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :  * destroyed.</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :  */</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             : class execution_context</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :   : private noncopyable</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             : {</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             : public:</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :   class id;</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :   class service;</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             : </span>
+<span id="L111"><span class="lineNum">     111</span>                 :             : public:</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :   /// Constructor.</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :   ASIO_DECL execution_context();</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : </span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :   /// Destructor.</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :   ASIO_DECL ~execution_context();</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : </span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : protected:</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :   /// Shuts down all services in the context.</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :   /**</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :    * This function is implemented as follows:</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :    *</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :    * @li For each service object @c svc in the execution_context set, in</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :    * reverse order of the beginning of service object lifetime, performs @c</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :    * svc-&gt;shutdown().</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :    */</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :   ASIO_DECL void shutdown();</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : </span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :   /// Destroys all services in the context.</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :   /**</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :    * This function is implemented as follows:</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :    *</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :    * @li For each service object @c svc in the execution_context set, in</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :    * reverse order * of the beginning of service object lifetime, performs</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :    * &lt;tt&gt;delete static_cast&lt;execution_context::service*&gt;(svc)&lt;/tt&gt;.</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :    */</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :   ASIO_DECL void destroy();</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             : </span>
+<span id="L139"><span class="lineNum">     139</span>                 :             : public:</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :   /// Fork-related event notifications.</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :   enum fork_event</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :   {</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :     /// Notify the context that the process is about to fork.</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :     fork_prepare,</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :     /// Notify the context that the process has forked and is the parent.</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     fork_parent,</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             : </span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :     /// Notify the context that the process has forked and is the child.</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :     fork_child</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :   };</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             : </span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :   /// Notify the execution_context of a fork-related event.</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :   /**</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :    * This function is used to inform the execution_context that the process is</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :    * about to fork, or has just forked. This allows the execution_context, and</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :    * the services it contains, to perform any necessary housekeeping to ensure</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :    * correct operation following a fork.</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :    *</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :    * This function must not be called while any other execution_context</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :    * function, or any function associated with the execution_context's derived</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :    * class, is being called in another thread. It is, however, safe to call</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :    * this function from within a completion handler, provided no other thread</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :    * is accessing the execution_context or its derived class.</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :    *</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :    * @param event A fork-related event.</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :    *</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :    * @throws asio::system_error Thrown on failure. If the notification</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :    * fails the execution_context object should no longer be used and should be</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :    * destroyed.</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :    *</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :    * @par Example</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :    * The following code illustrates how to incorporate the notify_fork()</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :    * function:</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :    * @code my_execution_context.notify_fork(execution_context::fork_prepare);</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :    * if (fork() == 0)</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :    * {</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :    *   // This is the child process.</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :    *   my_execution_context.notify_fork(execution_context::fork_child);</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :    * }</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :    * else</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :    * {</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :    *   // This is the parent process.</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :    *   my_execution_context.notify_fork(execution_context::fork_parent);</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :    * } @endcode</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :    *</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :    * @note For each service object @c svc in the execution_context set,</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :    * performs &lt;tt&gt;svc-&gt;notify_fork();&lt;/tt&gt;. When processing the fork_prepare</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :    * event, services are visited in reverse order of the beginning of service</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :    * object lifetime. Otherwise, services are visited in order of the beginning</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :    * of service object lifetime.</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :    */</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :   ASIO_DECL void notify_fork(fork_event event);</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             : </span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :   /// Obtain the service object corresponding to the given type.</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :   /**</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :    * This function is used to locate a service object that corresponds to the</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :    * given service type. If there is no existing implementation of the service,</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :    * then the execution_context will create a new instance of the service.</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :    *</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :    * @param e The execution_context object that owns the service.</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :    *</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :    * @return The service interface implementing the specified service type.</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :    * Ownership of the service interface is not transferred to the caller.</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :    */</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :   template &lt;typename Service&gt;</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :   friend Service&amp; use_service(execution_context&amp; e);</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             : </span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :   /// Obtain the service object corresponding to the given type.</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :   /**</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :    * This function is used to locate a service object that corresponds to the</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :    * given service type. If there is no existing implementation of the service,</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :    * then the io_context will create a new instance of the service.</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :    *</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :    * @param ioc The io_context object that owns the service.</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :    *</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :    * @return The service interface implementing the specified service type.</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :    * Ownership of the service interface is not transferred to the caller.</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :    *</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :    * @note This overload is preserved for backwards compatibility with services</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :    * that inherit from io_context::service.</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :    */</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :   template &lt;typename Service&gt;</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :   friend Service&amp; use_service(io_context&amp; ioc);</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             : </span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :   /// Creates a service object and adds it to the execution_context.</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :   /**</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :    * This function is used to add a service to the execution_context.</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :    *</span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :    * @param e The execution_context object that owns the service.</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :    *</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :    * @param args Zero or more arguments to be passed to the service</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :    * constructor.</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :    *</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :    * @throws asio::service_already_exists Thrown if a service of the</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :    * given type is already present in the execution_context.</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :    */</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :   template &lt;typename Service, typename... Args&gt;</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :   friend Service&amp; make_service(execution_context&amp; e, Args&amp;&amp;... args);</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             : </span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :   /// (Deprecated: Use make_service().) Add a service object to the</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :   /// execution_context.</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :   /**</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             :    * This function is used to add a service to the execution_context.</span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :    *</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :    * @param e The execution_context object that owns the service.</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :    *</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :    * @param svc The service object. On success, ownership of the service object</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :    * is transferred to the execution_context. When the execution_context object</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :    * is destroyed, it will destroy the service object by performing: @code</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :    * delete static_cast&lt;execution_context::service*&gt;(svc) @endcode</span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :    *</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :    * @throws asio::service_already_exists Thrown if a service of the</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :    * given type is already present in the execution_context.</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             :    *</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :    * @throws asio::invalid_service_owner Thrown if the service's owning</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             :    * execution_context is not the execution_context object specified by the</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :    * @c e parameter.</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :    */</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :   template &lt;typename Service&gt;</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :   friend void add_service(execution_context&amp; e, Service* svc);</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             : </span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :   /// Determine if an execution_context contains a specified service type.</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :   /**</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :    * This function is used to determine whether the execution_context contains a</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :    * service object corresponding to the given service type.</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :    *</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :    * @param e The execution_context object that owns the service.</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :    *</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :    * @return A boolean indicating whether the execution_context contains the</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :    * service.</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             :    */</span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :   template &lt;typename Service&gt;</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :   friend bool has_service(execution_context&amp; e);</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             : </span>
+<span id="L276"><span class="lineNum">     276</span>                 :             : private:</span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :   // The service registry.</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :   asio::detail::service_registry* service_registry_;</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             : };</span>
+<span id="L280"><span class="lineNum">     280</span>                 :             : </span>
+<span id="L281"><span class="lineNum">     281</span>                 :             : /// Class used to uniquely identify a service.</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             : class execution_context::id</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :   : private noncopyable</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             : {</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             : public:</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :   /// Constructor.</span>
+<span id="L287"><span class="lineNum">     287</span>                 :<span class="tlaGNC tlaBgGNC">          15 :   id() {}</span></span>
+<span id="L288"><span class="lineNum">     288</span>                 :             : };</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             : </span>
+<span id="L290"><span class="lineNum">     290</span>                 :             : /// Base class for all io_context services.</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             : class execution_context::service</span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :   : private noncopyable</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             : {</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             : public:</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             :   /// Get the context object that owns the service.</span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :   execution_context&amp; context();</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             : </span>
+<span id="L298"><span class="lineNum">     298</span>                 :             : protected:</span>
+<span id="L299"><span class="lineNum">     299</span>                 :             :   /// Constructor.</span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :   /**</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :    * @param owner The execution_context object that owns the service.</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :    */</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :   ASIO_DECL service(execution_context&amp; owner);</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             : </span>
+<span id="L305"><span class="lineNum">     305</span>                 :             :   /// Destructor.</span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :   ASIO_DECL virtual ~service();</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             : </span>
+<span id="L308"><span class="lineNum">     308</span>                 :             : private:</span>
+<span id="L309"><span class="lineNum">     309</span>                 :             :   /// Destroy all user-defined handler objects owned by the service.</span>
+<span id="L310"><span class="lineNum">     310</span>                 :             :   virtual void shutdown() = 0;</span>
+<span id="L311"><span class="lineNum">     311</span>                 :             : </span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :   /// Handle notification of a fork-related event to perform any necessary</span>
+<span id="L313"><span class="lineNum">     313</span>                 :             :   /// housekeeping.</span>
+<span id="L314"><span class="lineNum">     314</span>                 :             :   /**</span>
+<span id="L315"><span class="lineNum">     315</span>                 :             :    * This function is not a pure virtual so that services only have to</span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :    * implement it if necessary. The default implementation does nothing.</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :    */</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :   ASIO_DECL virtual void notify_fork(</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             :       execution_context::fork_event event);</span>
+<span id="L320"><span class="lineNum">     320</span>                 :             : </span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :   friend class asio::detail::service_registry;</span>
+<span id="L322"><span class="lineNum">     322</span>                 :             :   struct key</span>
+<span id="L323"><span class="lineNum">     323</span>                 :             :   {</span>
+<span id="L324"><span class="lineNum">     324</span>                 :             :     key() : type_info_(0), id_(0) {}</span>
+<span id="L325"><span class="lineNum">     325</span>                 :             :     const std::type_info* type_info_;</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :     const execution_context::id* id_;</span>
+<span id="L327"><span class="lineNum">     327</span>                 :             :   } key_;</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             : </span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :   execution_context&amp; owner_;</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             :   service* next_;</span>
+<span id="L331"><span class="lineNum">     331</span>                 :             : };</span>
+<span id="L332"><span class="lineNum">     332</span>                 :             : </span>
+<span id="L333"><span class="lineNum">     333</span>                 :             : /// Exception thrown when trying to add a duplicate service to an</span>
+<span id="L334"><span class="lineNum">     334</span>                 :             : /// execution_context.</span>
+<span id="L335"><span class="lineNum">     335</span>                 :             : class service_already_exists</span>
+<span id="L336"><span class="lineNum">     336</span>                 :             :   : public std::logic_error</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             : {</span>
+<span id="L338"><span class="lineNum">     338</span>                 :             : public:</span>
+<span id="L339"><span class="lineNum">     339</span>                 :             :   ASIO_DECL service_already_exists();</span>
+<span id="L340"><span class="lineNum">     340</span>                 :             : };</span>
+<span id="L341"><span class="lineNum">     341</span>                 :             : </span>
+<span id="L342"><span class="lineNum">     342</span>                 :             : /// Exception thrown when trying to add a service object to an</span>
+<span id="L343"><span class="lineNum">     343</span>                 :             : /// execution_context where the service has a different owner.</span>
+<span id="L344"><span class="lineNum">     344</span>                 :             : class invalid_service_owner</span>
+<span id="L345"><span class="lineNum">     345</span>                 :             :   : public std::logic_error</span>
+<span id="L346"><span class="lineNum">     346</span>                 :             : {</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             : public:</span>
+<span id="L348"><span class="lineNum">     348</span>                 :             :   ASIO_DECL invalid_service_owner();</span>
+<span id="L349"><span class="lineNum">     349</span>                 :             : };</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             : </span>
+<span id="L351"><span class="lineNum">     351</span>                 :             : namespace detail {</span>
+<span id="L352"><span class="lineNum">     352</span>                 :             : </span>
+<span id="L353"><span class="lineNum">     353</span>                 :             : // Special derived service id type to keep classes header-file only.</span>
+<span id="L354"><span class="lineNum">     354</span>                 :             : template &lt;typename Type&gt;</span>
+<span id="L355"><span class="lineNum">     355</span>                 :             : class service_id</span>
+<span id="L356"><span class="lineNum">     356</span>                 :             :   : public execution_context::id</span>
+<span id="L357"><span class="lineNum">     357</span>                 :             : {</span>
+<span id="L358"><span class="lineNum">     358</span>                 :             : };</span>
+<span id="L359"><span class="lineNum">     359</span>                 :             : </span>
+<span id="L360"><span class="lineNum">     360</span>                 :             : // Special service base class to keep classes header-file only.</span>
+<span id="L361"><span class="lineNum">     361</span>                 :             : template &lt;typename Type&gt;</span>
+<span id="L362"><span class="lineNum">     362</span>                 :             : class execution_context_service_base</span>
+<span id="L363"><span class="lineNum">     363</span>                 :             :   : public execution_context::service</span>
+<span id="L364"><span class="lineNum">     364</span>                 :             : {</span>
+<span id="L365"><span class="lineNum">     365</span>                 :             : public:</span>
+<span id="L366"><span class="lineNum">     366</span>                 :             :   static service_id&lt;Type&gt; id;</span>
+<span id="L367"><span class="lineNum">     367</span>                 :             : </span>
+<span id="L368"><span class="lineNum">     368</span>                 :             :   // Constructor.</span>
+<span id="L369"><span class="lineNum">     369</span>                 :             :   execution_context_service_base(execution_context&amp; e)</span>
+<span id="L370"><span class="lineNum">     370</span>                 :             :     : execution_context::service(e)</span>
+<span id="L371"><span class="lineNum">     371</span>                 :             :   {</span>
+<span id="L372"><span class="lineNum">     372</span>                 :             :   }</span>
+<span id="L373"><span class="lineNum">     373</span>                 :             : };</span>
+<span id="L374"><span class="lineNum">     374</span>                 :             : </span>
+<span id="L375"><span class="lineNum">     375</span>                 :             : template &lt;typename Type&gt;</span>
+<span id="L376"><span class="lineNum">     376</span>                 :             : service_id&lt;Type&gt; execution_context_service_base&lt;Type&gt;::id;</span>
+<span id="L377"><span class="lineNum">     377</span>                 :             : </span>
+<span id="L378"><span class="lineNum">     378</span>                 :             : } // namespace detail</span>
+<span id="L379"><span class="lineNum">     379</span>                 :             : } // namespace asio</span>
+<span id="L380"><span class="lineNum">     380</span>                 :             : </span>
+<span id="L381"><span class="lineNum">     381</span>                 :             : #include &quot;asio/detail/pop_options.hpp&quot;</span>
+<span id="L382"><span class="lineNum">     382</span>                 :             : </span>
+<span id="L383"><span class="lineNum">     383</span>                 :             : #include &quot;asio/impl/execution_context.hpp&quot;</span>
+<span id="L384"><span class="lineNum">     384</span>                 :             : #if defined(ASIO_HEADER_ONLY)</span>
+<span id="L385"><span class="lineNum">     385</span>                 :             : # include &quot;asio/impl/execution_context.ipp&quot;</span>
+<span id="L386"><span class="lineNum">     386</span>                 :             : #endif // defined(ASIO_HEADER_ONLY)</span>
+<span id="L387"><span class="lineNum">     387</span>                 :             : </span>
+<span id="L388"><span class="lineNum">     388</span>                 :             : #endif // ASIO_EXECUTION_CONTEXT_HPP</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.1-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

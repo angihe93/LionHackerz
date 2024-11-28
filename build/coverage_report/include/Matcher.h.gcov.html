@@ -1,0 +1,307 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverageN.info - include/Matcher.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory include">include</a> - Matcher.h<span style="font-size: 80%;"> (source / <a href="Matcher.h.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverageN.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntry">46</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2024-11-28 00:01:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">12</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">70</td>
+            <td class="headerCovTableEntry">35</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : // Copyright 2024 LionHackerz</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             : </span>
+<span id="L3"><span class="lineNum">       3</span>                 :             : /* Dallas Scott - ds4015 */</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             : /* Matcher Prototype */</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             : #ifndef MATCHER_H</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             : #define MATCHER_H</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             : </span>
+<span id="L8"><span class="lineNum">       8</span>                 :             : #include &lt;iostream&gt;</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             : #include &lt;list&gt;</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             : #include &lt;string&gt;</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             : #include &lt;map&gt;</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             : #include &lt;variant&gt;</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #include &lt;curl/curl.h&gt;</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #include &lt;wn.h&gt;</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #include &quot;Global.h&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &lt;string&gt;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &lt;mutex&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &lt;regex&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;cpp_redis/cpp_redis&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;Database.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;nlohmann/json.hpp&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : </span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : /* struct for holding a listing match */</span>
+<span id="L24"><span class="lineNum">      24</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC tlaBgGNC">          10 : struct JobMatch {</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 1 time"> + </span> 
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaGBC" title="Branch 12 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 13 was not taken"> - </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaGBC" title="Branch 16 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 17 was not taken"> - </span><span class="tlaGBC" title="Branch 18 was taken 1 time"> + </span> 
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 19 was not taken"> - </span><span class="tlaGBC" title="Branch 20 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 21 was not taken"> - </span><span class="tlaGBC" title="Branch 22 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 23 was not taken"> - </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 24 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 25 was not taken"> - </span><span class="tlaGBC" title="Branch 26 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 27 was not taken"> - </span><span class="tlaGBC" title="Branch 28 was taken 1 time"> + </span> 
+<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 29 was not taken"> - </span><span class="tlaUNC" title="Branch 30 was not taken"> - </span><span class="tlaGBC" title="Branch 31 was taken 1 time"> + </span>]
+<span id="L25"><span class="lineNum">      25</span>                 :             :     int listingId;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             :     int pay;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             :     int score;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             :     std::string company;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             :     std::string time_created;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     std::string field;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :     std::string position;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :     std::string description;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     std::string skill1;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :     std::string skill2;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     std::string skill3;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     std::string skill4;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     std::string skill5;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     std::string flex;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :     std::string modern;</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     std::string gender;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     std::string diversity;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     std::string remote;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     std::string personality;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     std::string location;</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :     std::string matchedWords;</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : </span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : nlohmann::json to_json() const {</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :             return {</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :                 {&quot;score&quot;, score},</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :                 {&quot;listing_id&quot;, listingId},</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :                 {&quot;company&quot;, company},</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :                 {&quot;time_created&quot;, time_created},</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :                 {&quot;field&quot;, field},</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :                 {&quot;position&quot;, position},</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :                 {&quot;description&quot;, description},</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :                 {&quot;skill1&quot;, skill1},</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :                 {&quot;skill2&quot;, skill2},</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :                 {&quot;skill3&quot;, skill3},</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :                 {&quot;skill4&quot;, skill4},</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :                 {&quot;skill5&quot;, skill5},</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :                 {&quot;pay&quot;, pay},</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :                 {&quot;flex&quot;, flex},</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :                 {&quot;modern&quot;, modern},</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :                 {&quot;gender&quot;, gender},</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :                 {&quot;diversity&quot;, diversity},</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :                 {&quot;remote&quot;, remote},</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :                 {&quot;personality&quot;, personality},</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :                 {&quot;location&quot;, location}</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :             };</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     }</span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">           4 :     void print() const {</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">           4 :         std::cout &lt;&lt; &quot;{ &quot;</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;listingId: &quot; &lt;&lt; listingId &lt;&lt; &quot;, &quot;</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;pay: &quot; &lt;&lt; pay &lt;&lt; &quot;, &quot;</span></span>
+<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;score: &quot; &lt;&lt; score &lt;&lt; &quot;, &quot;</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;company: \&quot;&quot; &lt;&lt; company &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;time_created: \&quot;&quot; &lt;&lt; time_created &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;field: \&quot;&quot; &lt;&lt; field &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;position: \&quot;&quot; &lt;&lt; position &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;description: \&quot;&quot; &lt;&lt; description &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;skill1: \&quot;&quot; &lt;&lt; skill1 &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;skill2: \&quot;&quot; &lt;&lt; skill2 &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;skill3: \&quot;&quot; &lt;&lt; skill3 &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;skill4: \&quot;&quot; &lt;&lt; skill4 &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;skill5: \&quot;&quot; &lt;&lt; skill5 &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;flex: \&quot;&quot; &lt;&lt; flex &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;modern: \&quot;&quot; &lt;&lt; modern &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;gender: \&quot;&quot; &lt;&lt; gender &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;diversity: \&quot;&quot; &lt;&lt; diversity &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;remote: \&quot;&quot; &lt;&lt; remote &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;personality: \&quot;&quot; &lt;&lt; personality &lt;&lt; &quot;\&quot;, &quot;</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot;location: \&quot;&quot; &lt;&lt; location &lt;&lt; &quot;\&quot;&quot;</span></span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">           4 :                   &lt;&lt; &quot; }&quot; &lt;&lt; std::endl;</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">           4 :     }</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">           2 :     bool operator==(const JobMatch&amp; other) const {</span></span>
+<span id="L96"><span class="lineNum">      96</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :         return listingId == other.listingId &amp;&amp;</span></span>
+<span id="L97"><span class="lineNum">      97</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                company == other.company &amp;&amp;</span></span>
+<span id="L98"><span class="lineNum">      98</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                description == other.description &amp;&amp;</span></span>
+<span id="L99"><span class="lineNum">      99</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                field == other.field &amp;&amp;</span></span>
+<span id="L100"><span class="lineNum">     100</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                position == other.position &amp;&amp;</span></span>
+<span id="L101"><span class="lineNum">     101</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                location == other.location &amp;&amp;</span></span>
+<span id="L102"><span class="lineNum">     102</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                pay == other.pay &amp;&amp;</span></span>
+<span id="L103"><span class="lineNum">     103</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                time_created == other.time_created &amp;&amp;</span></span>
+<span id="L104"><span class="lineNum">     104</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                skill1 == other.skill1 &amp;&amp;</span></span>
+<span id="L105"><span class="lineNum">     105</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                skill2 == other.skill2 &amp;&amp;</span></span>
+<span id="L106"><span class="lineNum">     106</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                skill3 == other.skill3 &amp;&amp;</span></span>
+<span id="L107"><span class="lineNum">     107</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                skill4 == other.skill4 &amp;&amp;</span></span>
+<span id="L108"><span class="lineNum">     108</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                skill5 == other.skill5 &amp;&amp;</span></span>
+<span id="L109"><span class="lineNum">     109</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                score == other.score &amp;&amp;</span></span>
+<span id="L110"><span class="lineNum">     110</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                remote == other.remote &amp;&amp;</span></span>
+<span id="L111"><span class="lineNum">     111</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                gender == other.gender &amp;&amp;</span></span>
+<span id="L112"><span class="lineNum">     112</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                diversity == other.diversity &amp;&amp;</span></span>
+<span id="L113"><span class="lineNum">     113</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                personality == other.personality &amp;&amp;</span></span>
+<span id="L114"><span class="lineNum">     114</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :                modern == other.modern &amp;&amp;</span></span>
+<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">           2 :                flex == other.flex;</span></span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :     }</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : </span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : };</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             : </span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : /* Matcher class for pairing job seekers with employers */</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             : </span>
+<span id="L122"><span class="lineNum">     122</span>                 :             : using JobListingMapVariantType = std::variant&lt;int, std::string, bool, std::vector&lt;std::string&gt;&gt;;</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             : </span>
+<span id="L124"><span class="lineNum">     124</span>                 :             : class Matcher</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             : {</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             : public:</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :     Matcher(Database &amp;db);</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : </span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :     /* This is the main call function for the Matcher class.  When</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :      * accessing the route to display matches in the browser, this</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :      * function will call all of the below functions in order to get</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :      * a set of matches and returns the results as a string to be</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :      * passed to the browser.  </span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :      * </span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :      * There is no need to call any of the other functions in this</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :      * class if you are just looking to return the listings.  At</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :      * present, this will give a list of listing IDs and their</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :      * corresponding match scores in descending order when called.</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :      * When the Listing class is created, more details can be</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :      * included. */</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :     std::vector&lt;JobMatch&gt; displayMatches(int uid, bool test);</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             : </span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :     /* If user has preferences for certain match criteria,</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :      * select those to apply augments to those dimensions.</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :      * stores the dimensions in list&lt;int&gt; dimensions by dim_id</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :      * and the corresponding augment values in list&lt;int&gt; augments.</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :      *</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :      *     @param uid: the given user id */</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :     std::vector&lt;std::vector&lt;std::string&gt; &gt; gatherRelevantDimensions(int uid);</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : </span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :     /* After populating dimensions with gatherRelevantDimensions(),</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :      * select all job listings and filter them by those which have</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :      * at least 75% of the user's preferred dimensions filled in.</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :      *</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :      * This eliminates listings where too many values were not</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :      * entered by the employer and hence what is most important</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :      * to the job seeker is not present in the listing.</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :      *</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :      *  Returns the list of filtered listings 'candidates' */</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :     std::vector&lt;int&gt; filterJobs(bool test);</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             : </span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :     /* After filtering jobs with filterJobs() to get candidates, the</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :      * match() function will calculate scores for each listing based on</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :      * the dimensions in the listing that match the dimensions in the</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :      * user's profile + additional augments for positive matches where</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :      * the user has specified.  These are stored in list&lt;int&gt; scores.</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :      *</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :      *      @param uid: the given user id to match on  */</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :     std::vector&lt;int&gt; match(int uid);</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             : </span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :     /* After populating matchs scores for each candidate with match(),</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :      * this function filters once again, this time by match score.</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :      * Any candidate that scores below 100 is remoted from the</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :      * match list. </span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     */</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :     std::vector&lt;std::vector&lt;int&gt;&gt; filterMatches();</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             : </span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :     /* With filtering finished, this function sorts the candidates,</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :      * their scores, and their matched words in descending order</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :      * (candidate with the largest score first).  The relative indices</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :      * of all 3 vectors are preserved after the sort (i.e., score in</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :      * index 1 corresponds to candidate in index 1). */</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     std::vector&lt;std::vector&lt;int&gt;&gt; sortMatches();</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : </span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     /* Retrieve the list of candidates */</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     std::vector&lt;int&gt; getCandidates();</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             : </span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     /* Retrieve the list of matched words for listing lid*/</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :     std::vector&lt;std::string&gt; getMatchedWords(int lid);</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : </span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     /* Helper functions for generating API's returned JSON objects*/</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     // TODO: deal with arrays of things later</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :     std::map&lt;std::string, std::variant&lt;std::string, std::vector&lt;std::map&lt;std::string, JobListingMapVariantType&gt;&gt;&gt;&gt; matchResponse(int uid);</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             : </span>
+<span id="L195"><span class="lineNum">     195</span>                 :             : private:</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :     Database *db;</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :     std::vector&lt;std::vector&lt;std::string&gt;&gt; all_listings;  /* all job listings in db */</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     std::vector&lt;std::string&gt; dimensions;  /* list of dimensions */</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :     std::vector&lt;int&gt; augments; /* user augments for certain dimenions */</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :     std::vector&lt;int&gt; candidates;  /* job listing candidates by listing id */</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :     std::vector&lt;int&gt; scores; /* scores for candidates (same indices as candidates) */</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :     std::vector&lt;std::vector&lt;std::string&gt;&gt; matchedWords; /* words that were matched for </span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :                                                             successful matches*/</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :     int payReq;</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :     std::mutex mutex_;</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             : </span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :     /* helper functions */</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :     void iterateList(std::vector&lt;std::string&gt; l); /* prints list */</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :     std::vector&lt;std::string&gt; tokenize(const std::string&amp; input); /* tokenize input */</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :     void iterateList(std::vector&lt;int&gt; l);         /* prints list */</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :     int binSearch(SynsetPtr s, int left, int right, char val); /* binary search for index */</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :     int wordMatchFound(std::string fieldU, std::string fieldE, int c);</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :                                                 /* matches words using WordNet synonyms */</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : };</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             : #endif</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.1-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
