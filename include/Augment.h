@@ -13,9 +13,9 @@ struct AugmentInput {
 };
 
 // Function to process and insert augmentations
-std::string processAugments(Database& db, int user_id, const std::vector<AugmentInput>& augments);
+std::string processAugments(Database *db, int user_id, const std::vector<AugmentInput>& augments);
 
 // Optional: Function to check if a dimension exists
-bool dimExists(Database& db, int dim_id);
+bool dimExists(Database *db, int dim_id);
 
 #endif // AUGMENT_H

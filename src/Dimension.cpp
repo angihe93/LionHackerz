@@ -1,3 +1,4 @@
+// Copyright 2024 LionHackerz
 #include "Dimension.h"
 #include <iostream>
 #include <stdexcept>

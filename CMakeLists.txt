@@ -75,11 +75,13 @@ include(GoogleTest)
    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
-#    test/EmployerUnitTests.cpp  // slow, turn off for now
+   test/EmployerUnitTests.cpp
+   test/DimensionUnitTests.cpp
+   # add user unit tests
    test/AuthUnitTests.cpp
    test/AuthIntegrationTests.cpp
    test/DatabaseIntegrationTests.cpp
-   test/DimensionUnitTests.cpp
+   test/MatcherUserDimensionIntegrationTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
@@ -154,7 +156,11 @@ if (CPPLINT)
         test/testMain.cpp
         test/EmployerUnitTests.cpp
         test/UserUnitTests.cpp
+        test/DimensionUnitTests.cpp
         test/AuthUnitTests.cpp
+        test/AuthIntegrationTests.cpp
+        test/DatabaseIntegrationTests.cpp
+        test/MatcherUserDimensionIntegrationTests.cpp
     )
 
     # Custom target to run cpplint

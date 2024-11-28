@@ -37,6 +37,12 @@ std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
         "Has_Augment", "dim_id,weight_mod", "id", "eq",
         std::to_string(uid), false, resCount);
 
+    // debug for MatcherUserDimensionIntegrationTests seg fault
+    // std::cout << "in gatherRelevantDimensions lists.empty(): " << lists.empty() << std::endl;
+    if (lists.empty()) {
+        return lists;
+    }
+
     /* sort query by increasing dim_id */
     std::vector<int> indices;
 
@@ -776,7 +782,6 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
 }
 
 /* Helper functions for generating API's returned JSON objects*/
-// TODO: deal with arrays of things later
 std::map<std::string, std::variant<std::string, std::vector<std::map<std::string,
                                                                      JobListingMapVariantType>>>>
 Matcher::matchResponse(int uid)
