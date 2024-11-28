@@ -5,11 +5,12 @@
 #include "Matcher.h"
 #include "RouteController.h"
 #include "Worker.h"
-#include <string>
-#include <iostream>
 #include <cpp_redis/cpp_redis>
+#include <iostream>
+#include <string>
 #include <cstdlib>
 #include "../external_libraries/Crow/include/crow.h"
+
 cpp_redis::client redis_client;
 
 /* redis task queue initialization */

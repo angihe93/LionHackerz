@@ -1,7 +1,9 @@
-#include <cpp_redis/cpp_redis>
+// Copyright 2024 LionHackerz
+
 #include "Worker.h"
-#include <iostream>
+#include <cpp_redis/cpp_redis>
 #include <chrono>
+#include <iostream>
 
 Worker::Worker(cpp_redis::client &redis, Matcher *matcher)
 	: redis_client(redis), m(matcher) {}

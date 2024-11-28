@@ -1030,7 +1030,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         // Process augmentations
         if (!augments.empty())
         {
-            std::string augment_result = processAugments(*db, user.id, augments);
+            std::string augment_result = processAugments(db, user.id, augments);
             std::cout << augment_result << std::endl;
         }
 
