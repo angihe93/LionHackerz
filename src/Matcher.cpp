@@ -35,6 +35,12 @@ std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
                         "Has_Augment", "dim_id,weight_mod", "id", "eq",
                         std::to_string(uid), false, resCount);
 
+    // debug for MatcherUserDimensionIntegrationTests seg fault
+    // std::cout << "in gatherRelevantDimensions lists.empty(): " << lists.empty() << std::endl;
+    if (lists.empty()) {
+        return lists;
+    }
+
     /* sort query by increasing dim_id */
     std::vector<int> indices;
 
