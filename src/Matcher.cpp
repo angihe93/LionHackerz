@@ -782,7 +782,6 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
 }
 
 /* Helper functions for generating API's returned JSON objects*/
-// TODO: deal with arrays of things later
 std::map<std::string, std::variant<std::string, std::vector<std::map<std::string,
                                                                      JobListingMapVariantType>>>>
 Matcher::matchResponse(int uid)

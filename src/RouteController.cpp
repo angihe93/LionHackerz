@@ -125,8 +125,7 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
         res.end();
         delete a;
         return;
-    }
-    else if (role == "matching_platform") {
+    } else if (role == "matching_platform") {
    
         // gen api key
         std::string retStr = a->genAPIKey(role, uid);
@@ -1010,7 +1009,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         // Process augmentations
         if (!augments.empty())
         {
-            std::string augment_result = processAugments(*db, user.id, augments);
+            std::string augment_result = processAugments(db, user.id, augments);
             std::cout << augment_result << std::endl;
         }
 

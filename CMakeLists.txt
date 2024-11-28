@@ -155,6 +155,9 @@ if (CPPLINT)
         test/EmployerUnitTests.cpp
         test/UserUnitTests.cpp
         test/AuthUnitTests.cpp
+        test/AuthIntegrationTests.cpp
+        test/DatabaseIntegrationTests.cpp
+        test/MatcherUserDimensionIntegrationTests.cpp
     )
 
     # Custom target to run cpplint
