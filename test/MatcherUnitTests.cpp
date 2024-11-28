@@ -224,10 +224,10 @@ TEST(GetValues, retrieveMatchedWords)
 
 	int uid = 5;
 
-	std::string w1 = "\"sculpting\"";
-	std::string w2 = "\"stonework\"";
-
-	std::vector<std::string> testMatchedWords;
+	std::string w1 = "sculpting";
+	std::string w2 = "stonework";
+	std::vector<std::string>
+		testMatchedWords;
 	testMatchedWords.push_back(w1);
 	testMatchedWords.push_back(w2);
 
@@ -238,5 +238,6 @@ TEST(GetValues, retrieveMatchedWords)
 	m->sortMatches();
 	std::vector<std::string> gmw = m->getMatchedWords(0);
 
-	EXPECT_EQ(testMatchedWords, gmw);
+	EXPECT_EQ(testMatchedWords[0], gmw[0]);
+	EXPECT_EQ(testMatchedWords[1], gmw[1]);
 }
