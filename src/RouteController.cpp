@@ -51,27 +51,27 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
 
     const auto &auth_header = req.get_header_value("Authorization");
     if (auth_header.empty())
-        {
-            res.code = 400;
-            jsonRes["error"]["code"] = res.code;
-            jsonRes["error"]["message"] = "No Authorization header found, it is required to proceed";
-            res.write(jsonRes.dump());
-            res.end();
-            return;
-        }
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "No Authorization header found, it is required to proceed";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
 
     Auth *a = new Auth(*db);
     auto [username, password] = a->decodeBasicAuth(auth_header);
     if (username == "" || password == "")
-        {
-            res.code = 400;
-            jsonRes["error"]["code"] = res.code;
-            jsonRes["error"]["message"] = "Invalid credentials";
-            res.write(jsonRes.dump());
-            res.end();
-            delete a;
-            return;
-        }
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "Invalid credentials";
+        res.write(jsonRes.dump());
+        res.end();
+        delete a;
+        return;
+    }
 
     // if username email not in API_User table yet, add it and get the created user id
     int uid = a->createAPIUser(username, password);
@@ -92,8 +92,12 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
         // check in database if this is admin, if so, issue admin api key
         int resCount = 0;
         std::vector<std::vector<std::string>> queryRes = db->query("Admin", "*", "username", "eq", username, "password", "eq", password, false, resCount);
+        std::cout << "test0" << std::endl;
+
         if (resCount == 0)
         {
+            std::cout << "test1" << std::endl;
+
             res.code = 400;
             jsonRes["error"]["code"] = res.code;
             jsonRes["error"]["message"] = "Wrong username or password";
@@ -102,13 +106,18 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
             delete a;
             return;
         }
-
+        std::cout << "test2" << std::endl;
         // gen api key
         std::string retStr = a->genAPIKey(role, uid);
+        std::cout << "test3" << std::endl;
 
         size_t id_pos = retStr.find("Error:");
+        std::cout << "test4" << std::endl;
+
         if (id_pos != std::string::npos)
         { // error
+            std::cout << "test5" << std::endl;
+
             std::cout << retStr << std::endl;
             res.code = 500;
             jsonRes["error"]["code"] = res.code;
@@ -118,6 +127,7 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
             delete a;
             return;
         }
+        std::cout << "test6" << std::endl;
 
         res.code = 201;
         jsonRes["data"]["apikey"] = retStr;
@@ -126,8 +136,9 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
         delete a;
         return;
     }
-    else if (role == "matching_platform") {
-   
+    else if (role == "matching_platform")
+    {
+
         // gen api key
         std::string retStr = a->genAPIKey(role, uid);
 
@@ -150,7 +161,6 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
         res.end();
         delete a;
         return;
-
     }
     else
     {
@@ -166,7 +176,7 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
 
 bool RouteController::checkAuthHeaders(const crow::request &req, crow::response &res)
 {
-const auto &auth_header = req.get_header_value("Authorization");
+    const auto &auth_header = req.get_header_value("Authorization");
     if (auth_header.empty())
     {
         crow::json::wvalue error;
@@ -207,10 +217,11 @@ const auto &auth_header = req.get_header_value("Authorization");
         delete a;
         return false;
     }
-    
+
     std::string role = a->getRole(aid);
     std::cout << "in checkAuthHeaders role: " << role << std::endl;
-    if (role != "admin" && role != "matching_platform") {
+    if (role != "admin" && role != "matching_platform")
+    {
         crow::json::wvalue error;
         res.code = 400;
         error["error"]["code"] = res.code;
@@ -233,10 +244,11 @@ void RouteController::setDatabase(Database *db)
 
 void RouteController::getMatches(const crow::request &req, crow::response &res)
 {
-    if (!checkAuthHeaders(req, res)) {
+    if (!checkAuthHeaders(req, res))
+    {
         return; // response has already been written in checkApiHeaders
     }
-    
+
     res.add_header("Content-Type", "application/json");
 
     auto params = crow::query_string(req.url_params);
@@ -362,7 +374,8 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
 
 void RouteController::getMatchesJSON(const crow::request &req, crow::response &res)
 {
-    if (!checkAuthHeaders(req, res)) {
+    if (!checkAuthHeaders(req, res))
+    {
         return; // response has already been written in checkApiHeaders
     }
 
@@ -502,7 +515,8 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
 
 void RouteController::changeField(const crow::request &req, crow::response &res)
 {
-    if (!checkAuthHeaders(req, res)) {
+    if (!checkAuthHeaders(req, res))
+    {
         return; // response has already been written in checkApiHeaders
     }
 
@@ -552,7 +566,8 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
 
 void RouteController::changePosition(const crow::request &req, crow::response &res)
 {
-    if (!checkAuthHeaders(req, res)) {
+    if (!checkAuthHeaders(req, res))
+    {
         return; // response has already been written in checkApiHeaders
     }
 
@@ -602,7 +617,8 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
 
 void RouteController::changeJobDescription(const crow::request &req, crow::response &res)
 {
-    if (!checkAuthHeaders(req, res)) {
+    if (!checkAuthHeaders(req, res))
+    {
         return; // response has already been written in checkApiHeaders
     }
 
@@ -711,7 +727,8 @@ void RouteController::generateAIListing(const crow::request &req, crow::response
 
 void RouteController::changeFlex(const crow::request &req, crow::response &res)
 {
-    if (!checkAuthHeaders(req, res)) {
+    if (!checkAuthHeaders(req, res))
+    {
         return; // response has already been written in checkApiHeaders
     }
 
@@ -763,7 +780,8 @@ void RouteController::changeFlex(const crow::request &req, crow::response &res)
 
 void RouteController::changeModernWorkspace(const crow::request &req, crow::response &res)
 {
-    if (!checkAuthHeaders(req, res)) {
+    if (!checkAuthHeaders(req, res))
+    {
         return; // response has already been written in checkApiHeaders
     }
     auto params = crow::query_string(req.url_params);
@@ -814,7 +832,8 @@ void RouteController::changeModernWorkspace(const crow::request &req, crow::resp
 
 void RouteController::dbtest(const crow::request &req, crow::response &res)
 {
-    if (!checkAuthHeaders(req, res)) {
+    if (!checkAuthHeaders(req, res))
+    {
         return; // response has already been written in checkApiHeaders
     }
 
@@ -890,7 +909,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
 {
     try
     {
-        if (!checkAuthHeaders(req, res)) {
+        if (!checkAuthHeaders(req, res))
+        {
             return; // response has already been written in checkApiHeaders
         }
 
