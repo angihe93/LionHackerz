@@ -1,0 +1,24 @@
+[100%] Running cpplint for Google C++ Style Guide compliance
+Done processing src/Augment.cpp
+Done processing src/Auth.cpp
+Done processing src/Database.cpp
+Done processing src/Dimension.cpp
+Done processing src/Employer.cpp
+Done processing src/Listing.cpp
+Done processing src/Matcher.cpp
+Done processing src/RouteController.cpp
+Done processing src/User.cpp
+Done processing src/Worker.cpp
+Done processing src/main.cpp
+Done processing test/AuthIntegrationTests.cpp
+Done processing test/AuthUnitTests.cpp
+Done processing test/DatabaseIntegrationTests.cpp
+Done processing test/DatabaseUnitTests.cpp
+Done processing test/DimensionUnitTests.cpp
+Done processing test/EmployerUnitTests.cpp
+Done processing test/ListingUnitTests.cpp
+Done processing test/MatcherUnitTests.cpp
+Done processing test/MatcherUserDimensionIntegrationTests.cpp
+Done processing test/UserUnitTests.cpp
+Done processing test/testMain.cpp
+[100%] Built target cpplint
