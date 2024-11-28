@@ -288,7 +288,7 @@ public:
          * @param lid   The listing id of the listing
          * @return true if the listing was deleted successfully, false otherwise
          */
-        bool deleteListing(int eid, int lid);
+        bool deleteListing(int eid, int lid, int &resCode);
 
         /**
          * Allows an employer to change the pay for a listing.
@@ -298,7 +298,7 @@ public:
          * @param newPay   The new pay for the listing
          * @return true if the pay was updated successfully, false otherwise
          */
-        bool changePay(int eid, int lid, int64_t newPay);
+        bool changePay(int eid, int lid, int64_t newPay, int &resCode);
 
         /**
          * Allows an employer to update the skill requirements for a listing.
@@ -308,7 +308,7 @@ public:
          * @param newSkills   A map of skill fields (e.g., skill1_req to skill5_req) and their new values
          * @return true if the skills were updated successfully, false otherwise
          */
-        bool changeSkillRequirements(int eid, int lid, std::map<std::string, std::string> newSkills);
+        bool changeSkillRequirements(int eid, int lid, std::map<std::string, std::string> newSkills, int &resCode);
 
         /**
          * Allows an employer to update the personality type requirements for a listing.
@@ -318,7 +318,7 @@ public:
          * @param newPersonalityTypes   The new personality type requirements for the listing
          * @return true if the personality types were updated successfully, false otherwise
          */
-        bool changePersonalityTypes(int eid, int lid, std::string newPersonalityTypes);
+        bool changePersonalityTypes(int eid, int lid, std::string newPersonalityTypes, int &resCode);
 
 private:
         Database *db;

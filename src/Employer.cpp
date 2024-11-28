@@ -577,3 +577,164 @@ int Employer::createEmployer(std::string company_name, std::string size)
         std::cout << "return eid: " << eid << std::endl;
         return eid;
 }
+/**
+ * Allows an employer to delete a listing they own.
+ *
+ * @param eid   The employer id of the employer
+ * @param lid   The listing id of the listing
+ * @param resCode Reference to an integer to store the result code
+ * @return true if the listing was deleted successfully, false otherwise
+ */
+bool Employer::deleteListing(int eid, int lid, int &resCode)
+{
+        // Check if the employer owns the listing
+        bool hasListing = checkHasListing(eid, lid);
+        if (!hasListing)
+        {
+                std::cout << "Error: The listing ID " << lid << " is not associated with employer ID " << eid << "." << std::endl;
+                resCode = 404; // Not Found
+                return false;
+        }
+
+        // Create a Listing object
+        Listing *l = new Listing(*db);
+
+        // Perform the delete operation
+        std::string res = l->deleteListing(lid, resCode);
+
+        // Clean up
+        delete l;
+
+        // Check if the operation was successful
+        if (res.find("Error:") != std::string::npos)
+        {
+                std::cout << res << std::endl;
+                return false;
+        }
+
+        // Optionally, log success
+        std::cout << "Listing ID " << lid << " deleted successfully." << std::endl;
+        return true;
+}
+/**
+ * Allows an employer to change the pay for a listing.
+ *
+ * @param eid      The employer id of the employer
+ * @param lid      The listing id of the listing
+ * @param newPay   The new pay for the listing
+ * @param resCode  Reference to an integer to store the result code
+ * @return true if the pay was updated successfully, false otherwise
+ */
+bool Employer::changePay(int eid, int lid, int64_t newPay, int &resCode)
+{
+        // Check if the employer owns the listing
+        bool hasListing = checkHasListing(eid, lid);
+        if (!hasListing)
+        {
+                std::cout << "Error: The listing ID " << lid << " is not associated with employer ID " << eid << "." << std::endl;
+                resCode = 404; // Not Found
+                return false;
+        }
+
+        // Create a Listing object
+        Listing *l = new Listing(*db);
+
+        // Perform the pay update
+        std::string res = l->changePay(lid, newPay, resCode);
+
+        // Clean up
+        delete l;
+
+        // Check if the operation was successful
+        if (res.find("Error:") != std::string::npos)
+        {
+                std::cout << res << std::endl;
+                return false;
+        }
+
+        // Optionally, log success
+        std::cout << "Pay updated successfully for listing ID " << lid << "." << std::endl;
+        return true;
+}
+
+/**
+ * Allows an employer to update the skill requirements for a listing.
+ *
+ * @param eid        The employer id of the employer
+ * @param lid        The listing id of the listing
+ * @param newSkills  A map of skill fields (e.g., skill1_req to skill5_req) and their new values
+ * @param resCode    Reference to an integer to store the result code
+ * @return true if the skills were updated successfully, false otherwise
+ */
+bool Employer::changeSkillRequirements(int eid, int lid, std::map<std::string, std::string> newSkills, int &resCode)
+{
+        // Check if the employer owns the listing
+        bool hasListing = checkHasListing(eid, lid);
+        if (!hasListing)
+        {
+                std::cout << "Error: The listing ID " << lid << " is not associated with employer ID " << eid << "." << std::endl;
+                resCode = 404; // Not Found
+                return false;
+        }
+
+        // Create a Listing object
+        Listing *l = new Listing(*db);
+
+        // Perform the skill requirements update
+        std::string res = l->changeSkillRequirements(lid, newSkills, resCode);
+
+        // Clean up
+        delete l;
+
+        // Check if the operation was successful
+        if (res.find("Error:") != std::string::npos)
+        {
+                std::cout << res << std::endl;
+                return false;
+        }
+
+        // Optionally, log success
+        std::cout << "Skill requirements updated successfully for listing ID " << lid << "." << std::endl;
+        return true;
+}
+
+/**
+ * Allows an employer to update the personality type requirements for a listing.
+ *
+ * @param eid                  The employer id of the employer
+ * @param lid                  The listing id of the listing
+ * @param newPersonalityTypes  The new personality type requirements for the listing
+ * @param resCode              Reference to an integer to store the result code
+ * @return true if the personality types were updated successfully, false otherwise
+ */
+bool Employer::changePersonalityTypes(int eid, int lid, std::string newPersonalityTypes, int &resCode)
+{
+        // Check if the employer owns the listing
+        bool hasListing = checkHasListing(eid, lid);
+        if (!hasListing)
+        {
+                std::cout << "Error: The listing ID " << lid << " is not associated with employer ID " << eid << "." << std::endl;
+                resCode = 404; // Not Found
+                return false;
+        }
+
+        // Create a Listing object
+        Listing *l = new Listing(*db);
+
+        // Perform the personality types update
+        std::string res = l->changePersonalityTypes(lid, newPersonalityTypes, resCode);
+
+        // Clean up
+        delete l;
+
+        // Check if the operation was successful
+        if (res.find("Error:") != std::string::npos)
+        {
+                std::cout << res << std::endl;
+                return false;
+        }
+
+        // Optionally, log success
+        std::cout << "Personality types updated successfully for listing ID " << lid << "." << std::endl;
+        return true;
+}

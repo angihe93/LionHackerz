@@ -622,7 +622,7 @@ int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::ma
 }
 
 // PETER ADDED
-bool Listing::deleteListing(int lid, int &resCode)
+std::string Listing::deleteListing(int lid, int &resCode)
 {
 
 	// Initialize result count
@@ -634,12 +634,12 @@ bool Listing::deleteListing(int lid, int &resCode)
 	if (resCount == 0)
 	{
 		resCode = 404;
-		return false;
+		return "Error: The listing ID you provided does not exist in the database.";
 	}
 
-	db->deleteRecord("Listing", "lid", "eq", std::to_string(lid));
+	std::string res = db->deleteRecord("Listing", "lid", "eq", std::to_string(lid));
 	resCode = 200;
-	return true;
+	return res;
 }
 std::string Listing::changePay(int lid, int64_t newPay, int &resCode)
 {

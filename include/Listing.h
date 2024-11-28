@@ -188,7 +188,7 @@ public:
 	 * @param lid   The listing id of the listing to delete
 	 * @return true if the listing was deleted successfully, false otherwise
 	 */
-	bool deleteListing(int lid, int &resCode);
+	std::string deleteListing(int lid, int &resCode);
 
 	/**
 	 * Updates the pay for a job listing.
