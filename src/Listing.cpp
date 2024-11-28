@@ -322,9 +322,9 @@ std::vector<std::string> Listing::getListing(int lid, bool test)
 	}
 	else
 	{
-		listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
-		eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-		company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
+		listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), true, resCount);
+		eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), true, resCount);
+		company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], true, resCount);
 
 		std::ostringstream oss;
 

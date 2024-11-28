@@ -389,7 +389,7 @@ bool Employer::changeFieldAll(int eid, std::string newField)
 
         for (int i = 0; i < listings[0].size(); i++)
         {
-                std::cout << "listings[0][i] for eid: " << listings[0][i] << std::endl;
+                // std::cout << "listings[0][i] for eid: " << listings[0][i] << std::endl;
                 res &= changeField(eid, std::stoi(listings[0][i]), newField);
         }
 
@@ -410,7 +410,7 @@ bool Employer::changePositionAll(int eid, std::string newPosition)
         bool res = true;
         for (int i = 0; i < listings[0].size(); i++)
         {
-                std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
+                // std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
                 res &= changePosition(eid, std::stoi(listings[0][i]), newPosition);
         }
 
@@ -430,7 +430,7 @@ bool Employer::changeFlexAll(int eid, bool newFlex, int &resCode)
         bool res = true;
         for (int i = 0; i < listings[0].size(); i++)
         {
-                std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
+                // std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
                 int lid = std::stoi(listings[0][i]);
                 res &= changeFlex(eid, lid, newFlex, resCode);
         }
@@ -451,7 +451,7 @@ bool Employer::changeModernWorkspaceAll(int eid, bool newValue, int &resCode)
         bool res = true;
         for (int i = 0; i < listings[0].size(); i++)
         {
-                std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
+                // std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
                 int lid = std::stoi(listings[0][i]);
                 res &= changeModernWorkspace(eid, lid, newValue, resCode);
         }
@@ -472,7 +472,7 @@ bool Employer::changeGenderAll(int eid, bool newValue, int &resCode)
         bool res = true;
         for (int i = 0; i < listings[0].size(); i++)
         {
-                std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
+                // std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
                 int lid = std::stoi(listings[0][i]);
                 res &= changeGender(eid, lid, newValue, resCode);
         }
@@ -493,7 +493,7 @@ bool Employer::changeDiversityAll(int eid, bool newValue, int &resCode)
         bool res = true;
         for (int i = 0; i < listings[0].size(); i++)
         {
-                std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
+                // std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
                 int lid = std::stoi(listings[0][i]);
                 res &= changeDiversity(eid, lid, newValue, resCode);
         }
@@ -514,7 +514,7 @@ bool Employer::changeRemoteAll(int eid, bool newValue, int &resCode)
         bool res = true;
         for (int i = 0; i < listings[0].size(); i++)
         {
-                std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
+                // std::cout << "listings[0][i] for lid: " << listings[0][i] << std::endl;
                 int lid = std::stoi(listings[0][i]);
                 res &= changeRemote(eid, lid, newValue, resCode);
         }

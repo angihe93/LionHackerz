@@ -16,6 +16,43 @@ Auth::Auth(Database &db)
 	this->db = &db;
 }
 
+int Auth::createAPIUser(std::string email, std::string password) {
+        
+        // invalid enail or password
+        if (email.empty() || password.empty()) {
+                std::cout << "Error: Email or password is empty" << std::endl;
+                return -1;
+        }
+        // check email doesn't already exist
+        int resCount = 0;
+        std::vector<std::vector<std::string>> queryRes = db->query("API_User", "", "email", "eq", email, false, resCount);
+        if (resCount > 0) {
+                int uid = std::stoi(queryRes[0][0]);
+                std::cout << "Email already exists" << std::endl;
+                return uid;
+        }
+
+        std::string data = "{\"email\": \"" + email + "\", \"password\": \"" + password + "\"}";
+        std::string res = db->insert("API_User", data);
+        size_t id_pos = res.find("Error:");
+        if (id_pos != std::string::npos) {
+                std::cout << res << std::endl;
+                return -1;
+        }
+        std::cout << "insertRes: " << res << std::endl;
+
+        queryRes = db->query("API_User", "id", "email", "eq", email, false, resCount);
+        if (resCount == 0) {
+                std::cout << "Error inserting to API_User" << std::endl;
+                return -1;
+        }
+
+        // get user id
+        int uid = std::stoi(queryRes[0][0]);
+ 
+        return uid;
+}
+
 std::string Auth::generateRandomHex(int length) {
         unsigned char buffer[length];
         
@@ -32,20 +69,6 @@ std::string Auth::generateRandomHex(int length) {
         
         return hexStream.str();
 }
-
-// std::string Auth::escapeJson(const std::string& input) {
-//     std::string output;
-//     for (char c : input) {
-//         if (c == '\"') {
-//             output += "\\\"";
-//         } else if (c == '\\') {
-//             output += "\\\\";
-//         } else {
-//             output += c;
-//         }
-//     }
-//     return output;
-// }
 
 std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& auth) {
         if (auth.substr(0, 6) != "Basic ") {
@@ -70,23 +93,88 @@ std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& aut
         return {username, password};
 }
 
-std::string Auth::genAPIKey(std::string role) {
+std::string Auth::genAPIKey(std::string role, int uid) {
 
         std::cout << "in Auth::genAPIKey" << std::endl;
 
-        if (role != "admin") {
-                std::cout << "Error: Roles other than admin are not yet implemented" << std::endl;
-                return "Error: Roles other than admin are not yet implemented";
-                // return "";
+        if (role != "admin" && role != "matching_platform") {
+                std::cout << "Error: Roles other than admin and matching_platform are not yet implemented" << std::endl;
+                return "Error: Roles other than admin and matching_platform are not yet implemented";
+        }
+
+        int resCount = 0;
+        std::vector<std::vector<std::string>> queryRes = db->query("API_User", "", "id", "eq", std::to_string(uid), false, resCount);
+        if (resCount == 0) {
+                std::cout << "Error: API user with uid does not exist" << std::endl;
+                return "Error: API user with uid does not exist, please create a user first";
         }
 
         std::string apikey = generateRandomHex(32);
-        // std::string data = "{\"apikey\": \"" + escapeJson(apikey) + "\", \"permission\": \"" + escapeJson(role) + "\"}";
-        std::string data = "{\"apikey\": \"" + apikey + "\", \"permission\": \"" + role + "\"}";
+        std::string data = "{\"apikey\": \"" + apikey + "\", \"role\": \"" + role + "\", \"uid\": \"" + std::to_string(uid) +"\"}";
 
         std::string insertRes = db->insert("Authentication",data);
         std::cout << "insertRes: " << insertRes << std::endl;
 
+        if (insertRes.find("Error:") != std::string::npos) {
+                std::cout << "Error inserting to Authentication" << std::endl;
+                return "Error inserting to Authentication";
+        }
+
         return apikey;
 
+}
+
+int Auth::getAid(std::string apiKey) {
+        if (apiKey.empty()) {
+                return -1; 
+        }
+        int resCount = 0;
+        // std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,apikey", "apikey", "eq", apiKey, true, resCount);
+        // apiKey = "\'" + apiKey + "\'";
+        std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,apikey", "apikey", "eq", apiKey, true, resCount);
+        std::cout << "in getAid, resCount: " << resCount << std::endl;
+        if (resCount == 0) {
+                std::cout << "Error: API key does not exist, please check the input" << std::endl;
+                return -1;
+        }
+        int aid = std::stoi(queryRes[0][0]);
+        // // strange bug in db->query, it returns all rows for every apikey eq
+        // // add additional check to make sure the apikey matches
+        // int aid = -1;
+        // for (int i = 0; i < resCount; i++) {
+        //         std::cout << "queryRes[1][i]: " << queryRes[1][i] << std::endl;
+        //         if (queryRes[1][i] == apiKey) {
+        //                 std::cout << "queryRes[1][i] == apiKey" << std::endl;
+        //                 aid = std::stoi(queryRes[0][i]);
+        //                 break;
+        //         }
+        // }
+
+        return aid;
+}
+
+            
+std::string Auth::getRole(int aid) {
+        int resCount = 0;
+        std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "role", "aid", "eq", std::to_string(aid), false, resCount);
+        if (resCount == 0) {
+                std::cout << "Error: aid does not exist, please check the input" << std::endl;
+                return "Error: aid does not exist, please check the input";
+        }
+        std::string role = queryRes[0][0];
+
+        // remove leading and trailing quotation marks
+        if (!role.empty() && role.front() == '\"') {
+                role.erase(0, 1);
+        }
+        if (!role.empty() && role.back() == '\"') {
+                role.erase(role.size() - 1);
+        }
+        // remove backslashes
+        size_t pos = 0;
+        while ((pos = role.find("\\\"", pos)) != std::string::npos) {
+                role.replace(pos, 2, "\"");
+                pos += 1; // Move past the replaced character
+        }
+        return role;
 }

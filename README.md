@@ -4,9 +4,9 @@ Our project tasks/to-do lists and completion can be found on Trello at:
 
 	https://trello.com/b/tavRkgxR/job-matching-api
 
- A deployed version can be found on the Google Cloud Platform at:
+ A deployed version (running app) can be found on the Google Cloud Platform at:
  	
-  	http://34.16.13.147:18080
+  	http://34.69.114.32/
 
 A demoable app/client can be found in the following repo:
 
@@ -73,11 +73,17 @@ This should complete the WordNet library installation.
 NEW (11/25/2024):
 
 This API makes use of cpp_redis for task queueing instances of the job matcher.  To install, follow the instructions
-found here:
+found below.  Even though cpp_redis contains tacopie, it may be better to install tacopie first on its own before cpp_redis
+to avoid errors:
+
+	https://github.com/Cylix/tacopie/wiki/Installation
+
+After that, you can install cpp_redis:
 
 	https://github.com/cpp-redis/cpp_redis/wiki/Installation
 
-If you run into errors, try installing tacopie first:
+If you run into errors about EXPORT(tacopie...), you can ignore if you've instlled tacopie first
+and just run make followed by sudo make install.  It should still install this way. 
 
 	git clone https://github.com/cylix/tacopie.git
  	cd tacopie
@@ -86,7 +92,22 @@ If you run into errors, try installing tacopie first:
   	make
    	sudo make install
 
-Once that is installed, follow the instructions above for installing cpp_redis again.
+If you run into an error about ::client::connect, simply remove the "::client" part of the main redis
+connection function in the API sourece files main.cpp and test/testMain.cpp and it should work.
+
+cpp_redis makes use of the nlohmann json package.  It can be installed on macOS with:
+
+	brew intall nlohmann-json
+
+For other platforms, see:
+
+	https://github.com/nlohmann/json
+
+When building the service in /build, if you get error such as "terminating due to uncaught exception of type cpp_redis::redis_error: connect() failure", then make sure redis is installed and running:
+
+`brew install redis`
+
+`brew services start redis`
 
 NEW:
 
@@ -166,6 +187,39 @@ POST /makeUser
 Postman tests for these routes can be found on our Trello board located here:
 
     https://trello.com/c/2X1naGF8/29-postman-tests-export
+
+### User Creation
+
+The user is created using a JSON request to the /makeUser endpoint. The request body will need to have a name and email. The request needs to have a "dimensions" parameter, which contains the information about the user's desired pay, field, gender, etc. The user may or may not indicate their skills and interests, and they may or may not include information about their "augments" which specifies how important certain things like location, pay, etc for a job is to a user and this will be used in the matching algorithm.
+
+Sample Request:
+{
+  "name": "SampleUser",
+  "email": "sampleuser@email.com",
+  "dimensions": {
+    "loc": "New York",
+    "field": "Software Engineering",
+    "pay": 120000,
+    "gender": true,
+    "diversity": true,
+    "mbti": "INTJ",
+    "flexibility": true,
+    "remote": true,
+    "workspace": false
+  },
+  "skills": [
+    { "name": "python" }
+  ],
+  "interests": [
+    { "name": "drawing", "rank": 3 },
+    { "name": "software development", "rank": 5 }
+  ],
+  "augments": [
+    { "dim_id": "1", "importance": "very" },
+    { "dim_id": "2", "importance": "somewhat" }
+  ]
+}
+
 
 # Database Queries - For Team Members in Designing your Classes
 

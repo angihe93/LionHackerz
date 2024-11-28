@@ -186,6 +186,7 @@ public:
     bool skillExists(const std::string &skillName);
     bool interestExists(const std::string &interestName);
     std::string escapeString(const std::string &input);
+    std::string urlEncode(const std::string &value);
 
 private:
     std::string openai_api_key;
