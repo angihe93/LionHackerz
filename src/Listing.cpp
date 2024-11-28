@@ -620,3 +620,99 @@ int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::ma
 
 	return -1;
 }
+
+// PETER ADDED
+std::string Listing::deleteListing(int lid, int &resCode)
+{
+
+	// Initialize result count
+	int resCount = 0;
+
+	// Query the listing to check if it exists
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string res = db->deleteRecord("Listing", "lid", "eq", std::to_string(lid));
+	resCode = 200;
+	return res;
+}
+std::string Listing::changePay(int lid, int64_t newPay, int &resCode)
+{
+	// Initialize result count
+	int resCount = 0;
+
+	// Query the listing to check if it exists
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string newPayStr = std::to_string(newPay);
+	std::string setVal = R"({"pay" : )" + newPayStr + "}";
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,remote_available", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+std::string Listing::changeSkillRequirements(int lid, std::map<std::string, std::string> newSkills, int &resCode)
+{
+	// Initialize result count
+	int resCount = 0;
+
+	// Query the listing to check if it exists
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+	// loop through length of newSkills and update each skill
+	// udpate all the skills at once
+
+	std::string setVal = "";
+	// newSkils length var
+	int newSkillsLength = newSkills.size();
+	for (int i = 0; i < newSkillsLength; i++)
+	{
+		std::string skill = newSkills[std::to_string(i)];
+		std::string setVal = R"({"skill)" + std::to_string(i + 1) + R"(_req" : ")" + skill + "\"}";
+		db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	}
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,remote_available", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}
+std::string Listing::changePersonalityTypes(int lid, std::string newPersonalityTypes, int &resCode)
+{
+	// Initialize result count
+	int resCount = 0;
+
+	// Query the listing to check if it exists
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	// Create JSON data for updating personality types
+	std::string data = "{\"personality_types\": \"" + newPersonalityTypes + "\"}";
+	std::cout << data << std::endl;
+	// Perform the update operation
+	db->update("Listing", data, "lid", "eq", std::to_string(lid));
+
+	std::vector<std::vector<std::string>> result = db->query("Listing", "lid,remote_available", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[1][0];
+}

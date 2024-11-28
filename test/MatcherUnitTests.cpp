@@ -46,11 +46,11 @@ TEST(FilterListings, discardTooManyNull)
 	int uid = 5;
 
 	std::vector<int> candidates;
-	for (int i = 1; i < 7; i++) {
+	for (int i = 1; i < 7; i++)
+	{
 		if (i != 3)
 			candidates.push_back(i);
 	}
-
 
 	std::vector<std::vector<std::string>> dimensions;
 	dimensions.push_back(m->gatherRelevantDimensions(uid)[0]);
@@ -71,7 +71,7 @@ TEST(FilterListings, calculateScores)
 	std::vector<int> scores;
 	scores.push_back(0);
 	scores.push_back(200);
-	scores.push_back(995);		
+	scores.push_back(995);
 	scores.push_back(995);
 	scores.push_back(1045);
 
@@ -189,7 +189,7 @@ TEST(Display, displayMatches)
 	match1.print();
 
 	matchList.push_back(match1);
-	
+
 	EXPECT_EQ(match1, display[0]);
 }
 
@@ -202,7 +202,7 @@ TEST(GetValues, retrieveCandidates)
 
 	int uid = 5;
 
-	std::vector<int> testCandidates;	
+	std::vector<int> testCandidates;
 	testCandidates.push_back(1);
 	testCandidates.push_back(2);
 	testCandidates.push_back(4);
