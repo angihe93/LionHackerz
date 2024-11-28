@@ -9,18 +9,19 @@
 // use MockDatabase for testing
 
 /* tests Employer::checkHasListing() function in Employer.cpp */
-TEST(EmployerCheckHasListing, checkHasListing) {
+TEST(EmployerCheckHasListing, checkHasListing)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
         // case where employer does not have the listing
-        bool res = e->checkHasListing(1,2);
+        bool res = e->checkHasListing(1, 2);
         bool expected = false;
         EXPECT_EQ(res, expected);
 
         // case where employer has the listing
-        res = e->checkHasListing(1,1); 
+        res = e->checkHasListing(1, 1);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -29,7 +30,8 @@ TEST(EmployerCheckHasListing, checkHasListing) {
 }
 
 /* tests Employer::changeField() function in Employer.cpp */
-TEST(EmployerChangeField, checkChangeField) {
+TEST(EmployerChangeField, checkChangeField)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -54,7 +56,8 @@ TEST(EmployerChangeField, checkChangeField) {
 }
 
 /* tests Employer::changePosition() function in Employer.cpp */
-TEST(EmployerChangePosition, checkChangePosition) {
+TEST(EmployerChangePosition, checkChangePosition)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -79,7 +82,8 @@ TEST(EmployerChangePosition, checkChangePosition) {
 }
 
 /* tests Employer::changeJobDescription() function in Employer.cpp */
-TEST(EmployerChangeJobDescription, checkChangeJobDescription) {
+TEST(EmployerChangeJobDescription, checkChangeJobDescription)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -104,7 +108,8 @@ TEST(EmployerChangeJobDescription, checkChangeJobDescription) {
 }
 
 /* tests Employer::changeFlex() function in Employer.cpp */
-TEST(EmployerChangeFlex, checkChangeFlex) {
+TEST(EmployerChangeFlex, checkChangeFlex)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -125,7 +130,7 @@ TEST(EmployerChangeFlex, checkChangeFlex) {
         expected = true;
         EXPECT_EQ(res, expected);
         // revert change if success
-        if (res == expected) 
+        if (res == expected)
                 e->changeFlex(4, 4, resCode);
 
         delete db;
@@ -133,7 +138,8 @@ TEST(EmployerChangeFlex, checkChangeFlex) {
 }
 
 /* tests Employer::changeGender() function in Employer.cpp */
-TEST(EmployerChangeGender, checkChangeGender) {
+TEST(EmployerChangeGender, checkChangeGender)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -154,7 +160,7 @@ TEST(EmployerChangeGender, checkChangeGender) {
         expected = true;
         EXPECT_EQ(res, expected);
         // revert change if success
-        if (res == expected) 
+        if (res == expected)
                 e->changeGender(7, 6, resCode);
 
         delete db;
@@ -162,7 +168,8 @@ TEST(EmployerChangeGender, checkChangeGender) {
 }
 
 /* Tests Employer::changeDiversity() function in Employer.cpp */
-TEST(EmployerChangeDiversity, checkChangeDiversity) {
+TEST(EmployerChangeDiversity, checkChangeDiversity)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -183,7 +190,7 @@ TEST(EmployerChangeDiversity, checkChangeDiversity) {
         expected = true;
         EXPECT_EQ(res, expected);
         // revert change if success
-        if (res == expected) 
+        if (res == expected)
                 e->changeDiversity(1, 1, resCode);
 
         delete db;
@@ -191,7 +198,8 @@ TEST(EmployerChangeDiversity, checkChangeDiversity) {
 }
 
 /* Tests Employer::changeRemote() function in Employer.cpp */
-TEST(EmployerChangeRemote, checkChangeRemote) {
+TEST(EmployerChangeRemote, checkChangeRemote)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -212,7 +220,7 @@ TEST(EmployerChangeRemote, checkChangeRemote) {
         expected = true;
         EXPECT_EQ(res, expected);
         // revert change if success
-        if (res == expected) 
+        if (res == expected)
                 e->changeRemote(1, 1, resCode);
 
         delete db;
@@ -220,7 +228,8 @@ TEST(EmployerChangeRemote, checkChangeRemote) {
 }
 
 /* Tests Employer::changeLocation() function in Employer.cpp */
-TEST(EmployerChangeLocation, checkChangeLocation) {
+TEST(EmployerChangeLocation, checkChangeLocation)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -246,7 +255,8 @@ TEST(EmployerChangeLocation, checkChangeLocation) {
 }
 
 /* Tests Employer::changeMBTI() function in Employer.cpp */
-TEST(EmployerChangeMBTI, checkChangeMBTI) {
+TEST(EmployerChangeMBTI, checkChangeMBTI)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -272,7 +282,8 @@ TEST(EmployerChangeMBTI, checkChangeMBTI) {
 }
 
 /* Tests Employer::changeModernWorkspace() function in Employer.cpp */
-TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
+TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -293,7 +304,7 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
         expected = true;
         EXPECT_EQ(res, expected);
         // revert change if success
-        if (res == expected) 
+        if (res == expected)
                 e->changeModernWorkspace(1, 1, resCode);
 
         delete db;
@@ -301,7 +312,8 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace) {
 }
 
 /* Tests Employer::changeFieldAll() function in Employer.cpp */
-TEST(EmployerChangeFieldAll, checkChangeFieldAll) {
+TEST(EmployerChangeFieldAll, checkChangeFieldAll)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -312,11 +324,11 @@ TEST(EmployerChangeFieldAll, checkChangeFieldAll) {
 
         delete db;
         delete e;
-
 }
 
 /* Tests Employer::changePositionAll() function in Employer.cpp */
-TEST(EmployerChangePositionAll, checkChangePositionAll) {
+TEST(EmployerChangePositionAll, checkChangePositionAll)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -330,7 +342,8 @@ TEST(EmployerChangePositionAll, checkChangePositionAll) {
 }
 
 /* Tests Employer::changeFlexAll() function in Employer.cpp */
-TEST(EmployerChangeFlexAll, checkChangeFlexAll) {
+TEST(EmployerChangeFlexAll, checkChangeFlexAll)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -344,7 +357,8 @@ TEST(EmployerChangeFlexAll, checkChangeFlexAll) {
 }
 
 /* Tests Employer::changeModernWorkspaceAll() function in Employer.cpp */
-TEST(EmployerChangeModernWorkspaceAll, checkChangeModernWorkspaceAll) {
+TEST(EmployerChangeModernWorkspaceAll, checkChangeModernWorkspaceAll)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -358,7 +372,8 @@ TEST(EmployerChangeModernWorkspaceAll, checkChangeModernWorkspaceAll) {
 }
 
 /* Tests Employer::changeGenderAll() function in Employer.cpp */
-TEST(EmployerChangeGenderAll, checkChangeGenderAll) {
+TEST(EmployerChangeGenderAll, checkChangeGenderAll)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -372,7 +387,8 @@ TEST(EmployerChangeGenderAll, checkChangeGenderAll) {
 }
 
 /* Tests Employer::changeDiversityAll() function in Employer.cpp */
-TEST(EmployerChangeDiversityAll, checkChangeDiversityAll) {
+TEST(EmployerChangeDiversityAll, checkChangeDiversityAll)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -386,7 +402,8 @@ TEST(EmployerChangeDiversityAll, checkChangeDiversityAll) {
 }
 
 /* Tests Employer::changeRemoteAll() function in Employer.cpp */
-TEST(EmployerChangeRemoteAll, checkChangeRemoteAll) {
+TEST(EmployerChangeRemoteAll, checkChangeRemoteAll)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -399,9 +416,9 @@ TEST(EmployerChangeRemoteAll, checkChangeRemoteAll) {
         delete e;
 }
 
-
 /* Tests Employer::postListing() function in Employer.cpp */
-TEST(EmployerPostListing, checkPostListing) {
+TEST(EmployerPostListing, checkPostListing)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
@@ -419,16 +436,76 @@ TEST(EmployerPostListing, checkPostListing) {
 }
 
 /* Tests Employer::createEmployer() function in Employer.cpp */
-TEST(EmployerCreate, checkCreateEmployer) {
+TEST(EmployerCreate, checkCreateEmployer)
+{
 
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
-        std::string company_name = "MediMetrics"; 
+        std::string company_name = "MediMetrics";
         std::string size = "Medium";
 
         int res = e->createEmployer(company_name, size);
         EXPECT_GT(res, 0);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changePay() function in Employer.cpp */
+TEST(EmployerChangePay, checkPayListing)
+{
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->changePay(1, 1, 100000, resCode);
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::changePay() function in Employer.cpp */
+TEST(EmployerChangeSkillRequirements, checkChangeSkillRequirements)
+{
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->changeSkillRequirements(1, 1, {{"skill1_req", "Data Analysis"}, {"skill2_req", "SQL"}, {"skill3_req", "Healthcare Industry Knowledge"}, {"skill4_req", "Problem-solving"}, {"skill5_req", "Communication"}}, resCode);
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+TEST(EmployerChangePersonalityType, checkChangePersonalityType)
+{
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->changePersonalityTypes(1, 1, "INTJ", resCode);
+        EXPECT_EQ(res, true);
+
+        delete db;
+        delete e;
+}
+
+/* Tests Employer::deleteListing() function in Employer.cpp */
+TEST(EmployerDeleteListing, checkDeleteListing)
+{
+
+        Database *db = new MockDatabase();
+        Employer *e = new Employer(*db);
+
+        int resCode = 0;
+        bool res = e->deleteListing(1, true, resCode);
+        EXPECT_EQ(res, true);
 
         delete db;
         delete e;

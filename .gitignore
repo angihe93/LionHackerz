@@ -1,6 +1,8 @@
 external_libraries/boost_1_86_0
 external_libraries/Crow
 external_libraries/WordNet-3.0
+external_libraries/openssl*
+external_libraries/cpp_redis
 build/*
 !build/README.txt
 !build/coverage_report
@@ -10,5 +12,6 @@ build/*
 .DS_Store
 .vscode/settings.json
 external_libraries/.DS_Store
+set_env.sh
 external_libraries/cpp_redis
 external_libraries/tacopie

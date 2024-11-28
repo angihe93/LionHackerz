@@ -269,7 +269,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         res.end();
         return;
     }
-    
+
     int resCount = 0;
     /* check if user ID exists */
     std::vector<std::vector<std::string>> userExists = db->query("User", "", "id", "eq", std::to_string(uid), false, resCount);
@@ -282,7 +282,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         res.write(jsonRes.dump());
         res.end();
         return;
-    } 
+    }
     resCount = 0;
 
     /* check if user has dimensions to compare on */
@@ -296,7 +296,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         res.write(jsonRes.dump());
         res.end();
         return;
-    } 
+    }
 
     std::cout << "Valid UID: " << uid << std::endl;
 
@@ -328,12 +328,12 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         return;
     }
 
-        // No cached result, queue the task for processing
-        std::cout << "No cache found for UID " << uid << ". Adding task to queue." << std::endl;
+    // No cached result, queue the task for processing
+    std::cout << "No cache found for UID " << uid << ". Adding task to queue." << std::endl;
 
-        // Push the task to the Redis task queue
-        redis_client.lpush("task_queue", {std::to_string(uid)}, [](cpp_redis::reply &lpush_reply)
-        {
+    // Push the task to the Redis task queue
+    redis_client.lpush("task_queue", {std::to_string(uid)}, [](cpp_redis::reply &lpush_reply)
+                       {
             if (lpush_reply.is_error())
             {
                 std::cerr << "Error adding to Redis queue: " << lpush_reply.error() << std::endl;
@@ -341,22 +341,21 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
             else
             {
                 std::cout << "Successfully added task to queue." << std::endl;
-            } 
-        });
+            } });
 
-        redis_client.commit(); /* commit task push */
+    redis_client.commit(); /* commit task push */
 
-        res.code = 202;
-        jsonRes["success"]["code"] = res.code;
-        jsonRes["success"]["message"] = "Task was added to the job queue. Check back soon for results.";   
-        res.write(jsonRes.dump());
+    res.code = 202;
+    jsonRes["success"]["code"] = res.code;
+    jsonRes["success"]["message"] = "Task was added to the job queue. Check back soon for results.";
+    res.write(jsonRes.dump());
 
-        /* add CORS headers */
-        res.add_header("Access-Control-Allow-Origin", "*");
-        res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+    /* add CORS headers */
+    res.add_header("Access-Control-Allow-Origin", "*");
+    res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.add_header("Access-Control-Allow-Headers", "Content-Type");
 
-        res.end(); 
+    res.end();
 
     redis_client.commit();
 }
@@ -909,7 +908,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         }
 
         // Extract name and email
-        if (!body.has("name") || !body.has("email") || !body.has("dimensions")) {
+        if (!body.has("name") || !body.has("email") || !body.has("dimensions"))
+        {
             crow::json::wvalue error;
             error["status"] = "error";
             error["message"] = "Missing 'name' or 'email' or 'dimension' fields.";
@@ -924,7 +924,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
 
         // Extract dimensions
         auto dimensions_json = body["dimensions"];
-        if (!dimensions_json) {
+        if (!dimensions_json)
+        {
             returnError(res, 400, "Invalid 'dimensions' format.");
             return;
         }
@@ -932,7 +933,8 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         // Validate and extract dimension fields
         Dimension dimension;
         std::string dimensionError = dimension.fromJson(dimensions_json);
-        if (!dimensionError.empty()) {
+        if (!dimensionError.empty())
+        {
             returnError(res, 400, dimensionError);
             return;
         }
@@ -948,7 +950,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         std::string dimension_result = dimension.save(*db);
         std::cout << dimension_result << std::endl;
 
-         // Process skills if provided
+        // Process skills if provided
         if (body.has("skills"))
         {
             std::vector<SkillInput> skills;
@@ -1041,7 +1043,6 @@ void RouteController::returnError(crow::response &res, int code, const std::stri
     res.end();
 }
 
-
 std::string RouteController::parseSkills(const crow::json::rvalue &skills_json, std::vector<SkillInput> &skills)
 {
     Database db;
@@ -1120,7 +1121,7 @@ std::string RouteController::processSkills(Database &db, int user_id, const std:
         }
         else
         {
-            data += ",\"rank\": null";  // Otherwise, just gonna explicitly set 'rank' to null
+            data += ",\"rank\": null"; // Otherwise, just gonna explicitly set 'rank' to null
         }
 
         data += "}";
@@ -1130,7 +1131,6 @@ std::string RouteController::processSkills(Database &db, int user_id, const std:
     }
     return "Skills processed successfully.";
 }
-
 
 std::string RouteController::processInterests(Database &db, int user_id, const std::vector<InterestInput> &interests)
 {
@@ -1146,7 +1146,6 @@ std::string RouteController::processInterests(Database &db, int user_id, const s
     }
     return "Interests processed successfully.";
 }
-
 
 void RouteController::initRoutes(crow::App<> &app)
 {
@@ -1183,8 +1182,9 @@ void RouteController::initRoutes(crow::App<> &app)
     /* get the progress of a job match while processing in queue */
 
     CROW_ROUTE(app, "/progress/<string>")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res, 
-        const std::string& user_id) {
+        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res,
+                                               const std::string &user_id)
+                                        {
 
 
         auto future_reply = redis_client.get("progress:" + user_id);
@@ -1207,9 +1207,7 @@ void RouteController::initRoutes(crow::App<> &app)
         res.code = 200;
         res.write(reply.as_string());
         res.end();
-        return;
-    });
-
+        return; });
 
     CROW_ROUTE(app, "/getMatchesJSON")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
