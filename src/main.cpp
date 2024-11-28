@@ -10,16 +10,16 @@
 #include <cpp_redis/cpp_redis>
 #include <cstdlib>
 #include "../external_libraries/Crow/include/crow.h"
-
 cpp_redis::client redis_client;
 
 /* redis task queue initialization */
-void setup_redis() {
-    redis_client.connect("127.0.0.1", 6379, [](const std::string& host, std::size_t port, cpp_redis::connect_state status) {
+void setup_redis()
+{
+    redis_client.connect("127.0.0.1", 6379, [](const std::string &host, std::size_t port, cpp_redis::connect_state status)
+                         {
         if (status == cpp_redis::connect_state::dropped) {
             std::cerr << "Redis connection lost to " << host << ":" << port << std::endl;
-        }
-    });
+        } });
 }
 
 int main()
@@ -27,7 +27,7 @@ int main()
 
     setup_redis();
 
-    crow::SimpleApp app; 
+    crow::SimpleApp app;
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -40,9 +40,9 @@ int main()
     Worker worker(redis_client, &m);
 
     /* start task queue */
-    worker.start_worker_pool(4); 
+    worker.start_worker_pool(4);
 
-    //set the port, set the app to run on multiple threads, and run the app
+    // set the port, set the app to run on multiple threads, and run the app
     app.port(18080).bindaddr("0.0.0.0").multithreaded().run();
 
     return 0;

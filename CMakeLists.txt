@@ -80,6 +80,7 @@ include(GoogleTest)
    test/AuthIntegrationTests.cpp
    test/DatabaseIntegrationTests.cpp
    test/DimensionUnitTests.cpp
+   test/EmployerUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
