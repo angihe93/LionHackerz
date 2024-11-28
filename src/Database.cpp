@@ -56,33 +56,6 @@ Database::Database(const std::string url, const std::string api_key)
     this->api_key = api_key;
 }
 
-/**
- * Performs an HTTP request using the specified method, URL, and data payload.
- *
- * @param getPostPatch   The HTTP method to use ("GET", "POST", "PATCH", or "AI").
- *                       "AI" is treated similarly to POST/GET and requires an OpenAI API key.
- * @param url            The target URL for the request.
- * @param insertData     The data payload to include in the request body (used for POST, PATCH, and AI).
- *                       Leave empty for GET requests.
- * @param httpStatusCode A reference to a string where the HTTP status code (e.g., "200", "404") will be stored.
- * @return               A string containing the server's response body, or an empty string on failure.
- *
- * @details
- * - Initializes a CURL session to send the HTTP request.
- * - Sets headers, including "Content-Type" and "Authorization".
- * - Configures the HTTP method based on the value of `getPostPatch`.
- * - For "AI" requests, includes an OpenAI API key in the Authorization header.
- * - Handles HTTP response codes, storing them in the `httpStatusCode` parameter.
- * - Cleans up all allocated resources before returning the response or an error message.
- *
- * @errors
- * - Returns an empty string and logs an error if:
- *   - CURL initialization fails.
- *   - An unsupported HTTP method is provided.
- *   - A required API key (for "AI" requests) is missing.
- * - Logs CURL errors if the request fails.
- */
-
 std::string Database::request(const std::string &getPostPatch, const std::string url,
                               const std::string &insertData, std::string &httpStatusCode)
 {
@@ -112,14 +85,18 @@ std::string Database::request(const std::string &getPostPatch, const std::string
     headers = curl_slist_append(headers, ("apikey: " + this->api_key).c_str());
 
     if (getPostPatch == "AI")
+    {
         headers = curl_slist_append(headers, ("Authorization: Bearer " + this->openai_api_key).c_str());
+    }
     else
+    {
         headers = curl_slist_append(headers, ("Authorization: Bearer " + this->api_key).c_str());
+    }
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
-    if (getPostPatch != "POST" && getPostPatch != "GET" && getPostPatch != "PATCH" && getPostPatch != "AI")
+    if (getPostPatch != "POST" && getPostPatch != "GET" && getPostPatch != "PATCH" && getPostPatch != "AI" && getPostPatch != "DELETE")
     {
         std::cout << "invalid option. please specify whether you wish to perform a GET or POST or PATCH"
                   << "request." << std::endl;
@@ -140,8 +117,14 @@ std::string Database::request(const std::string &getPostPatch, const std::string
     {
         curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
     }
+    else if (getPostPatch == "DELETE")
+    {
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+    }
     if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH" || getPostPatch == "AI"))
+    {
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
+    }
 
     headers = curl_slist_append(headers, "Prefer: return=representation");
 
@@ -154,21 +137,15 @@ std::string Database::request(const std::string &getPostPatch, const std::string
     httpStatusCode = std::to_string(response_code);
 
     if (res != CURLE_OK)
+    {
         std::cerr << "cURL error: " << curl_easy_strerror(res) << std::endl;
+    }
 
     curl_slist_free_all(headers);
     curl_easy_cleanup(curl);
 
     return response;
 }
-
-/**
- * Inserts a new entity into the database
- *
- * @param table   The name of the table being updated
- * @param data    The entity to be inserted
- * @return true if the pay was updated successfully, false otherwise
- */
 
 std::string Database::insert(std::string table, std::string data)
 {
@@ -202,6 +179,24 @@ std::string Database::update(std::string table, std::string data, std::string co
     std::string status = request(method, fURL, json, statusCode);
 
     return status;
+}
+
+// PETER ADDED
+
+std::string Database::deleteRecord(std::string table, std::string column, std::string op, std::string val)
+{
+    std::string statusCode = "";
+
+    std::string url = this->url + "/rest/v1/" + table + "?" + column + "=" + op + "." + val;
+    const std::string fURL = url;
+
+    const std::string method = "DELETE";
+
+    // Send DELETE request
+    std::string status = request(method, fURL, "", statusCode);
+    std::cout << "status: " << status << std::endl;
+    std::cout << "statusCode: " << statusCode << std::endl;
+    return statusCode;
 }
 
 std::vector<std::vector<std::string>>

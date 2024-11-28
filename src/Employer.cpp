@@ -577,8 +577,3 @@ int Employer::createEmployer(std::string company_name, std::string size)
         std::cout << "return eid: " << eid << std::endl;
         return eid;
 }
-
-bool deleteListing(int eid, int lid)
-{
-        std::string res = db->delete("Listing", lid, eid);
-}
