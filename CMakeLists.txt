@@ -79,6 +79,7 @@ include(GoogleTest)
    test/AuthUnitTests.cpp
    test/AuthIntegrationTests.cpp
    test/DatabaseIntegrationTests.cpp
+   test/DimensionUnitTests.cpp
    src/Matcher.cpp
    src/Database.cpp
    src/Listing.cpp
@@ -86,6 +87,7 @@ include(GoogleTest)
    src/Augment.cpp
    src/Employer.cpp
    src/Auth.cpp
+   src/Dimension.cpp
  )
 
 
