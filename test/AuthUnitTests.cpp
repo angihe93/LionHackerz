@@ -95,15 +95,14 @@ TEST(AuthGetAid, checkGetAid) {
     int aid = a->getAid(apiKey);
     EXPECT_EQ(aid, -1);
 
-    // debug this, why does it return all rows in Authentication_TEST?
     // get aid should fail
     apiKey = "kkjffthfhgfvhkjgvjhgkuyfk";
     std::cout << "testing apiKey: " << apiKey << std::endl;
     aid = a->getAid(apiKey);
-    // EXPECT_EQ(aid, -1);
+    EXPECT_EQ(aid, -1);
 
     // get aid should succeed
-    apiKey = "75497150f67ac7b1f721d3333e397bc134e40ebd9c95cf0b9d03a030ef390c58";
+    apiKey = "f1d2191c02d66b63e53093484a592255e0d1c39e3f1e0730fa787627c60c574c";
     std::cout << "testing apiKey: " << apiKey << std::endl;
     aid = a->getAid(apiKey);
     EXPECT_EQ(aid, 1);
