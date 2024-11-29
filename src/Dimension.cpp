@@ -7,8 +7,10 @@ Dimension::Dimension()
     : user_id(-1), pay(0), gender(false), diversity(false),
       flexibility(false), remote(false), workspace(false) {}
 
-std::string Dimension::fromJson(const crow::json::rvalue &json) {
-    try {
+std::string Dimension::fromJson(const crow::json::rvalue &json)
+{
+    try
+    {
         if (!json.has("loc") || !json.has("field") || !json.has("pay") ||
             !json.has("gender") || !json.has("diversity") || !json.has("mbti") ||
             !json.has("flexibility") || !json.has("remote") || !json.has("workspace"))
@@ -37,8 +39,10 @@ std::string Dimension::fromJson(const crow::json::rvalue &json) {
 std::string Dimension::escapeJson(const std::string &input)
 {
     std::string output;
-    for (char c : input) {
-        switch (c) {
+    for (char c : input)
+    {
+        switch (c)
+        {
         case '\"':
             output += "\\\"";
             break;
@@ -53,7 +57,8 @@ std::string Dimension::escapeJson(const std::string &input)
     return output;
 }
 
-std::string Dimension::save(Database &db) {
+std::string Dimension::save(Database &db)
+{
     std::string data = "{";
     data += "\"id\": " + std::to_string(user_id) + ",";
     data += "\"loc\": \"" + escapeJson(loc) + "\",";

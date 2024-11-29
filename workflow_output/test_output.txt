@@ -1,0 +1,816 @@
+[==========] Running 52 tests from 47 test suites.
+[----------] Global test environment set-up.
+[----------] 1 test from GetDim
+[ RUN      ] GetDim.augmentsAndWeights
+[       OK ] GetDim.augmentsAndWeights (873 ms)
+[----------] 1 test from GetDim (873 ms total)
+
+[----------] 3 tests from FilterListings
+[ RUN      ] FilterListings.discardTooManyNull
+[       OK ] FilterListings.discardTooManyNull (1566 ms)
+[ RUN      ] FilterListings.calculateScores
+Initializing WordNet...
+WordNet initialized successfully.
+Listing #1
+score: 0
+Listing #2
+score: 200
+Listing #4
+score: 995
+Listing #5
+score: 995
+Listing #6
+score: 1045
+[       OK ] FilterListings.calculateScores (3645 ms)
+[ RUN      ] FilterListings.elimLowScores
+WordNet is already initialized.
+Listing #1
+score: 0
+Listing #2
+score: 200
+Listing #4
+score: 995
+Listing #5
+score: 995
+Listing #6
+score: 1045
+[       OK ] FilterListings.elimLowScores (3415 ms)
+[----------] 3 tests from FilterListings (8627 ms total)
+
+[----------] 1 test from Sort
+[ RUN      ] Sort.sortMatches
+WordNet is already initialized.
+Listing #1
+score: 0
+Listing #2
+score: 200
+Listing #4
+score: 995
+Listing #5
+score: 995
+Listing #6
+score: 1045
+[       OK ] Sort.sortMatches (3152 ms)
+[----------] 1 test from Sort (3152 ms total)
+
+[----------] 1 test from Display
+[ RUN      ] Display.displayMatches
+WordNet is already initialized.
+Listing #1
+score: 0
+Listing #2
+score: 200
+Listing #4
+score: 995
+Listing #5
+score: 995
+Listing #6
+score: 1045
+{ listingId: 6, pay: 80000, score: 1045, company: ""TechForge"", time_created: ""2024-11-02T03:33:40.506159+00:00"", field: ""Information Technology"", position: ""Software Developer"", description: ""Develop and maintain software applications"", skill1: ""JavaScript"", skill2: ""React"", skill3: ""Node.js"", skill4: ""Problem-solving"", skill5: ""Teamwork"", flex: ""true"", modern: ""true"", gender: ""true"", diversity: ""true"", remote: ""true"", personality: ""INTP"", location: ""Austin"" }
+{ listingId: 6, pay: 80000, score: 1045, company: ""TechForge"", time_created: ""2024-11-02T03:33:40.506159+00:00"", field: ""Information Technology"", position: ""Software Developer"", description: ""Develop and maintain software applications"", skill1: ""JavaScript"", skill2: ""React"", skill3: ""Node.js"", skill4: ""Problem-solving"", skill5: ""Teamwork"", flex: ""true"", modern: ""true"", gender: ""true"", diversity: ""true"", remote: ""true"", personality: ""INTP"", location: ""Austin"" }
+[       OK ] Display.displayMatches (5328 ms)
+[----------] 1 test from Display (5329 ms total)
+
+[----------] 2 tests from GetValues
+[ RUN      ] GetValues.retrieveCandidates
+[       OK ] GetValues.retrieveCandidates (1547 ms)
+[ RUN      ] GetValues.retrieveMatchedWords
+WordNet is already initialized.
+Listing #1
+score: 0
+Listing #2
+score: 200
+Listing #4
+score: 995
+Listing #5
+score: 995
+Listing #6
+score: 1045
+[       OK ] GetValues.retrieveMatchedWords (3328 ms)
+[----------] 2 tests from GetValues (4876 ms total)
+
+[----------] 1 test from dbQuery
+[ RUN      ] dbQuery.CheckQuery
+SELECT name FROM Dimension WHERE dim_id eq 1
+Query complete.
+	Number of results: 0
+	Number of columns returned:  0
+
+Results: 
+
+Tokenized and listified: 
+SELECT name FROM Dimension WHERE dim_id eq 1
+Query complete.
+	Number of results: 1
+	Number of columns returned:  1
+
+Results: [{"name":"location"}]
+
+Tokenized and listified: 
+List 0: ("location")
+SELECT lid FROM Listing WHERE skill1_req eq drawing AND field eq arts
+Query complete.
+	Number of results: 1
+	Number of columns returned:  1
+
+[{"lid":4}]
+
+Tokenized and listified: 
+List 0: (4)
+SELECT lid FROM Listing WHERE skill1_req eq drawing AND skill2_req eq painting AND skill3_req eq sculpting AND 
+Query complete..
+	Number of results: 2
+	Number of columns returned:  1
+
+[{"lid":5}, 
+ {"lid":4}]
+
+Tokenized and listified: 
+List 0: (5, 4)
+[       OK ] dbQuery.CheckQuery (423 ms)
+[----------] 1 test from dbQuery (423 ms total)
+
+[----------] 1 test from dbInsert
+[ RUN      ] dbInsert.CheckInsert
+insertRes: {"code":"23505","details":"Key (eid)=(5) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"Employer_pkey\""}
+[       OK ] dbInsert.CheckInsert (153 ms)
+[----------] 1 test from dbInsert (153 ms total)
+
+[----------] 1 test from dbUpdate
+[ RUN      ] dbUpdate.CheckUpdate
+updateRes: [{"eid":6,"company_name":"Small Consulting","size":"small"}]
+[       OK ] dbUpdate.CheckUpdate (283 ms)
+[----------] 1 test from dbUpdate (283 ms total)
+
+[----------] 1 test from dbDelete
+[ RUN      ] dbDelete.CheckDeleteRecord
+insertRes: [{"eid":100,"company_name":"Test Consulting","size":"small"}]
+status: [{"eid":100,"company_name":"Test Consulting","size":"small"}]
+statusCode: 200
+deleteRes: 200
+status: []
+statusCode: 200
+deleteRes2: 200
+Query Results Size: 0
+[       OK ] dbDelete.CheckDeleteRecord (553 ms)
+[----------] 1 test from dbDelete (553 ms total)
+
+[----------] 1 test from ListingGet
+[ RUN      ] ListingGet.checkGetListing
+SELECT  FROM Listing_TEST WHERE lid eq 1
+Query complete.
+	Number of results: 1
+	Number of columns returned:  21
+
+Results: [{"lid":1,"created_at":"2024-10-12T22:19:23.396145+00:00","field":"Computer science","position":"Software Engineer","job_description":"Looking for a code monkey.","skill1_req":"","skill2_req":"","skill3_req":"","skill4_req":"","skill5_req":"","pay":100000,"job_flexibility":true,"modern_building":false,"mixed_gender":true,"diverse_workforce":true,"remote_available":false,"personality_types":"INTJ","location":null}]
+
+Tokenized and listified: 
+List 0: (1)
+List 1: ("2024-10-12T22:19:23.396145+00:00")
+List 2: (19:23.396145+00:00")
+List 3: (23.396145+00:00")
+List 4: (00")
+List 5: ("Computer science")
+List 6: ("Software Engineer")
+List 7: ("Looking for a code monkey.")
+List 8: ("")
+List 9: ("")
+List 10: ("")
+List 11: ("")
+List 12: ("")
+List 13: (100000)
+List 14: ("true")
+List 15: ("false")
+List 16: ("true")
+List 17: ("true")
+List 18: ("false")
+List 19: ("INTJ")
+List 20: ("null")
+SELECT eid FROM Created_TEST WHERE lid eq 1
+Query complete.
+	Number of results: 1
+	Number of columns returned:  1
+
+Results: [{"eid":1}]
+
+Tokenized and listified: 
+List 0: (1)
+SELECT company_name FROM Employer_TEST WHERE eid eq 1
+Query complete.
+	Number of results: 1
+	Number of columns returned:  1
+
+Results: [{"company_name":"Google"}]
+
+Tokenized and listified: 
+List 0: ("Google")
+returning 	Posted by: "Google"
+
+	Created on: "2024-10-12T22:19:23.396145+00:00"
+
+	Field:  "Computer science"
+
+	Position: "Software Engineer"
+
+	Job Description: "Looking for a code monkey."
+
+	Skills required: "", "", "", "", ""
+
+	Pay: 100000
+
+	Flexibility: "true"
+
+	Modern Workspace: "false"
+
+	Gender Parity: "true"
+
+	Diverse Workforce: "true"
+
+	Remote Option Available: "false"
+
+	Personality Types: "INTJ"
+
+
+getRes: 	Posted by: "Google"
+
+	Created on: "2024-10-12T22:19:23.396145+00:00"
+
+	Field:  "Computer science"
+
+	Position: "Software Engineer"
+
+	Job Description: "Looking for a code monkey."
+
+	Skills required: "", "", "", "", ""
+
+	Pay: 100000
+
+	Flexibility: "true"
+
+	Modern Workspace: "false"
+
+	Gender Parity: "true"
+
+	Diverse Workforce: "true"
+
+	Remote Option Available: "false"
+
+	Personality Types: "INTJ"
+
+
+SELECT  FROM Listing_TEST WHERE lid eq 2
+Query complete.
+	Number of results: 1
+	Number of columns returned:  21
+
+Results: [{"lid":2,"created_at":"2024-10-12T22:21:39.955097+00:00","field":"Software Development","position":"Lead Engineer","job_description":"Microsoft is currently looking for an experienced candidate to lead our engineering team.","skill1_req":"Leadership","skill2_req":"Communication","skill3_req":"Programming languages","skill4_req":null,"skill5_req":null,"pay":175000,"job_flexibility":true,"modern_building":true,"mixed_gender":true,"diverse_workforce":true,"remote_available":true,"personality_types":"INTJ","location":null}]
+
+Tokenized and listified: 
+List 0: (2)
+List 1: ("2024-10-12T22:21:39.955097+00:00")
+List 2: (21:39.955097+00:00")
+List 3: (39.955097+00:00")
+List 4: (00")
+List 5: ("Software Development")
+List 6: ("Lead Engineer")
+List 7: ("Microsoft is currently looking for an experienced candidate to lead our engineering team.")
+List 8: ("Leadership")
+List 9: ("Communication")
+List 10: ("Programming languages")
+List 11: ("null")
+List 12: ("null")
+List 13: (175000)
+List 14: ("true")
+List 15: ("true")
+List 16: ("true")
+List 17: ("true")
+List 18: ("true")
+List 19: ("INTJ")
+List 20: ("null")
+SELECT eid FROM Created_TEST WHERE lid eq 2
+Query complete.
+	Number of results: 1
+	Number of columns returned:  1
+
+Results: [{"eid":2}]
+
+Tokenized and listified: 
+List 0: (2)
+SELECT company_name FROM Employer_TEST WHERE eid eq 2
+Query complete.
+	Number of results: 1
+	Number of columns returned:  1
+
+Results: [{"company_name":"Microsoft"}]
+
+Tokenized and listified: 
+List 0: ("Microsoft")
+returning 	Posted by: "Microsoft"
+
+	Created on: "2024-10-12T22:21:39.955097+00:00"
+
+	Field:  "Software Development"
+
+	Position: "Lead Engineer"
+
+	Job Description: "Microsoft is currently looking for an experienced candidate to lead our engineering team."
+
+	Skills required: "Leadership", "Communication", "Programming languages", 
+
+	Pay: 175000
+
+	Flexibility: "true"
+
+	Modern Workspace: "true"
+
+	Gender Parity: "true"
+
+	Diverse Workforce: "true"
+
+	Remote Option Available: "true"
+
+	Personality Types: "INTJ"
+
+
+getRes: 	Posted by: "Microsoft"
+
+	Created on: "2024-10-12T22:21:39.955097+00:00"
+
+	Field:  "Software Development"
+
+	Position: "Lead Engineer"
+
+	Job Description: "Microsoft is currently looking for an experienced candidate to lead our engineering team."
+
+	Skills required: "Leadership", "Communication", "Programming languages", 
+
+	Pay: 175000
+
+	Flexibility: "true"
+
+	Modern Workspace: "true"
+
+	Gender Parity: "true"
+
+	Diverse Workforce: "true"
+
+	Remote Option Available: "true"
+
+	Personality Types: "INTJ"
+
+
+[       OK ] ListingGet.checkGetListing (891 ms)
+[----------] 1 test from ListingGet (891 ms total)
+
+[----------] 1 test from ListingChange
+[ RUN      ] ListingChange.checkChangeField
+{"field": "Computer science"}
+{"position": "Software Engineer"}
+{"job_description": "Microsoft is currently looking for an experienced candidate to lead our engineering team."}
+[       OK ] ListingChange.checkChangeField (1439 ms)
+[----------] 1 test from ListingChange (1439 ms total)
+
+[----------] 1 test from ListingInsert
+[ RUN      ] ListingInsert.checkInsertListing
+in Listing::insertListing
+[{"lid":280,"created_at":"2024-11-28T04:56:37.76534+00:00","field":"HealthTech","position":"Healthcare Data Analyst","job_description":"Analyze and interpret healthcare data to aid in decision-making","skill1_req":"Data Analysis","skill2_req":"SQL","skill3_req":"Healthcare Industry Knowledge","skill4_req":"Problem-solving","skill5_req":"Communication","pay":75000,"job_flexibility":false,"modern_building":true,"mixed_gender":true,"diverse_workforce":true,"remote_available":false,"personality_types":"INTJ","location":"Boston"}]
+resCount: 252  lidQ[0][0]: 280
+[       OK ] ListingInsert.checkInsertListing (292 ms)
+[----------] 1 test from ListingInsert (292 ms total)
+
+[----------] 1 test from ListingDelete
+[ RUN      ] ListingDelete.checkDeleteListing
+in Listing::insertListing
+[{"lid":281,"created_at":"2024-11-28T04:56:38.068929+00:00","field":"HealthTech","position":"Healthcare Data Analyst","job_description":"Analyze and interpret healthcare data to aid in decision-making","skill1_req":"Data Analysis","skill2_req":"SQL","skill3_req":"Healthcare Industry Knowledge","skill4_req":"Problem-solving","skill5_req":"Communication","pay":75000,"job_flexibility":false,"modern_building":true,"mixed_gender":true,"diverse_workforce":true,"remote_available":false,"personality_types":"INTJ","location":"Boston"}]
+resCount: 253  lidQ[0][0]: 281
+insertRes: 281
+status: [{"lid":281,"created_at":"2024-11-28T04:56:38.068929+00:00","field":"HealthTech","position":"Healthcare Data Analyst","job_description":"Analyze and interpret healthcare data to aid in decision-making","skill1_req":"Data Analysis","skill2_req":"SQL","skill3_req":"Healthcare Industry Knowledge","skill4_req":"Problem-solving","skill5_req":"Communication","pay":75000,"job_flexibility":false,"modern_building":true,"mixed_gender":true,"diverse_workforce":true,"remote_available":false,"personality_types":"INTJ","location":"Boston"}]
+statusCode: 200
+[       OK ] ListingDelete.checkDeleteListing (837 ms)
+[----------] 1 test from ListingDelete (837 ms total)
+
+[----------] 1 test from ListingChangeAdditional
+[ RUN      ] ListingChangeAdditional.checkChangePaySkillPersonality
+in Listing::insertListing
+[{"lid":282,"created_at":"2024-11-28T04:56:38.918698+00:00","field":"Engineering","position":"Software Developer","job_description":"Develop and maintain software applications.","skill1_req":"C++","skill2_req":"Python","skill3_req":"Algorithms","skill4_req":"Data Structures","skill5_req":"Problem Solving","pay":100000,"job_flexibility":true,"modern_building":true,"mixed_gender":true,"diverse_workforce":true,"remote_available":true,"personality_types":"INTP","location":"San Francisco"}]
+resCount: 253  lidQ[0][0]: 282
+{"personality_types": "ENFP"}
+[       OK ] ListingChangeAdditional.checkChangePaySkillPersonality (2962 ms)
+[----------] 1 test from ListingChangeAdditional (2962 ms total)
+
+[----------] 1 test from EmployerCheckHasListing
+[ RUN      ] EmployerCheckHasListing.checkHasListing
+[       OK ] EmployerCheckHasListing.checkHasListing (270 ms)
+[----------] 1 test from EmployerCheckHasListing (270 ms total)
+
+[----------] 1 test from EmployerChangeField
+[ RUN      ] EmployerChangeField.checkChangeField
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+{"field": "Computer science"}
+[       OK ] EmployerChangeField.checkChangeField (751 ms)
+[----------] 1 test from EmployerChangeField (751 ms total)
+
+[----------] 1 test from EmployerChangePosition
+[ RUN      ] EmployerChangePosition.checkChangePosition
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+{"position": "Lead Engineer"}
+[       OK ] EmployerChangePosition.checkChangePosition (709 ms)
+[----------] 1 test from EmployerChangePosition (709 ms total)
+
+[----------] 1 test from EmployerChangeJobDescription
+[ RUN      ] EmployerChangeJobDescription.checkChangeJobDescription
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+{"job_description": "We are looking for a few new programmers to round off our team.  Students welcome to apply."}
+[       OK ] EmployerChangeJobDescription.checkChangeJobDescription (713 ms)
+[----------] 1 test from EmployerChangeJobDescription (713 ms total)
+
+[----------] 1 test from EmployerChangeFlex
+[ RUN      ] EmployerChangeFlex.checkChangeFlex
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+[       OK ] EmployerChangeFlex.checkChangeFlex (1532 ms)
+[----------] 1 test from EmployerChangeFlex (1532 ms total)
+
+[----------] 1 test from EmployerChangeGender
+[ RUN      ] EmployerChangeGender.checkChangeGender
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+[       OK ] EmployerChangeGender.checkChangeGender (1536 ms)
+[----------] 1 test from EmployerChangeGender (1536 ms total)
+
+[----------] 1 test from EmployerChangeDiversity
+[ RUN      ] EmployerChangeDiversity.checkChangeDiversity
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+[       OK ] EmployerChangeDiversity.checkChangeDiversity (1627 ms)
+[----------] 1 test from EmployerChangeDiversity (1627 ms total)
+
+[----------] 1 test from EmployerChangeRemote
+[ RUN      ] EmployerChangeRemote.checkChangeRemote
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+[       OK ] EmployerChangeRemote.checkChangeRemote (1380 ms)
+[----------] 1 test from EmployerChangeRemote (1380 ms total)
+
+[----------] 1 test from EmployerChangeLocation
+[ RUN      ] EmployerChangeLocation.checkChangeLocation
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+[       OK ] EmployerChangeLocation.checkChangeLocation (811 ms)
+[----------] 1 test from EmployerChangeLocation (811 ms total)
+
+[----------] 1 test from EmployerChangeMBTI
+[ RUN      ] EmployerChangeMBTI.checkChangeMBTI
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+[       OK ] EmployerChangeMBTI.checkChangeMBTI (834 ms)
+[----------] 1 test from EmployerChangeMBTI (834 ms total)
+
+[----------] 1 test from EmployerChangeModernWorkspace
+[ RUN      ] EmployerChangeModernWorkspace.checkChangeModernWorkspace
+Error: The listing ID is not associated with the employer ID.
+Error: The listing ID you provided does not exist in the database.
+Error: The listing ID is not associated with the employer ID.
+[       OK ] EmployerChangeModernWorkspace.checkChangeModernWorkspace (1448 ms)
+[----------] 1 test from EmployerChangeModernWorkspace (1448 ms total)
+
+[----------] 1 test from EmployerChangeFieldAll
+[ RUN      ] EmployerChangeFieldAll.checkChangeFieldAll
+{"field": "Arts"}
+{"field": "Arts"}
+[       OK ] EmployerChangeFieldAll.checkChangeFieldAll (1022 ms)
+[----------] 1 test from EmployerChangeFieldAll (1022 ms total)
+
+[----------] 1 test from EmployerChangePositionAll
+[ RUN      ] EmployerChangePositionAll.checkChangePositionAll
+{"position": "Programmer"}
+[       OK ] EmployerChangePositionAll.checkChangePositionAll (613 ms)
+[----------] 1 test from EmployerChangePositionAll (613 ms total)
+
+[----------] 1 test from EmployerChangeFlexAll
+[ RUN      ] EmployerChangeFlexAll.checkChangeFlexAll
+[       OK ] EmployerChangeFlexAll.checkChangeFlexAll (37993 ms)
+[----------] 1 test from EmployerChangeFlexAll (37993 ms total)
+
+[----------] 1 test from EmployerChangeModernWorkspaceAll
+[ RUN      ] EmployerChangeModernWorkspaceAll.checkChangeModernWorkspaceAll
+[       OK ] EmployerChangeModernWorkspaceAll.checkChangeModernWorkspaceAll (38676 ms)
+[----------] 1 test from EmployerChangeModernWorkspaceAll (38676 ms total)
+
+[----------] 1 test from EmployerChangeGenderAll
+[ RUN      ] EmployerChangeGenderAll.checkChangeGenderAll
+[       OK ] EmployerChangeGenderAll.checkChangeGenderAll (40668 ms)
+[----------] 1 test from EmployerChangeGenderAll (40668 ms total)
+
+[----------] 1 test from EmployerChangeDiversityAll
+[ RUN      ] EmployerChangeDiversityAll.checkChangeDiversityAll
+[       OK ] EmployerChangeDiversityAll.checkChangeDiversityAll (39234 ms)
+[----------] 1 test from EmployerChangeDiversityAll (39234 ms total)
+
+[----------] 1 test from EmployerChangeRemoteAll
+[ RUN      ] EmployerChangeRemoteAll.checkChangeRemoteAll
+[       OK ] EmployerChangeRemoteAll.checkChangeRemoteAll (77233 ms)
+[----------] 1 test from EmployerChangeRemoteAll (77233 ms total)
+
+[----------] 1 test from EmployerPostListing
+[ RUN      ] EmployerPostListing.checkPostListing
+in Listing::insertListing
+[{"lid":285,"created_at":"2024-11-28T05:00:48.937011+00:00","field":"Education","position":"Education Consultant","job_description":"Develop and implement educational programs for schools and other institutions, providing guidance on curriculum and teaching strategies","skill1_req":"Curriculum Development","skill2_req":"Teaching Experience","skill3_req":"Instructional Design","skill4_req":"Project Management","skill5_req":"Communication","pay":65000,"job_flexibility":false,"modern_building":true,"mixed_gender":true,"diverse_workforce":true,"remote_available":false,"personality_types":"ENFJ","location":"Boston"}]
+resCount: 256  lidQ[0][0]: 285
+res from insert to Created: [{"eid":7,"lid":285}]
+[       OK ] EmployerPostListing.checkPostListing (426 ms)
+[----------] 1 test from EmployerPostListing (426 ms total)
+
+[----------] 1 test from EmployerCreate
+[ RUN      ] EmployerCreate.checkCreateEmployer
+createEmployer res: [{"eid":84,"company_name":"MediMetrics","size":"Medium"}]
+"eid" found at position: 3
+return eid: 84
+[       OK ] EmployerCreate.checkCreateEmployer (181 ms)
+[----------] 1 test from EmployerCreate (182 ms total)
+
+[----------] 1 test from EmployerChangePay
+[ RUN      ] EmployerChangePay.checkPayListing
+Pay updated successfully for listing ID 1.
+[       OK ] EmployerChangePay.checkPayListing (621 ms)
+[----------] 1 test from EmployerChangePay (621 ms total)
+
+[----------] 1 test from EmployerChangeSkillRequirements
+[ RUN      ] EmployerChangeSkillRequirements.checkChangeSkillRequirements
+Skill requirements updated successfully for listing ID 1.
+[       OK ] EmployerChangeSkillRequirements.checkChangeSkillRequirements (1299 ms)
+[----------] 1 test from EmployerChangeSkillRequirements (1299 ms total)
+
+[----------] 1 test from EmployerChangePersonalityType
+[ RUN      ] EmployerChangePersonalityType.checkChangePersonalityType
+{"personality_types": "INTJ"}
+Personality types updated successfully for listing ID 1.
+[       OK ] EmployerChangePersonalityType.checkChangePersonalityType (584 ms)
+[----------] 1 test from EmployerChangePersonalityType (584 ms total)
+
+[----------] 1 test from EmployerDeleteListing
+[ RUN      ] EmployerDeleteListing.checkDeleteListing
+status: {"code":"23503","details":"Key (lid)=(1) is still referenced from table \"Created_TEST\".","hint":null,"message":"update or delete on table \"Listing_TEST\" violates foreign key constraint \"Created_TEST_lid_fkey\" on table \"Created_TEST\""}
+statusCode: 409
+Listing ID 1 deleted successfully.
+[       OK ] EmployerDeleteListing.checkDeleteListing (409 ms)
+[----------] 1 test from EmployerDeleteListing (409 ms total)
+
+[----------] 3 tests from DimensionTest
+[ RUN      ] DimensionTest.FromJson_Success
+[       OK ] DimensionTest.FromJson_Success (0 ms)
+[ RUN      ] DimensionTest.FromJson_MissingFields
+[       OK ] DimensionTest.FromJson_MissingFields (0 ms)
+[ RUN      ] DimensionTest.FromJson_InvalidDataTypes
+[       OK ] DimensionTest.FromJson_InvalidDataTypes (1 ms)
+[----------] 3 tests from DimensionTest (2 ms total)
+
+[----------] 1 test from AuthDecodeBasicAuth
+[ RUN      ] AuthDecodeBasicAuth.checkDecodeBasicAuth
+Invalid Authorization header
+[       OK ] AuthDecodeBasicAuth.checkDecodeBasicAuth (0 ms)
+[----------] 1 test from AuthDecodeBasicAuth (0 ms total)
+
+[----------] 1 test from AuthCreateAPIUser
+[ RUN      ] AuthCreateAPIUser.checkCreateAPIUser
+Error: Email or password is empty
+Email already exists
+[       OK ] AuthCreateAPIUser.checkCreateAPIUser (292 ms)
+[----------] 1 test from AuthCreateAPIUser (292 ms total)
+
+[----------] 1 test from AuthGenAPIKey
+[ RUN      ] AuthGenAPIKey.checkGenAPIKey
+in Auth::genAPIKey
+insertRes: [{"aid":53,"created_at":"2024-11-28T05:00:52.934489+00:00","apikey":"fdd906eb7bbda61678d19a6d69b701d57ea6f2ff551292a4430a44a0a16d835f","uid":1,"role":"admin"}]
+in Auth::genAPIKey
+Error: API user with uid does not exist
+in Auth::genAPIKey
+Error: Roles other than admin and matching_platform are not yet implemented
+[       OK ] AuthGenAPIKey.checkGenAPIKey (493 ms)
+[----------] 1 test from AuthGenAPIKey (493 ms total)
+
+[----------] 1 test from AuthGetAid
+[ RUN      ] AuthGetAid.checkGetAid
+testing apiKey: kkjffthfhgfvhkjgvjhgkuyfk
+SELECT aid,apikey FROM Authentication_TEST WHERE apikey eq kkjffthfhgfvhkjgvjhgkuyfk
+Query complete.
+	Number of results: 33
+	Number of columns returned:  2
+
+Results: [{"aid":1,"apikey":"f1d2191c02d66b63e53093484a592255e0d1c39e3f1e0730fa787627c60c574c"}, 
+ {"aid":2,"apikey":"ba5f9ea8c7f10f32db923e1cc3c9b06b6f6343d435af33d106e5503542da7875"}, 
+ {"aid":3,"apikey":"f7bca0ddf6d381ea79fd1566fac9eb2d352da674f11c58e915c15374c0e9f9b5"}, 
+ {"aid":4,"apikey":"2e4e358c7e7e13767490aad328d20a15fe7a4c01fa17a7878bde61f8f08809dd"}, 
+ {"aid":5,"apikey":"519cdfa06ade29a5359698ee826247c89d440e0e568daa895925bd691f4816dd"}, 
+ {"aid":6,"apikey":"66bfa23cc483ea2378af92d565a4e7837d083b4ab9ceca35c8d06348c9ccedcb"}, 
+ {"aid":7,"apikey":"2dfe1db562c3e5fea3081450fc62b4c12e912b5ad603734ea1fdd8772c1efd5b"}, 
+ {"aid":8,"apikey":"96280b096dbdd1cd88276845086cccd2d9305877002e247228a73ce7bdefef59"}, 
+ {"aid":9,"apikey":"797c073dde4da9f8aff5fbc0fac62bb8cf1c710d4becb258e658af955adec5c3"}, 
+ {"aid":10,"apikey":"c033007c1d3dedf7a6daba8783a022cc3fee9becbde37eadf070b701faf0c574"}, 
+ {"aid":11,"apikey":"15f80924f88afb738eff5d53c08506a21ecc6f6a801cfefa2e5f43001149f33c"}, 
+ {"aid":12,"apikey":"e374e775cb6e3eece60e218bb696bb7db9eb622e351ffc52a572f37538b94e46"}, 
+ {"aid":13,"apikey":"2e66ccb2e839e47954176ad3888f1bbc2edf467e18880a4a5a08780e3457aaa9"}, 
+ {"aid":15,"apikey":"8ed687583b8223078a052276d28af72044b9049238dc96ca23e38019b37c166f"}, 
+ {"aid":17,"apikey":"a21a1e3c17ce02638b029bc0b9b64156e8cdf8f0421c9f30c80c735029622fd9"}, 
+ {"aid":19,"apikey":"bfb42a24fc09b44073be2d73736de3892cdd4882440665b79b2ad47e68965b9f"}, 
+ {"aid":21,"apikey":"a7b0fbea3bda1273bf7c6a74ea0a2986d7e20f1c62a83a258b572cf94159df5e"}, 
+ {"aid":23,"apikey":"52dcb4714b2a6a853ee736ba18f90b9f0461e941feb6ac4a8bda5b3a08bb624e"}, 
+ {"aid":25,"apikey":"0591352bb3276264fa572918c54f51e22cf859149479f9f70136d80e408c2842"}, 
+ {"aid":27,"apikey":"2adfc5367031defb2a9ab0f0c792820b20250cff5e31c7f6e8245bdc7872ec0f"}, 
+ {"aid":29,"apikey":"6aa9f376ee44a3cda6fd30477e5bde7afaa530815cda3450f4fd64e8646d620c"}, 
+ {"aid":31,"apikey":"c9083a6956336d02672874d97564cc15c0fd0fe8e5dcedce76b76261908815b4"}, 
+ {"aid":33,"apikey":"8c360626cd76851499a6c5448346beac5ada8513c7565c0490cac286f15c0ba7"}, 
+ {"aid":35,"apikey":"9e1adb83fd9f605358ee49b7fc1381ab78e84dd9c7952573ecc38a3a8fbe9393"}, 
+ {"aid":37,"apikey":"cff04d427d464bbaf1e9aea1c211f807a8810eabf2c0773a687bb0507b71d60a"}, 
+ {"aid":39,"apikey":"f5abab5ab5335cfce1567295fc739b5cda5ba5d527b366d56e74fcf4a047a70a"}, 
+ {"aid":41,"apikey":"b0bfcdef71812d1ec4e09288f25494ff0b40036af2124ec161a75cc1a6b62b00"}, 
+ {"aid":43,"apikey":"cc09ce6afa6c2063f42b0c89331e7c6afbd8520203a16b395208580455e6056f"}, 
+ {"aid":45,"apikey":"a252141fd82702530795babc3e6ea61df0307387f4cbc33e930e04f899a0b8c6"}, 
+ {"aid":47,"apikey":"895dbfd53f9ce30f78904d4bf76b6ed5c067d95306fe46b8ea0f38b36d6551d5"}, 
+ {"aid":49,"apikey":"eb2a2c940e444d8611f09ea1d1f3f67cd1afa28c813b4c8fd0c0420d3657b544"}, 
+ {"aid":51,"apikey":"f52f3807ba3dfa5c11e51f04491a649b43bd20ef62670095107e1b1c35785304"}, 
+ {"aid":53,"apikey":"fdd906eb7bbda61678d19a6d69b701d57ea6f2ff551292a4430a44a0a16d835f"}]
+
+Tokenized and listified: 
+List 0: (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53)
+List 1: ("f1d2191c02d66b63e53093484a592255e0d1c39e3f1e0730fa787627c60c574c", "ba5f9ea8c7f10f32db923e1cc3c9b06b6f6343d435af33d106e5503542da7875", "f7bca0ddf6d381ea79fd1566fac9eb2d352da674f11c58e915c15374c0e9f9b5", "2e4e358c7e7e13767490aad328d20a15fe7a4c01fa17a7878bde61f8f08809dd", "519cdfa06ade29a5359698ee826247c89d440e0e568daa895925bd691f4816dd", "66bfa23cc483ea2378af92d565a4e7837d083b4ab9ceca35c8d06348c9ccedcb", "2dfe1db562c3e5fea3081450fc62b4c12e912b5ad603734ea1fdd8772c1efd5b", "96280b096dbdd1cd88276845086cccd2d9305877002e247228a73ce7bdefef59", "797c073dde4da9f8aff5fbc0fac62bb8cf1c710d4becb258e658af955adec5c3", "c033007c1d3dedf7a6daba8783a022cc3fee9becbde37eadf070b701faf0c574", "15f80924f88afb738eff5d53c08506a21ecc6f6a801cfefa2e5f43001149f33c", "e374e775cb6e3eece60e218bb696bb7db9eb622e351ffc52a572f37538b94e46", "2e66ccb2e839e47954176ad3888f1bbc2edf467e18880a4a5a08780e3457aaa9", "8ed687583b8223078a052276d28af72044b9049238dc96ca23e38019b37c166f", "a21a1e3c17ce02638b029bc0b9b64156e8cdf8f0421c9f30c80c735029622fd9", "bfb42a24fc09b44073be2d73736de3892cdd4882440665b79b2ad47e68965b9f", "a7b0fbea3bda1273bf7c6a74ea0a2986d7e20f1c62a83a258b572cf94159df5e", "52dcb4714b2a6a853ee736ba18f90b9f0461e941feb6ac4a8bda5b3a08bb624e", "0591352bb3276264fa572918c54f51e22cf859149479f9f70136d80e408c2842", "2adfc5367031defb2a9ab0f0c792820b20250cff5e31c7f6e8245bdc7872ec0f", "6aa9f376ee44a3cda6fd30477e5bde7afaa530815cda3450f4fd64e8646d620c", "c9083a6956336d02672874d97564cc15c0fd0fe8e5dcedce76b76261908815b4", "8c360626cd76851499a6c5448346beac5ada8513c7565c0490cac286f15c0ba7", "9e1adb83fd9f605358ee49b7fc1381ab78e84dd9c7952573ecc38a3a8fbe9393", "cff04d427d464bbaf1e9aea1c211f807a8810eabf2c0773a687bb0507b71d60a", "f5abab5ab5335cfce1567295fc739b5cda5ba5d527b366d56e74fcf4a047a70a", "b0bfcdef71812d1ec4e09288f25494ff0b40036af2124ec161a75cc1a6b62b00", "cc09ce6afa6c2063f42b0c89331e7c6afbd8520203a16b395208580455e6056f", "a252141fd82702530795babc3e6ea61df0307387f4cbc33e930e04f899a0b8c6", "895dbfd53f9ce30f78904d4bf76b6ed5c067d95306fe46b8ea0f38b36d6551d5", "eb2a2c940e444d8611f09ea1d1f3f67cd1afa28c813b4c8fd0c0420d3657b544", "f52f3807ba3dfa5c11e51f04491a649b43bd20ef62670095107e1b1c35785304", "fdd906eb7bbda61678d19a6d69b701d57ea6f2ff551292a4430a44a0a16d835f")
+in getAid, resCount: 33
+testing apiKey: 75497150f67ac7b1f721d3333e397bc134e40ebd9c95cf0b9d03a030ef390c58
+SELECT aid,apikey FROM Authentication_TEST WHERE apikey eq 75497150f67ac7b1f721d3333e397bc134e40ebd9c95cf0b9d03a030ef390c58
+Query complete.
+	Number of results: 33
+	Number of columns returned:  2
+
+Results: [{"aid":1,"apikey":"f1d2191c02d66b63e53093484a592255e0d1c39e3f1e0730fa787627c60c574c"}, 
+ {"aid":2,"apikey":"ba5f9ea8c7f10f32db923e1cc3c9b06b6f6343d435af33d106e5503542da7875"}, 
+ {"aid":3,"apikey":"f7bca0ddf6d381ea79fd1566fac9eb2d352da674f11c58e915c15374c0e9f9b5"}, 
+ {"aid":4,"apikey":"2e4e358c7e7e13767490aad328d20a15fe7a4c01fa17a7878bde61f8f08809dd"}, 
+ {"aid":5,"apikey":"519cdfa06ade29a5359698ee826247c89d440e0e568daa895925bd691f4816dd"}, 
+ {"aid":6,"apikey":"66bfa23cc483ea2378af92d565a4e7837d083b4ab9ceca35c8d06348c9ccedcb"}, 
+ {"aid":7,"apikey":"2dfe1db562c3e5fea3081450fc62b4c12e912b5ad603734ea1fdd8772c1efd5b"}, 
+ {"aid":8,"apikey":"96280b096dbdd1cd88276845086cccd2d9305877002e247228a73ce7bdefef59"}, 
+ {"aid":9,"apikey":"797c073dde4da9f8aff5fbc0fac62bb8cf1c710d4becb258e658af955adec5c3"}, 
+ {"aid":10,"apikey":"c033007c1d3dedf7a6daba8783a022cc3fee9becbde37eadf070b701faf0c574"}, 
+ {"aid":11,"apikey":"15f80924f88afb738eff5d53c08506a21ecc6f6a801cfefa2e5f43001149f33c"}, 
+ {"aid":12,"apikey":"e374e775cb6e3eece60e218bb696bb7db9eb622e351ffc52a572f37538b94e46"}, 
+ {"aid":13,"apikey":"2e66ccb2e839e47954176ad3888f1bbc2edf467e18880a4a5a08780e3457aaa9"}, 
+ {"aid":15,"apikey":"8ed687583b8223078a052276d28af72044b9049238dc96ca23e38019b37c166f"}, 
+ {"aid":17,"apikey":"a21a1e3c17ce02638b029bc0b9b64156e8cdf8f0421c9f30c80c735029622fd9"}, 
+ {"aid":19,"apikey":"bfb42a24fc09b44073be2d73736de3892cdd4882440665b79b2ad47e68965b9f"}, 
+ {"aid":21,"apikey":"a7b0fbea3bda1273bf7c6a74ea0a2986d7e20f1c62a83a258b572cf94159df5e"}, 
+ {"aid":23,"apikey":"52dcb4714b2a6a853ee736ba18f90b9f0461e941feb6ac4a8bda5b3a08bb624e"}, 
+ {"aid":25,"apikey":"0591352bb3276264fa572918c54f51e22cf859149479f9f70136d80e408c2842"}, 
+ {"aid":27,"apikey":"2adfc5367031defb2a9ab0f0c792820b20250cff5e31c7f6e8245bdc7872ec0f"}, 
+ {"aid":29,"apikey":"6aa9f376ee44a3cda6fd30477e5bde7afaa530815cda3450f4fd64e8646d620c"}, 
+ {"aid":31,"apikey":"c9083a6956336d02672874d97564cc15c0fd0fe8e5dcedce76b76261908815b4"}, 
+ {"aid":33,"apikey":"8c360626cd76851499a6c5448346beac5ada8513c7565c0490cac286f15c0ba7"}, 
+ {"aid":35,"apikey":"9e1adb83fd9f605358ee49b7fc1381ab78e84dd9c7952573ecc38a3a8fbe9393"}, 
+ {"aid":37,"apikey":"cff04d427d464bbaf1e9aea1c211f807a8810eabf2c0773a687bb0507b71d60a"}, 
+ {"aid":39,"apikey":"f5abab5ab5335cfce1567295fc739b5cda5ba5d527b366d56e74fcf4a047a70a"}, 
+ {"aid":41,"apikey":"b0bfcdef71812d1ec4e09288f25494ff0b40036af2124ec161a75cc1a6b62b00"}, 
+ {"aid":43,"apikey":"cc09ce6afa6c2063f42b0c89331e7c6afbd8520203a16b395208580455e6056f"}, 
+ {"aid":45,"apikey":"a252141fd82702530795babc3e6ea61df0307387f4cbc33e930e04f899a0b8c6"}, 
+ {"aid":47,"apikey":"895dbfd53f9ce30f78904d4bf76b6ed5c067d95306fe46b8ea0f38b36d6551d5"}, 
+ {"aid":49,"apikey":"eb2a2c940e444d8611f09ea1d1f3f67cd1afa28c813b4c8fd0c0420d3657b544"}, 
+ {"aid":51,"apikey":"f52f3807ba3dfa5c11e51f04491a649b43bd20ef62670095107e1b1c35785304"}, 
+ {"aid":53,"apikey":"fdd906eb7bbda61678d19a6d69b701d57ea6f2ff551292a4430a44a0a16d835f"}]
+
+Tokenized and listified: 
+List 0: (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53)
+List 1: ("f1d2191c02d66b63e53093484a592255e0d1c39e3f1e0730fa787627c60c574c", "ba5f9ea8c7f10f32db923e1cc3c9b06b6f6343d435af33d106e5503542da7875", "f7bca0ddf6d381ea79fd1566fac9eb2d352da674f11c58e915c15374c0e9f9b5", "2e4e358c7e7e13767490aad328d20a15fe7a4c01fa17a7878bde61f8f08809dd", "519cdfa06ade29a5359698ee826247c89d440e0e568daa895925bd691f4816dd", "66bfa23cc483ea2378af92d565a4e7837d083b4ab9ceca35c8d06348c9ccedcb", "2dfe1db562c3e5fea3081450fc62b4c12e912b5ad603734ea1fdd8772c1efd5b", "96280b096dbdd1cd88276845086cccd2d9305877002e247228a73ce7bdefef59", "797c073dde4da9f8aff5fbc0fac62bb8cf1c710d4becb258e658af955adec5c3", "c033007c1d3dedf7a6daba8783a022cc3fee9becbde37eadf070b701faf0c574", "15f80924f88afb738eff5d53c08506a21ecc6f6a801cfefa2e5f43001149f33c", "e374e775cb6e3eece60e218bb696bb7db9eb622e351ffc52a572f37538b94e46", "2e66ccb2e839e47954176ad3888f1bbc2edf467e18880a4a5a08780e3457aaa9", "8ed687583b8223078a052276d28af72044b9049238dc96ca23e38019b37c166f", "a21a1e3c17ce02638b029bc0b9b64156e8cdf8f0421c9f30c80c735029622fd9", "bfb42a24fc09b44073be2d73736de3892cdd4882440665b79b2ad47e68965b9f", "a7b0fbea3bda1273bf7c6a74ea0a2986d7e20f1c62a83a258b572cf94159df5e", "52dcb4714b2a6a853ee736ba18f90b9f0461e941feb6ac4a8bda5b3a08bb624e", "0591352bb3276264fa572918c54f51e22cf859149479f9f70136d80e408c2842", "2adfc5367031defb2a9ab0f0c792820b20250cff5e31c7f6e8245bdc7872ec0f", "6aa9f376ee44a3cda6fd30477e5bde7afaa530815cda3450f4fd64e8646d620c", "c9083a6956336d02672874d97564cc15c0fd0fe8e5dcedce76b76261908815b4", "8c360626cd76851499a6c5448346beac5ada8513c7565c0490cac286f15c0ba7", "9e1adb83fd9f605358ee49b7fc1381ab78e84dd9c7952573ecc38a3a8fbe9393", "cff04d427d464bbaf1e9aea1c211f807a8810eabf2c0773a687bb0507b71d60a", "f5abab5ab5335cfce1567295fc739b5cda5ba5d527b366d56e74fcf4a047a70a", "b0bfcdef71812d1ec4e09288f25494ff0b40036af2124ec161a75cc1a6b62b00", "cc09ce6afa6c2063f42b0c89331e7c6afbd8520203a16b395208580455e6056f", "a252141fd82702530795babc3e6ea61df0307387f4cbc33e930e04f899a0b8c6", "895dbfd53f9ce30f78904d4bf76b6ed5c067d95306fe46b8ea0f38b36d6551d5", "eb2a2c940e444d8611f09ea1d1f3f67cd1afa28c813b4c8fd0c0420d3657b544", "f52f3807ba3dfa5c11e51f04491a649b43bd20ef62670095107e1b1c35785304", "fdd906eb7bbda61678d19a6d69b701d57ea6f2ff551292a4430a44a0a16d835f")
+in getAid, resCount: 33
+[       OK ] AuthGetAid.checkGetAid (299 ms)
+[----------] 1 test from AuthGetAid (299 ms total)
+
+[----------] 1 test from AuthGetRole
+[ RUN      ] AuthGetRole.checkGetRole
+Error: aid does not exist, please check the input
+[       OK ] AuthGetRole.checkGetRole (301 ms)
+[----------] 1 test from AuthGetRole (301 ms total)
+
+[----------] 1 test from AuthIntegration
+[ RUN      ] AuthIntegration.checkAuthIntegration
+in Auth::genAPIKey
+Error: API user with uid does not exist
+insertRes: [{"id":26,"created_at":"2024-11-28T05:00:54.278459+00:00","email":"test25@email.com","password":"test25"}]
+in Auth::genAPIKey
+insertRes: {"code":"23503","details":"Key (uid)=(26) is not present in table \"API_User\".","hint":null,"message":"insert or update on table \"Authentication_TEST\" violates foreign key constraint \"Authentication_TEST_uid_fkey\""}
+Email already exists
+[       OK ] AuthIntegration.checkAuthIntegration (1180 ms)
+[----------] 1 test from AuthIntegration (1180 ms total)
+
+[----------] 1 test from dbIntegration
+[ RUN      ] dbIntegration.CheckDbIntegration
+SELECT name FROM Dimension WHERE dim_id eq 1
+Query complete.
+	Number of results: 0
+	Number of columns returned:  0
+
+Results: 
+
+Tokenized and listified: 
+SELECT name FROM Dimension_TEST WHERE dim_id eq 1
+Query complete.
+	Number of results: 1
+	Number of columns returned:  1
+
+Results: [{"name":"location"}]
+
+Tokenized and listified: 
+List 0: ("location")
+SELECT name FROM Dimension_TEST WHERE   
+Query complete.
+	Number of results: 39
+	Number of columns returned:  1
+
+Results: [{"name":"location"}, 
+ {"name":"skill1"}, 
+ {"name":"skill2"}, 
+ {"name":"skill3"}, 
+ {"name":"skill4"}, 
+ {"name":"skill5"}, 
+ {"name":"interest1"}, 
+ {"name":"interest2"}, 
+ {"name":"interest3"}, 
+ {"name":"interest4"}, 
+ {"name":"interest5"}, 
+ {"name":"pay"}, 
+ {"name":"mbti"}, 
+ {"name":"gender"}, 
+ {"name":"diversity"}, 
+ {"name":"flexibility"}, 
+ {"name":"remote"}, 
+ {"name":"workspace"}, 
+ {"name":"field"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}, 
+ {"name":"dimension name"}]
+
+Tokenized and listified: 
+List 0: ("location", "skill1", "skill2", "skill3", "skill4", "skill5", "interest1", "interest2", "interest3", "interest4", "interest5", "pay", "mbti", "gender", "diversity", "flexibility", "remote", "workspace", "field", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name", "dimension name")
+SELECT name FROM Dimension_TEST WHERE dim_id eq 40
+Query complete.
+	Number of results: 0
+	Number of columns returned:  0
+
+Results: []
+
+Tokenized and listified: 
+insertRes: [{"dim_id":40,"name":"dimension name","def_weight":50}]
+SELECT name FROM Dimension_TEST WHERE dim_id eq 40
+Query complete.
+	Number of results: 1
+	Number of columns returned:  1
+
+Results: [{"name":"dimension name"}]
+
+Tokenized and listified: 
+List 0: ("dimension name")
+updateRes: [{"dim_id":40,"name":"dimension name","def_weight":70}]
+[       OK ] dbIntegration.CheckDbIntegration (833 ms)
+[----------] 1 test from dbIntegration (833 ms total)
+
+[----------] 1 test from MatcherUserDimensionIntegration
+[ RUN      ] MatcherUserDimensionIntegration.CheckMatcherUserDimensionIntegration
+WordNet is already initialized.
+Insert Response: [{"id":26,"created_at":"2024-11-28T05:00:56.550066+00:00","uname":"test26","email":"test26@email.com"}]
+saveRes: User created with ID: 26
+WordNet is already initialized.
+Dimension Insert Response: [{"id":26,"loc":"","field":"Computer Science","pay":0,"gender":false,"diversity":false,"mbti":"","flexibility":true,"remote":false,"workspace":false}]
+Dimension data saved for user ID: 26
+[       OK ] MatcherUserDimensionIntegration.CheckMatcherUserDimensionIntegration (1514 ms)
+[----------] 1 test from MatcherUserDimensionIntegration (1514 ms total)
+
+[----------] Global test environment tear-down
+[==========] 52 tests from 47 test suites ran. (286201 ms total)
+[  PASSED  ] 52 tests.
