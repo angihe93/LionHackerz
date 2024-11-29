@@ -40,6 +40,18 @@ TEST(AuthCreateAPIUser, checkCreateAPIUser) {
     int uid = a->createAPIUser(email, password);
     EXPECT_EQ(uid, -1);
 
+    // create user should fail
+    email = "abc";
+    password = "";
+    uid = a->createAPIUser(email, password);
+    EXPECT_EQ(uid, -1);
+
+    // create user should fail
+    email = "";
+    password = "abc";
+    uid = a->createAPIUser(email, password);
+    EXPECT_EQ(uid, -1);
+
     // create user should succeed
     // get the largest uid, the created uid should be this + 1
     // or if user with email already exists, return its uid
