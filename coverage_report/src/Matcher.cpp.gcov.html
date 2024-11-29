@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2024-11-29 17:20:16</td>
+            <td class="headerValue">2024-11-29 17:45:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">78.3&nbsp;%</td>
@@ -295,11 +295,11 @@
 <span id="L223"><span class="lineNum">     223</span>                 :             :            than 25% of the user's preferred dimensions are not present in</span>
 <span id="L224"><span class="lineNum">     224</span>                 :             :            the listing - all others go into candidates */</span>
 <span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">           9 :         int l = 0;</span></span>
-<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">         683 :         for (auto &amp;lid : lists[0])</span></span>
+<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">         701 :         for (auto &amp;lid : lists[0])</span></span>
 <span id="L227"><span class="lineNum">     227</span>                 :             :         {</span>
-<span id="L228"><span class="lineNum">     228</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         674 :             if (static_cast&lt;float&gt;(nonNullCount[l]) / static_cast&lt;float&gt;(prefDimCount) &gt; 0.25)</span></span>
+<span id="L228"><span class="lineNum">     228</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         692 :             if (static_cast&lt;float&gt;(nonNullCount[l]) / static_cast&lt;float&gt;(prefDimCount) &gt; 0.25)</span></span>
 <span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          35 :                 candidates.push_back(stoi(lid));</span></span>
-<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">         674 :             l++;</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">         692 :             l++;</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :             :         }</span>
 <span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">           9 :         sort(candidates.begin(), candidates.end());</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :<span class="tlaGNC">           9 :         return candidates;</span></span>
@@ -528,8 +528,8 @@
 <span id="L445"><span class="lineNum">     445</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          30 :                     if (wU == wE)</span></span>
 <span id="L446"><span class="lineNum">     446</span>                 :             :                     {</span>
 <span id="L447"><span class="lineNum">     447</span>                 :<span class="tlaGNC">          25 :                         bool alreadyStored = false;</span></span>
-<span id="L448"><span class="lineNum">     448</span>                 :<span class="tlaGNC">         101 :                         for (std::string &amp;mw : matchedWords[cNum])</span></span>
-<span id="L449"><span class="lineNum">     449</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          76 :                             if (mw == wE)</span></span>
+<span id="L448"><span class="lineNum">     448</span>                 :<span class="tlaGNC">         103 :                         for (std::string &amp;mw : matchedWords[cNum])</span></span>
+<span id="L449"><span class="lineNum">     449</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          78 :                             if (mw == wE)</span></span>
 <span id="L450"><span class="lineNum">     450</span>                 :<span class="tlaGNC">          10 :                                 alreadyStored = true;</span></span>
 <span id="L451"><span class="lineNum">     451</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          25 :                         if (!alreadyStored)</span></span>
 <span id="L452"><span class="lineNum">     452</span>                 :<span class="tlaGNC">          15 :                             matchedWords[cNum].push_back(wE);</span></span>
