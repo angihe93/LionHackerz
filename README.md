@@ -12,7 +12,7 @@ A demoable app/client can be found in the following repo:
 
 	https://github.com/ds4015/w4156-app
 
- CI is set up to build and run tests, coverage, static analysis, and style check on push and pull requests. It is set up in Actions as a workflow named "CMake on a single platform". Click on a workflow run and scroll down to Artifacts section to download reports and outputs produced during runtime. Some reports and outputs produced from a previous workflow run is in workflow_output/. Coverage report from a previous run is in build/coverage_report.
+ CI is set up to build and run tests, coverage, static analysis, and style check on push and pull requests. It is set up in Actions as a workflow named "CMake on a single platform". Click on a workflow run and scroll down to Artifacts section to download reports and outputs produced during runtime. Some reports and outputs produced from a previous workflow run is in workflow_output/. Coverage report from a previous run is in coverage_report/.
 
 # Initial Setup
 

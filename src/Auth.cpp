@@ -131,7 +131,6 @@ int Auth::getAid(std::string apiKey) {
         int resCount = 0;
 
         std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,key", "key", "eq", apiKey, false, resCount);
-        std::cout << "in getAid, resCount: " << resCount << std::endl;
         if (resCount == 0) {
                 std::cout << "Error: API key does not exist, please check the input" << std::endl;
                 return -1;
