@@ -77,7 +77,7 @@ include(GoogleTest)
    test/ListingUnitTests.cpp
    test/EmployerUnitTests.cpp
    test/DimensionUnitTests.cpp
-   # add user unit tests
+#    test/UserUnitTests.cpp
    test/AuthUnitTests.cpp
    test/AuthIntegrationTests.cpp
    test/DatabaseIntegrationTests.cpp

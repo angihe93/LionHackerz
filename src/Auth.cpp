@@ -110,7 +110,7 @@ std::string Auth::genAPIKey(std::string role, int uid) {
         }
 
         std::string apikey = generateRandomHex(32);
-        std::string data = "{\"apikey\": \"" + apikey + "\", \"role\": \"" + role + "\", \"uid\": \"" + std::to_string(uid) +"\"}";
+        std::string data = "{\"key\": \"" + apikey + "\", \"role\": \"" + role + "\", \"uid\": \"" + std::to_string(uid) +"\"}";
 
         std::string insertRes = db->insert("Authentication",data);
         std::cout << "insertRes: " << insertRes << std::endl;
@@ -129,26 +129,14 @@ int Auth::getAid(std::string apiKey) {
                 return -1; 
         }
         int resCount = 0;
-        // std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,apikey", "apikey", "eq", apiKey, true, resCount);
-        // apiKey = "\'" + apiKey + "\'";
-        std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,apikey", "apikey", "eq", apiKey, true, resCount);
+
+        std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,key", "key", "eq", apiKey, false, resCount);
         std::cout << "in getAid, resCount: " << resCount << std::endl;
         if (resCount == 0) {
                 std::cout << "Error: API key does not exist, please check the input" << std::endl;
                 return -1;
         }
         int aid = std::stoi(queryRes[0][0]);
-        // // strange bug in db->query, it returns all rows for every apikey eq
-        // // add additional check to make sure the apikey matches
-        // int aid = -1;
-        // for (int i = 0; i < resCount; i++) {
-        //         std::cout << "queryRes[1][i]: " << queryRes[1][i] << std::endl;
-        //         if (queryRes[1][i] == apiKey) {
-        //                 std::cout << "queryRes[1][i] == apiKey" << std::endl;
-        //                 aid = std::stoi(queryRes[0][i]);
-        //                 break;
-        //         }
-        // }
 
         return aid;
 }
