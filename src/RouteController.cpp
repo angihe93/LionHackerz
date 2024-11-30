@@ -111,7 +111,6 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
         std::cout << "test3" << std::endl;
 
         size_t id_pos = retStr.find("Error:");
-        std::cout << "test4" << std::endl;
 
         if (id_pos != std::string::npos)
         { // error
@@ -896,9 +895,9 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
 {
     try
     {
-        if (!checkAuthHeaders(req, res)) {
-            return; // response has already been written in checkApiHeaders
-        }
+       // if (!checkAuthHeaders(req, res)) {
+        //    return; // response has already been written in checkApiHeaders
+       // }
 
         // Parse the JSON body
         auto body = crow::json::load(req.body);
