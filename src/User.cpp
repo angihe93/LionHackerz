@@ -5,8 +5,8 @@
 #include <iostream>
 #include <stdexcept>
 
-User::User(const std::string& rname, const std::string& name, const std::string& email)
-    : real_name(rname), name(name), email(email), id(-1) {}
+User::User(const std::string& name, const std::string& email)
+    : name(name), email(email), id(-1) {}
 
 std::string User::escapeJson(const std::string& input) {
     std::string output;
@@ -24,7 +24,7 @@ std::string User::escapeJson(const std::string& input) {
 
 std::string User::save(Database& db) {
     // Construct JSON data for insertion
-    std::string data = "{\"real_name\": \"" + escapeJson(real_name) + "\", \"uname\": \"" + escapeJson(name) + "\", \"email\": \"" + escapeJson(email) + "\"}";
+    std::string data = "{\"uname\": \"" + escapeJson(name) + "\", \"email\": \"" + escapeJson(email) + "\"}";
 
     // Insert into 'users' table
     std::string response = db.insert("User", data);

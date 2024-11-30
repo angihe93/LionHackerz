@@ -1,4 +1,3 @@
-// Copyright 2024 LionHackerz
 #include "Dimension.h"
 #include <iostream>
 #include <stdexcept>
@@ -68,7 +67,7 @@ std::string Dimension::save(Database &db) {
     data += "}";
 
     // Insert into DB
-    std::string response = db.insert("Has_Dimension", data);
+    std::string response = db.insert("Dimension", data);
     std::cout << "Dimension Insert Response: " << response << std::endl;
 
     return "Dimension data saved for user ID: " + std::to_string(user_id);

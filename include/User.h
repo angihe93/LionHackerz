@@ -10,11 +10,10 @@ class User {
 public:
     int id; 
     std::string name;
-    std::string real_name;
     std::string email;
 
     // Constructor
-    User(const std::string& rname, const std::string& name, const std::string& email);
+    User(const std::string& name, const std::string& email);
 
     // Method to save the user to the database
     std::string save(Database& db);

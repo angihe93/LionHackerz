@@ -4,7 +4,6 @@
 #define ROUTECONTROLLER_H
 
 #include "crow.h"
-#include "crow/middlewares/cors.h"
 #include "Database.h"
 #include <cpp_redis/cpp_redis>
 #include "Global.h"
@@ -26,7 +25,7 @@ class RouteController {
         Database* db;
 
     public:
-        void initRoutes(crow::SimpleApp &app);
+        void initRoutes(crow::App<>& app);
         void setDatabase(Database* db);
 
         /**
@@ -110,7 +109,6 @@ class RouteController {
         void dbtest(const crow::request& req, crow::response& res);
 
         void makeUser(const crow::request &req, crow::response &res);
-        void getUIDFromAPIKey(const crow::request &req, crow::response &res);
         void returnError(crow::response &res, int code, const std::string &message);
         std::string parseSkills(const crow::json::rvalue &skills_json, std::vector<SkillInput> &skills);
         std::string parseInterests(const crow::json::rvalue &interests_json, std::vector<InterestInput> &interests);

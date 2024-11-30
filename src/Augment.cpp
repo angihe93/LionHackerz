@@ -5,15 +5,15 @@
 #include <iostream>
 #include <stdexcept>
 
-bool dimExists(Database *db, int dim_id) {
+bool dimExists(Database& db, int dim_id) {
     int resCount = 0;
     // Query the 'dimension' table to check if dim_id exists
     std::vector<std::vector<std::string>> result =
-        db->query("dimension", "id", "id", "eq", std::to_string(dim_id), false, resCount);
+        db.query("dimension", "id", "id", "eq", std::to_string(dim_id), false, resCount);
     return resCount > 0;
 }
 
-std::string processAugments(Database *db, int user_id, const std::vector<AugmentInput>& augments) {
+std::string processAugments(Database& db, int user_id, const std::vector<AugmentInput>& augments) {
     std::string result = "Augmentation processing completed.";
     for (const auto& augment : augments) {
         // Verify that dim_id exists
@@ -39,7 +39,7 @@ std::string processAugments(Database *db, int user_id, const std::vector<Augment
         //std::cout << data << std::endl;
 
         // Insert into 'has_augment' table
-        std::string response = db->insert("Has_Augment", data);
+        std::string response = db.insert("Has_Augment", data);
         std::cout << "Augment Insert Response: " << response << std::endl;
     }
     return result;
