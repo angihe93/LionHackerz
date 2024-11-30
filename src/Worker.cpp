@@ -1,8 +1,11 @@
+// Copyright 2024 LionHackerz
+
+#include "Worker.h"
 #include <cpp_redis/cpp_redis>
 #include "Worker.h"
-#include <iostream>
 #include <chrono>
 #include <mutex>
+#include <iostream>
 
 
 Worker::Worker(cpp_redis::client &redis, Matcher *matcher, std::mutex &mutex)
