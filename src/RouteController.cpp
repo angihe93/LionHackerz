@@ -333,6 +333,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         return;
     }
 
+
     // No cached result, queue the task for processing
     std::cout << "No cache found for UID " << uid << ". Adding task to queue." << std::endl;
 
@@ -1041,6 +1042,61 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
     }
 }
 
+void RouteController::getProfile(const crow::request &req, crow::response &res) {
+
+    crow::json::wvalue jsonRes;
+
+    auto params = crow::query_string(req.url_params);
+
+    int uid = std::stoi(params.get("uid"));    
+
+    int resCount = 0;
+    std::vector<std::vector<std::string>> result = 
+        db->query("Has_Dimension", "", "id", "eq", std::to_string(uid), false, resCount);
+    resCount = 0;
+
+    std::vector<std::vector<std::string>> skills = 
+        db->query("Has_Skill", "name", "id", "eq", std::to_string(uid), false, resCount);
+
+    resCount = 0;
+    std::vector<std::vector<std::string>> interests = 
+        db->query("Has_Interest", "name", "uid", "eq", std::to_string(uid), false, resCount);
+
+    std::string profile = "{";
+    
+    int count = 1;
+    
+    for (auto &r : skills) {
+        for (auto &c : r) {
+            profile += "\"skill" + std::to_string(count) + "\": " + c + ",";
+            count++;
+        }
+    }
+    count = 1;
+    for (auto &r : interests) {
+        for (auto &c : r) {
+            profile += "\"interest" + std::to_string(count) + "\": " + c + ",";
+            count++;
+        }
+    }
+
+    profile += "\"location\": " + result[1][0] + ",";
+    profile += "\"field\": " + result[2][0] + ",";    
+    profile += "\"pay\": " + result[3][0] + ",";
+    profile += "\"gender\": " + result[4][0] + ",";
+    profile += "\"diversity\": " + result[5][0] + ",";
+    profile += "\"flexibility\": " + result[6][0] + ",";
+    profile += "\"remote\": " + result[7][0] + ",";
+    profile += "\"workspace\": " + result[8][0] + "";
+    profile += "}";
+
+    jsonRes["results"] = profile;
+    res.write(jsonRes.dump());
+    res.end();
+
+    return;
+}
+
 
 void RouteController::returnError(crow::response &res, int code, const std::string &message)
 {
@@ -1235,6 +1291,10 @@ void RouteController::initRoutes(crow::SimpleApp &app)
   /* USER ROUTE */
     CROW_ROUTE(app, "/makeUser")
         .methods("POST"_method, "OPTIONS"_method)([this](const crow::request &req, crow::response &res)
-                                        { makeUser(req, res); }); 
+                                        { makeUser(req, res); });
+
+    CROW_ROUTE(app, "/getProfile")
+        .methods("GET"_method, "OPTIONS"_method)([this](const crow::request &req, crow::response &res)
+                                        { getProfile(req, res); }); 
 
 }

@@ -63,6 +63,7 @@ std::string Database::request(const std::string &getPostPatch, const std::string
                   << "any AI-related functions.  Please set this and try again." << std::endl;
                   return "";
     }
+    
 
     CURL *curl = curl_easy_init();
     std::string response;
@@ -100,15 +101,15 @@ std::string Database::request(const std::string &getPostPatch, const std::string
     }
 
 
-        if (getPostPatch == "POST" || getPostPatch == "AI") {
-           	curl_easy_setopt(curl, CURLOPT_POST, 1L);
-        } else if (getPostPatch == "PATCH") {
-            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
-        } else if (getPostPatch == "GET" || getPostPatch == "AI") {
-            curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
-        }
-        if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH" || getPostPatch == "AI"))
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
+    if (getPostPatch == "POST" || getPostPatch == "AI") {
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+    } else if (getPostPatch == "PATCH") {
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
+    } else if (getPostPatch == "GET" || getPostPatch == "AI") {
+        curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+    }
+    if (!insertData.empty() && (getPostPatch == "POST" || getPostPatch == "PATCH" || getPostPatch == "AI"))
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());
 
 
 
@@ -118,7 +119,7 @@ std::string Database::request(const std::string &getPostPatch, const std::string
 
     CURLcode res = curl_easy_perform(curl);
 
-    int16_t response_code;
+    long response_code; /* NOTE: this must be type long to work on deployed server */
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
     httpStatusCode = std::to_string(response_code);
 

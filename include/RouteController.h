@@ -109,6 +109,7 @@ class RouteController {
          *      the end user of the API, more for development purposes. */
         void dbtest(const crow::request& req, crow::response& res);
 
+        void getProfile(const crow::request &req, crow::response &res);
         void makeUser(const crow::request &req, crow::response &res);
         void getUIDFromAPIKey(const crow::request &req, crow::response &res);
         void returnError(crow::response &res, int code, const std::string &message);
