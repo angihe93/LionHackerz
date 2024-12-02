@@ -92,6 +92,12 @@ TEST(AuthGenAPIKey, checkGenAPIKey) {
         apiKey = a->genAPIKey(role, uid);
         EXPECT_NE(apiKey.find("Error:"), std::string::npos);
 
+        // gen api should succeed
+        role = "matching_platform";
+        uid = 5;
+        apiKey = a->genAPIKey(role, uid);
+        EXPECT_EQ(apiKey.find("Error:"), std::string::npos);
+
         delete db;
         delete a;
 }

@@ -31,13 +31,13 @@
             <td class="headerValue">coverageN_.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">68.7&nbsp;%</td>
+            <td class="headerCovTableEntryLo">71.0&nbsp;%</td>
             <td class="headerCovTableEntry">782</td>
-            <td class="headerCovTableEntry">537</td>
+            <td class="headerCovTableEntry">555</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2024-11-29 17:45:15</td>
+            <td class="headerValue">2024-12-02 01:28:41</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">78.3&nbsp;%</td>
@@ -49,9 +49,9 @@
             <td></td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">53.9&nbsp;%</td>
+            <td class="headerCovTableEntryLo">53.6&nbsp;%</td>
             <td class="headerCovTableEntry">332</td>
-            <td class="headerCovTableEntry">179</td>
+            <td class="headerCovTableEntry">178</td>
           </tr>
                   <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -295,11 +295,11 @@
 <span id="L223"><span class="lineNum">     223</span>                 :             :            than 25% of the user's preferred dimensions are not present in</span>
 <span id="L224"><span class="lineNum">     224</span>                 :             :            the listing - all others go into candidates */</span>
 <span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">           9 :         int l = 0;</span></span>
-<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">         701 :         for (auto &amp;lid : lists[0])</span></span>
+<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">         837 :         for (auto &amp;lid : lists[0])</span></span>
 <span id="L227"><span class="lineNum">     227</span>                 :             :         {</span>
-<span id="L228"><span class="lineNum">     228</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         692 :             if (static_cast&lt;float&gt;(nonNullCount[l]) / static_cast&lt;float&gt;(prefDimCount) &gt; 0.25)</span></span>
+<span id="L228"><span class="lineNum">     228</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         828 :             if (static_cast&lt;float&gt;(nonNullCount[l]) / static_cast&lt;float&gt;(prefDimCount) &gt; 0.25)</span></span>
 <span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          35 :                 candidates.push_back(stoi(lid));</span></span>
-<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">         692 :             l++;</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">         828 :             l++;</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :             :         }</span>
 <span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">           9 :         sort(candidates.begin(), candidates.end());</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :<span class="tlaGNC">           9 :         return candidates;</span></span>
@@ -498,12 +498,12 @@
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span>]
 <span id="L420"><span class="lineNum">     420</span>                 :<span class="tlaGNC">         100 :                      interestAugmentsAlreadyApplied.end(), &quot;\&quot;interest1\&quot;&quot;) ==</span></span>
 <span id="L421"><span class="lineNum">     421</span>                 :<span class="tlaGNC">         100 :                 interestAugmentsAlreadyApplied.end())</span></span>
-<span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">          76 :                 interestAugments.push_back(&quot;\&quot;interest1\&quot;&quot;);</span></span>
+<span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">          80 :                 interestAugments.push_back(&quot;\&quot;interest1\&quot;&quot;);</span></span>
 <span id="L423"><span class="lineNum">     423</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         200 :             if (find(interestAugmentsAlreadyApplied.begin(),</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span>]
 <span id="L424"><span class="lineNum">     424</span>                 :<span class="tlaGNC">         100 :                      interestAugmentsAlreadyApplied.end(), &quot;\&quot;interest2\&quot;&quot;) ==</span></span>
 <span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">         100 :                 interestAugmentsAlreadyApplied.end())</span></span>
-<span id="L426"><span class="lineNum">     426</span>                 :<span class="tlaGNC">          91 :                 interestAugments.push_back(&quot;\&quot;interest2\&quot;&quot;);</span></span>
+<span id="L426"><span class="lineNum">     426</span>                 :<span class="tlaGNC">          95 :                 interestAugments.push_back(&quot;\&quot;interest2\&quot;&quot;);</span></span>
 <span id="L427"><span class="lineNum">     427</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         200 :             if (find(interestAugmentsAlreadyApplied.begin(),</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
 <span id="L428"><span class="lineNum">     428</span>                 :<span class="tlaGNC">         100 :                      interestAugmentsAlreadyApplied.end(), &quot;\&quot;interest3\&quot;&quot;) ==</span></span>
@@ -528,8 +528,8 @@
 <span id="L445"><span class="lineNum">     445</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          30 :                     if (wU == wE)</span></span>
 <span id="L446"><span class="lineNum">     446</span>                 :             :                     {</span>
 <span id="L447"><span class="lineNum">     447</span>                 :<span class="tlaGNC">          25 :                         bool alreadyStored = false;</span></span>
-<span id="L448"><span class="lineNum">     448</span>                 :<span class="tlaGNC">         103 :                         for (std::string &amp;mw : matchedWords[cNum])</span></span>
-<span id="L449"><span class="lineNum">     449</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          78 :                             if (mw == wE)</span></span>
+<span id="L448"><span class="lineNum">     448</span>                 :<span class="tlaGNC">          85 :                         for (std::string &amp;mw : matchedWords[cNum])</span></span>
+<span id="L449"><span class="lineNum">     449</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          60 :                             if (mw == wE)</span></span>
 <span id="L450"><span class="lineNum">     450</span>                 :<span class="tlaGNC">          10 :                                 alreadyStored = true;</span></span>
 <span id="L451"><span class="lineNum">     451</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          25 :                         if (!alreadyStored)</span></span>
 <span id="L452"><span class="lineNum">     452</span>                 :<span class="tlaGNC">          15 :                             matchedWords[cNum].push_back(wE);</span></span>
@@ -586,7 +586,7 @@
 <span id="L502"><span class="lineNum">     502</span>                 :<span class="tlaGNC">          25 :         auto gendU = userVals[4][0];</span></span>
 <span id="L503"><span class="lineNum">     503</span>                 :<span class="tlaGNC">          25 :         auto gendE = all_listings[16][cInd];</span></span>
 <span id="L504"><span class="lineNum">     504</span>                 :             : </span>
-<span id="L505"><span class="lineNum">     505</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          25 :         if (gendU == gendE &amp;&amp; gendU != &quot;\&quot;null\&quot;&quot;)</span></span>
+<span id="L505"><span class="lineNum">     505</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaGNC">          25 :         if (gendU == gendE &amp;&amp; gendU != &quot;\&quot;null\&quot;&quot;)</span></span>
 <span id="L506"><span class="lineNum">     506</span>                 :             :         {</span>
 <span id="L507"><span class="lineNum">     507</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             candidateScore += 15;</span></span>
 <span id="L508"><span class="lineNum">     508</span>                 :             : </span>
@@ -602,21 +602,21 @@
 <span id="L518"><span class="lineNum">     518</span>                 :             :         /* score on diversity + augment if applicable */</span>
 <span id="L519"><span class="lineNum">     519</span>                 :<span class="tlaGNC tlaBgGNC">          25 :         auto divU = userVals[5][0];</span></span>
 <span id="L520"><span class="lineNum">     520</span>                 :<span class="tlaGNC">          25 :         auto divE = all_listings[17][cInd];</span></span>
-<span id="L521"><span class="lineNum">     521</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          25 :         if (divU == divE &amp;&amp; divU != &quot;\&quot;null\&quot;&quot;)</span></span>
+<span id="L521"><span class="lineNum">     521</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          25 :         if (divU == divE &amp;&amp; divU != &quot;\&quot;null\&quot;&quot;)</span></span>
 <span id="L522"><span class="lineNum">     522</span>                 :             :         {</span>
-<span id="L523"><span class="lineNum">     523</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             candidateScore += 15;</span></span>
+<span id="L523"><span class="lineNum">     523</span>                 :<span class="tlaGNC">           5 :             candidateScore += 15;</span></span>
 <span id="L524"><span class="lineNum">     524</span>                 :             : </span>
-<span id="L525"><span class="lineNum">     525</span>                 :<span class="tlaUNC">           0 :             for (auto &amp;d : dimensions)</span></span>
+<span id="L525"><span class="lineNum">     525</span>                 :<span class="tlaGNC">          45 :             for (auto &amp;d : dimensions)</span></span>
 <span id="L526"><span class="lineNum">     526</span>                 :             :             {</span>
-<span id="L527"><span class="lineNum">     527</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :                 if (d == &quot;\&quot;diversity\&quot;&quot;)</span></span>
-<span id="L528"><span class="lineNum">     528</span>                 :<span class="tlaUNC">           0 :                     candidateScore += augments[uAug];</span></span>
-<span id="L529"><span class="lineNum">     529</span>                 :<span class="tlaUNC">           0 :                 uAug++;</span></span>
+<span id="L527"><span class="lineNum">     527</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          40 :                 if (d == &quot;\&quot;diversity\&quot;&quot;)</span></span>
+<span id="L528"><span class="lineNum">     528</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                     candidateScore += augments[uAug];</span></span>
+<span id="L529"><span class="lineNum">     529</span>                 :<span class="tlaGNC tlaBgGNC">          40 :                 uAug++;</span></span>
 <span id="L530"><span class="lineNum">     530</span>                 :             :             }</span>
-<span id="L531"><span class="lineNum">     531</span>                 :<span class="tlaUNC">           0 :             uAug = 0;</span></span>
-<span id="L532"><span class="lineNum">     532</span>                 :<span class="tlaUNC">           0 :         }</span></span>
+<span id="L531"><span class="lineNum">     531</span>                 :<span class="tlaGNC">           5 :             uAug = 0;</span></span>
+<span id="L532"><span class="lineNum">     532</span>                 :<span class="tlaGNC">           5 :         }</span></span>
 <span id="L533"><span class="lineNum">     533</span>                 :             : </span>
 <span id="L534"><span class="lineNum">     534</span>                 :             :         /* score on mbti + augment if applicable */</span>
-<span id="L535"><span class="lineNum">     535</span>                 :<span class="tlaGNC tlaBgGNC">          25 :         auto mbtiU = userVals[6][0];</span></span>
+<span id="L535"><span class="lineNum">     535</span>                 :<span class="tlaGNC">          25 :         auto mbtiU = userVals[6][0];</span></span>
 <span id="L536"><span class="lineNum">     536</span>                 :<span class="tlaGNC">          25 :         auto mbtiE = all_listings[19][cInd];</span></span>
 <span id="L537"><span class="lineNum">     537</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          25 :         if (wordMatchFound(mbtiU, mbtiE, cNum))</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
@@ -636,40 +636,40 @@
 <span id="L551"><span class="lineNum">     551</span>                 :<span class="tlaGNC tlaBgGNC">          25 :         auto flexU = userVals[7][0];</span></span>
 <span id="L552"><span class="lineNum">     552</span>                 :<span class="tlaGNC">          25 :         auto flexE = all_listings[14][cInd];</span></span>
 <span id="L553"><span class="lineNum">     553</span>                 :             : </span>
-<span id="L554"><span class="lineNum">     554</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          25 :         if (flexU == flexE &amp;&amp; flexU != &quot;\&quot;null\&quot;&quot;)</span></span>
+<span id="L554"><span class="lineNum">     554</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          25 :         if (flexU == flexE &amp;&amp; flexU != &quot;\&quot;null\&quot;&quot;)</span></span>
 <span id="L555"><span class="lineNum">     555</span>                 :             :         {</span>
-<span id="L556"><span class="lineNum">     556</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             candidateScore += 15;</span></span>
+<span id="L556"><span class="lineNum">     556</span>                 :<span class="tlaGNC">           5 :             candidateScore += 15;</span></span>
 <span id="L557"><span class="lineNum">     557</span>                 :             : </span>
-<span id="L558"><span class="lineNum">     558</span>                 :<span class="tlaUNC">           0 :             for (auto &amp;d : dimensions)</span></span>
+<span id="L558"><span class="lineNum">     558</span>                 :<span class="tlaGNC">          45 :             for (auto &amp;d : dimensions)</span></span>
 <span id="L559"><span class="lineNum">     559</span>                 :             :             {</span>
-<span id="L560"><span class="lineNum">     560</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :                 if (d == &quot;\&quot;flexibility\&quot;&quot;)</span></span>
-<span id="L561"><span class="lineNum">     561</span>                 :<span class="tlaUNC">           0 :                     candidateScore += augments[uAug];</span></span>
-<span id="L562"><span class="lineNum">     562</span>                 :<span class="tlaUNC">           0 :                 uAug++;</span></span>
+<span id="L560"><span class="lineNum">     560</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          40 :                 if (d == &quot;\&quot;flexibility\&quot;&quot;)</span></span>
+<span id="L561"><span class="lineNum">     561</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                     candidateScore += augments[uAug];</span></span>
+<span id="L562"><span class="lineNum">     562</span>                 :<span class="tlaGNC tlaBgGNC">          40 :                 uAug++;</span></span>
 <span id="L563"><span class="lineNum">     563</span>                 :             :             }</span>
-<span id="L564"><span class="lineNum">     564</span>                 :<span class="tlaUNC">           0 :             uAug = 0;</span></span>
-<span id="L565"><span class="lineNum">     565</span>                 :<span class="tlaUNC">           0 :         }</span></span>
+<span id="L564"><span class="lineNum">     564</span>                 :<span class="tlaGNC">           5 :             uAug = 0;</span></span>
+<span id="L565"><span class="lineNum">     565</span>                 :<span class="tlaGNC">           5 :         }</span></span>
 <span id="L566"><span class="lineNum">     566</span>                 :             : </span>
 <span id="L567"><span class="lineNum">     567</span>                 :             :         /* score on remote + augment if applicable */</span>
-<span id="L568"><span class="lineNum">     568</span>                 :<span class="tlaGNC tlaBgGNC">          25 :         auto remU = userVals[8][0];</span></span>
+<span id="L568"><span class="lineNum">     568</span>                 :<span class="tlaGNC">          25 :         auto remU = userVals[8][0];</span></span>
 <span id="L569"><span class="lineNum">     569</span>                 :<span class="tlaGNC">          25 :         auto remE = all_listings[18][cInd];</span></span>
-<span id="L570"><span class="lineNum">     570</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          25 :         if (remU == remE &amp;&amp; remU != &quot;\&quot;null\&quot;&quot;)</span></span>
+<span id="L570"><span class="lineNum">     570</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          25 :         if (remU == remE &amp;&amp; remU != &quot;\&quot;null\&quot;&quot;)</span></span>
 <span id="L571"><span class="lineNum">     571</span>                 :             :         {</span>
-<span id="L572"><span class="lineNum">     572</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             candidateScore += 25;</span></span>
+<span id="L572"><span class="lineNum">     572</span>                 :<span class="tlaGNC">          10 :             candidateScore += 25;</span></span>
 <span id="L573"><span class="lineNum">     573</span>                 :             : </span>
-<span id="L574"><span class="lineNum">     574</span>                 :<span class="tlaUNC">           0 :             for (auto &amp;d : dimensions)</span></span>
+<span id="L574"><span class="lineNum">     574</span>                 :<span class="tlaGNC">          90 :             for (auto &amp;d : dimensions)</span></span>
 <span id="L575"><span class="lineNum">     575</span>                 :             :             {</span>
-<span id="L576"><span class="lineNum">     576</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :                 if (d == &quot;\&quot;remote\&quot;&quot;)</span></span>
-<span id="L577"><span class="lineNum">     577</span>                 :<span class="tlaUNC">           0 :                     candidateScore += augments[uAug];</span></span>
-<span id="L578"><span class="lineNum">     578</span>                 :<span class="tlaUNC">           0 :                 uAug++;</span></span>
+<span id="L576"><span class="lineNum">     576</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          80 :                 if (d == &quot;\&quot;remote\&quot;&quot;)</span></span>
+<span id="L577"><span class="lineNum">     577</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                     candidateScore += augments[uAug];</span></span>
+<span id="L578"><span class="lineNum">     578</span>                 :<span class="tlaGNC tlaBgGNC">          80 :                 uAug++;</span></span>
 <span id="L579"><span class="lineNum">     579</span>                 :             :             }</span>
-<span id="L580"><span class="lineNum">     580</span>                 :<span class="tlaUNC">           0 :             uAug = 0;</span></span>
-<span id="L581"><span class="lineNum">     581</span>                 :<span class="tlaUNC">           0 :         }</span></span>
+<span id="L580"><span class="lineNum">     580</span>                 :<span class="tlaGNC">          10 :             uAug = 0;</span></span>
+<span id="L581"><span class="lineNum">     581</span>                 :<span class="tlaGNC">          10 :         }</span></span>
 <span id="L582"><span class="lineNum">     582</span>                 :             : </span>
 <span id="L583"><span class="lineNum">     583</span>                 :             :         /* score on workspace + augment if applicable */</span>
-<span id="L584"><span class="lineNum">     584</span>                 :<span class="tlaGNC tlaBgGNC">          25 :         auto modernU = userVals[9][0];</span></span>
+<span id="L584"><span class="lineNum">     584</span>                 :<span class="tlaGNC">          25 :         auto modernU = userVals[9][0];</span></span>
 <span id="L585"><span class="lineNum">     585</span>                 :<span class="tlaGNC">          25 :         auto modernE = all_listings[15][cInd];</span></span>
 <span id="L586"><span class="lineNum">     586</span>                 :             : </span>
-<span id="L587"><span class="lineNum">     587</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          25 :         if (modernU == modernE &amp;&amp; modernU != &quot;\&quot;null\&quot;&quot;)</span></span>
+<span id="L587"><span class="lineNum">     587</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaGNC">          25 :         if (modernU == modernE &amp;&amp; modernU != &quot;\&quot;null\&quot;&quot;)</span></span>
 <span id="L588"><span class="lineNum">     588</span>                 :             :         {</span>
 <span id="L589"><span class="lineNum">     589</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             candidateScore += 15;</span></span>
 <span id="L590"><span class="lineNum">     590</span>                 :             : </span>
@@ -1129,11 +1129,11 @@
 <span id="L1044"><span class="lineNum">    1044</span>                 :             :     /* compare words */</span>
 <span id="L1045"><span class="lineNum">    1045</span>                 :<span class="tlaGNC">         765 :     int matchCount = 0;</span></span>
 <span id="L1046"><span class="lineNum">    1046</span>                 :             :     /* user synonms vs. listing */</span>
-<span id="L1047"><span class="lineNum">    1047</span>                 :<span class="tlaGNC">        1530 :     for (std::string &amp;w : fieldVecU)</span></span>
+<span id="L1047"><span class="lineNum">    1047</span>                 :<span class="tlaGNC">        1655 :     for (std::string &amp;w : fieldVecU)</span></span>
 <span id="L1048"><span class="lineNum">    1048</span>                 :             :     {</span>
-<span id="L1049"><span class="lineNum">    1049</span>                 :<span class="tlaGNC">        7425 :         std::transform(w.begin(), w.end(), w.begin(), [](unsigned char c)</span></span>
-<span id="L1050"><span class="lineNum">    1050</span>                 :<span class="tlaGNC">        6660 :                        { return std::tolower(c); });</span></span>
-<span id="L1051"><span class="lineNum">    1051</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         765 :         if (fieldSetE.find(w) != fieldSetE.end())</span></span>
+<span id="L1049"><span class="lineNum">    1049</span>                 :<span class="tlaGNC">        7975 :         std::transform(w.begin(), w.end(), w.begin(), [](unsigned char c)</span></span>
+<span id="L1050"><span class="lineNum">    1050</span>                 :<span class="tlaGNC">        7085 :                        { return std::tolower(c); });</span></span>
+<span id="L1051"><span class="lineNum">    1051</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         890 :         if (fieldSetE.find(w) != fieldSetE.end())</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
 <span id="L1052"><span class="lineNum">    1052</span>                 :             :         {</span>
 <span id="L1053"><span class="lineNum">    1053</span>                 :<span class="tlaGNC">          45 :             bool alreadyStored = std::find(matchedWords[c].begin(), matchedWords[c].end(), w) != matchedWords[c].end();</span></span>
@@ -1145,27 +1145,27 @@
 <span id="L1059"><span class="lineNum">    1059</span>                 :<span class="tlaGNC">          45 :         }</span></span>
 <span id="L1060"><span class="lineNum">    1060</span>                 :             : </span>
 <span id="L1061"><span class="lineNum">    1061</span>                 :             :         // Check for matches in synsets</span>
-<span id="L1062"><span class="lineNum">    1062</span>                 :<span class="tlaGNC">         765 :         char *wb = morphword(const_cast&lt;char *&gt;(w.c_str()), NOUN);</span></span>
-<span id="L1063"><span class="lineNum">    1063</span>                 :<span class="tlaGNC">        1530 :         SynsetPtr synset = (wb != NULL) ? findtheinfo_ds(wb, NOUN, SYNS, ALLSENSES)</span></span>
-<span id="L1064"><span class="lineNum">    1064</span>                 :<span class="tlaGNC">         765 :                                         : findtheinfo_ds(const_cast&lt;char *&gt;(w.c_str()), NOUN, SYNS, ALLSENSES);</span></span>
+<span id="L1062"><span class="lineNum">    1062</span>                 :<span class="tlaGNC">         890 :         char *wb = morphword(const_cast&lt;char *&gt;(w.c_str()), NOUN);</span></span>
+<span id="L1063"><span class="lineNum">    1063</span>                 :<span class="tlaGNC">        1755 :         SynsetPtr synset = (wb != NULL) ? findtheinfo_ds(wb, NOUN, SYNS, ALLSENSES)</span></span>
+<span id="L1064"><span class="lineNum">    1064</span>                 :<span class="tlaGNC">         865 :                                         : findtheinfo_ds(const_cast&lt;char *&gt;(w.c_str()), NOUN, SYNS, ALLSENSES);</span></span>
 <span id="L1065"><span class="lineNum">    1065</span>                 :             : </span>
-<span id="L1066"><span class="lineNum">    1066</span>                 :<span class="tlaGNC">        2055 :         while (synset != NULL)</span></span>
+<span id="L1066"><span class="lineNum">    1066</span>                 :<span class="tlaGNC">        2505 :         while (synset != NULL)</span></span>
 <span id="L1067"><span class="lineNum">    1067</span>                 :             :         {</span>
 <span id="L1068"><span class="lineNum">    1068</span>                 :             :             // Create an unordered_set for synset words</span>
-<span id="L1069"><span class="lineNum">    1069</span>                 :<span class="tlaGNC">        1290 :             std::unordered_set&lt;std::string&gt; synsetWords;</span></span>
-<span id="L1070"><span class="lineNum">    1070</span>                 :<span class="tlaGNC">        5300 :             for (int i = 0; i &lt; synset-&gt;wcount; ++i)</span></span>
+<span id="L1069"><span class="lineNum">    1069</span>                 :<span class="tlaGNC">        1615 :             std::unordered_set&lt;std::string&gt; synsetWords;</span></span>
+<span id="L1070"><span class="lineNum">    1070</span>                 :<span class="tlaGNC">        6400 :             for (int i = 0; i &lt; synset-&gt;wcount; ++i)</span></span>
 <span id="L1071"><span class="lineNum">    1071</span>                 :             :             {</span>
-<span id="L1072"><span class="lineNum">    1072</span>                 :<span class="tlaGNC">        4010 :                 std::string synsetWord(synset-&gt;words[i]);</span></span>
-<span id="L1073"><span class="lineNum">    1073</span>                 :<span class="tlaGNC">        4010 :                 std::transform(synsetWord.begin(), synsetWord.end(), synsetWord.begin(),</span></span>
-<span id="L1074"><span class="lineNum">    1074</span>                 :<span class="tlaGNC">       30475 :                                [](unsigned char c)</span></span>
-<span id="L1075"><span class="lineNum">    1075</span>                 :<span class="tlaGNC">       30475 :                                { return std::tolower(c); });</span></span>
-<span id="L1076"><span class="lineNum">    1076</span>                 :<span class="tlaGNC">        4010 :                 synsetWords.insert(synsetWord);</span></span>
-<span id="L1077"><span class="lineNum">    1077</span>                 :<span class="tlaGNC">        4010 :             }</span></span>
+<span id="L1072"><span class="lineNum">    1072</span>                 :<span class="tlaGNC">        4785 :                 std::string synsetWord(synset-&gt;words[i]);</span></span>
+<span id="L1073"><span class="lineNum">    1073</span>                 :<span class="tlaGNC">        4785 :                 std::transform(synsetWord.begin(), synsetWord.end(), synsetWord.begin(),</span></span>
+<span id="L1074"><span class="lineNum">    1074</span>                 :<span class="tlaGNC">       35550 :                                [](unsigned char c)</span></span>
+<span id="L1075"><span class="lineNum">    1075</span>                 :<span class="tlaGNC">       35550 :                                { return std::tolower(c); });</span></span>
+<span id="L1076"><span class="lineNum">    1076</span>                 :<span class="tlaGNC">        4785 :                 synsetWords.insert(synsetWord);</span></span>
+<span id="L1077"><span class="lineNum">    1077</span>                 :<span class="tlaGNC">        4785 :             }</span></span>
 <span id="L1078"><span class="lineNum">    1078</span>                 :             : </span>
 <span id="L1079"><span class="lineNum">    1079</span>                 :             :             // Check for matches in fieldSetE</span>
-<span id="L1080"><span class="lineNum">    1080</span>                 :<span class="tlaGNC">        6455 :             for (const std::string &amp;wE : fieldSetE)</span></span>
+<span id="L1080"><span class="lineNum">    1080</span>                 :<span class="tlaGNC">        7385 :             for (const std::string &amp;wE : fieldSetE)</span></span>
 <span id="L1081"><span class="lineNum">    1081</span>                 :             :             {</span>
-<span id="L1082"><span class="lineNum">    1082</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">        5165 :                 if (synsetWords.find(wE) != synsetWords.end())</span></span>
+<span id="L1082"><span class="lineNum">    1082</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">        5770 :                 if (synsetWords.find(wE) != synsetWords.end())</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
 <span id="L1083"><span class="lineNum">    1083</span>                 :             :                 {</span>
 <span id="L1084"><span class="lineNum">    1084</span>                 :<span class="tlaGNC">          65 :                     bool alreadyStored = std::find(matchedWords[c].begin(), matchedWords[c].end(), wE) != matchedWords[c].end();</span></span>
@@ -1178,8 +1178,8 @@
 <span id="L1091"><span class="lineNum">    1091</span>                 :             :             }</span>
 <span id="L1092"><span class="lineNum">    1092</span>                 :             : </span>
 <span id="L1093"><span class="lineNum">    1093</span>                 :             :             // Move to the next synset</span>
-<span id="L1094"><span class="lineNum">    1094</span>                 :<span class="tlaGNC">        1290 :             synset = synset-&gt;nextss;</span></span>
-<span id="L1095"><span class="lineNum">    1095</span>                 :<span class="tlaGNC">        1290 :         }</span></span>
+<span id="L1094"><span class="lineNum">    1094</span>                 :<span class="tlaGNC">        1615 :             synset = synset-&gt;nextss;</span></span>
+<span id="L1095"><span class="lineNum">    1095</span>                 :<span class="tlaGNC">        1615 :         }</span></span>
 <span id="L1096"><span class="lineNum">    1096</span>                 :             :     }</span>
 <span id="L1097"><span class="lineNum">    1097</span>                 :<span class="tlaGNC">         765 :     return matchCount;</span></span>
 <span id="L1098"><span class="lineNum">    1098</span>                 :<span class="tlaGNC">         765 : }</span></span>
@@ -1216,11 +1216,11 @@
 <span id="L1128"><span class="lineNum">    1128</span>                 :<span class="tlaGNC">        1530 :     std::istringstream stream(input);</span></span>
 <span id="L1129"><span class="lineNum">    1129</span>                 :<span class="tlaGNC">        1530 :     std::vector&lt;std::string&gt; tokens;</span></span>
 <span id="L1130"><span class="lineNum">    1130</span>                 :<span class="tlaGNC">        1530 :     std::string token;</span></span>
-<span id="L1131"><span class="lineNum">    1131</span>                 :<span class="tlaGNC">        5465 :     while (stream &gt;&gt; token)</span></span>
+<span id="L1131"><span class="lineNum">    1131</span>                 :<span class="tlaGNC">        5590 :     while (stream &gt;&gt; token)</span></span>
 <span id="L1132"><span class="lineNum">    1132</span>                 :             :     {</span>
-<span id="L1133"><span class="lineNum">    1133</span>                 :<span class="tlaGNC">        3935 :         token.erase(std::remove(token.begin(), token.end(), '\&quot;'), token.end());</span></span>
-<span id="L1134"><span class="lineNum">    1134</span>                 :<span class="tlaGNC">        3935 :         token.erase(std::remove(token.begin(), token.end(), ','), token.end());</span></span>
-<span id="L1135"><span class="lineNum">    1135</span>                 :<span class="tlaGNC">        3935 :         tokens.push_back(token);</span></span>
+<span id="L1133"><span class="lineNum">    1133</span>                 :<span class="tlaGNC">        4060 :         token.erase(std::remove(token.begin(), token.end(), '\&quot;'), token.end());</span></span>
+<span id="L1134"><span class="lineNum">    1134</span>                 :<span class="tlaGNC">        4060 :         token.erase(std::remove(token.begin(), token.end(), ','), token.end());</span></span>
+<span id="L1135"><span class="lineNum">    1135</span>                 :<span class="tlaGNC">        4060 :         tokens.push_back(token);</span></span>
 <span id="L1136"><span class="lineNum">    1136</span>                 :             :     }</span>
 <span id="L1137"><span class="lineNum">    1137</span>                 :<span class="tlaGNC">        1530 :     return tokens;</span></span>
 <span id="L1138"><span class="lineNum">    1138</span>                 :<span class="tlaGNC">        1530 : }</span></span>

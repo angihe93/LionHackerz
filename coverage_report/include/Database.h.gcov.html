@@ -31,18 +31,18 @@
             <td class="headerValue">coverageN_.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">32</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2024-11-29 17:45:15</td>
+            <td class="headerValue">2024-12-02 01:28:41</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">86.7&nbsp;%</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">15</td>
-            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">15</td>
           </tr>
           <tr>
             <td></td>
@@ -105,10 +105,10 @@
 <span id="L34"><span class="lineNum">      34</span>                 :             :     Database(const std::string url, const std::string api_key);</span>
 <span id="L35"><span class="lineNum">      35</span>                 :             : </span>
 <span id="L36"><span class="lineNum">      36</span>                 :             :     /* Destructor:  Call cleanup on curl after database closed. */</span>
-<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC tlaBgGNC">         125 :     virtual ~Database()</span></span>
-<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">         125 :     {</span></span>
-<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          79 :         curl_global_cleanup();</span></span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">         125 :     }</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC tlaBgGNC">         139 :     virtual ~Database()</span></span>
+<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">         139 :     {</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          86 :         curl_global_cleanup();</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">         139 :     }</span></span>
 <span id="L41"><span class="lineNum">      41</span>                 :             : </span>
 <span id="L42"><span class="lineNum">      42</span>                 :             :     /* query(): Main query function with 1 filter column.</span>
 <span id="L43"><span class="lineNum">      43</span>                 :             :      * This function takes as input the name of a table in the database,</span>
@@ -229,10 +229,10 @@
 <span id="L158"><span class="lineNum">     158</span>                 :             :     virtual std::string deleteRecord(const std::string table, const std::string column, const std::string op, const std::string val);</span>
 <span id="L159"><span class="lineNum">     159</span>                 :             : </span>
 <span id="L160"><span class="lineNum">     160</span>                 :             :     /* Used for returning the query results.  Do not call directly or modify. */</span>
-<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">        2324 :     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">        2887 :     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)</span></span>
 <span id="L162"><span class="lineNum">     162</span>                 :             :     {</span>
-<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">        2324 :         ((std::string *)userp)-&gt;append((char *)contents, size * nmemb);</span></span>
-<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">        2324 :         return size * nmemb;</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">        2887 :         ((std::string *)userp)-&gt;append((char *)contents, size * nmemb);</span></span>
+<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">        2887 :         return size * nmemb;</span></span>
 <span id="L165"><span class="lineNum">     165</span>                 :             :     }</span>
 <span id="L166"><span class="lineNum">     166</span>                 :             : </span>
 <span id="L167"><span class="lineNum">     167</span>                 :             :     /* helper function: returns the number of results returned in the query string */</span>
@@ -275,7 +275,7 @@
 <span id="L204"><span class="lineNum">     204</span>                 :             : {</span>
 <span id="L205"><span class="lineNum">     205</span>                 :             : public:</span>
 <span id="L206"><span class="lineNum">     206</span>                 :             :     // Constructors</span>
-<span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">          76 :     MockDatabase() { Database(); };</span></span>
+<span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">          82 :     MockDatabase() { Database(); };</span></span>
 <span id="L208"><span class="lineNum">     208</span>                 :             :     // ~MockDatabase();</span>
 <span id="L209"><span class="lineNum">     209</span>                 :             : </span>
 <span id="L210"><span class="lineNum">     210</span>                 :             :     /**</span>
@@ -285,12 +285,12 @@
 <span id="L214"><span class="lineNum">     214</span>                 :             :      * @param data   A JSON formatted string (&quot;{ &quot;col1&quot;: &quot;val1&quot;, ... }&quot;) that contains the data for each column you are inserting.</span>
 <span id="L215"><span class="lineNum">     215</span>                 :             :      * @return std::string</span>
 <span id="L216"><span class="lineNum">     216</span>                 :             :      */</span>
-<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">          12 :     std::string insert(std::string table, std::string data) override</span></span>
+<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">          13 :     std::string insert(std::string table, std::string data) override</span></span>
 <span id="L218"><span class="lineNum">     218</span>                 :             :     {</span>
 <span id="L219"><span class="lineNum">     219</span>                 :             :         // Use the test table suffix _TEST</span>
-<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">          12 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
-<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">          12 :         return Database::insert(testTable, data);</span></span>
-<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">          12 :     }</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">          13 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
+<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">          13 :         return Database::insert(testTable, data);</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">          13 :     }</span></span>
 <span id="L223"><span class="lineNum">     223</span>                 :             : </span>
 <span id="L224"><span class="lineNum">     224</span>                 :             :     /**</span>
 <span id="L225"><span class="lineNum">     225</span>                 :             :      * update() overrides the update() method in Database to use the _TEST tables</span>
@@ -302,12 +302,12 @@
 <span id="L231"><span class="lineNum">     231</span>                 :             :      * @param val   Value of the filter column to select on for update.</span>
 <span id="L232"><span class="lineNum">     232</span>                 :             :      * @return std::string</span>
 <span id="L233"><span class="lineNum">     233</span>                 :             :      */</span>
-<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">         478 :     std::string update(std::string table, std::string data, std::string column, std::string op, std::string val) override</span></span>
+<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">         604 :     std::string update(std::string table, std::string data, std::string column, std::string op, std::string val) override</span></span>
 <span id="L235"><span class="lineNum">     235</span>                 :             :     {</span>
 <span id="L236"><span class="lineNum">     236</span>                 :             :         // Use the test table suffix _TEST</span>
-<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">         478 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
-<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">         478 :         return Database::update(testTable, data, column, op, val);</span></span>
-<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">         478 :     }</span></span>
+<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">         604 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
+<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">         604 :         return Database::update(testTable, data, column, op, val);</span></span>
+<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">         604 :     }</span></span>
 <span id="L240"><span class="lineNum">     240</span>                 :             : </span>
 <span id="L241"><span class="lineNum">     241</span>                 :             :     /**</span>
 <span id="L242"><span class="lineNum">     242</span>                 :             :      * Deletes a record from the specified table.</span>
@@ -337,15 +337,15 @@
 <span id="L266"><span class="lineNum">     266</span>                 :             :      * @param resCount   The number of results returned</span>
 <span id="L267"><span class="lineNum">     267</span>                 :             :      * @return std::vector&lt;std::vector&lt;std::string&gt;&gt;</span>
 <span id="L268"><span class="lineNum">     268</span>                 :             :      */</span>
-<span id="L269"><span class="lineNum">     269</span>                 :<span class="tlaGNC">        1475 :     std::vector&lt;std::vector&lt;std::string&gt;&gt; query(std::string table, std::string selectColumns,</span></span>
+<span id="L269"><span class="lineNum">     269</span>                 :<span class="tlaGNC">        1863 :     std::vector&lt;std::vector&lt;std::string&gt;&gt; query(std::string table, std::string selectColumns,</span></span>
 <span id="L270"><span class="lineNum">     270</span>                 :             :                                                 std::string filterColumn, std::string op,</span>
 <span id="L271"><span class="lineNum">     271</span>                 :             :                                                 std::string value,</span>
 <span id="L272"><span class="lineNum">     272</span>                 :             :                                                 bool printResults, int &amp;resCount) override</span>
 <span id="L273"><span class="lineNum">     273</span>                 :             :     {</span>
 <span id="L274"><span class="lineNum">     274</span>                 :             :         // Use the test table suffix _TEST</span>
-<span id="L275"><span class="lineNum">     275</span>                 :<span class="tlaGNC">        1475 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
-<span id="L276"><span class="lineNum">     276</span>                 :<span class="tlaGNC">        1475 :         return Database::query(testTable, selectColumns, filterColumn, op, value, printResults, resCount);</span></span>
-<span id="L277"><span class="lineNum">     277</span>                 :<span class="tlaGNC">        1475 :     }</span></span>
+<span id="L275"><span class="lineNum">     275</span>                 :<span class="tlaGNC">        1863 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
+<span id="L276"><span class="lineNum">     276</span>                 :<span class="tlaGNC">        1863 :         return Database::query(testTable, selectColumns, filterColumn, op, value, printResults, resCount);</span></span>
+<span id="L277"><span class="lineNum">     277</span>                 :<span class="tlaGNC">        1863 :     }</span></span>
 <span id="L278"><span class="lineNum">     278</span>                 :             : </span>
 <span id="L279"><span class="lineNum">     279</span>                 :             :     /**</span>
 <span id="L280"><span class="lineNum">     280</span>                 :             :      * query() overrides the query() method in Database to use the _TEST tables</span>
@@ -361,7 +361,7 @@
 <span id="L290"><span class="lineNum">     290</span>                 :             :      * @param printResults   True to print results, false otherwise</span>
 <span id="L291"><span class="lineNum">     291</span>                 :             :      * @param resCount   The number of results returned</span>
 <span id="L292"><span class="lineNum">     292</span>                 :             :      */</span>
-<span id="L293"><span class="lineNum">     293</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     std::vector&lt;std::vector&lt;std::string&gt;&gt; query(std::string table, std::string selectColumns,</span></span>
+<span id="L293"><span class="lineNum">     293</span>                 :<span class="tlaGNC">           2 :     std::vector&lt;std::vector&lt;std::string&gt;&gt; query(std::string table, std::string selectColumns,</span></span>
 <span id="L294"><span class="lineNum">     294</span>                 :             :                                                 std::string filterColumn1, std::string op1,</span>
 <span id="L295"><span class="lineNum">     295</span>                 :             :                                                 std::string value1,</span>
 <span id="L296"><span class="lineNum">     296</span>                 :             :                                                 std::string filterColumn2, std::string op2,</span>
@@ -369,9 +369,9 @@
 <span id="L298"><span class="lineNum">     298</span>                 :             :                                                 bool printResults, int &amp;resCount) override</span>
 <span id="L299"><span class="lineNum">     299</span>                 :             :     {</span>
 <span id="L300"><span class="lineNum">     300</span>                 :             :         // Use the test table suffix _TEST</span>
-<span id="L301"><span class="lineNum">     301</span>                 :<span class="tlaUNC">           0 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
-<span id="L302"><span class="lineNum">     302</span>                 :<span class="tlaUNC">           0 :         return Database::query(testTable, selectColumns, filterColumn1, op1, value1, filterColumn2, op2, value2, printResults, resCount);</span></span>
-<span id="L303"><span class="lineNum">     303</span>                 :<span class="tlaUNC">           0 :     }</span></span>
+<span id="L301"><span class="lineNum">     301</span>                 :<span class="tlaGNC">           2 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
+<span id="L302"><span class="lineNum">     302</span>                 :<span class="tlaGNC">           2 :         return Database::query(testTable, selectColumns, filterColumn1, op1, value1, filterColumn2, op2, value2, printResults, resCount);</span></span>
+<span id="L303"><span class="lineNum">     303</span>                 :<span class="tlaGNC">           2 :     }</span></span>
 <span id="L304"><span class="lineNum">     304</span>                 :             : </span>
 <span id="L305"><span class="lineNum">     305</span>                 :             :     /**</span>
 <span id="L306"><span class="lineNum">     306</span>                 :             :      * query() overrides the query() method in Database to use the _TEST tables</span>
@@ -390,7 +390,7 @@
 <span id="L319"><span class="lineNum">     319</span>                 :             :      * @param printResults   True to print results, false otherwise</span>
 <span id="L320"><span class="lineNum">     320</span>                 :             :      * @param resCount   The number of results returned</span>
 <span id="L321"><span class="lineNum">     321</span>                 :             :      */</span>
-<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaUNC">           0 :     std::vector&lt;std::vector&lt;std::string&gt;&gt; query(std::string table, std::string selectColumns,</span></span>
+<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">           2 :     std::vector&lt;std::vector&lt;std::string&gt;&gt; query(std::string table, std::string selectColumns,</span></span>
 <span id="L323"><span class="lineNum">     323</span>                 :             :                                                 std::string filterColumn1, std::string op1,</span>
 <span id="L324"><span class="lineNum">     324</span>                 :             :                                                 std::string value1,</span>
 <span id="L325"><span class="lineNum">     325</span>                 :             :                                                 std::string filterColumn2, std::string op2,</span>
@@ -400,9 +400,9 @@
 <span id="L329"><span class="lineNum">     329</span>                 :             :                                                 bool printResults, int &amp;resCount) override</span>
 <span id="L330"><span class="lineNum">     330</span>                 :             :     {</span>
 <span id="L331"><span class="lineNum">     331</span>                 :             :         // Use the test table suffix _TEST</span>
-<span id="L332"><span class="lineNum">     332</span>                 :<span class="tlaUNC">           0 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
-<span id="L333"><span class="lineNum">     333</span>                 :<span class="tlaUNC">           0 :         return Database::query(testTable, selectColumns, filterColumn1, op1, value1, filterColumn2, op2, value2, filterColumn3, op3, value3, printResults, resCount);</span></span>
-<span id="L334"><span class="lineNum">     334</span>                 :<span class="tlaUNC">           0 :     }</span></span>
+<span id="L332"><span class="lineNum">     332</span>                 :<span class="tlaGNC">           2 :         std::string testTable = table + &quot;_TEST&quot;;</span></span>
+<span id="L333"><span class="lineNum">     333</span>                 :<span class="tlaGNC">           2 :         return Database::query(testTable, selectColumns, filterColumn1, op1, value1, filterColumn2, op2, value2, filterColumn3, op3, value3, printResults, resCount);</span></span>
+<span id="L334"><span class="lineNum">     334</span>                 :<span class="tlaGNC">           2 :     }</span></span>
 <span id="L335"><span class="lineNum">     335</span>                 :             : };</span>
 <span id="L336"><span class="lineNum">     336</span>                 :             : </span>
 <span id="L337"><span class="lineNum">     337</span>                 :             : #endif // DATABASE_H</span>

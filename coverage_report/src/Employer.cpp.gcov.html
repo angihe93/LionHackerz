@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2024-11-29 17:45:15</td>
+            <td class="headerValue">2024-12-02 01:28:41</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -82,24 +82,24 @@
 <span id="L11"><span class="lineNum">      11</span>                 :<span class="tlaGNC">          26 :         this-&gt;db = &amp;db;</span></span>
 <span id="L12"><span class="lineNum">      12</span>                 :<span class="tlaGNC">          50 : }</span></span>
 <span id="L13"><span class="lineNum">      13</span>                 :<span class="tlaGNC">           4 : </span></span>
-<span id="L14"><span class="lineNum">      14</span>                 :<span class="tlaGNC">         490 : bool Employer::checkHasListing(int eid, int lid)</span></span>
+<span id="L14"><span class="lineNum">      14</span>                 :<span class="tlaGNC">         606 : bool Employer::checkHasListing(int eid, int lid)</span></span>
 <span id="L15"><span class="lineNum">      15</span>                 :<span class="tlaGNC">           2 : {</span></span>
-<span id="L16"><span class="lineNum">      16</span>                 :<span class="tlaGNC">         490 :         int resCount = 0;</span></span>
-<span id="L17"><span class="lineNum">      17</span>                 :<span class="tlaGNC">         490 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; eidRes = db-&gt;query(&quot;Created&quot;, &quot;eid&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid), false, resCount);</span></span>
-<span id="L18"><span class="lineNum">      18</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">         492 :         if (resCount == 0)</span></span>
+<span id="L16"><span class="lineNum">      16</span>                 :<span class="tlaGNC">         606 :         int resCount = 0;</span></span>
+<span id="L17"><span class="lineNum">      17</span>                 :<span class="tlaGNC">         606 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; eidRes = db-&gt;query(&quot;Created&quot;, &quot;eid&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid), false, resCount);</span></span>
+<span id="L18"><span class="lineNum">      18</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">         608 :         if (resCount == 0)</span></span>
 <span id="L19"><span class="lineNum">      19</span>                 :<span class="tlaGNC">           2 :         {</span></span>
 <span id="L20"><span class="lineNum">      20</span>                 :<span class="tlaGNC">          13 :                 std::cout &lt;&lt; &quot;Error: The listing ID you provided does not exist in the database.&quot; &lt;&lt; std::endl;</span></span>
 <span id="L21"><span class="lineNum">      21</span>                 :<span class="tlaGNC">          13 :                 return false;</span></span>
 <span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC">           2 :         }</span></span>
 <span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L24"><span class="lineNum">      24</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         479 :         if (std::stoi(eidRes[0][0]) != eid)</span></span>
+<span id="L24"><span class="lineNum">      24</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         595 :         if (std::stoi(eidRes[0][0]) != eid)</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
 <span id="L25"><span class="lineNum">      25</span>                 :<span class="tlaGNC">           2 :         {</span></span>
 <span id="L26"><span class="lineNum">      26</span>                 :<span class="tlaGNC">          12 :                 return false;</span></span>
 <span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">           2 :         }</span></span>
 <span id="L28"><span class="lineNum">      28</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">         469 :         return true;</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaGNC">         490 : }</span></span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">         585 :         return true;</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaGNC">         606 : }</span></span>
 <span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">           2 : </span></span>
 <span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC">           7 : bool Employer::changeField(int eid, int lid, std::string newField)</span></span>
 <span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">           2 : {</span></span>
@@ -193,28 +193,28 @@
 <span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">           2 :         return true;</span></span>
 <span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L123"><span class="lineNum">     123</span>                 :             : </span>
-<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">          88 : bool Employer::changeFlex(int eid, int lid, bool newFlex, int &amp;resCode)</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">         112 : bool Employer::changeFlex(int eid, int lid, bool newFlex, int &amp;resCode)</span></span>
 <span id="L125"><span class="lineNum">     125</span>                 :             : {</span>
 <span id="L126"><span class="lineNum">     126</span>                 :             : </span>
-<span id="L127"><span class="lineNum">     127</span>                 :<span class="tlaGNC">          88 :         bool hasListing = checkHasListing(eid, lid);</span></span>
-<span id="L128"><span class="lineNum">     128</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          88 :         if (!hasListing)</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :<span class="tlaGNC">         112 :         bool hasListing = checkHasListing(eid, lid);</span></span>
+<span id="L128"><span class="lineNum">     128</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (!hasListing)</span></span>
 <span id="L129"><span class="lineNum">     129</span>                 :             :         {</span>
 <span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; &quot;Error: The listing ID is not associated with the employer ID.&quot; &lt;&lt; std::endl;</span></span>
 <span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L132"><span class="lineNum">     132</span>                 :             :         }</span>
 <span id="L133"><span class="lineNum">     133</span>                 :             : </span>
-<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC tlaBgGNC">          88 :         Listing *l = new Listing(*db);</span></span>
-<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">          88 :         std::string res = l-&gt;changeFlex(lid, newFlex, resCode);</span></span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         Listing *l = new Listing(*db);</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">         112 :         std::string res = l-&gt;changeFlex(lid, newFlex, resCode);</span></span>
 <span id="L136"><span class="lineNum">     136</span>                 :             : </span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">          88 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
-<span id="L138"><span class="lineNum">     138</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          88 :         if (id_pos != std::string::npos)</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">         112 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
+<span id="L138"><span class="lineNum">     138</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (id_pos != std::string::npos)</span></span>
 <span id="L139"><span class="lineNum">     139</span>                 :             :         {</span>
 <span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; res &lt;&lt; std::endl;</span></span>
 <span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L142"><span class="lineNum">     142</span>                 :             :         }</span>
 <span id="L143"><span class="lineNum">     143</span>                 :             : </span>
-<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC tlaBgGNC">          88 :         return true;</span></span>
-<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">          88 : }</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         return true;</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">         112 : }</span></span>
 <span id="L146"><span class="lineNum">     146</span>                 :             : </span>
 <span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">           4 : bool Employer::changeGender(int eid, int lid, int &amp;resCode)</span></span>
 <span id="L148"><span class="lineNum">     148</span>                 :             : {</span>
@@ -239,28 +239,28 @@
 <span id="L167"><span class="lineNum">     167</span>                 :<span class="tlaGNC tlaBgGNC">           2 :         return true;</span></span>
 <span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L169"><span class="lineNum">     169</span>                 :             : </span>
-<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">          89 : bool Employer::changeGender(int eid, int lid, bool newValue, int &amp;resCode)</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">         112 : bool Employer::changeGender(int eid, int lid, bool newValue, int &amp;resCode)</span></span>
 <span id="L171"><span class="lineNum">     171</span>                 :             : {</span>
 <span id="L172"><span class="lineNum">     172</span>                 :             : </span>
-<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">          89 :         bool hasListing = checkHasListing(eid, lid);</span></span>
-<span id="L174"><span class="lineNum">     174</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          89 :         if (!hasListing)</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">         112 :         bool hasListing = checkHasListing(eid, lid);</span></span>
+<span id="L174"><span class="lineNum">     174</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (!hasListing)</span></span>
 <span id="L175"><span class="lineNum">     175</span>                 :             :         {</span>
 <span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; &quot;Error: The listing ID is not associated with the employer ID.&quot; &lt;&lt; std::endl;</span></span>
 <span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L178"><span class="lineNum">     178</span>                 :             :         }</span>
 <span id="L179"><span class="lineNum">     179</span>                 :             : </span>
-<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC tlaBgGNC">          89 :         Listing *l = new Listing(*db);</span></span>
-<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">          89 :         std::string res = l-&gt;changeGender(lid, newValue, resCode);</span></span>
+<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         Listing *l = new Listing(*db);</span></span>
+<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">         112 :         std::string res = l-&gt;changeGender(lid, newValue, resCode);</span></span>
 <span id="L182"><span class="lineNum">     182</span>                 :             : </span>
-<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">          89 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
-<span id="L184"><span class="lineNum">     184</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          89 :         if (id_pos != std::string::npos)</span></span>
+<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">         112 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
+<span id="L184"><span class="lineNum">     184</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (id_pos != std::string::npos)</span></span>
 <span id="L185"><span class="lineNum">     185</span>                 :             :         {</span>
 <span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; res &lt;&lt; std::endl;</span></span>
 <span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L188"><span class="lineNum">     188</span>                 :             :         }</span>
 <span id="L189"><span class="lineNum">     189</span>                 :             : </span>
-<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC tlaBgGNC">          89 :         return true;</span></span>
-<span id="L191"><span class="lineNum">     191</span>                 :<span class="tlaGNC">          89 : }</span></span>
+<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         return true;</span></span>
+<span id="L191"><span class="lineNum">     191</span>                 :<span class="tlaGNC">         112 : }</span></span>
 <span id="L192"><span class="lineNum">     192</span>                 :             : </span>
 <span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">           4 : bool Employer::changeDiversity(int eid, int lid, int &amp;resCode)</span></span>
 <span id="L194"><span class="lineNum">     194</span>                 :             : {</span>
@@ -285,28 +285,28 @@
 <span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC tlaBgGNC">           2 :         return true;</span></span>
 <span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L215"><span class="lineNum">     215</span>                 :             : </span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">          89 : bool Employer::changeDiversity(int eid, int lid, bool newValue, int &amp;resCode)</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">         112 : bool Employer::changeDiversity(int eid, int lid, bool newValue, int &amp;resCode)</span></span>
 <span id="L217"><span class="lineNum">     217</span>                 :             : {</span>
 <span id="L218"><span class="lineNum">     218</span>                 :             : </span>
-<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">          89 :         bool hasListing = checkHasListing(eid, lid);</span></span>
-<span id="L220"><span class="lineNum">     220</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          89 :         if (!hasListing)</span></span>
+<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">         112 :         bool hasListing = checkHasListing(eid, lid);</span></span>
+<span id="L220"><span class="lineNum">     220</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (!hasListing)</span></span>
 <span id="L221"><span class="lineNum">     221</span>                 :             :         {</span>
 <span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; &quot;Error: The listing ID is not associated with the employer ID.&quot; &lt;&lt; std::endl;</span></span>
 <span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L224"><span class="lineNum">     224</span>                 :             :         }</span>
 <span id="L225"><span class="lineNum">     225</span>                 :             : </span>
-<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC tlaBgGNC">          89 :         Listing *l = new Listing(*db);</span></span>
-<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">          89 :         std::string res = l-&gt;changeDiversity(lid, newValue, resCode);</span></span>
+<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         Listing *l = new Listing(*db);</span></span>
+<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">         112 :         std::string res = l-&gt;changeDiversity(lid, newValue, resCode);</span></span>
 <span id="L228"><span class="lineNum">     228</span>                 :             : </span>
-<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          89 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
-<span id="L230"><span class="lineNum">     230</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          89 :         if (id_pos != std::string::npos)</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">         112 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
+<span id="L230"><span class="lineNum">     230</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (id_pos != std::string::npos)</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :             :         {</span>
 <span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; res &lt;&lt; std::endl;</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L234"><span class="lineNum">     234</span>                 :             :         }</span>
 <span id="L235"><span class="lineNum">     235</span>                 :             : </span>
-<span id="L236"><span class="lineNum">     236</span>                 :<span class="tlaGNC tlaBgGNC">          89 :         return true;</span></span>
-<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">          89 : }</span></span>
+<span id="L236"><span class="lineNum">     236</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         return true;</span></span>
+<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">         112 : }</span></span>
 <span id="L238"><span class="lineNum">     238</span>                 :             : </span>
 <span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">           4 : bool Employer::changeRemote(int eid, int lid, int &amp;resCode)</span></span>
 <span id="L240"><span class="lineNum">     240</span>                 :             : {</span>
@@ -331,28 +331,28 @@
 <span id="L259"><span class="lineNum">     259</span>                 :<span class="tlaGNC tlaBgGNC">           2 :         return true;</span></span>
 <span id="L260"><span class="lineNum">     260</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L261"><span class="lineNum">     261</span>                 :             : </span>
-<span id="L262"><span class="lineNum">     262</span>                 :<span class="tlaGNC">          89 : bool Employer::changeRemote(int eid, int lid, bool newValue, int &amp;resCode)</span></span>
+<span id="L262"><span class="lineNum">     262</span>                 :<span class="tlaGNC">         112 : bool Employer::changeRemote(int eid, int lid, bool newValue, int &amp;resCode)</span></span>
 <span id="L263"><span class="lineNum">     263</span>                 :             : {</span>
 <span id="L264"><span class="lineNum">     264</span>                 :             : </span>
-<span id="L265"><span class="lineNum">     265</span>                 :<span class="tlaGNC">          89 :         bool hasListing = checkHasListing(eid, lid);</span></span>
-<span id="L266"><span class="lineNum">     266</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          89 :         if (!hasListing)</span></span>
+<span id="L265"><span class="lineNum">     265</span>                 :<span class="tlaGNC">         112 :         bool hasListing = checkHasListing(eid, lid);</span></span>
+<span id="L266"><span class="lineNum">     266</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (!hasListing)</span></span>
 <span id="L267"><span class="lineNum">     267</span>                 :             :         {</span>
 <span id="L268"><span class="lineNum">     268</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; &quot;Error: The listing ID is not associated with the employer ID.&quot; &lt;&lt; std::endl;</span></span>
 <span id="L269"><span class="lineNum">     269</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L270"><span class="lineNum">     270</span>                 :             :         }</span>
 <span id="L271"><span class="lineNum">     271</span>                 :             : </span>
-<span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC tlaBgGNC">          89 :         Listing *l = new Listing(*db);</span></span>
-<span id="L273"><span class="lineNum">     273</span>                 :<span class="tlaGNC">          89 :         std::string res = l-&gt;changeRemote(lid, newValue, resCode);</span></span>
+<span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         Listing *l = new Listing(*db);</span></span>
+<span id="L273"><span class="lineNum">     273</span>                 :<span class="tlaGNC">         112 :         std::string res = l-&gt;changeRemote(lid, newValue, resCode);</span></span>
 <span id="L274"><span class="lineNum">     274</span>                 :             : </span>
-<span id="L275"><span class="lineNum">     275</span>                 :<span class="tlaGNC">          89 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
-<span id="L276"><span class="lineNum">     276</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          89 :         if (id_pos != std::string::npos)</span></span>
+<span id="L275"><span class="lineNum">     275</span>                 :<span class="tlaGNC">         112 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
+<span id="L276"><span class="lineNum">     276</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (id_pos != std::string::npos)</span></span>
 <span id="L277"><span class="lineNum">     277</span>                 :             :         {</span>
 <span id="L278"><span class="lineNum">     278</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; res &lt;&lt; std::endl;</span></span>
 <span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L280"><span class="lineNum">     280</span>                 :             :         }</span>
 <span id="L281"><span class="lineNum">     281</span>                 :             : </span>
-<span id="L282"><span class="lineNum">     282</span>                 :<span class="tlaGNC tlaBgGNC">          89 :         return true;</span></span>
-<span id="L283"><span class="lineNum">     283</span>                 :<span class="tlaGNC">          89 : }</span></span>
+<span id="L282"><span class="lineNum">     282</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         return true;</span></span>
+<span id="L283"><span class="lineNum">     283</span>                 :<span class="tlaGNC">         112 : }</span></span>
 <span id="L284"><span class="lineNum">     284</span>                 :             : </span>
 <span id="L285"><span class="lineNum">     285</span>                 :<span class="tlaGNC">           3 : bool Employer::changeLocation(int eid, int lid, std::string newLocation, int &amp;resCode)</span></span>
 <span id="L286"><span class="lineNum">     286</span>                 :             : {</span>
@@ -423,28 +423,28 @@
 <span id="L351"><span class="lineNum">     351</span>                 :<span class="tlaGNC tlaBgGNC">           2 :         return true;</span></span>
 <span id="L352"><span class="lineNum">     352</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L353"><span class="lineNum">     353</span>                 :             : </span>
-<span id="L354"><span class="lineNum">     354</span>                 :<span class="tlaGNC">          89 : bool Employer::changeModernWorkspace(int eid, int lid, bool newValue, int &amp;resCode)</span></span>
+<span id="L354"><span class="lineNum">     354</span>                 :<span class="tlaGNC">         112 : bool Employer::changeModernWorkspace(int eid, int lid, bool newValue, int &amp;resCode)</span></span>
 <span id="L355"><span class="lineNum">     355</span>                 :             : {</span>
 <span id="L356"><span class="lineNum">     356</span>                 :             : </span>
-<span id="L357"><span class="lineNum">     357</span>                 :<span class="tlaGNC">          89 :         bool hasListing = checkHasListing(eid, lid);</span></span>
-<span id="L358"><span class="lineNum">     358</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          89 :         if (!hasListing)</span></span>
+<span id="L357"><span class="lineNum">     357</span>                 :<span class="tlaGNC">         112 :         bool hasListing = checkHasListing(eid, lid);</span></span>
+<span id="L358"><span class="lineNum">     358</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (!hasListing)</span></span>
 <span id="L359"><span class="lineNum">     359</span>                 :             :         {</span>
 <span id="L360"><span class="lineNum">     360</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; &quot;Error: The listing ID is not associated with the employer ID.&quot; &lt;&lt; std::endl;</span></span>
 <span id="L361"><span class="lineNum">     361</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L362"><span class="lineNum">     362</span>                 :             :         }</span>
 <span id="L363"><span class="lineNum">     363</span>                 :             : </span>
-<span id="L364"><span class="lineNum">     364</span>                 :<span class="tlaGNC tlaBgGNC">          89 :         Listing *l = new Listing(*db);</span></span>
-<span id="L365"><span class="lineNum">     365</span>                 :<span class="tlaGNC">          89 :         std::string res = l-&gt;changeModernWorkspace(lid, newValue, resCode);</span></span>
+<span id="L364"><span class="lineNum">     364</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         Listing *l = new Listing(*db);</span></span>
+<span id="L365"><span class="lineNum">     365</span>                 :<span class="tlaGNC">         112 :         std::string res = l-&gt;changeModernWorkspace(lid, newValue, resCode);</span></span>
 <span id="L366"><span class="lineNum">     366</span>                 :             : </span>
-<span id="L367"><span class="lineNum">     367</span>                 :<span class="tlaGNC">          89 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
-<span id="L368"><span class="lineNum">     368</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          89 :         if (id_pos != std::string::npos)</span></span>
+<span id="L367"><span class="lineNum">     367</span>                 :<span class="tlaGNC">         112 :         size_t id_pos = res.find(&quot;Error:&quot;);</span></span>
+<span id="L368"><span class="lineNum">     368</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         112 :         if (id_pos != std::string::npos)</span></span>
 <span id="L369"><span class="lineNum">     369</span>                 :             :         {</span>
 <span id="L370"><span class="lineNum">     370</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 std::cout &lt;&lt; res &lt;&lt; std::endl;</span></span>
 <span id="L371"><span class="lineNum">     371</span>                 :<span class="tlaUNC">           0 :                 return false;</span></span>
 <span id="L372"><span class="lineNum">     372</span>                 :             :         }</span>
 <span id="L373"><span class="lineNum">     373</span>                 :             : </span>
-<span id="L374"><span class="lineNum">     374</span>                 :<span class="tlaGNC tlaBgGNC">          89 :         return true;</span></span>
-<span id="L375"><span class="lineNum">     375</span>                 :<span class="tlaGNC">          89 : }</span></span>
+<span id="L374"><span class="lineNum">     374</span>                 :<span class="tlaGNC tlaBgGNC">         112 :         return true;</span></span>
+<span id="L375"><span class="lineNum">     375</span>                 :<span class="tlaGNC">         112 : }</span></span>
 <span id="L376"><span class="lineNum">     376</span>                 :<span class="tlaGNC">           8 : </span></span>
 <span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaGNC">           1 : bool Employer::changeFieldAll(int eid, std::string newField)</span></span>
 <span id="L378"><span class="lineNum">     378</span>                 :             : {</span>
@@ -500,12 +500,12 @@
 <span id="L428"><span class="lineNum">     428</span>                 :             :         }</span>
 <span id="L429"><span class="lineNum">     429</span>                 :             : </span>
 <span id="L430"><span class="lineNum">     430</span>                 :<span class="tlaGNC tlaBgGNC">           1 :         bool res = true;</span></span>
-<span id="L431"><span class="lineNum">     431</span>                 :<span class="tlaGNC">          89 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
+<span id="L431"><span class="lineNum">     431</span>                 :<span class="tlaGNC">         113 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
 <span id="L432"><span class="lineNum">     432</span>                 :             :         {</span>
 <span id="L433"><span class="lineNum">     433</span>                 :             :                 // std::cout &lt;&lt; &quot;listings[0][i] for lid: &quot; &lt;&lt; listings[0][i] &lt;&lt; std::endl;</span>
-<span id="L434"><span class="lineNum">     434</span>                 :<span class="tlaGNC">          88 :                 int lid = std::stoi(listings[0][i]);</span></span>
-<span id="L435"><span class="lineNum">     435</span>                 :<span class="tlaGNC">          88 :                 res &amp;= changeFlex(eid, lid, newFlex, resCode);</span></span>
-<span id="L436"><span class="lineNum">     436</span>                 :<span class="tlaGNC">          88 :         }</span></span>
+<span id="L434"><span class="lineNum">     434</span>                 :<span class="tlaGNC">         112 :                 int lid = std::stoi(listings[0][i]);</span></span>
+<span id="L435"><span class="lineNum">     435</span>                 :<span class="tlaGNC">         112 :                 res &amp;= changeFlex(eid, lid, newFlex, resCode);</span></span>
+<span id="L436"><span class="lineNum">     436</span>                 :<span class="tlaGNC">         112 :         }</span></span>
 <span id="L437"><span class="lineNum">     437</span>                 :             : </span>
 <span id="L438"><span class="lineNum">     438</span>                 :<span class="tlaGNC">           1 :         return res;</span></span>
 <span id="L439"><span class="lineNum">     439</span>                 :<span class="tlaGNC">           1 : }</span></span>
@@ -521,12 +521,12 @@
 <span id="L449"><span class="lineNum">     449</span>                 :             :         }</span>
 <span id="L450"><span class="lineNum">     450</span>                 :             : </span>
 <span id="L451"><span class="lineNum">     451</span>                 :<span class="tlaGNC tlaBgGNC">           1 :         bool res = true;</span></span>
-<span id="L452"><span class="lineNum">     452</span>                 :<span class="tlaGNC">          90 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
+<span id="L452"><span class="lineNum">     452</span>                 :<span class="tlaGNC">         113 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
 <span id="L453"><span class="lineNum">     453</span>                 :             :         {</span>
 <span id="L454"><span class="lineNum">     454</span>                 :             :                 // std::cout &lt;&lt; &quot;listings[0][i] for lid: &quot; &lt;&lt; listings[0][i] &lt;&lt; std::endl;</span>
-<span id="L455"><span class="lineNum">     455</span>                 :<span class="tlaGNC">          89 :                 int lid = std::stoi(listings[0][i]);</span></span>
-<span id="L456"><span class="lineNum">     456</span>                 :<span class="tlaGNC">          89 :                 res &amp;= changeModernWorkspace(eid, lid, newValue, resCode);</span></span>
-<span id="L457"><span class="lineNum">     457</span>                 :<span class="tlaGNC">          89 :         }</span></span>
+<span id="L455"><span class="lineNum">     455</span>                 :<span class="tlaGNC">         112 :                 int lid = std::stoi(listings[0][i]);</span></span>
+<span id="L456"><span class="lineNum">     456</span>                 :<span class="tlaGNC">         112 :                 res &amp;= changeModernWorkspace(eid, lid, newValue, resCode);</span></span>
+<span id="L457"><span class="lineNum">     457</span>                 :<span class="tlaGNC">         112 :         }</span></span>
 <span id="L458"><span class="lineNum">     458</span>                 :             : </span>
 <span id="L459"><span class="lineNum">     459</span>                 :<span class="tlaGNC">           1 :         return res;</span></span>
 <span id="L460"><span class="lineNum">     460</span>                 :<span class="tlaGNC">           1 : }</span></span>
@@ -542,12 +542,12 @@
 <span id="L470"><span class="lineNum">     470</span>                 :             :         }</span>
 <span id="L471"><span class="lineNum">     471</span>                 :             : </span>
 <span id="L472"><span class="lineNum">     472</span>                 :<span class="tlaGNC tlaBgGNC">           1 :         bool res = true;</span></span>
-<span id="L473"><span class="lineNum">     473</span>                 :<span class="tlaGNC">          90 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
+<span id="L473"><span class="lineNum">     473</span>                 :<span class="tlaGNC">         113 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
 <span id="L474"><span class="lineNum">     474</span>                 :             :         {</span>
 <span id="L475"><span class="lineNum">     475</span>                 :             :                 // std::cout &lt;&lt; &quot;listings[0][i] for lid: &quot; &lt;&lt; listings[0][i] &lt;&lt; std::endl;</span>
-<span id="L476"><span class="lineNum">     476</span>                 :<span class="tlaGNC">          89 :                 int lid = std::stoi(listings[0][i]);</span></span>
-<span id="L477"><span class="lineNum">     477</span>                 :<span class="tlaGNC">          89 :                 res &amp;= changeGender(eid, lid, newValue, resCode);</span></span>
-<span id="L478"><span class="lineNum">     478</span>                 :<span class="tlaGNC">          89 :         }</span></span>
+<span id="L476"><span class="lineNum">     476</span>                 :<span class="tlaGNC">         112 :                 int lid = std::stoi(listings[0][i]);</span></span>
+<span id="L477"><span class="lineNum">     477</span>                 :<span class="tlaGNC">         112 :                 res &amp;= changeGender(eid, lid, newValue, resCode);</span></span>
+<span id="L478"><span class="lineNum">     478</span>                 :<span class="tlaGNC">         112 :         }</span></span>
 <span id="L479"><span class="lineNum">     479</span>                 :             : </span>
 <span id="L480"><span class="lineNum">     480</span>                 :<span class="tlaGNC">           1 :         return res;</span></span>
 <span id="L481"><span class="lineNum">     481</span>                 :<span class="tlaGNC">           1 : }</span></span>
@@ -563,12 +563,12 @@
 <span id="L491"><span class="lineNum">     491</span>                 :             :         }</span>
 <span id="L492"><span class="lineNum">     492</span>                 :             : </span>
 <span id="L493"><span class="lineNum">     493</span>                 :<span class="tlaGNC tlaBgGNC">           1 :         bool res = true;</span></span>
-<span id="L494"><span class="lineNum">     494</span>                 :<span class="tlaGNC">          90 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
+<span id="L494"><span class="lineNum">     494</span>                 :<span class="tlaGNC">         113 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
 <span id="L495"><span class="lineNum">     495</span>                 :             :         {</span>
 <span id="L496"><span class="lineNum">     496</span>                 :             :                 // std::cout &lt;&lt; &quot;listings[0][i] for lid: &quot; &lt;&lt; listings[0][i] &lt;&lt; std::endl;</span>
-<span id="L497"><span class="lineNum">     497</span>                 :<span class="tlaGNC">          89 :                 int lid = std::stoi(listings[0][i]);</span></span>
-<span id="L498"><span class="lineNum">     498</span>                 :<span class="tlaGNC">          89 :                 res &amp;= changeDiversity(eid, lid, newValue, resCode);</span></span>
-<span id="L499"><span class="lineNum">     499</span>                 :<span class="tlaGNC">          89 :         }</span></span>
+<span id="L497"><span class="lineNum">     497</span>                 :<span class="tlaGNC">         112 :                 int lid = std::stoi(listings[0][i]);</span></span>
+<span id="L498"><span class="lineNum">     498</span>                 :<span class="tlaGNC">         112 :                 res &amp;= changeDiversity(eid, lid, newValue, resCode);</span></span>
+<span id="L499"><span class="lineNum">     499</span>                 :<span class="tlaGNC">         112 :         }</span></span>
 <span id="L500"><span class="lineNum">     500</span>                 :             : </span>
 <span id="L501"><span class="lineNum">     501</span>                 :<span class="tlaGNC">           1 :         return res;</span></span>
 <span id="L502"><span class="lineNum">     502</span>                 :<span class="tlaGNC">           1 : }</span></span>
@@ -584,12 +584,12 @@
 <span id="L512"><span class="lineNum">     512</span>                 :             :         }</span>
 <span id="L513"><span class="lineNum">     513</span>                 :             : </span>
 <span id="L514"><span class="lineNum">     514</span>                 :<span class="tlaGNC tlaBgGNC">           1 :         bool res = true;</span></span>
-<span id="L515"><span class="lineNum">     515</span>                 :<span class="tlaGNC">          90 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
+<span id="L515"><span class="lineNum">     515</span>                 :<span class="tlaGNC">         113 :         for (int i = 0; i &lt; listings[0].size(); i++)</span></span>
 <span id="L516"><span class="lineNum">     516</span>                 :             :         {</span>
 <span id="L517"><span class="lineNum">     517</span>                 :             :                 // std::cout &lt;&lt; &quot;listings[0][i] for lid: &quot; &lt;&lt; listings[0][i] &lt;&lt; std::endl;</span>
-<span id="L518"><span class="lineNum">     518</span>                 :<span class="tlaGNC">          89 :                 int lid = std::stoi(listings[0][i]);</span></span>
-<span id="L519"><span class="lineNum">     519</span>                 :<span class="tlaGNC">          89 :                 res &amp;= changeRemote(eid, lid, newValue, resCode);</span></span>
-<span id="L520"><span class="lineNum">     520</span>                 :<span class="tlaGNC">          89 :         }</span></span>
+<span id="L518"><span class="lineNum">     518</span>                 :<span class="tlaGNC">         112 :                 int lid = std::stoi(listings[0][i]);</span></span>
+<span id="L519"><span class="lineNum">     519</span>                 :<span class="tlaGNC">         112 :                 res &amp;= changeRemote(eid, lid, newValue, resCode);</span></span>
+<span id="L520"><span class="lineNum">     520</span>                 :<span class="tlaGNC">         112 :         }</span></span>
 <span id="L521"><span class="lineNum">     521</span>                 :             : </span>
 <span id="L522"><span class="lineNum">     522</span>                 :<span class="tlaGNC">           1 :         return res;</span></span>
 <span id="L523"><span class="lineNum">     523</span>                 :<span class="tlaGNC">           1 : }</span></span>

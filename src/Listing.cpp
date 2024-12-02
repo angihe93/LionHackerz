@@ -318,12 +318,26 @@ std::vector<std::string> Listing::getListing(int lid, bool test)
 	{
 		listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
 		eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+		// if eid is uninitialized, return error
+		if (eid.size() == 0)
+		{
+			std::vector<std::string> res;
+			res.push_back("Error: The listing ID you provided does not exist in the database or is not associated with an employer.");
+			return res;
+		}
 		company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
 	}
 	else
 	{
 		listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), true, resCount);
 		eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), true, resCount);
+		// if eid is uninitialized, return error
+		if (eid.size() == 0)
+		{
+			std::vector<std::string> res;
+			res.push_back("Error: The listing ID you provided does not exist in the database or is not associated with an employer.");
+			return res;
+		}
 		company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], true, resCount);
 
 		std::ostringstream oss;
@@ -396,29 +410,30 @@ std::vector<std::string> Listing::getListing(int lid, bool test)
 		if (listings[i][0] != "\"null\"")
 			listingResults.push_back(listings[i][0]);
 
-	if (listings[13][0] != "\"null\"")
-		listingResults.push_back(listings[13][0]);
+	// don't need the if's since these are not nullable in Listing_AI 
+	// if (listings[13][0] != "\"null\"")
+	listingResults.push_back(listings[13][0]);
 
-	if (listings[14][0] != "\"null\"")
-		listingResults.push_back(listings[14][0]);
+	// if (listings[14][0] != "\"null\"")
+	listingResults.push_back(listings[14][0]);
 
-	if (listings[15][0] != "\"null\"")
-		listingResults.push_back(listings[15][0]);
+	// if (listings[15][0] != "\"null\"")
+	listingResults.push_back(listings[15][0]);
 
-	if (listings[16][0] != "\"null\"")
-		listingResults.push_back(listings[16][0]);
+	// if (listings[16][0] != "\"null\"")
+	listingResults.push_back(listings[16][0]);
 
-	if (listings[17][0] != "\"null\"")
-		listingResults.push_back(listings[17][0]);
+	// if (listings[17][0] != "\"null\"")
+	listingResults.push_back(listings[17][0]);
 
-	if (listings[18][0] != "\"null\"")
-		listingResults.push_back(listings[18][0]);
+	// if (listings[18][0] != "\"null\"")
+	listingResults.push_back(listings[18][0]);
 
-	if (listings[19][0] != "\"null\"")
-		listingResults.push_back(listings[19][0]);
+	// if (listings[19][0] != "\"null\"")
+	listingResults.push_back(listings[19][0]);
 
-	if (listings[20][0] != "\"null\"")
-		listingResults.push_back(listings[20][0]);
+	// if (listings[20][0] != "\"null\"")
+	listingResults.push_back(listings[20][0]);
 
 	return listingResults;
 }
