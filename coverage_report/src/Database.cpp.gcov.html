@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2024-12-02 01:28:41</td>
+            <td class="headerValue">2024-12-02 14:00:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -49,9 +49,9 @@
             <td></td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">70.5&nbsp;%</td>
+            <td class="headerCovTableEntryLo">74.4&nbsp;%</td>
             <td class="headerCovTableEntry">156</td>
-            <td class="headerCovTableEntry">110</td>
+            <td class="headerCovTableEntry">116</td>
           </tr>
                   <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -86,43 +86,43 @@
 <span id="L15"><span class="lineNum">      15</span>                 :<span class="tlaGNC">           2 : </span></span>
 <span id="L16"><span class="lineNum">      16</span>                 :<span class="tlaGNC">           2 : // using namespace std;</span></span>
 <span id="L17"><span class="lineNum">      17</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L18"><span class="lineNum">      18</span>                 :<span class="tlaGNC">         251 : Database::Database()</span></span>
-<span id="L19"><span class="lineNum">      19</span>                 :<span class="tlaGNC">         153 : {</span></span>
-<span id="L20"><span class="lineNum">      20</span>                 :<span class="tlaGNC">          98 :     openai_api_key = &quot;&quot;;</span></span>
-<span id="L21"><span class="lineNum">      21</span>                 :<span class="tlaGNC">          98 :     char *url_char = std::getenv(&quot;SUPABASE_URL&quot;);</span></span>
-<span id="L22"><span class="lineNum">      22</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          98 :     if (url_char == NULL)</span></span>
+<span id="L18"><span class="lineNum">      18</span>                 :<span class="tlaGNC">         254 : Database::Database()</span></span>
+<span id="L19"><span class="lineNum">      19</span>                 :<span class="tlaGNC">         155 : {</span></span>
+<span id="L20"><span class="lineNum">      20</span>                 :<span class="tlaGNC">          99 :     openai_api_key = &quot;&quot;;</span></span>
+<span id="L21"><span class="lineNum">      21</span>                 :<span class="tlaGNC">          99 :     char *url_char = std::getenv(&quot;SUPABASE_URL&quot;);</span></span>
+<span id="L22"><span class="lineNum">      22</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          99 :     if (url_char == NULL)</span></span>
 <span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC">           2 :     {</span></span>
 <span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">           2 :         std::cout &lt;&lt; &quot;ERROR: did not find SUPABASE_URL, check it is set and accessible in the current environment&quot; &lt;&lt; std::endl;</span></span>
 <span id="L25"><span class="lineNum">      25</span>                 :<span class="tlaGNC">           2 :     }</span></span>
 <span id="L26"><span class="lineNum">      26</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">          98 :     char *api_char = std::getenv(&quot;SUPABASE_API_KEY&quot;);</span></span>
-<span id="L28"><span class="lineNum">      28</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          98 :     if (api_char == NULL)</span></span>
+<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">          99 :     char *api_char = std::getenv(&quot;SUPABASE_API_KEY&quot;);</span></span>
+<span id="L28"><span class="lineNum">      28</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          99 :     if (api_char == NULL)</span></span>
 <span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">           2 :     {</span></span>
 <span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaGNC">           2 :         std::cout &lt;&lt; &quot;ERROR: did not find SUPABASE_API_KEY, check it is set and accessible in the current environment&quot; &lt;&lt; std::endl;</span></span>
 <span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">           2 :     }</span></span>
 <span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">          98 :     char *openai_api_char = std::getenv(&quot;OPENAI_API_KEY&quot;);</span></span>
-<span id="L34"><span class="lineNum">      34</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          98 :     if (openai_api_char == NULL)</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">          99 :     char *openai_api_char = std::getenv(&quot;OPENAI_API_KEY&quot;);</span></span>
+<span id="L34"><span class="lineNum">      34</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          99 :     if (openai_api_char == NULL)</span></span>
 <span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">           2 :     {</span></span>
 <span id="L36"><span class="lineNum">      36</span>                 :<span class="tlaGNC">           2 :         std::cout &lt;&lt; &quot;ERROR: did not find OPENAI_API_KEY, check it is set and accessible in thh current environment.&quot; &lt;&lt; std::endl</span></span>
 <span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">           2 :                   &lt;&lt; &quot;Continuing without AI.&quot; &lt;&lt; std::endl;</span></span>
 <span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">           2 :     }</span></span>
 <span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">          98 :     const std::string url = url_char;</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">          99 :     const std::string url = url_char;</span></span>
 <span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC">           2 :     //  std::cout &lt;&lt; &quot;in Database(), url: &quot; &lt;&lt; url &lt;&lt; std::endl;</span></span>
-<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          98 :     const std::string api = api_char;</span></span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          99 :     const std::string api = api_char;</span></span>
 <span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC">           2 :     //  std::cout &lt;&lt; &quot;in Database(), api: &quot; &lt;&lt; api &lt;&lt; std::endl;</span></span>
-<span id="L44"><span class="lineNum">      44</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          98 :     if (openai_api_char != NULL)</span></span>
+<span id="L44"><span class="lineNum">      44</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          99 :     if (openai_api_char != NULL)</span></span>
 <span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">           2 :     {</span></span>
-<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">          98 :         const std::string openai_api = openai_api_char;</span></span>
-<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          98 :         this-&gt;openai_api_key = openai_api;</span></span>
-<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          98 :     }</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">          99 :         const std::string openai_api = openai_api_char;</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          99 :         this-&gt;openai_api_key = openai_api;</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          99 :     }</span></span>
 <span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">           2 : </span></span>
 <span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">           2 :     // for ci workflow debug</span></span>
 <span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">           2 :     // this-&gt;url = &quot;https://alcpkkevodekihwyjzvl.supabase.co&quot;;</span></span>
-<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">          98 :     this-&gt;url = url;</span></span>
-<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          98 :     this-&gt;api_key = api;</span></span>
-<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">         153 : }</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">          99 :     this-&gt;url = url;</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          99 :     this-&gt;api_key = api;</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">         155 : }</span></span>
 <span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">           2 : </span></span>
 <span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">           8 : Database::Database(const std::string url, const std::string api_key)</span></span>
 <span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">           6 : {</span></span>
@@ -130,21 +130,21 @@
 <span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">           4 :     this-&gt;api_key = api_key;</span></span>
 <span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">           6 : }</span></span>
 <span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">        2658 : std::string Database::request(const std::string &amp;getPostPatch, const std::string url,</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">        2703 : std::string Database::request(const std::string &amp;getPostPatch, const std::string url,</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">           2 :                               const std::string &amp;insertData, std::string &amp;httpStatusCode)</span></span>
 <span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">           2 : {</span></span>
-<span id="L65"><span class="lineNum">      65</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">        2658 :     if (getPostPatch == &quot;AI&quot; &amp;&amp; this-&gt;openai_api_key == &quot;&quot;)</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
+<span id="L65"><span class="lineNum">      65</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">        2703 :     if (getPostPatch == &quot;AI&quot; &amp;&amp; this-&gt;openai_api_key == &quot;&quot;)</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">           2 :     {</span></span>
 <span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">           2 :         std::cout &lt;&lt; &quot;You must have an Open AI API key set as an environmental variable to use&quot;</span></span>
 <span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">           2 :                   &lt;&lt; &quot;any AI-related functions.  Please set this and try again.&quot; &lt;&lt; std::endl;</span></span>
 <span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">           2 :         return &quot;&quot;;</span></span>
 <span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">           2 :     }</span></span>
 <span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">        2658 :     CURL *curl = curl_easy_init();</span></span>
-<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">        2658 :     std::string response;</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">        2703 :     CURL *curl = curl_easy_init();</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">        2703 :     std::string response;</span></span>
 <span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L75"><span class="lineNum">      75</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">        2658 :     if (!curl)</span></span>
+<span id="L75"><span class="lineNum">      75</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">        2703 :     if (!curl)</span></span>
 <span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">           2 :     {</span></span>
 <span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">           2 :         std::cerr &lt;&lt; &quot;failed to initialize&quot; &lt;&lt; std::endl;</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">           2 :         return &quot;&quot;;</span></span>
@@ -152,28 +152,28 @@
 <span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">           2 : </span></span>
 <span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">           2 :     // debug</span></span>
 <span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">           2 :     // std::cout &lt;&lt; &quot;url: &quot; &lt;&lt; url &lt;&lt; std::endl;</span></span>
-<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">        2658 :     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">        2703 :     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());</span></span>
 <span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">        2658 :     struct curl_slist *headers = NULL;</span></span>
-<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">        2658 :     headers = curl_slist_append(headers, &quot;Content-Type: application/json&quot;);</span></span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">        2658 :     headers = curl_slist_append(headers, &quot;Accept: application/json&quot;);</span></span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">        2658 :     headers = curl_slist_append(headers, (&quot;apikey: &quot; + this-&gt;api_key).c_str());</span></span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">        2703 :     struct curl_slist *headers = NULL;</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">        2703 :     headers = curl_slist_append(headers, &quot;Content-Type: application/json&quot;);</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">        2703 :     headers = curl_slist_append(headers, &quot;Accept: application/json&quot;);</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">        2703 :     headers = curl_slist_append(headers, (&quot;apikey: &quot; + this-&gt;api_key).c_str());</span></span>
 <span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L90"><span class="lineNum">      90</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">        2658 :     if (getPostPatch == &quot;AI&quot;)</span></span>
+<span id="L90"><span class="lineNum">      90</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">        2703 :     if (getPostPatch == &quot;AI&quot;)</span></span>
 <span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC">           2 :     {</span></span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">           2 :         headers = curl_slist_append(headers, (&quot;Authorization: Bearer &quot; + this-&gt;openai_api_key).c_str());</span></span>
-<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">           2 :     }</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">           3 :         headers = curl_slist_append(headers, (&quot;Authorization: Bearer &quot; + this-&gt;openai_api_key).c_str());</span></span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">           3 :     }</span></span>
 <span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">           2 :     else</span></span>
 <span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">           2 :     {</span></span>
-<span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaGNC">        2658 :         headers = curl_slist_append(headers, (&quot;Authorization: Bearer &quot; + this-&gt;api_key).c_str());</span></span>
+<span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaGNC">        2702 :         headers = curl_slist_append(headers, (&quot;Authorization: Bearer &quot; + this-&gt;api_key).c_str());</span></span>
 <span id="L97"><span class="lineNum">      97</span>                 :<span class="tlaGNC">           2 :     }</span></span>
 <span id="L98"><span class="lineNum">      98</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">        2658 :     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);</span></span>
-<span id="L100"><span class="lineNum">     100</span>                 :<span class="tlaGNC">        2658 :     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &amp;response);</span></span>
+<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">        2703 :     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);</span></span>
+<span id="L100"><span class="lineNum">     100</span>                 :<span class="tlaGNC">        2703 :     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &amp;response);</span></span>
 <span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L102"><span class="lineNum">     102</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">        2658 :     if (getPostPatch != &quot;POST&quot; &amp;&amp; getPostPatch != &quot;GET&quot; &amp;&amp; getPostPatch != &quot;PATCH&quot; &amp;&amp; getPostPatch != &quot;AI&quot; &amp;&amp; getPostPatch != &quot;DELETE&quot;)</span></span>
+<span id="L102"><span class="lineNum">     102</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">        2703 :     if (getPostPatch != &quot;POST&quot; &amp;&amp; getPostPatch != &quot;GET&quot; &amp;&amp; getPostPatch != &quot;PATCH&quot; &amp;&amp; getPostPatch != &quot;AI&quot; &amp;&amp; getPostPatch != &quot;DELETE&quot;)</span></span>
 <span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 8 was taken 1 time"> + </span> 
-<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaGBC" title="Branch 11 was taken 1 time"> + </span>]
+<span class="lineNum">        </span>       <span class="tlaGBC" title="Branch 9 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaGBC" title="Branch 11 was taken 1 time"> + </span>]
 <span id="L103"><span class="lineNum">     103</span>                 :<span class="tlaGNC">           2 :     {</span></span>
 <span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">           2 :         std::cout &lt;&lt; &quot;invalid option. please specify whether you wish to perform a GET or POST or PATCH&quot;</span></span>
 <span id="L105"><span class="lineNum">     105</span>                 :<span class="tlaGNC">           2 :                   &lt;&lt; &quot;request.&quot; &lt;&lt; std::endl;</span></span>
@@ -182,83 +182,83 @@
 <span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">           2 :         return &quot;exiting request.&quot;;</span></span>
 <span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaGNC">           2 :     }</span></span>
 <span id="L110"><span class="lineNum">     110</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L111"><span class="lineNum">     111</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">        2658 :     if (getPostPatch == &quot;POST&quot; || getPostPatch == &quot;AI&quot;)</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
+<span id="L111"><span class="lineNum">     111</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">        2703 :     if (getPostPatch == &quot;POST&quot; || getPostPatch == &quot;AI&quot;)</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
 <span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">           2 :     {</span></span>
-<span id="L113"><span class="lineNum">     113</span>                 :<span class="tlaGNC">          18 :         curl_easy_setopt(curl, CURLOPT_POST, 1L);</span></span>
-<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">          18 :     }</span></span>
-<span id="L115"><span class="lineNum">     115</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">        2642 :     else if (getPostPatch == &quot;PATCH&quot;)</span></span>
+<span id="L113"><span class="lineNum">     113</span>                 :<span class="tlaGNC">          22 :         curl_easy_setopt(curl, CURLOPT_POST, 1L);</span></span>
+<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">          22 :     }</span></span>
+<span id="L115"><span class="lineNum">     115</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">        2683 :     else if (getPostPatch == &quot;PATCH&quot;)</span></span>
 <span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC">           2 :     {</span></span>
-<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">         607 :         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, &quot;PATCH&quot;);</span></span>
-<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">         613 :     }</span></span>
-<span id="L119"><span class="lineNum">     119</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        2035 :     else if (getPostPatch == &quot;GET&quot;)</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">         617 :         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, &quot;PATCH&quot;);</span></span>
+<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">         623 :     }</span></span>
+<span id="L119"><span class="lineNum">     119</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        2066 :     else if (getPostPatch == &quot;GET&quot;)</span></span>
 <span id="L120"><span class="lineNum">     120</span>                 :             :     {</span>
-<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">        2031 :         curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);</span></span>
-<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">        2031 :     }</span></span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">        2062 :         curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">        2062 :     }</span></span>
 <span id="L123"><span class="lineNum">     123</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :     else if (getPostPatch == &quot;DELETE&quot;)</span></span>
 <span id="L124"><span class="lineNum">     124</span>                 :             :     {</span>
 <span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">           4 :         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, &quot;DELETE&quot;);</span></span>
 <span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           4 :     }</span></span>
-<span id="L127"><span class="lineNum">     127</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">        2656 :     if (!insertData.empty() &amp;&amp; (getPostPatch == &quot;POST&quot; || getPostPatch == &quot;PATCH&quot; || getPostPatch == &quot;AI&quot;))</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
+<span id="L127"><span class="lineNum">     127</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">        2701 :     if (!insertData.empty() &amp;&amp; (getPostPatch == &quot;POST&quot; || getPostPatch == &quot;PATCH&quot; || getPostPatch == &quot;AI&quot;))</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
 <span id="L128"><span class="lineNum">     128</span>                 :             :     {</span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">         621 :         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">         621 :     }</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">         635 :         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, insertData.c_str());</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">         635 :     }</span></span>
 <span id="L131"><span class="lineNum">     131</span>                 :             : </span>
-<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">        2656 :     headers = curl_slist_append(headers, &quot;Prefer: return=representation&quot;);</span></span>
+<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">        2701 :     headers = curl_slist_append(headers, &quot;Prefer: return=representation&quot;);</span></span>
 <span id="L133"><span class="lineNum">     133</span>                 :             : </span>
-<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">        2656 :     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);</span></span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">        2701 :     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);</span></span>
 <span id="L135"><span class="lineNum">     135</span>                 :             : </span>
-<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">        2656 :     CURLcode res = curl_easy_perform(curl);</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">        2701 :     CURLcode res = curl_easy_perform(curl);</span></span>
 <span id="L137"><span class="lineNum">     137</span>                 :             : </span>
 <span id="L138"><span class="lineNum">     138</span>                 :             :     int16_t response_code;</span>
-<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">        2656 :     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &amp;response_code);</span></span>
-<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">        2656 :     httpStatusCode = std::to_string(response_code);</span></span>
+<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">        2701 :     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &amp;response_code);</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">        2701 :     httpStatusCode = std::to_string(response_code);</span></span>
 <span id="L141"><span class="lineNum">     141</span>                 :             : </span>
-<span id="L142"><span class="lineNum">     142</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        2656 :     if (res != CURLE_OK)</span></span>
+<span id="L142"><span class="lineNum">     142</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        2701 :     if (res != CURLE_OK)</span></span>
 <span id="L143"><span class="lineNum">     143</span>                 :             :     {</span>
 <span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         std::cerr &lt;&lt; &quot;cURL error: &quot; &lt;&lt; curl_easy_strerror(res) &lt;&lt; std::endl;</span></span>
 <span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaUNC">           0 :     }</span></span>
 <span id="L146"><span class="lineNum">     146</span>                 :             : </span>
-<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC tlaBgGNC">        2656 :     curl_slist_free_all(headers);</span></span>
-<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">        2656 :     curl_easy_cleanup(curl);</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC tlaBgGNC">        2701 :     curl_slist_free_all(headers);</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">        2701 :     curl_easy_cleanup(curl);</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :             : </span>
-<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">        2656 :     return response;</span></span>
-<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">        2656 : }</span></span>
+<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">        2701 :     return response;</span></span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">        2701 : }</span></span>
 <span id="L152"><span class="lineNum">     152</span>                 :             : </span>
-<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">          16 : std::string Database::insert(std::string table, std::string data)</span></span>
+<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">          19 : std::string Database::insert(std::string table, std::string data)</span></span>
 <span id="L154"><span class="lineNum">     154</span>                 :             : {</span>
-<span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC">          16 :     std::string statusCode = &quot;&quot;;</span></span>
+<span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC">          19 :     std::string statusCode = &quot;&quot;;</span></span>
 <span id="L156"><span class="lineNum">     156</span>                 :             : </span>
-<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">          16 :     std::string url = this-&gt;url + &quot;/rest/v1/&quot; + table;</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">          19 :     std::string url = this-&gt;url + &quot;/rest/v1/&quot; + table;</span></span>
 <span id="L158"><span class="lineNum">     158</span>                 :             : </span>
-<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">          16 :     const std::string fURL = url;</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">          19 :     const std::string fURL = url;</span></span>
 <span id="L160"><span class="lineNum">     160</span>                 :             : </span>
-<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">          16 :     const std::string method = &quot;POST&quot;;</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">          19 :     const std::string method = &quot;POST&quot;;</span></span>
 <span id="L162"><span class="lineNum">     162</span>                 :             : </span>
-<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">          16 :     const std::string json = data;</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">          19 :     const std::string json = data;</span></span>
 <span id="L164"><span class="lineNum">     164</span>                 :             : </span>
-<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">          16 :     std::string status = request(method, fURL, json, statusCode);</span></span>
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">          19 :     std::string status = request(method, fURL, json, statusCode);</span></span>
 <span id="L166"><span class="lineNum">     166</span>                 :             : </span>
-<span id="L167"><span class="lineNum">     167</span>                 :<span class="tlaGNC">          16 :     return status;</span></span>
-<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">          16 : }</span></span>
+<span id="L167"><span class="lineNum">     167</span>                 :<span class="tlaGNC">          19 :     return status;</span></span>
+<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">          19 : }</span></span>
 <span id="L169"><span class="lineNum">     169</span>                 :             : </span>
-<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">         605 : std::string Database::update(std::string table, std::string data, std::string column, std::string op, std::string val)</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">         615 : std::string Database::update(std::string table, std::string data, std::string column, std::string op, std::string val)</span></span>
 <span id="L171"><span class="lineNum">     171</span>                 :             : {</span>
-<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">         605 :     std::string statusCode = &quot;&quot;;</span></span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">         615 :     std::string statusCode = &quot;&quot;;</span></span>
 <span id="L173"><span class="lineNum">     173</span>                 :             : </span>
-<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">         605 :     std::string url = this-&gt;url + &quot;/rest/v1/&quot; + table + &quot;?&quot; + column + &quot;=&quot; + op + &quot;.&quot; + val;</span></span>
+<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">         615 :     std::string url = this-&gt;url + &quot;/rest/v1/&quot; + table + &quot;?&quot; + column + &quot;=&quot; + op + &quot;.&quot; + val;</span></span>
 <span id="L175"><span class="lineNum">     175</span>                 :             : </span>
-<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">         605 :     const std::string fURL = url;</span></span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">         615 :     const std::string fURL = url;</span></span>
 <span id="L177"><span class="lineNum">     177</span>                 :             : </span>
-<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">         605 :     const std::string method = &quot;PATCH&quot;;</span></span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">         615 :     const std::string method = &quot;PATCH&quot;;</span></span>
 <span id="L179"><span class="lineNum">     179</span>                 :             : </span>
-<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">         605 :     const std::string json = data;</span></span>
+<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">         615 :     const std::string json = data;</span></span>
 <span id="L181"><span class="lineNum">     181</span>                 :             : </span>
-<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">         605 :     std::string status = request(method, fURL, json, statusCode);</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">         615 :     std::string status = request(method, fURL, json, statusCode);</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :             : </span>
-<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">         605 :     return status;</span></span>
-<span id="L185"><span class="lineNum">     185</span>                 :<span class="tlaGNC">         605 : }</span></span>
+<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">         615 :     return status;</span></span>
+<span id="L185"><span class="lineNum">     185</span>                 :<span class="tlaGNC">         615 : }</span></span>
 <span id="L186"><span class="lineNum">     186</span>                 :             : </span>
 <span id="L187"><span class="lineNum">     187</span>                 :             : // PETER ADDED</span>
 <span id="L188"><span class="lineNum">     188</span>                 :             : </span>
@@ -279,37 +279,37 @@
 <span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L204"><span class="lineNum">     204</span>                 :             : </span>
 <span id="L205"><span class="lineNum">     205</span>                 :             : std::vector&lt;std::vector&lt;std::string&gt;&gt;</span>
-<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">        2023 : Database::query(std::string table, std::string selectColumns,</span></span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">        2054 : Database::query(std::string table, std::string selectColumns,</span></span>
 <span id="L207"><span class="lineNum">     207</span>                 :             :                 std::string filterColumn, std::string op,</span>
 <span id="L208"><span class="lineNum">     208</span>                 :             :                 std::string value, bool printResults, int &amp;resCount)</span>
 <span id="L209"><span class="lineNum">     209</span>                 :             : {</span>
-<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">        2023 :     std::string statusCode = &quot;&quot;;</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">        2054 :     std::string statusCode = &quot;&quot;;</span></span>
 <span id="L211"><span class="lineNum">     211</span>                 :             : </span>
-<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">        4046 :     std::string url = this-&gt;url + &quot;/rest/v1/&quot; + table + &quot;?&quot; + &quot;select=&quot; +</span></span>
-<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">        2023 :                       selectColumns + &quot;&amp;&quot; + filterColumn + &quot;=&quot; + op + &quot;.&quot; + value;</span></span>
+<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">        4108 :     std::string url = this-&gt;url + &quot;/rest/v1/&quot; + table + &quot;?&quot; + &quot;select=&quot; +</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">        2054 :                       selectColumns + &quot;&amp;&quot; + filterColumn + &quot;=&quot; + op + &quot;.&quot; + value;</span></span>
 <span id="L214"><span class="lineNum">     214</span>                 :             : </span>
-<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">        2023 :     const std::string fURL = url;</span></span>
+<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">        2054 :     const std::string fURL = url;</span></span>
 <span id="L216"><span class="lineNum">     216</span>                 :             : </span>
-<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">        2023 :     const std::string &amp;method = &quot;GET&quot;;</span></span>
-<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC">        2023 :     const std::string &amp;insertData = &quot;&quot;;</span></span>
+<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">        2054 :     const std::string &amp;method = &quot;GET&quot;;</span></span>
+<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC">        2054 :     const std::string &amp;insertData = &quot;&quot;;</span></span>
 <span id="L219"><span class="lineNum">     219</span>                 :             : </span>
-<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">        2023 :     std::string result = request(method, fURL, insertData, statusCode);</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">        2054 :     std::string result = request(method, fURL, insertData, statusCode);</span></span>
 <span id="L221"><span class="lineNum">     221</span>                 :             : </span>
-<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">        2023 :     int i = 0;</span></span>
-<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">        2023 :     int listCount = 0;</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">        2054 :     int i = 0;</span></span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">        2054 :     int listCount = 0;</span></span>
 <span id="L224"><span class="lineNum">     224</span>                 :             : </span>
-<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">      403384 :     while (i &lt; result.size() &amp;&amp; result[i] != '}')</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">      409521 :     while (i &lt; result.size() &amp;&amp; result[i] != '}')</span></span>
 <span id="L226"><span class="lineNum">     226</span>                 :             :     {</span>
-<span id="L227"><span class="lineNum">     227</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">      401361 :         if (result[i] == ':')</span></span>
-<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">       14975 :             listCount++;</span></span>
-<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">      401361 :         i++;</span></span>
+<span id="L227"><span class="lineNum">     227</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">      407467 :         if (result[i] == ':')</span></span>
+<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">       15194 :             listCount++;</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">      407467 :         i++;</span></span>
 <span id="L230"><span class="lineNum">     230</span>                 :             :     }</span>
 <span id="L231"><span class="lineNum">     231</span>                 :             : </span>
-<span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">        2023 :     std::vector&lt;std::vector&lt;std::string&gt;&gt; queryLists;</span></span>
+<span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">        2054 :     std::vector&lt;std::vector&lt;std::string&gt;&gt; queryLists;</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :             : </span>
-<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">        2023 :     int cR = this-&gt;countResults(result);</span></span>
-<span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">        2023 :     resCount = this-&gt;countResults(result);</span></span>
-<span id="L236"><span class="lineNum">     236</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        2023 :     if (printResults)</span></span>
+<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">        2054 :     int cR = this-&gt;countResults(result);</span></span>
+<span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">        2054 :     resCount = this-&gt;countResults(result);</span></span>
+<span id="L236"><span class="lineNum">     236</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        2054 :     if (printResults)</span></span>
 <span id="L237"><span class="lineNum">     237</span>                 :             :     {</span>
 <span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">          18 :         std::cout &lt;&lt; &quot;SELECT &quot; &lt;&lt; selectColumns &lt;&lt; &quot; FROM &quot; &lt;&lt; table &lt;&lt; &quot; WHERE &quot;</span></span>
 <span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">          18 :                   &lt;&lt; filterColumn &lt;&lt; &quot; &quot; &lt;&lt; op &lt;&lt; &quot; &quot; &lt;&lt; value &lt;&lt; std::endl;</span></span>
@@ -321,13 +321,13 @@
 <span id="L245"><span class="lineNum">     245</span>                 :<span class="tlaGNC">          18 :                   &lt;&lt; &quot;Results: &quot; &lt;&lt; result &lt;&lt; std::endl;</span></span>
 <span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">          18 :     }</span></span>
 <span id="L247"><span class="lineNum">     247</span>                 :             : </span>
-<span id="L248"><span class="lineNum">     248</span>                 :<span class="tlaGNC">        2023 :     tokenize(result, cR, listCount, queryLists);</span></span>
+<span id="L248"><span class="lineNum">     248</span>                 :<span class="tlaGNC">        2054 :     tokenize(result, cR, listCount, queryLists);</span></span>
 <span id="L249"><span class="lineNum">     249</span>                 :             : </span>
-<span id="L250"><span class="lineNum">     250</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        2023 :     if (printResults)</span></span>
+<span id="L250"><span class="lineNum">     250</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        2054 :     if (printResults)</span></span>
 <span id="L251"><span class="lineNum">     251</span>                 :<span class="tlaGNC">          18 :         iterateLists(queryLists);</span></span>
 <span id="L252"><span class="lineNum">     252</span>                 :             : </span>
-<span id="L253"><span class="lineNum">     253</span>                 :<span class="tlaGNC">        2023 :     return queryLists;</span></span>
-<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">        2023 : }</span></span>
+<span id="L253"><span class="lineNum">     253</span>                 :<span class="tlaGNC">        2054 :     return queryLists;</span></span>
+<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">        2054 : }</span></span>
 <span id="L255"><span class="lineNum">     255</span>                 :             : </span>
 <span id="L256"><span class="lineNum">     256</span>                 :             : std::vector&lt;std::vector&lt;std::string&gt;&gt;</span>
 <span id="L257"><span class="lineNum">     257</span>                 :<span class="tlaGNC">           2 : Database::query(std::string table, std::string selectColumns,</span></span>
@@ -444,61 +444,61 @@
 <span id="L368"><span class="lineNum">     368</span>                 :<span class="tlaGNC">           2 :     return queryLists;</span></span>
 <span id="L369"><span class="lineNum">     369</span>                 :<span class="tlaGNC">           2 : }</span></span>
 <span id="L370"><span class="lineNum">     370</span>                 :             : </span>
-<span id="L371"><span class="lineNum">     371</span>                 :<span class="tlaGNC">        4054 : int Database::countResults(std::string results)</span></span>
+<span id="L371"><span class="lineNum">     371</span>                 :<span class="tlaGNC">        4116 : int Database::countResults(std::string results)</span></span>
 <span id="L372"><span class="lineNum">     372</span>                 :             : {</span>
-<span id="L373"><span class="lineNum">     373</span>                 :<span class="tlaGNC">        4054 :     int count = 0;</span></span>
-<span id="L374"><span class="lineNum">     374</span>                 :<span class="tlaGNC">     1787822 :     for (int i = 0; i &lt; results.size(); i++)</span></span>
-<span id="L375"><span class="lineNum">     375</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">     1794496 :         if (results[i] == '}')</span></span>
-<span id="L376"><span class="lineNum">     376</span>                 :<span class="tlaGNC">       10736 :             count++;</span></span>
-<span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaGNC">        4054 :     return count;</span></span>
+<span id="L373"><span class="lineNum">     373</span>                 :<span class="tlaGNC">        4116 :     int count = 0;</span></span>
+<span id="L374"><span class="lineNum">     374</span>                 :<span class="tlaGNC">     1821476 :     for (int i = 0; i &lt; results.size(); i++)</span></span>
+<span id="L375"><span class="lineNum">     375</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">     1828746 :         if (results[i] == '}')</span></span>
+<span id="L376"><span class="lineNum">     376</span>                 :<span class="tlaGNC">       11394 :             count++;</span></span>
+<span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaGNC">        4116 :     return count;</span></span>
 <span id="L378"><span class="lineNum">     378</span>                 :             : }</span>
 <span id="L379"><span class="lineNum">     379</span>                 :             : </span>
-<span id="L380"><span class="lineNum">     380</span>                 :<span class="tlaGNC">        2027 : std::vector&lt;std::vector&lt;std::string&gt;&gt; Database::tokenize(const std::string &amp;res, int cR, int listCount,</span></span>
+<span id="L380"><span class="lineNum">     380</span>                 :<span class="tlaGNC">        2058 : std::vector&lt;std::vector&lt;std::string&gt;&gt; Database::tokenize(const std::string &amp;res, int cR, int listCount,</span></span>
 <span id="L381"><span class="lineNum">     381</span>                 :             :                                                          std::vector&lt;std::vector&lt;std::string&gt;&gt; &amp;queryLists)</span>
 <span id="L382"><span class="lineNum">     382</span>                 :             : {</span>
-<span id="L383"><span class="lineNum">     383</span>                 :<span class="tlaGNC">        2027 :     std::string localRes = res;</span></span>
-<span id="L384"><span class="lineNum">     384</span>                 :<span class="tlaGNC">        2027 :     queryLists.resize(listCount);</span></span>
+<span id="L383"><span class="lineNum">     383</span>                 :<span class="tlaGNC">        2058 :     std::string localRes = res;</span></span>
+<span id="L384"><span class="lineNum">     384</span>                 :<span class="tlaGNC">        2058 :     queryLists.resize(listCount);</span></span>
 <span id="L385"><span class="lineNum">     385</span>                 :             : </span>
-<span id="L386"><span class="lineNum">     386</span>                 :<span class="tlaGNC">       17006 :     for (int j = 0; j &lt; listCount; j++)</span></span>
-<span id="L387"><span class="lineNum">     387</span>                 :<span class="tlaGNC">       14979 :         queryLists[j].resize(cR);</span></span>
+<span id="L386"><span class="lineNum">     386</span>                 :<span class="tlaGNC">       17256 :     for (int j = 0; j &lt; listCount; j++)</span></span>
+<span id="L387"><span class="lineNum">     387</span>                 :<span class="tlaGNC">       15198 :         queryLists[j].resize(cR);</span></span>
 <span id="L388"><span class="lineNum">     388</span>                 :             : </span>
-<span id="L389"><span class="lineNum">     389</span>                 :<span class="tlaGNC">        7391 :     for (int i = 0; i &lt; cR; i++)</span></span>
+<span id="L389"><span class="lineNum">     389</span>                 :<span class="tlaGNC">        7751 :     for (int i = 0; i &lt; cR; i++)</span></span>
 <span id="L390"><span class="lineNum">     390</span>                 :             :     {</span>
-<span id="L391"><span class="lineNum">     391</span>                 :<span class="tlaGNC">       40157 :         for (int j = 0; j &lt; listCount; j++)</span></span>
+<span id="L391"><span class="lineNum">     391</span>                 :<span class="tlaGNC">       41245 :         for (int j = 0; j &lt; listCount; j++)</span></span>
 <span id="L392"><span class="lineNum">     392</span>                 :             :         {</span>
-<span id="L393"><span class="lineNum">     393</span>                 :<span class="tlaGNC">       34793 :             int delim_pos = localRes.find(&quot;:&quot;);</span></span>
-<span id="L394"><span class="lineNum">     394</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       34793 :             if (delim_pos == std::string::npos)</span></span>
+<span id="L393"><span class="lineNum">     393</span>                 :<span class="tlaGNC">       35552 :             int delim_pos = localRes.find(&quot;:&quot;);</span></span>
+<span id="L394"><span class="lineNum">     394</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       35552 :             if (delim_pos == std::string::npos)</span></span>
 <span id="L395"><span class="lineNum">     395</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 break;</span></span>
 <span id="L396"><span class="lineNum">     396</span>                 :             : </span>
-<span id="L397"><span class="lineNum">     397</span>                 :<span class="tlaGNC tlaBgGNC">       34793 :             localRes.erase(0, delim_pos + 1);</span></span>
+<span id="L397"><span class="lineNum">     397</span>                 :<span class="tlaGNC tlaBgGNC">       35552 :             localRes.erase(0, delim_pos + 1);</span></span>
 <span id="L398"><span class="lineNum">     398</span>                 :             : </span>
-<span id="L399"><span class="lineNum">     399</span>                 :<span class="tlaGNC">       34793 :             std::string token = localRes.substr(0, localRes.find(&quot;,&quot;));</span></span>
+<span id="L399"><span class="lineNum">     399</span>                 :<span class="tlaGNC">       35552 :             std::string token = localRes.substr(0, localRes.find(&quot;,&quot;));</span></span>
 <span id="L400"><span class="lineNum">     400</span>                 :             : </span>
-<span id="L401"><span class="lineNum">     401</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       34793 :             if (!token.empty())</span></span>
+<span id="L401"><span class="lineNum">     401</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       35552 :             if (!token.empty())</span></span>
 <span id="L402"><span class="lineNum">     402</span>                 :             :             {</span>
-<span id="L403"><span class="lineNum">     403</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       34793 :                 if (token.back() == ']')</span></span>
+<span id="L403"><span class="lineNum">     403</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       35552 :                 if (token.back() == ']')</span></span>
 <span id="L404"><span class="lineNum">     404</span>                 :             :                 {</span>
-<span id="L405"><span class="lineNum">     405</span>                 :<span class="tlaGNC">        1981 :                     token.pop_back();</span></span>
-<span id="L406"><span class="lineNum">     406</span>                 :<span class="tlaGNC">        1981 :                 }</span></span>
-<span id="L407"><span class="lineNum">     407</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       34793 :                 if (token.back() == '}')</span></span>
+<span id="L405"><span class="lineNum">     405</span>                 :<span class="tlaGNC">        2010 :                     token.pop_back();</span></span>
+<span id="L406"><span class="lineNum">     406</span>                 :<span class="tlaGNC">        2010 :                 }</span></span>
+<span id="L407"><span class="lineNum">     407</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       35552 :                 if (token.back() == '}')</span></span>
 <span id="L408"><span class="lineNum">     408</span>                 :             :                 {</span>
-<span id="L409"><span class="lineNum">     409</span>                 :<span class="tlaGNC">        5364 :                     token.pop_back();</span></span>
-<span id="L410"><span class="lineNum">     410</span>                 :<span class="tlaGNC">        5364 :                 }</span></span>
-<span id="L411"><span class="lineNum">     411</span>                 :<span class="tlaGNC">       34793 :             }</span></span>
+<span id="L409"><span class="lineNum">     409</span>                 :<span class="tlaGNC">        5693 :                     token.pop_back();</span></span>
+<span id="L410"><span class="lineNum">     410</span>                 :<span class="tlaGNC">        5693 :                 }</span></span>
+<span id="L411"><span class="lineNum">     411</span>                 :<span class="tlaGNC">       35552 :             }</span></span>
 <span id="L412"><span class="lineNum">     412</span>                 :             : </span>
-<span id="L413"><span class="lineNum">     413</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       34793 :             if (token == &quot;null&quot;)</span></span>
-<span id="L414"><span class="lineNum">     414</span>                 :<span class="tlaGNC">         380 :                 token = &quot;\&quot;null\&quot;&quot;;</span></span>
+<span id="L413"><span class="lineNum">     413</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       35552 :             if (token == &quot;null&quot;)</span></span>
+<span id="L414"><span class="lineNum">     414</span>                 :<span class="tlaGNC">         375 :                 token = &quot;\&quot;null\&quot;&quot;;</span></span>
 <span id="L415"><span class="lineNum">     415</span>                 :             : </span>
-<span id="L416"><span class="lineNum">     416</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       34793 :             if (token == &quot;true&quot;)</span></span>
-<span id="L417"><span class="lineNum">     417</span>                 :<span class="tlaGNC">        5791 :                 token = &quot;\&quot;true\&quot;&quot;;</span></span>
+<span id="L416"><span class="lineNum">     416</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       35552 :             if (token == &quot;true&quot;)</span></span>
+<span id="L417"><span class="lineNum">     417</span>                 :<span class="tlaGNC">        5885 :                 token = &quot;\&quot;true\&quot;&quot;;</span></span>
 <span id="L418"><span class="lineNum">     418</span>                 :             : </span>
-<span id="L419"><span class="lineNum">     419</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       34793 :             if (token == &quot;false&quot;)</span></span>
-<span id="L420"><span class="lineNum">     420</span>                 :<span class="tlaGNC">        1854 :                 token = &quot;\&quot;false\&quot;&quot;;</span></span>
-<span id="L421"><span class="lineNum">     421</span>                 :<span class="tlaGNC">       34793 :             queryLists[j][i] = token;</span></span>
-<span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">       34793 :         }</span></span>
-<span id="L423"><span class="lineNum">     423</span>                 :<span class="tlaGNC">        5364 :     }</span></span>
-<span id="L424"><span class="lineNum">     424</span>                 :<span class="tlaGNC">        2027 :     return queryLists;</span></span>
-<span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">        2027 : }</span></span>
+<span id="L419"><span class="lineNum">     419</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">       35552 :             if (token == &quot;false&quot;)</span></span>
+<span id="L420"><span class="lineNum">     420</span>                 :<span class="tlaGNC">        1875 :                 token = &quot;\&quot;false\&quot;&quot;;</span></span>
+<span id="L421"><span class="lineNum">     421</span>                 :<span class="tlaGNC">       35552 :             queryLists[j][i] = token;</span></span>
+<span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">       35552 :         }</span></span>
+<span id="L423"><span class="lineNum">     423</span>                 :<span class="tlaGNC">        5693 :     }</span></span>
+<span id="L424"><span class="lineNum">     424</span>                 :<span class="tlaGNC">        2058 :     return queryLists;</span></span>
+<span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">        2058 : }</span></span>
 <span id="L426"><span class="lineNum">     426</span>                 :             : </span>
 <span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">          20 : void Database::iterateLists(std::vector&lt;std::vector&lt;std::string&gt;&gt; &amp;queryLists)</span></span>
 <span id="L428"><span class="lineNum">     428</span>                 :             : {</span>
@@ -510,11 +510,11 @@
 <span id="L434"><span class="lineNum">     434</span>                 :<span class="tlaGNC">          75 :         int listSize = v.size();</span></span>
 <span id="L435"><span class="lineNum">     435</span>                 :<span class="tlaGNC">          75 :         std::cout &lt;&lt; &quot;List &quot; &lt;&lt; listCount++ &lt;&lt; &quot;: &quot;;</span></span>
 <span id="L436"><span class="lineNum">     436</span>                 :<span class="tlaGNC">          75 :         std::cout &lt;&lt; &quot;(&quot;;</span></span>
-<span id="L437"><span class="lineNum">     437</span>                 :<span class="tlaGNC">         235 :         for (std::string &amp;s : v)</span></span>
+<span id="L437"><span class="lineNum">     437</span>                 :<span class="tlaGNC">         237 :         for (std::string &amp;s : v)</span></span>
 <span id="L438"><span class="lineNum">     438</span>                 :             :         {</span>
-<span id="L439"><span class="lineNum">     439</span>                 :<span class="tlaGNC">         160 :             std::cout &lt;&lt; s;</span></span>
-<span id="L440"><span class="lineNum">     440</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         160 :             if (++e != listSize)</span></span>
-<span id="L441"><span class="lineNum">     441</span>                 :<span class="tlaGNC">          85 :                 std::cout &lt;&lt; &quot;, &quot;;</span></span>
+<span id="L439"><span class="lineNum">     439</span>                 :<span class="tlaGNC">         162 :             std::cout &lt;&lt; s;</span></span>
+<span id="L440"><span class="lineNum">     440</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         162 :             if (++e != listSize)</span></span>
+<span id="L441"><span class="lineNum">     441</span>                 :<span class="tlaGNC">          87 :                 std::cout &lt;&lt; &quot;, &quot;;</span></span>
 <span id="L442"><span class="lineNum">     442</span>                 :             :         }</span>
 <span id="L443"><span class="lineNum">     443</span>                 :<span class="tlaGNC">          75 :         std::cout &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;</span></span>
 <span id="L444"><span class="lineNum">     444</span>                 :             :     }</span>
