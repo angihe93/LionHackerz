@@ -1259,4 +1259,8 @@ void RouteController::initRoutes(crow::App<> &app)
     CROW_ROUTE(app, "/makeUser")
         .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
                                          { makeUser(req, res); });
+
+    /* EMPLOYER ROUTES */
+    // CROW_ROUTE(app, "/employer/changeField") ...
+
 }

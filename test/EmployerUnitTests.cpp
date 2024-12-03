@@ -114,7 +114,7 @@ TEST(EmployerChangeFlex, checkChangeFlex)
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
-        // case where change flex should fail
+        // case where change flex should fail because eid 4 does not have lid 3
         int resCode = 0;
         bool res = e->changeFlex(4, 3, resCode);
         bool expected = false;
@@ -132,6 +132,15 @@ TEST(EmployerChangeFlex, checkChangeFlex)
         // revert change if success
         if (res == expected)
                 e->changeFlex(4, 4, resCode);
+
+        // change flex to a boolean value
+        // change flex should fail because eid 4 does not have lid 3
+        res = e->changeFlex(4, 3, true, resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
+
+        // may need mocking? to test the error case: size_t id_pos = res.find("Error:"); if (id_pos != std::string::npos)
+
 
         delete db;
         delete e;
@@ -163,6 +172,12 @@ TEST(EmployerChangeGender, checkChangeGender)
         if (res == expected)
                 e->changeGender(7, 6, resCode);
 
+        // case where change gender should fail
+        res = e->changeGender(5, 6, true, resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
+
+
         delete db;
         delete e;
 }
@@ -193,6 +208,11 @@ TEST(EmployerChangeDiversity, checkChangeDiversity)
         if (res == expected)
                 e->changeDiversity(1, 1, resCode);
 
+        // case where change diversity should fail
+        res = e->changeDiversity(1, 2, true, resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
+
         delete db;
         delete e;
 }
@@ -222,6 +242,11 @@ TEST(EmployerChangeRemote, checkChangeRemote)
         // revert change if success
         if (res == expected)
                 e->changeRemote(1, 1, resCode);
+
+        // case where change remote should fail
+        res = e->changeRemote(1, 2, true, resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
 
         delete db;
         delete e;
@@ -307,6 +332,11 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace)
         if (res == expected)
                 e->changeModernWorkspace(1, 1, resCode);
 
+        // case where change modern workspace should fail
+        res = e->changeModernWorkspace(1, 2, true, resCode);
+        expected = false;
+        EXPECT_EQ(res, expected);
+
         delete db;
         delete e;
 }
@@ -318,9 +348,14 @@ TEST(EmployerChangeFieldAll, checkChangeFieldAll)
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
+        // case where changeFieldAll should succeed
         bool res = e->changeFieldAll(4, "Arts");
         // std::cout << "res from changeFieldAll: " << res << std::endl;
         EXPECT_EQ(res, true);
+
+        // case where changeFieldAll should fail
+        res = e->changeFieldAll(9999, "Arts");
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;
@@ -333,9 +368,14 @@ TEST(EmployerChangePositionAll, checkChangePositionAll)
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
+        // case where changePositionAll should succeed
         bool res = e->changePositionAll(3, "Programmer");
         // std::cout << "res from changePositionAll: " << res << std::endl;
         EXPECT_EQ(res, true);
+
+        // case where changePositionAll should fail
+        res = e->changePositionAll(9999, "Programmer");
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;
@@ -348,9 +388,14 @@ TEST(EmployerChangeFlexAll, checkChangeFlexAll)
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
+        // case where changeFlexAll should succeed
         int resCode = 0;
         bool res = e->changeFlexAll(7, true, resCode);
         EXPECT_EQ(res, true);
+
+        // case where changeFlexAll should fail
+        res = e->changeFlexAll(9999, true, resCode);
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;
@@ -363,9 +408,14 @@ TEST(EmployerChangeModernWorkspaceAll, checkChangeModernWorkspaceAll)
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
+        // case where changeModernWorkspaceAll should succeed
         int resCode = 0;
         bool res = e->changeModernWorkspaceAll(7, true, resCode);
         EXPECT_EQ(res, true);
+
+        // case where changeModernWorkspaceAll should fail
+        res = e->changeModernWorkspaceAll(9999, true, resCode);
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;
@@ -378,9 +428,14 @@ TEST(EmployerChangeGenderAll, checkChangeGenderAll)
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
+        // case where changeGenderAll should succeed
         int resCode = 0;
         bool res = e->changeGenderAll(7, true, resCode);
         EXPECT_EQ(res, true);
+
+        // case where changeGenderAll should fail
+        res = e->changeGenderAll(9999, true, resCode);
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;
@@ -393,9 +448,14 @@ TEST(EmployerChangeDiversityAll, checkChangeDiversityAll)
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
+        // case where changeDiversityAll should succeed
         int resCode = 0;
         bool res = e->changeDiversityAll(7, true, resCode);
         EXPECT_EQ(res, true);
+
+        // case where changeDiversityAll should fail
+        res = e->changeDiversityAll(9999, true, resCode);
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;
@@ -408,9 +468,14 @@ TEST(EmployerChangeRemoteAll, checkChangeRemoteAll)
         Database *db = new MockDatabase();
         Employer *e = new Employer(*db);
 
+        // case where changeRemoteAll should succeed
         int resCode = 0;
         bool res = e->changeRemoteAll(7, false, resCode);
         EXPECT_EQ(res, true);
+
+        // case where changeRemoteAll should fail
+        res = e->changeRemoteAll(9999, false, resCode);
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;
@@ -463,6 +528,9 @@ TEST(EmployerChangePay, checkPayListing)
         bool res = e->changePay(1, 1, 100000, resCode);
         EXPECT_EQ(res, true);
 
+        res = e->changePay(1, 2, 100000, resCode);
+        EXPECT_EQ(res, false);
+
         delete db;
         delete e;
 }
@@ -478,6 +546,9 @@ TEST(EmployerChangeSkillRequirements, checkChangeSkillRequirements)
         bool res = e->changeSkillRequirements(1, 1, {{"skill1_req", "Data Analysis"}, {"skill2_req", "SQL"}, {"skill3_req", "Healthcare Industry Knowledge"}, {"skill4_req", "Problem-solving"}, {"skill5_req", "Communication"}}, resCode);
         EXPECT_EQ(res, true);
 
+        res = e->changeSkillRequirements(1, 2, {{"skill1_req", "Data Analysis"}, {"skill2_req", "SQL"}, {"skill3_req", "Healthcare Industry Knowledge"}, {"skill4_req", "Problem-solving"}, {"skill5_req", "Communication"}}, resCode);
+        EXPECT_EQ(res, false);
+
         delete db;
         delete e;
 }
@@ -491,6 +562,9 @@ TEST(EmployerChangePersonalityType, checkChangePersonalityType)
         int resCode = 0;
         bool res = e->changePersonalityTypes(1, 1, "INTJ", resCode);
         EXPECT_EQ(res, true);
+
+        res = e->changePersonalityTypes(1, 2, "INTJ", resCode);
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;
@@ -506,6 +580,10 @@ TEST(EmployerDeleteListing, checkDeleteListing)
         int resCode = 0;
         bool res = e->deleteListing(1, true, resCode);
         EXPECT_EQ(res, true);
+
+        // deleteilsting for eid 1 lid 2, should fail
+        res = e->deleteListing(1, 2, resCode);
+        EXPECT_EQ(res, false);
 
         delete db;
         delete e;

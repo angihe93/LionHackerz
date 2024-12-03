@@ -6,9 +6,15 @@
 #include <string>
 #include <vector>
 
-Employer::Employer(Database &db)
+// Employer::Employer(Database &db)
+// {
+//         this->db = &db;
+// }
+
+Employer::Employer(Database &db, Listing &l)
 {
         this->db = &db;
+        this->l = &l;
 }
 
 bool Employer::checkHasListing(int eid, int lid)
