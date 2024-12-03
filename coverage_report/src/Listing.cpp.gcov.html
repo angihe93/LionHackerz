@@ -31,13 +31,13 @@
             <td class="headerValue">coverageN_.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryHi">98.7&nbsp;%</td>
+            <td class="headerCovTableEntryHi">98.9&nbsp;%</td>
             <td class="headerCovTableEntry">537</td>
-            <td class="headerCovTableEntry">530</td>
+            <td class="headerCovTableEntry">531</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2024-12-02 14:00:38</td>
+            <td class="headerValue">2024-12-02 20:48:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -81,10 +81,10 @@
 <span id="L10"><span class="lineNum">      10</span>                 :<span class="tlaGNC">           2 : #include &lt;vector&gt;</span></span>
 <span id="L11"><span class="lineNum">      11</span>                 :<span class="tlaGNC">           2 : #include &lt;sstream&gt;</span></span>
 <span id="L12"><span class="lineNum">      12</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L13"><span class="lineNum">      13</span>                 :<span class="tlaGNC">        1210 : Listing::Listing(Database &amp;db)</span></span>
-<span id="L14"><span class="lineNum">      14</span>                 :<span class="tlaGNC">         605 : {</span></span>
-<span id="L15"><span class="lineNum">      15</span>                 :<span class="tlaGNC">         605 :         this-&gt;db = &amp;db;</span></span>
-<span id="L16"><span class="lineNum">      16</span>                 :<span class="tlaGNC">        1208 : }</span></span>
+<span id="L13"><span class="lineNum">      13</span>                 :<span class="tlaGNC">          89 : Listing::Listing(Database &amp;db)</span></span>
+<span id="L14"><span class="lineNum">      14</span>                 :<span class="tlaGNC">          87 : {</span></span>
+<span id="L15"><span class="lineNum">      15</span>                 :<span class="tlaGNC">          48 :         this-&gt;db = &amp;db;</span></span>
+<span id="L16"><span class="lineNum">      16</span>                 :<span class="tlaGNC">          87 : }</span></span>
 <span id="L17"><span class="lineNum">      17</span>                 :<span class="tlaGNC">           2 : </span></span>
 <span id="L18"><span class="lineNum">      18</span>                 :<span class="tlaGNC">           9 : std::string Listing::changeField(int lid, std::string newField)</span></span>
 <span id="L19"><span class="lineNum">      19</span>                 :<span class="tlaGNC">           2 : {</span></span>
@@ -144,25 +144,25 @@
 <span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">           4 :         return result[1][0];</span></span>
 <span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">         119 : std::string Listing::changeFlex(int lid, bool newFlex, int resCode)</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">          48 : std::string Listing::changeFlex(int lid, bool newFlex, int resCode)</span></span>
 <span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">           2 : {</span></span>
-<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">         119 :         int resCount = 0;</span></span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">         119 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">          48 :         int resCount = 0;</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          48 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">           2 :                                                                                                                           false, resCount);</span></span>
-<span id="L81"><span class="lineNum">      81</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">         119 :         if (resCount == 0)</span></span>
+<span id="L81"><span class="lineNum">      81</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          48 :         if (resCount == 0)</span></span>
 <span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">           2 :         {</span></span>
 <span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">           3 :                 resCode = 404;</span></span>
 <span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">           3 :                 return &quot;Error: The listing ID you provided does not exist in the database.&quot;;</span></span>
 <span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">           2 :         }</span></span>
 <span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">         118 :         std::string newFlexStr = newFlex ? &quot;true&quot; : &quot;false&quot;;</span></span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">         118 :         std::string setVal = R&quot;({&quot;job_flexibility&quot; : )&quot; + newFlexStr + &quot;}&quot;;</span></span>
-<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">         118 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
-<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">         234 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,job_flexibility&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
-<span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC">         118 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">         118 :         resCode = 200;</span></span>
-<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">         118 :         return result[1][0];</span></span>
-<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">         119 : }</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">          47 :         std::string newFlexStr = newFlex ? &quot;true&quot; : &quot;false&quot;;</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">          47 :         std::string setVal = R&quot;({&quot;job_flexibility&quot; : )&quot; + newFlexStr + &quot;}&quot;;</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">          47 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">          92 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,job_flexibility&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
+<span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC">          47 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">          47 :         resCode = 200;</span></span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">          47 :         return result[1][0];</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">          48 : }</span></span>
 <span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">           2 : </span></span>
 <span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaGNC">           4 : std::string Listing::changeGender(int lid, int &amp;resCode)</span></span>
 <span id="L97"><span class="lineNum">      97</span>                 :<span class="tlaGNC">           2 : {</span></span>
@@ -186,26 +186,26 @@
 <span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">           4 :         return result[1][0];</span></span>
 <span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">           2 : </span></span>
-<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">         125 : std::string Listing::changeGender(int lid, bool newValue, int &amp;resCode)</span></span>
+<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">          54 : std::string Listing::changeGender(int lid, bool newValue, int &amp;resCode)</span></span>
 <span id="L119"><span class="lineNum">     119</span>                 :             : {</span>
-<span id="L120"><span class="lineNum">     120</span>                 :<span class="tlaGNC">         117 :         int resCount = 0;</span></span>
-<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">         117 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
+<span id="L120"><span class="lineNum">     120</span>                 :<span class="tlaGNC">          46 :         int resCount = 0;</span></span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">          46 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
 <span id="L122"><span class="lineNum">     122</span>                 :             :                                                                                                                           false, resCount);</span>
-<span id="L123"><span class="lineNum">     123</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         117 :         if (resCount == 0)</span></span>
+<span id="L123"><span class="lineNum">     123</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          46 :         if (resCount == 0)</span></span>
 <span id="L124"><span class="lineNum">     124</span>                 :             :         {</span>
 <span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">           1 :                 resCode = 404;</span></span>
 <span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           1 :                 return &quot;Error: The listing ID you provided does not exist in the database.&quot;;</span></span>
 <span id="L127"><span class="lineNum">     127</span>                 :             :         }</span>
 <span id="L128"><span class="lineNum">     128</span>                 :             : </span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">         116 :         std::string newGenderStr = newValue ? &quot;true&quot; : &quot;false&quot;;</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">         116 :         std::string setVal = R&quot;({&quot;mixed_gender&quot; : )&quot; + newGenderStr + &quot;}&quot;;</span></span>
-<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">         116 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">          45 :         std::string newGenderStr = newValue ? &quot;true&quot; : &quot;false&quot;;</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">          45 :         std::string setVal = R&quot;({&quot;mixed_gender&quot; : )&quot; + newGenderStr + &quot;}&quot;;</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">          45 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
 <span id="L132"><span class="lineNum">     132</span>                 :             : </span>
-<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">         232 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,mixed_gender&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
-<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">         116 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
-<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">         116 :         resCode = 200;</span></span>
-<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">         116 :         return result[1][0];</span></span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">         117 : }</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">          90 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,mixed_gender&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">          45 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">          45 :         resCode = 200;</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">          45 :         return result[1][0];</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">          46 : }</span></span>
 <span id="L138"><span class="lineNum">     138</span>                 :             : </span>
 <span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">           3 : std::string Listing::changeDiversity(int lid, int &amp;resCode)</span></span>
 <span id="L140"><span class="lineNum">     140</span>                 :             : {</span>
@@ -229,26 +229,26 @@
 <span id="L158"><span class="lineNum">     158</span>                 :<span class="tlaGNC">           2 :         return result[1][0];</span></span>
 <span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">           3 : }</span></span>
 <span id="L160"><span class="lineNum">     160</span>                 :             : </span>
-<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">         117 : std::string Listing::changeDiversity(int lid, bool newValue, int &amp;resCode)</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">          46 : std::string Listing::changeDiversity(int lid, bool newValue, int &amp;resCode)</span></span>
 <span id="L162"><span class="lineNum">     162</span>                 :             : {</span>
-<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">         117 :         int resCount = 0;</span></span>
-<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">         117 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">          46 :         int resCount = 0;</span></span>
+<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">          46 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
 <span id="L165"><span class="lineNum">     165</span>                 :             :                                                                                                                           false, resCount);</span>
-<span id="L166"><span class="lineNum">     166</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         117 :         if (resCount == 0)</span></span>
+<span id="L166"><span class="lineNum">     166</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          46 :         if (resCount == 0)</span></span>
 <span id="L167"><span class="lineNum">     167</span>                 :             :         {</span>
 <span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">           1 :                 resCode = 404;</span></span>
 <span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">           1 :                 return &quot;Error: The listing ID you provided does not exist in the database.&quot;;</span></span>
 <span id="L170"><span class="lineNum">     170</span>                 :             :         }</span>
 <span id="L171"><span class="lineNum">     171</span>                 :             : </span>
-<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">         116 :         std::string newDiversityStr = newValue ? &quot;true&quot; : &quot;false&quot;;</span></span>
-<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">         116 :         std::string setVal = R&quot;({&quot;diverse_workforce&quot; : )&quot; + newDiversityStr + &quot;}&quot;;</span></span>
-<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">         116 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">          45 :         std::string newDiversityStr = newValue ? &quot;true&quot; : &quot;false&quot;;</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">          45 :         std::string setVal = R&quot;({&quot;diverse_workforce&quot; : )&quot; + newDiversityStr + &quot;}&quot;;</span></span>
+<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">          45 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
 <span id="L175"><span class="lineNum">     175</span>                 :             : </span>
-<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">         232 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,diverse_workforce&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
-<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">         116 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
-<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">         116 :         resCode = 200;</span></span>
-<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">         116 :         return result[1][0];</span></span>
-<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">         117 : }</span></span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">          90 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,diverse_workforce&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">          45 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">          45 :         resCode = 200;</span></span>
+<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">          45 :         return result[1][0];</span></span>
+<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">          46 : }</span></span>
 <span id="L181"><span class="lineNum">     181</span>                 :             : </span>
 <span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">           3 : std::string Listing::changeRemote(int lid, int &amp;resCode)</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :             : {</span>
@@ -272,26 +272,26 @@
 <span id="L201"><span class="lineNum">     201</span>                 :<span class="tlaGNC">           2 :         return result[1][0];</span></span>
 <span id="L202"><span class="lineNum">     202</span>                 :<span class="tlaGNC">           3 : }</span></span>
 <span id="L203"><span class="lineNum">     203</span>                 :             : </span>
-<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC">         117 : std::string Listing::changeRemote(int lid, bool newValue, int &amp;resCode)</span></span>
+<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC">          46 : std::string Listing::changeRemote(int lid, bool newValue, int &amp;resCode)</span></span>
 <span id="L205"><span class="lineNum">     205</span>                 :             : {</span>
-<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">         117 :         int resCount = 0;</span></span>
-<span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">         117 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">          46 :         int resCount = 0;</span></span>
+<span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">          46 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
 <span id="L208"><span class="lineNum">     208</span>                 :             :                                                                                                                           false, resCount);</span>
-<span id="L209"><span class="lineNum">     209</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         117 :         if (resCount == 0)</span></span>
+<span id="L209"><span class="lineNum">     209</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          46 :         if (resCount == 0)</span></span>
 <span id="L210"><span class="lineNum">     210</span>                 :             :         {</span>
 <span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">           1 :                 resCode = 404;</span></span>
 <span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">           1 :                 return &quot;Error: The listing ID you provided does not exist in the database.&quot;;</span></span>
 <span id="L213"><span class="lineNum">     213</span>                 :             :         }</span>
 <span id="L214"><span class="lineNum">     214</span>                 :             : </span>
-<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">         116 :         std::string newRemoteStr = newValue ? &quot;true&quot; : &quot;false&quot;;</span></span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">         116 :         std::string setVal = R&quot;({&quot;remote_available&quot; : )&quot; + newRemoteStr + &quot;}&quot;;</span></span>
-<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">         116 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
+<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">          45 :         std::string newRemoteStr = newValue ? &quot;true&quot; : &quot;false&quot;;</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">          45 :         std::string setVal = R&quot;({&quot;remote_available&quot; : )&quot; + newRemoteStr + &quot;}&quot;;</span></span>
+<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">          45 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
 <span id="L218"><span class="lineNum">     218</span>                 :             : </span>
-<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">         232 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,remote_available&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
-<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">         116 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
-<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">         116 :         resCode = 200;</span></span>
-<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">         116 :         return result[1][0];</span></span>
-<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">         117 : }</span></span>
+<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">          90 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,remote_available&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">          45 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
+<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">          45 :         resCode = 200;</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">          45 :         return result[1][0];</span></span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">          46 : }</span></span>
 <span id="L224"><span class="lineNum">     224</span>                 :             : </span>
 <span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">           2 : std::string Listing::changeLocation(int lid, std::string newLocation, int &amp;resCode)</span></span>
 <span id="L226"><span class="lineNum">     226</span>                 :             : {</span>
@@ -355,26 +355,26 @@
 <span id="L284"><span class="lineNum">     284</span>                 :<span class="tlaGNC">           2 :         return result[1][0];</span></span>
 <span id="L285"><span class="lineNum">     285</span>                 :<span class="tlaGNC">           3 : }</span></span>
 <span id="L286"><span class="lineNum">     286</span>                 :             : </span>
-<span id="L287"><span class="lineNum">     287</span>                 :<span class="tlaGNC">         117 : std::string Listing::changeModernWorkspace(int lid, bool newValue, int &amp;resCode)</span></span>
+<span id="L287"><span class="lineNum">     287</span>                 :<span class="tlaGNC">          46 : std::string Listing::changeModernWorkspace(int lid, bool newValue, int &amp;resCode)</span></span>
 <span id="L288"><span class="lineNum">     288</span>                 :             : {</span>
-<span id="L289"><span class="lineNum">     289</span>                 :<span class="tlaGNC">         117 :         int resCount = 0;</span></span>
-<span id="L290"><span class="lineNum">     290</span>                 :<span class="tlaGNC">         117 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
+<span id="L289"><span class="lineNum">     289</span>                 :<span class="tlaGNC">          46 :         int resCount = 0;</span></span>
+<span id="L290"><span class="lineNum">     290</span>                 :<span class="tlaGNC">          46 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; listing = db-&gt;query(&quot;Listing&quot;, &quot;&quot;, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid),</span></span>
 <span id="L291"><span class="lineNum">     291</span>                 :             :                                                                                                                           false, resCount);</span>
-<span id="L292"><span class="lineNum">     292</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         117 :         if (resCount == 0)</span></span>
+<span id="L292"><span class="lineNum">     292</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          46 :         if (resCount == 0)</span></span>
 <span id="L293"><span class="lineNum">     293</span>                 :<span class="tlaGNC">           2 :         {</span></span>
 <span id="L294"><span class="lineNum">     294</span>                 :<span class="tlaGNC">           1 :                 resCode = 404;</span></span>
 <span id="L295"><span class="lineNum">     295</span>                 :<span class="tlaGNC">           1 :                 return &quot;Error: The listing ID you provided does not exist in the database.&quot;;</span></span>
 <span id="L296"><span class="lineNum">     296</span>                 :<span class="tlaGNC">           2 :         }</span></span>
 <span id="L297"><span class="lineNum">     297</span>                 :             : </span>
-<span id="L298"><span class="lineNum">     298</span>                 :<span class="tlaGNC">         116 :         std::string newBool = newValue ? &quot;true&quot; : &quot;false&quot;;</span></span>
-<span id="L299"><span class="lineNum">     299</span>                 :<span class="tlaGNC">         118 :         std::string setVal = R&quot;({&quot;modern_building&quot; : )&quot; + newBool + &quot;}&quot;;</span></span>
+<span id="L298"><span class="lineNum">     298</span>                 :<span class="tlaGNC">          45 :         std::string newBool = newValue ? &quot;true&quot; : &quot;false&quot;;</span></span>
+<span id="L299"><span class="lineNum">     299</span>                 :<span class="tlaGNC">          47 :         std::string setVal = R&quot;({&quot;modern_building&quot; : )&quot; + newBool + &quot;}&quot;;</span></span>
 <span id="L300"><span class="lineNum">     300</span>                 :             : </span>
-<span id="L301"><span class="lineNum">     301</span>                 :<span class="tlaGNC">         116 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
-<span id="L302"><span class="lineNum">     302</span>                 :<span class="tlaGNC">         234 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,modern_building&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
-<span id="L303"><span class="lineNum">     303</span>                 :<span class="tlaGNC">         116 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
-<span id="L304"><span class="lineNum">     304</span>                 :<span class="tlaGNC">         116 :         resCode = 200;</span></span>
-<span id="L305"><span class="lineNum">     305</span>                 :<span class="tlaGNC">         116 :         return result[1][0];</span></span>
-<span id="L306"><span class="lineNum">     306</span>                 :<span class="tlaGNC">         117 : }</span></span>
+<span id="L301"><span class="lineNum">     301</span>                 :<span class="tlaGNC">          45 :         db-&gt;update(&quot;Listing&quot;, setVal, &quot;lid&quot;, &quot;eq&quot;, std::to_string(lid));</span></span>
+<span id="L302"><span class="lineNum">     302</span>                 :<span class="tlaGNC">          92 :         std::vector&lt;std::vector&lt;std::string&gt;&gt; result = db-&gt;query(&quot;Listing&quot;, &quot;lid,modern_building&quot;, &quot;lid&quot;, &quot;eq&quot;,</span></span>
+<span id="L303"><span class="lineNum">     303</span>                 :<span class="tlaGNC">          45 :                                                                                                                          std::to_string(lid), false, resCount);</span></span>
+<span id="L304"><span class="lineNum">     304</span>                 :<span class="tlaGNC">          45 :         resCode = 200;</span></span>
+<span id="L305"><span class="lineNum">     305</span>                 :<span class="tlaGNC">          45 :         return result[1][0];</span></span>
+<span id="L306"><span class="lineNum">     306</span>                 :<span class="tlaGNC">          46 : }</span></span>
 <span id="L307"><span class="lineNum">     307</span>                 :             : </span>
 <span id="L308"><span class="lineNum">     308</span>                 :<span class="tlaGNC">          10 : std::vector&lt;std::string&gt; Listing::getListing(int lid, bool test)</span></span>
 <span id="L309"><span class="lineNum">     309</span>                 :             : {</span>
@@ -636,10 +636,10 @@
 <span id="L565"><span class="lineNum">     565</span>                 :<span class="tlaGNC">           1 :         std::cout &lt;&lt; &quot;localListings after inserting to Listing_AI: &quot; &lt;&lt; localListings &lt;&lt; std::endl;</span></span>
 <span id="L566"><span class="lineNum">     566</span>                 :<span class="tlaGNC">           1 :         std::string localCompanies = localListings.substr(listings.find('(') + 1, std::string::npos);</span></span>
 <span id="L567"><span class="lineNum">     567</span>                 :             : </span>
-<span id="L568"><span class="lineNum">     568</span>                 :<span class="tlaGNC">           1 :         while (localCompanies[0] != '(')</span></span>
-<span id="L569"><span class="lineNum">     569</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 localCompanies.erase(0, 1);</span></span>
+<span id="L568"><span class="lineNum">     568</span>                 :<span class="tlaGNC">           4 :         while (localCompanies[0] != '(')</span></span>
+<span id="L569"><span class="lineNum">     569</span>                 :<span class="tlaGNC">           3 :                 localCompanies.erase(0, 1);</span></span>
 <span id="L570"><span class="lineNum">     570</span>                 :             : </span>
-<span id="L571"><span class="lineNum">     571</span>                 :<span class="tlaGNC tlaBgGNC">           1 :         count = 0;</span></span>
+<span id="L571"><span class="lineNum">     571</span>                 :<span class="tlaGNC">           1 :         count = 0;</span></span>
 <span id="L572"><span class="lineNum">     572</span>                 :             : </span>
 <span id="L573"><span class="lineNum">     573</span>                 :<span class="tlaGNC">           2 :         while (count &lt; n)</span></span>
 <span id="L574"><span class="lineNum">     574</span>                 :             :         {</span>
