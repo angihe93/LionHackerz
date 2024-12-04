@@ -80,6 +80,7 @@ include(GoogleTest)
    test/ListingUnitTests.cpp
    test/EmployerUnitTests.cpp
    test/DimensionUnitTests.cpp
+   test/AugmentUnitTests.cpp
 #    test/UserUnitTests.cpp
    test/AuthUnitTests.cpp
    test/AuthIntegrationTests.cpp
@@ -164,6 +165,7 @@ if (CPPLINT)
         test/EmployerUnitTests.cpp
         test/UserUnitTests.cpp
         test/DimensionUnitTests.cpp
+        test/AugmentUnitTests.cpp
         test/AuthUnitTests.cpp
         test/AuthIntegrationTests.cpp
         test/DatabaseIntegrationTests.cpp

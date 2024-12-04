@@ -9,7 +9,7 @@ bool dimExists(Database *db, int dim_id) {
     int resCount = 0;
     // Query the 'dimension' table to check if dim_id exists
     std::vector<std::vector<std::string>> result =
-        db->query("dimension", "id", "id", "eq", std::to_string(dim_id), false, resCount);
+        db->query("Dimension", "dim_id", "dim_id", "eq", std::to_string(dim_id), false, resCount);
     return resCount > 0;
 }
 
