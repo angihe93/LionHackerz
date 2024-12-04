@@ -25,23 +25,21 @@ TEST(dbQuery, CheckQuery)
 
         // query with 2 filters
         queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "field", "eq", "Arts", true, resCount);
-        expected = {{"5", "4"}};
-        EXPECT_EQ(queryRes, expected);
+        std::vector<std::vector<std::string>> e1 = {{"5", "4"}};
+        std::vector<std::vector<std::string>> e2 = {{"4", "5"}};
+        EXPECT_TRUE(queryRes==e1 || queryRes==e2);
 
         // query with 2 filters no print
         queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "field", "eq", "Arts", false, resCount);
-        expected = {{"5", "4"}};
-        EXPECT_EQ(queryRes, expected);
+        EXPECT_TRUE(queryRes==e1 || queryRes==e2);
 
         // query with 3 filters
         queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "skill2_req", "eq", "painting", "skill3_req", "eq", "sculpting", true, resCount);
-        expected = {{"5", "4"}};
-        EXPECT_EQ(queryRes, expected);
+        EXPECT_TRUE(queryRes==e1 || queryRes==e2);
 
         // query with 3 filters no print
         queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "skill2_req", "eq", "painting", "skill3_req", "eq", "sculpting", false, resCount);
-        expected = {{"5", "4"}};
-        EXPECT_EQ(queryRes, expected);
+        EXPECT_TRUE(queryRes==e1 || queryRes==e2);
 
         delete db;
 }

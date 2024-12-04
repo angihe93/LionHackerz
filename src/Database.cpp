@@ -244,7 +244,7 @@ Database::query(std::string table, std::string selectColumns,
         std::cout << std::endl
                   << "Results: " << result << std::endl;
     }
-
+ 
     tokenize(result, cR, listCount, queryLists);
 
     if (printResults)

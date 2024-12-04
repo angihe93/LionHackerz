@@ -188,10 +188,6 @@ public:
     /* Retrieve the list of matched words for listing lid*/
     std::vector<std::string> getMatchedWords(int lid);
 
-    /* Helper functions for generating API's returned JSON objects*/
-    // TODO: deal with arrays of things later
-    std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> matchResponse(int uid);
-
 private:
     Database *db;
     std::vector<std::vector<std::string>> all_listings;  /* all job listings in db */
@@ -208,7 +204,6 @@ private:
     void iterateList(std::vector<std::string> l); /* prints list */
     std::vector<std::string> tokenize(const std::string& input); /* tokenize input */
     void iterateList(std::vector<int> l);         /* prints list */
-    int binSearch(SynsetPtr s, int left, int right, char val); /* binary search for index */
     int wordMatchFound(std::string fieldU, std::string fieldE, int c);
                                                 /* matches words using WordNet synonyms */
     int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */
