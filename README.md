@@ -176,11 +176,11 @@ GET /dbtest
 
 GET /getMatches
 
- Get a listing of job matches (for users)
+	Get a listing of job matches (for users)
 
 POST /listing/create
 
- Create a new job listing (for employers)
+	Create a new job listing (for employers)
 
 POST /listing/generateAI
 
@@ -225,7 +225,7 @@ Postman tests for these routes can be found on our Trello board located here:
 ### User Creation
 
 The user is created using a JSON request to the /makeUser endpoint. The request body will need to have a name and email. The request needs to have a "dimensions" parameter, which contains the information about the user's desired pay, field, gender, etc. The user may or may not indicate their skills and interests, and they may or may not include information about their "augments" which specifies how important certain things like location, pay, etc for a job is to a user and this will be used in the matching algorithm.
-
+```
 Sample Request:
 {
   "name": "SampleUser",
@@ -253,7 +253,7 @@ Sample Request:
     { "dim_id": "2", "importance": "somewhat" }
   ]
 }
-
+```
 
 # Database Queries - For Team Members in Designing your Classes
 
