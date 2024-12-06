@@ -32,4 +32,4 @@ TEST(AugmentFunctions, checkAugmentFunctions) {
     EXPECT_EQ(result, expected);
 
     delete db;
-}
+} 

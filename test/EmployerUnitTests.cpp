@@ -588,6 +588,7 @@ TEST(EmployerChangeRemoteAll, checkChangeRemoteAll)
 }
 
 /* Tests Employer::postListing() function in Employer.cpp */
+int postId;
 TEST(EmployerPostListing, checkPostListing)
 {
 
@@ -602,6 +603,7 @@ TEST(EmployerPostListing, checkPostListing)
 
         int resLid = e->postListing(7, basicInfo, skillsPersonality, pay, boolFields);
         EXPECT_GT(resLid, 0);
+        postId = resLid;
 
         delete db;
         delete l;
@@ -695,7 +697,7 @@ TEST(EmployerDeleteListing, checkDeleteListing)
         Employer *e = new Employer(*db, *l);
 
         int resCode = 0;
-        bool res = e->deleteListing(1, true, resCode);
+        bool res = e->deleteListing(7, postId, resCode);
         EXPECT_EQ(res, true);
 
         // deleteilsting for eid 1 lid 2, should fail
