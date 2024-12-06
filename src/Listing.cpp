@@ -423,6 +423,40 @@ std::vector<std::string> Listing::getListing(int lid, bool test)
 	return listingResults;
 }
 
+std::string Listing::generateAIJobDescription(std::string title, std::string field,
+        std::string skill1, std::string skill2, std::string skill3, std::string skill4,
+        std::string skill5, std::string location, std::string pay) {
+
+
+        std::string data = R"({
+                "model": "gpt-4o",
+                "messages": [
+                        {
+                                "role": "system",
+                                "content": "You are a helpful assistant."
+                        },
+                        {
+                                "role": "user",
+                                "content": "generate a job description for a job in the )" + field + R"( field. the job title is )" + title + R"(. the skills required are )" + skill1 + R"(, )" + skill2 + R"(, )" + skill4 + R"(, )" + skill5 + R"(. the pay is )" + pay + R"( per year and the location is in )" + location + R"(. the description should combine all those factors subtly and be a few sentences long. Do not include any headings, just the description paragraph all on the same line."
+                        }
+                ]
+        })";
+
+        const std::string insertData = data;
+        const std::string url = "https://api.openai.com/v1/chat/completions";
+        const std::string method = "AI";
+        std::string statusCode = "";
+
+        std::string description = db->request(method, url, insertData, statusCode);
+        std::string starting_junk = description.substr(0, description.find("\"content\":"));
+        description.erase(0, starting_junk.length() + 12);
+        description = description.substr(0, description.find("\"refusal\": null"));
+        if (description.length() >= 2 && description.substr(description.length() - 2) == "\",") {
+        description.erase(description.length() - 2);
+    }
+        return description;
+}
+
 std::string Listing::generateAIListing(std::string n)
 {
 	std::string data = R"({

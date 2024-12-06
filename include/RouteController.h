@@ -111,6 +111,7 @@ class RouteController {
         void createListing(const crow::request &req, crow::response &res);
         void getProfile(const crow::request &req, crow::response &res);
         void makeUser(const crow::request &req, crow::response &res);
+        void generateAIJobDescription(const crow::request &req, crow::response &res);
         void getUIDFromAPIKey(const crow::request &req, crow::response &res);
         void returnError(crow::response &res, int code, const std::string &message);
         std::string parseSkills(const crow::json::rvalue &skills_json, std::vector<SkillInput> &skills);

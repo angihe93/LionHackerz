@@ -713,6 +713,52 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     return;
 }
 
+void RouteController::generateAIJobDescription(const crow::request &req, crow::response &res) {
+
+    crow::json::wvalue jsonRes;
+
+    if (this->db->getAIkey() == "")
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must have an Open AI API key set as an environmental variable to use AI.  Please set this and try again.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+
+    auto json = crow::json::load(req.body);
+    if (!json) {
+        res.code = 400;
+        res.write("Invalid JSON");
+        return;
+    }
+
+    std::string title = json["job_title"].s();
+    std::string field = json["job_field"].s();
+    std::string skill1 = json["skill1"].s();
+    std::string skill2 = json["skill2"].s();
+    std::string skill3 = json["skill3"].s();
+    std::string skill4 = json["skill4"].s();
+    std::string skill5 = json["skill5"].s();
+    std::string pay = std::to_string(json["pay"].i());
+    std::string location = json["loc"].s();
+
+    Listing *l = new Listing(*db);
+
+    std::string description = l->generateAIJobDescription(title, field, skill1,
+        skill2, skill3, skill4, skill5, pay, location);
+    res.code = 200;
+    jsonRes["description"] = description;
+    res.write(jsonRes.dump());
+    res.end();
+
+    delete l;
+    return;
+
+}
+
 void RouteController::generateAIListing(const crow::request &req, crow::response &res)
 {
 
@@ -1345,6 +1391,10 @@ void RouteController::initRoutes(crow::SimpleApp &app)
     CROW_ROUTE(app, "/listing/generateAI")
         .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
                                          { generateAIListing(req, res); });
+
+    CROW_ROUTE(app, "/listing/generateJobDescription")
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
+                                         { generateAIJobDescription(req, res); });
 
   /* USER ROUTE */
     CROW_ROUTE(app, "/makeUser")
