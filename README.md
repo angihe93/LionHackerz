@@ -212,7 +212,7 @@ PATCH /listing/changeModernWorkspace
 
 POST /makeUser
 
-	Regiser a new user account
+	Register a new user account
 
 GET /getProfile
 
