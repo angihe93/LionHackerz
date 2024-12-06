@@ -173,34 +173,27 @@ jobs:
 
       - name: Run Get Matches Collection
         run: |
-          newman run ../postman/GetMatches.postman_collection.json \
-            --environment ../postman/workspace.postman_globals.json \
+          newman run ./postman/GetMatches.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
             --reporters cli,html \
             --reporter-html-export newman-report.html
       - name: Run Listing Collection
         run: |
-          newman run ../postman/Listing.postman_collection.json \
-            --environment ../postman/workspace.postman_globals.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report.html
-
-      - name: Run Listing Collection
-        run: |
-          newman run ../postman/Listing.postman_collection.json \
-            --environment ../postman/workspace.postman_globals.json \
+          newman run ./postman/Listing.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
             --reporters cli,html \
             --reporter-html-export newman-report.html
 
       - name: Run SignUp Collection
         run: |
-          newman run ../postman/SignUp.postman_collection.json \
-            --environment ../postman/workspace.postman_globals.json \
+          newman run ./postman/SignUp.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
             --reporters cli,html \
             --reporter-html-export newman-report.html
       - name: Run User Collection
         run: |
-          newman run ../postman/User.postman_collection.json \
-            --environment ../postman/workspace.postman_globals.json \
+          newman run ./postman/User.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
             --reporters cli,html \
             --reporter-html-export newman-report.html
 
