@@ -40,6 +40,18 @@ TEST(AuthCreateAPIUser, checkCreateAPIUser) {
     int uid = a->createAPIUser(email, password);
     EXPECT_EQ(uid, -1);
 
+    // create user should fail
+    email = "abc";
+    password = "";
+    uid = a->createAPIUser(email, password);
+    EXPECT_EQ(uid, -1);
+
+    // create user should fail
+    email = "";
+    password = "abc";
+    uid = a->createAPIUser(email, password);
+    EXPECT_EQ(uid, -1);
+
     // create user should succeed
     // get the largest uid, the created uid should be this + 1
     // or if user with email already exists, return its uid
@@ -80,6 +92,12 @@ TEST(AuthGenAPIKey, checkGenAPIKey) {
         apiKey = a->genAPIKey(role, uid);
         EXPECT_NE(apiKey.find("Error:"), std::string::npos);
 
+        // gen api should succeed
+        role = "matching_platform";
+        uid = 5;
+        apiKey = a->genAPIKey(role, uid);
+        EXPECT_EQ(apiKey.find("Error:"), std::string::npos);
+
         delete db;
         delete a;
 }
@@ -95,15 +113,14 @@ TEST(AuthGetAid, checkGetAid) {
     int aid = a->getAid(apiKey);
     EXPECT_EQ(aid, -1);
 
-    // debug this, why does it return all rows in Authentication_TEST?
     // get aid should fail
     apiKey = "kkjffthfhgfvhkjgvjhgkuyfk";
     std::cout << "testing apiKey: " << apiKey << std::endl;
     aid = a->getAid(apiKey);
-    // EXPECT_EQ(aid, -1);
+    EXPECT_EQ(aid, -1);
 
     // get aid should succeed
-    apiKey = "75497150f67ac7b1f721d3333e397bc134e40ebd9c95cf0b9d03a030ef390c58";
+    apiKey = "f1d2191c02d66b63e53093484a592255e0d1c39e3f1e0730fa787627c60c574c";
     std::cout << "testing apiKey: " << apiKey << std::endl;
     aid = a->getAid(apiKey);
     EXPECT_EQ(aid, 1);

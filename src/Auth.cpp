@@ -84,7 +84,7 @@ std::pair<std::string, std::string> Auth::decodeBasicAuth(const std::string& aut
         if (delimiter_pos == std::string::npos) {
                 std::cout << "Invalid credentials format" << std::endl;
                 return {"",""};
-                // throw std::invalid_argument("Invalid credentials format");
+                throw std::invalid_argument("Invalid credentials format");
         }
 
         std::string username = decoded_credentials.substr(0, delimiter_pos);
@@ -110,7 +110,7 @@ std::string Auth::genAPIKey(std::string role, int uid) {
         }
 
         std::string apikey = generateRandomHex(32);
-        std::string data = "{\"apikey\": \"" + apikey + "\", \"role\": \"" + role + "\", \"uid\": \"" + std::to_string(uid) +"\"}";
+        std::string data = "{\"key\": \"" + apikey + "\", \"role\": \"" + role + "\", \"uid\": \"" + std::to_string(uid) +"\"}";
 
         std::string insertRes = db->insert("Authentication",data);
         std::cout << "insertRes: " << insertRes << std::endl;
@@ -129,26 +129,13 @@ int Auth::getAid(std::string apiKey) {
                 return -1; 
         }
         int resCount = 0;
-        // std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,apikey", "apikey", "eq", apiKey, true, resCount);
-        // apiKey = "\'" + apiKey + "\'";
-        std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,apikey", "apikey", "eq", apiKey, true, resCount);
-        std::cout << "in getAid, resCount: " << resCount << std::endl;
+
+        std::vector<std::vector<std::string>> queryRes = db->query("Authentication", "aid,key", "key", "eq", apiKey, false, resCount);
         if (resCount == 0) {
                 std::cout << "Error: API key does not exist, please check the input" << std::endl;
                 return -1;
         }
         int aid = std::stoi(queryRes[0][0]);
-        // // strange bug in db->query, it returns all rows for every apikey eq
-        // // add additional check to make sure the apikey matches
-        // int aid = -1;
-        // for (int i = 0; i < resCount; i++) {
-        //         std::cout << "queryRes[1][i]: " << queryRes[1][i] << std::endl;
-        //         if (queryRes[1][i] == apiKey) {
-        //                 std::cout << "queryRes[1][i] == apiKey" << std::endl;
-        //                 aid = std::stoi(queryRes[0][i]);
-        //                 break;
-        //         }
-        // }
 
         return aid;
 }
@@ -162,19 +149,11 @@ std::string Auth::getRole(int aid) {
                 return "Error: aid does not exist, please check the input";
         }
         std::string role = queryRes[0][0];
+        std::cout << "role: " << role << std::endl;
 
         // remove leading and trailing quotation marks
-        if (!role.empty() && role.front() == '\"') {
-                role.erase(0, 1);
-        }
-        if (!role.empty() && role.back() == '\"') {
-                role.erase(role.size() - 1);
-        }
-        // remove backslashes
-        size_t pos = 0;
-        while ((pos = role.find("\\\"", pos)) != std::string::npos) {
-                role.replace(pos, 2, "\"");
-                pos += 1; // Move past the replaced character
-        }
+        role.erase(0, 1);
+        role.erase(role.size() - 1);
+
         return role;
 }

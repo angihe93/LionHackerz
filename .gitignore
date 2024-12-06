@@ -6,6 +6,7 @@ external_libraries/cpp_redis
 build/*
 !build/README.txt
 !build/coverage_report
+!build/filterbr.py
 !external_libraries/README.txt
 !external_libraries/cmake/cpp_redis/CMakeLists.txt
 !external_libraries/cmake/tacopie/CMakeLists.txt

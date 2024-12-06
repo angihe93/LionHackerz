@@ -19,8 +19,11 @@ set(INCLUDE_PATHS
     /opt/homebrew/Cellar/asio/1.30.2/include)
 
 # Add coverage flags for GCC/Clang
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage -fprofile-arcs")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g --coverage")
+
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 
 link_directories(external_libraries/WordNet-3.0/lib /usr/local/lib)
 
@@ -77,7 +80,8 @@ include(GoogleTest)
    test/ListingUnitTests.cpp
    test/EmployerUnitTests.cpp
    test/DimensionUnitTests.cpp
-   # add user unit tests
+   test/AugmentUnitTests.cpp
+#    test/UserUnitTests.cpp
    test/AuthUnitTests.cpp
    test/AuthIntegrationTests.cpp
    test/DatabaseIntegrationTests.cpp
@@ -92,6 +96,7 @@ include(GoogleTest)
    src/Dimension.cpp
  )
 
+target_compile_options(LionHackerzProjectTests PRIVATE -O0 -fno-inline -fno-builtin -fno-omit-frame-pointer -fno-optimize-sibling-calls)
 
 target_include_directories(LionHackerzProjectTests PRIVATE 
      ${INCLUDE_PATHS} 
@@ -116,8 +121,11 @@ add_custom_target(run_tests
 
 add_custom_target(gen_cov
     COMMAND lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
-    COMMAND lcov --rc lcov_branch_coverage=1 --remove coverage.info '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
-    COMMAND genhtml --branch-coverage coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+    COMMAND lcov --rc lcov_branch_coverage=1 --no-external --remove coverage.info '*/external_libraries/*' '*/opt/homebrew/*' '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
+    COMMAND python3 filterbr.py coverageN.info > coverageN_.info
+    COMMAND genhtml --branch-coverage coverageN_.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+    COMMAND mkdir -p coverage_report_gcovr
+    COMMAND gcovr --root .. --object-directory . --html --html-details -o coverage_report_gcovr/coverage.html -f ../src -v --gcov-ignore-errors=no_working_dir_found --exclude-throw-branches --exclude-unreachable-branches --decisions
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating coverage report"
 )
@@ -157,6 +165,7 @@ if (CPPLINT)
         test/EmployerUnitTests.cpp
         test/UserUnitTests.cpp
         test/DimensionUnitTests.cpp
+        test/AugmentUnitTests.cpp
         test/AuthUnitTests.cpp
         test/AuthIntegrationTests.cpp
         test/DatabaseIntegrationTests.cpp

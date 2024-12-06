@@ -203,9 +203,7 @@ bool RouteController::checkAuthHeaders(const crow::request &req, crow::response 
 
     // get aid from api key, check it belongs to an admin or matching platform
     std::string apiKey = username;
-    std::cout << "in checkAuthHeaders apiKey: " << apiKey << std::endl;
     int aid = a->getAid(apiKey);
-    std::cout << "in checkAuthHeaders aid: " << aid << std::endl;
     if (aid == -1)
     {
         crow::json::wvalue error;
@@ -219,7 +217,6 @@ bool RouteController::checkAuthHeaders(const crow::request &req, crow::response 
     }
 
     std::string role = a->getRole(aid);
-    std::cout << "in checkAuthHeaders role: " << role << std::endl;
     if (role != "admin" && role != "matching_platform")
     {
         crow::json::wvalue error;
@@ -370,145 +367,6 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     res.end();
 
     redis_client.commit();
-}
-
-void RouteController::getMatchesJSON(const crow::request &req, crow::response &res)
-{
-    if (!checkAuthHeaders(req, res))
-    {
-        return; // response has already been written in checkApiHeaders
-    }
-
-    auto params = crow::query_string(req.url_params);
-    crow::json::wvalue jsonRes;
-
-    int uid = 0;
-
-    if (params.get("uid") != nullptr)
-    {
-        uid = std::stoi(params.get("uid"));
-    }
-    else
-    {
-        res.code = 400;
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a user ID with '?uid=X' to retrieve job matches.";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-    }
-
-    Matcher *m = new Matcher(*db);
-    Listing *l = new Listing(*db);
-
-    if (uid != 1 && uid != 5)
-    {
-        res.code = 404;
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "Oops. That user doesn't exist yet.  We can't find any matches.";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-    }
-    else
-    {
-        res.code = 200;
-        std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> match_resp = m->matchResponse(uid);
-        jsonRes["data"]["summary"] = std::get<std::string>(match_resp["summary"]);
-
-        std::vector<std::map<std::string, JobListingMapVariantType>> match_resp_listings = std::get<std::vector<std::map<std::string, JobListingMapVariantType>>>(match_resp["job_listings"]);
-
-        crow::json::wvalue::list job_listings = crow::json::wvalue::list();
-        for (auto &jl : match_resp_listings)
-        {
-            crow::json::wvalue jsonJL;
-            jsonJL["match_score"] = std::get<int>(jl["match_score"]);
-            jsonJL["posted_by"] = std::get<std::string>(jl["posted_by"]);
-            jsonJL["created_on"] = std::get<std::string>(jl["created_on"]);
-            jsonJL["field"] = std::get<std::string>(jl["field"]);
-            jsonJL["position"] = std::get<std::string>(jl["position"]);
-            jsonJL["job_description"] = std::get<std::string>(jl["job_description"]);
-
-            crow::json::wvalue::list skills = crow::json::wvalue::list();
-            if (jl.find("skill1") != jl.end())
-            {
-                skills.push_back(std::get<std::string>(jl["skill1"]));
-            }
-            if (jl.find("skill2") != jl.end())
-            {
-                skills.push_back(std::get<std::string>(jl["skill2"]));
-            }
-            if (jl.find("skill3") != jl.end())
-            {
-                skills.push_back(std::get<std::string>(jl["skill3"]));
-            }
-            if (jl.find("skill4") != jl.end())
-            {
-                skills.push_back(std::get<std::string>(jl["skill4"]));
-            }
-            if (jl.find("skill5") != jl.end())
-            {
-                skills.push_back(std::get<std::string>(jl["skill5"]));
-            }
-            jsonJL["skills_required"] = std::move(skills);
-
-            if (jl.find("pay") != jl.end())
-            {
-                jsonJL["pay"] = std::stoi(std::get<std::string>(jl["pay"]));
-            }
-            if (jl.find("flexibility") != jl.end())
-            {
-                jsonJL["flexibility"] = (std::get<std::string>(jl["flexibility"]) == "true") ? true : false;
-            }
-            if (jl.find("modern_workspace") != jl.end())
-            {
-                jsonJL["modern_workspace"] = (std::get<std::string>(jl["modern_workspace"]) == "true") ? true : false;
-            }
-            if (jl.find("gender_parity") != jl.end())
-            {
-                jsonJL["gender_parity"] = (std::get<std::string>(jl["gender_parity"]) == "true") ? true : false;
-            }
-            if (jl.find("diverse_workforce") != jl.end())
-            {
-                jsonJL["diverse_workforce"] = (std::get<std::string>(jl["diverse_workforce"]) == "true") ? true : false;
-            }
-            if (jl.find("remote_option_available") != jl.end())
-            {
-                jsonJL["remote_option_available"] = (std::get<std::string>(jl["remote_option_available"]) == "true") ? true : false;
-            }
-            if (jl.find("personality_types") != jl.end())
-            {
-                jsonJL["personality_types"] = std::get<std::string>(jl["personality_types"]);
-            }
-            if (jl.find("location") != jl.end())
-            {
-                jsonJL["location"] = std::get<std::string>(jl["location"]);
-            }
-
-            crow::json::wvalue::list matched_words = crow::json::wvalue::list();
-            std::string words_str = std::get<std::string>(jl["matched_words"]);
-            std::string delim = ";";
-            size_t pos = 0;
-            std::string word;
-            while ((pos = words_str.find(delim)) != std::string::npos)
-            {
-                word = words_str.substr(0, pos);
-                matched_words.push_back(word);
-                words_str.erase(0, pos + 1);
-            }
-            jsonJL["matched_words"] = std::move(matched_words);
-
-            job_listings.push_back(jsonJL);
-        }
-        jsonRes["data"]["job_listings"] = std::move(job_listings);
-
-        res.write(jsonRes.dump());
-        res.end();
-    }
-
-    delete m;
-    delete l;
-    return;
 }
 
 /* LISTING ROUTES */
@@ -1229,9 +1087,6 @@ void RouteController::initRoutes(crow::App<> &app)
         res.end();
         return; });
 
-    CROW_ROUTE(app, "/getMatchesJSON")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
-                                        { getMatchesJSON(req, res); });
 
     /* LISTING ROUTES */
     CROW_ROUTE(app, "/listing/changeField")
@@ -1262,4 +1117,8 @@ void RouteController::initRoutes(crow::App<> &app)
     CROW_ROUTE(app, "/makeUser")
         .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
                                          { makeUser(req, res); });
+
+    /* EMPLOYER ROUTES */
+    // CROW_ROUTE(app, "/employer/changeField") ...
+
 }

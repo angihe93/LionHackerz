@@ -10,7 +10,7 @@
 class Employer
 {
 public:
-        Employer(Database &db);
+        Employer(Database &db, Listing &l);
 
         /**
          * Check if the employer has the listing it wants to change
@@ -322,6 +322,7 @@ public:
 
 private:
         Database *db;
+        Listing *l;
 };
 
 #endif

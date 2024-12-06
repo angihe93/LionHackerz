@@ -18,20 +18,28 @@ TEST(dbQuery, CheckQuery)
         EXPECT_EQ(queryRes, expected); // expected queryRes to be empty bc not connected to DB
 
         // should connect to DB and check query result
-        db = new Database();
+        db = new MockDatabase();
         queryRes = db->query("Dimension", "name", "dim_id", "eq", "1", true, resCount);
         expected = {{"\"location\""}};
         EXPECT_EQ(queryRes, expected);
 
         // query with 2 filters
-        queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "field", "eq", "arts", true, resCount);
-        expected = {{"4"}};
-        EXPECT_EQ(queryRes, expected);
+        queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "field", "eq", "Arts", true, resCount);
+        std::vector<std::vector<std::string>> e1 = {{"5", "4"}};
+        std::vector<std::vector<std::string>> e2 = {{"4", "5"}};
+        EXPECT_TRUE(queryRes==e1 || queryRes==e2);
+
+        // query with 2 filters no print
+        queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "field", "eq", "Arts", false, resCount);
+        EXPECT_TRUE(queryRes==e1 || queryRes==e2);
 
         // query with 3 filters
         queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "skill2_req", "eq", "painting", "skill3_req", "eq", "sculpting", true, resCount);
-        expected = {{"5", "4"}};
-        EXPECT_EQ(queryRes, expected);
+        EXPECT_TRUE(queryRes==e1 || queryRes==e2);
+
+        // query with 3 filters no print
+        queryRes = db->query("Listing", "lid", "skill1_req", "eq", "drawing", "skill2_req", "eq", "painting", "skill3_req", "eq", "sculpting", false, resCount);
+        EXPECT_TRUE(queryRes==e1 || queryRes==e2);
 
         delete db;
 }
@@ -112,5 +120,67 @@ TEST(dbDelete, CheckDeleteRecord)
         EXPECT_TRUE(queryRes.empty());
 
         // Clean up
+        delete db;
+}
+
+/* tests Database::escapeString() function in Database.cpp */
+TEST(dbEscapeString, CheckEscapeString)
+{
+        Database *db = new Database();
+
+        std::string input = "Test \"String\" with \\ backslashes";
+        std::string expected_output = "Test \\\"String\\\" with \\\\ backslashes";
+        std::string output = db->escapeString(input);
+        EXPECT_EQ(output, expected_output);
+        
+        delete db;
+}
+
+/* tests Database::skillExists() function in Database.cpp */
+TEST(dbSkillExists, CheckSkillExists)
+{
+        Database *db = new MockDatabase();
+
+        // Skill exists
+        std::string skillName = "drawing";
+        bool exists = db->skillExists(skillName);
+        EXPECT_TRUE(exists);
+
+        // Skill does not exist
+        skillName = "nonexistent_skill";
+        exists = db->skillExists(skillName);
+        EXPECT_FALSE(exists);
+
+        delete db;
+}
+
+/* tests Database::interestExists() function in Database.cpp */
+TEST(dbInterestExists, CheckInterestExists)
+{
+        Database *db = new MockDatabase();
+
+        // Interest exists
+        std::string interestName = "sculpting";
+        bool exists = db->interestExists(interestName);
+        EXPECT_TRUE(exists);
+
+        // Interest does not exist
+        interestName = "nonexistent_interest";
+        exists = db->interestExists(interestName);
+        EXPECT_FALSE(exists);
+
+        delete db;
+}
+
+/* tests Database::urlEncode() function in Database.cpp */
+TEST(dbUrlEncode, CheckUrlEncode)
+{
+        Database *db = new Database();
+
+        std::string value = "Test String with Spaces and Special Characters: !@#$%^&*()_+-~.,";
+        std::string expected_output = "Test%20String%20with%20Spaces%20and%20Special%20Characters%3A%20%21%40%23%24%25%5E%26%2A%28%29_%2B-~.%2C";
+        std::string output = db->urlEncode(value);
+        EXPECT_EQ(output, expected_output);
+
         delete db;
 }

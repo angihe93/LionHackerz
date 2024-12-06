@@ -307,7 +307,6 @@ std::string Listing::changeModernWorkspace(int lid, bool newValue, int &resCode)
 
 std::vector<std::string> Listing::getListing(int lid, bool test)
 {
-	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
 
 	std::vector<std::vector<std::string>> listings;
@@ -318,12 +317,26 @@ std::vector<std::string> Listing::getListing(int lid, bool test)
 	{
 		listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
 		eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+		// if listings or eid is uninitialized, return error
+		if (listings.size() == 0 || eid.size() == 0)
+		{
+			std::vector<std::string> res;
+			res.push_back("Error: The listing ID you provided does not exist in the database or is not associated with an employer.");
+			return res;
+		}
 		company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
 	}
 	else
 	{
 		listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), true, resCount);
 		eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), true, resCount);
+		// if listings or eid is uninitialized, return error
+		if (listings.size() == 0 || eid.size() == 0)
+		{
+			std::vector<std::string> res;
+			res.push_back("Error: The listing ID you provided does not exist in the database or is not associated with an employer.");
+			return res;
+		}
 		company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], true, resCount);
 
 		std::ostringstream oss;
@@ -396,29 +409,30 @@ std::vector<std::string> Listing::getListing(int lid, bool test)
 		if (listings[i][0] != "\"null\"")
 			listingResults.push_back(listings[i][0]);
 
-	if (listings[13][0] != "\"null\"")
-		listingResults.push_back(listings[13][0]);
+	// don't need the if's since these are not nullable in Listing_AI 
+	// if (listings[13][0] != "\"null\"")
+	listingResults.push_back(listings[13][0]);
 
-	if (listings[14][0] != "\"null\"")
-		listingResults.push_back(listings[14][0]);
+	// if (listings[14][0] != "\"null\"")
+	listingResults.push_back(listings[14][0]);
 
-	if (listings[15][0] != "\"null\"")
-		listingResults.push_back(listings[15][0]);
+	// if (listings[15][0] != "\"null\"")
+	listingResults.push_back(listings[15][0]);
 
-	if (listings[16][0] != "\"null\"")
-		listingResults.push_back(listings[16][0]);
+	// if (listings[16][0] != "\"null\"")
+	listingResults.push_back(listings[16][0]);
 
-	if (listings[17][0] != "\"null\"")
-		listingResults.push_back(listings[17][0]);
+	// if (listings[17][0] != "\"null\"")
+	listingResults.push_back(listings[17][0]);
 
-	if (listings[18][0] != "\"null\"")
-		listingResults.push_back(listings[18][0]);
+	// if (listings[18][0] != "\"null\"")
+	listingResults.push_back(listings[18][0]);
 
-	if (listings[19][0] != "\"null\"")
-		listingResults.push_back(listings[19][0]);
+	// if (listings[19][0] != "\"null\"")
+	listingResults.push_back(listings[19][0]);
 
-	if (listings[20][0] != "\"null\"")
-		listingResults.push_back(listings[20][0]);
+	// if (listings[20][0] != "\"null\"")
+	listingResults.push_back(listings[20][0]);
 
 	return listingResults;
 }
@@ -444,8 +458,15 @@ std::string Listing::generateAIListing(std::string n)
 	const std::string url = "https://api.openai.com/v1/chat/completions";
 	const std::string method = "AI";
 	std::string statusCode = "";
-
 	std::string listing_list = db->request(method, url, insertData, statusCode);
+	
+	// if gpt request failed, eg due to not having access to gpt-4o, return error
+	if (statusCode != "200") {
+		std::cout << "statusCode after listing_list = db->request(method, url, insertData, statusCode): " << statusCode << std::endl;
+		std::cout << "listing_list: " << listing_list << std::endl;
+		return "Error: OpenAI request failed.  Please check you have credits or have access to model gpt-4o.";
+	}
+		
 	std::string starting_junk = listing_list.substr(0, listing_list.find("\"content\":"));
 	listing_list.erase(0, starting_junk.length() + 12);
 	listing_list = listing_list.substr(0, listing_list.find("\"refusal\": null"));
@@ -459,7 +480,7 @@ std::string Listing::generateAIListing(std::string n)
 void Listing::parseAI(const std::string listings, int n)
 {
 
-	std::cout << n << std::endl;
+	std::cout << "in parseAI, n: " << n << std::endl;
 	std::string localListings = listings;
 
 	std::string jobField;
@@ -541,6 +562,7 @@ void Listing::parseAI(const std::string listings, int n)
 		lids.push_back(stoi(lidQ[0][0]));
 	}
 
+	std::cout << "localListings after inserting to Listing_AI: " << localListings << std::endl;
 	std::string localCompanies = localListings.substr(listings.find('(') + 1, std::string::npos);
 
 	while (localCompanies[0] != '(')

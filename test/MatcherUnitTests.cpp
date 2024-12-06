@@ -34,6 +34,9 @@ TEST(GetDim, augmentsAndWeights)
 	testResults.push_back(aug_weights);
 
 	EXPECT_EQ(testResults, m->gatherRelevantDimensions(uid));
+
+	delete db;
+	delete m;
 }
 
 /* This tests the filterJobs() function in
@@ -57,6 +60,9 @@ TEST(FilterListings, discardTooManyNull)
 	std::vector<int> filter = m->filterJobs(true);
 
 	EXPECT_EQ(candidates, filter);
+
+	delete db;
+	delete m;
 }
 
 /* This tests the main scoring function match() in
@@ -81,6 +87,9 @@ TEST(FilterListings, calculateScores)
 	std::vector<int> sc = m->match(uid);
 
 	EXPECT_EQ(scores, sc);
+
+	delete db;
+	delete m;
 }
 
 /* This tests the filterMatches() function, whether or
@@ -114,6 +123,9 @@ TEST(FilterListings, elimLowScores)
 	std::vector<std::vector<int>> filteredMatches = m->filterMatches();
 
 	EXPECT_EQ(testResults, filteredMatches);
+
+	delete db;
+	delete m;
 }
 
 /* This tests the sortMatches() function, in Matcher.cpp */
@@ -146,6 +158,9 @@ TEST(Sort, sortMatches)
 	std::vector<std::vector<int>> sortedMatches = m->sortMatches();
 
 	EXPECT_EQ(testResults, sortedMatches);
+
+	delete db;
+	delete m;
 }
 
 /* This tests the main display function in Matcher.cpp, which
@@ -191,6 +206,9 @@ TEST(Display, displayMatches)
 	matchList.push_back(match1);
 
 	EXPECT_EQ(match1, display[0]);
+
+	delete db;
+	delete m;
 }
 
 /* This tests the getCandidates() function, a basic
@@ -213,6 +231,9 @@ TEST(GetValues, retrieveCandidates)
 	m->filterJobs(true);
 
 	EXPECT_EQ(testCandidates, m->getCandidates());
+
+	delete db;
+	delete m;
 }
 
 /* This tests the getMatchedWords() function, a basic
@@ -240,4 +261,51 @@ TEST(GetValues, retrieveMatchedWords)
 
 	EXPECT_EQ(testMatchedWords[0], gmw[0]);
 	EXPECT_EQ(testMatchedWords[1], gmw[1]);
+
+	delete db;
+	delete m;
 }
+
+/* This tests the matchDimensions() function, a basic
+ * helper in Matcher.cpp */
+// its a private method called by filterJobs:
+/* After populating dimensions with gatherRelevantDimensions(),
+     * select all job listings and filter them by those which have
+     * at least 75% of the user's preferred dimensions filled in.
+     *
+     * This eliminates listings where too many values were not
+     * entered by the employer and hence what is most important
+     * to the job seeker is not present in the listing.
+     *
+     *  Returns the list of filtered listings 'candidates' */
+//     std::vector<int> filterJobs(bool test);
+// TEST(FilterListings, checkAddidtionalmatchDimensions)
+// {
+// 	Database *db = new Database();
+// 	Matcher *m = new Matcher(*db);
+
+// 	std::string d1 = "\"field\"";
+// 	std::string d2 = "\"skill4\"";
+// 	std::string d3 = "\"skill5\"";
+// 	std::string d4 = "\"gender\"";
+// 	std::string d5 = "\"diversity\"";
+// 	std::string d6 = "\"remote\"";
+// 	std::string d7 = "\"workspace\"";
+// 	std::string d8 = "\"location\"";
+// 	std::string d9 = "\"flexibility\"";
+// 	std::string d10 = "\"invalid dimension\"";
+
+// 	EXPECT_EQ(5, m->matchDimensions(d1));
+// 	EXPECT_EQ(11, m->matchDimensions(d2));
+// 	EXPECT_EQ(12, m->matchDimensions(d3));
+// 	EXPECT_EQ(16, m->matchDimensions(d4));
+// 	EXPECT_EQ(17, m->matchDimensions(d5));
+// 	EXPECT_EQ(18, m->matchDimensions(d6));
+// 	EXPECT_EQ(15, m->matchDimensions(d7));
+// 	EXPECT_EQ(20, m->matchDimensions(d8));
+// 	EXPECT_EQ(14, m->matchDimensions(d9));
+// 	EXPECT_EQ(-1, m->matchDimensions(d10));
+
+// 	delete db;
+// 	delete m;
+// }

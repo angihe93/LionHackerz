@@ -6,9 +6,10 @@
 #include <string>
 #include <vector>
 
-Employer::Employer(Database &db)
+Employer::Employer(Database &db, Listing &l)
 {
         this->db = &db;
+        this->l = &l;
 }
 
 bool Employer::checkHasListing(int eid, int lid)
@@ -39,7 +40,6 @@ bool Employer::changeField(int eid, int lid, std::string newField)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeField(lid, newField);
 
         size_t id_pos = res.find("Error:");
@@ -62,7 +62,6 @@ bool Employer::changePosition(int eid, int lid, std::string newPosition)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changePosition(lid, newPosition);
 
         size_t id_pos = res.find("Error:");
@@ -85,7 +84,6 @@ bool Employer::changeJobDescription(int eid, int lid, std::string newDescription
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeJobDescription(lid, newDescription);
 
         size_t id_pos = res.find("Error:");
@@ -108,7 +106,6 @@ bool Employer::changeFlex(int eid, int lid, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeFlex(lid, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -131,7 +128,6 @@ bool Employer::changeFlex(int eid, int lid, bool newFlex, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeFlex(lid, newFlex, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -154,7 +150,6 @@ bool Employer::changeGender(int eid, int lid, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeGender(lid, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -177,7 +172,6 @@ bool Employer::changeGender(int eid, int lid, bool newValue, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeGender(lid, newValue, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -200,7 +194,6 @@ bool Employer::changeDiversity(int eid, int lid, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeDiversity(lid, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -223,7 +216,6 @@ bool Employer::changeDiversity(int eid, int lid, bool newValue, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeDiversity(lid, newValue, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -246,7 +238,6 @@ bool Employer::changeRemote(int eid, int lid, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeRemote(lid, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -269,7 +260,6 @@ bool Employer::changeRemote(int eid, int lid, bool newValue, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeRemote(lid, newValue, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -292,7 +282,6 @@ bool Employer::changeLocation(int eid, int lid, std::string newLocation, int &re
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeLocation(lid, newLocation, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -315,7 +304,6 @@ bool Employer::changeMBTI(int eid, int lid, std::string newMBTI, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeMBTI(lid, newMBTI, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -338,7 +326,6 @@ bool Employer::changeModernWorkspace(int eid, int lid, int &resCode)
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeModernWorkspace(lid, resCode);
 
         size_t id_pos = res.find("Error:");
@@ -361,7 +348,6 @@ bool Employer::changeModernWorkspace(int eid, int lid, bool newValue, int &resCo
                 return false;
         }
 
-        Listing *l = new Listing(*db);
         std::string res = l->changeModernWorkspace(lid, newValue, resCode);
 
         size_t id_pos = res.find("Error:");

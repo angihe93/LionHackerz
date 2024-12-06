@@ -139,6 +139,12 @@ jobs:
           name: coverage-report
           path: ${{github.workspace}}/build/coverage_report
 
+      - name: Upload coverage report gcovr
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report-gcovr
+          path: ${{github.workspace}}/build/coverage_report_gcovr
+  
       - name: Run static analysis
         working-directory: ${{github.workspace}}/build
         run: cppcheck ../src > cppcheck_output.txt 2>&1
