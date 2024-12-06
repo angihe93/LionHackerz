@@ -172,19 +172,51 @@ GET /
 
 GET /dbtest
 
+	Tests of the custom database class
+
 GET /getMatches
+
+ Get a listing of job matches (for users)
+
+POST /listing/create
+
+ Create a new job listing (for employers)
+
+POST /listing/generateAI
+
+	Generate a set number of full job listings using AI
+
+POST /listing/generateJobDescription
+
+	Generate a job description using AI
 
 PATCH /listing/changeField
 
+	Change the job field of a listing
+
 PATCH /listing/changePosition
+
+	Change the job position field in a listing
 
 PATCH /listing/changeJobDescription
 
+	Change the job description field in a listing
+
 PATCH /listing/changeFlex
+
+	Change the boolean flexibility field in a listing
 
 PATCH /listing/changeModernWorkspace
 
+	Change the boolean workspace field in a listing
+
 POST /makeUser
+
+	Regiser a new user account
+
+GET /getProfile
+
+	Returns the profile of a given user to display alongside match results
 
 Postman tests for these routes can be found on our Trello board located here:
 
