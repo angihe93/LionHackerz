@@ -781,39 +781,9 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
     return allMatches;
 }
 
-void Matcher::iterateList(std::vector<std::string> l)
-{
-    int count = 0;
-    int size = l.size();
-    std::cout << "(";
-    for (auto &v : l)
-    {
-        std::cout << v;
-        if (count != size - 1)
-            std::cout << ", ";
-        count++;
-    }
-    std::cout << ")" << std::endl;
-}
-
 std::vector<int> Matcher::getCandidates()
 {
     return candidates;
-}
-
-void Matcher::iterateList(std::vector<int> l)
-{
-    int count = 0;
-    int size = l.size();
-    std::cout << "(";
-    for (auto &v : l)
-    {
-        std::cout << v;
-        if (count != size - 1)
-            std::cout << ", ";
-        count++;
-    }
-    std::cout << ")" << std::endl;
 }
 
 int Matcher::matchDimensions(std::string d)

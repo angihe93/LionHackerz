@@ -201,11 +201,10 @@ private:
     std::mutex mutex_;
 
     /* helper functions */
-    void iterateList(std::vector<std::string> l); /* prints list */
     std::vector<std::string> tokenize(const std::string& input); /* tokenize input */
-    void iterateList(std::vector<int> l);         /* prints list */
     int wordMatchFound(std::string fieldU, std::string fieldE, int c);
                                                 /* matches words using WordNet synonyms */
+protected:    
     int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */
 };
 #endif
