@@ -325,8 +325,8 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         res.write(jsonRes.dump());
 
         /* add CORS headers */
-       res.add_header("Access-Control-Allow-Origin", "*"); // Allow any origin (use "*" or specify your domain)
-       res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Common HTTP methods
+       res.add_header("Access-Control-Allow-Origin", "*"); 
+       res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); 
        res.add_header("Access-Control-Allow-Headers", "Content-Type"); 
 
         res.end();
@@ -355,8 +355,8 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     jsonRes["success"]["code"] = res.code;
     jsonRes["success"]["message"] = "Task was added to the job queue. Check back soon for results.";
     res.write(jsonRes.dump());
-       res.add_header("Access-Control-Allow-Origin", "*"); // Allow any origin (use "*" or specify your domain)
-       res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Common HTTP methods
+       res.add_header("Access-Control-Allow-Origin", "*"); 
+       res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); 
        res.add_header("Access-Control-Allow-Headers", "Content-Type"); 
      
 
@@ -505,6 +505,63 @@ void RouteController::getMatchesJSON(const crow::request &req, crow::response &r
 }
 
 /* LISTING ROUTES */
+
+void RouteController::createListing(const crow::request &req, crow::response &res)
+{
+    crow::json::wvalue jsonRes;
+    auto json = crow::json::load(req.body);
+    if (!json) {
+        res.code = 400;
+        res.write("Invalid JSON");
+        return;
+    }
+
+     std::map<std::string, std::string> basicInfo;
+    basicInfo["cname"] = json["basicInfo"]["cname"].s(); 
+    basicInfo["csize"] = json["basicInfo"]["csize"].s();
+    basicInfo["field"] = json["basicInfo"]["field"].s();
+    basicInfo["position"] = json["basicInfo"]["position"].s();    
+    basicInfo["job_description"] = json["basicInfo"]["job_description"].s();
+    basicInfo["location"] = json["basicInfo"]["location"].s();
+
+
+    std::map<std::string, std::string> skillsPersonality;
+    skillsPersonality["skill1_req"] = json["skillsPersonality"]["skill1_req"].s();
+    skillsPersonality["skill2_req"] = json["skillsPersonality"]["skill2_req"].s();    
+    skillsPersonality["skill3_req"] = json["skillsPersonality"]["skill2_req"].s();    
+    skillsPersonality["skill4_req"] = json["skillsPersonality"]["skill2_req"].s();    
+    skillsPersonality["skill5_req"] = json["skillsPersonality"]["skill2_req"].s();
+
+    skillsPersonality["personality_types"] = json["skillsPersonality"]["personality_types"].s();    
+
+    int64_t pay = json["pay"].i();  
+
+    std::map<std::string, bool> boolFields;
+    boolFields["job_flexibility"] = json["boolFields"]["job_flexibility"].b();
+    boolFields["remote_available"] = json["boolFields"]["remote_available"].b();
+    boolFields["diverse_workforce"] = json["boolFields"]["diverse_workforce"].b();    
+    boolFields["mixed_gender"] = json["boolFields"]["mixed_gender"].b();
+    boolFields["modern_building"] = json["boolFields"]["modern_building"].b();
+
+    Listing *l = new Listing(*db);
+
+    if (l->insertListing(basicInfo, skillsPersonality, pay, boolFields)) {
+        jsonRes["error"]["message"] = "Error creating listing.";
+        res.code = 400;
+        res.write(jsonRes.dump());
+        res.end();
+        delete l;
+        return;
+    }
+
+    res.code = 200;
+    jsonRes["success"]["message"] = "Listing successfully created.";
+    res.write(jsonRes.dump());
+    res.end();
+    delete l;
+    return;
+
+}
 
 void RouteController::changeField(const crow::request &req, crow::response &res)
 {
@@ -1085,9 +1142,10 @@ void RouteController::getProfile(const crow::request &req, crow::response &res) 
     profile += "\"pay\": " + result[3][0] + ",";
     profile += "\"gender\": " + result[4][0] + ",";
     profile += "\"diversity\": " + result[5][0] + ",";
-    profile += "\"flexibility\": " + result[6][0] + ",";
-    profile += "\"remote\": " + result[7][0] + ",";
-    profile += "\"workspace\": " + result[8][0] + "";
+    profile += "\"mbti\": " + result[6][0] + ",";
+    profile += "\"flexibility\": " + result[7][0] + ",";
+    profile += "\"remote\": " + result[8][0] + ",";
+    profile += "\"workspace\": " + result[9][0] + "";
     profile += "}";
 
     jsonRes["results"] = profile;
@@ -1223,10 +1281,6 @@ void RouteController::initRoutes(crow::SimpleApp &app)
             [this](const crow::request &req, crow::response &res, const std::string &user_id)
             {
 
-            // res.add_header("Access-Control-Allow-Origin", "*"); // Allow any origin (use "*" or specify your domain)
-            // res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // Common HTTP methods
-            // res.add_header("Access-Control-Allow-Headers", "Content-Type,"); 
-
                 // Handle OPTIONS preflight request
                 if (req.method == crow::HTTPMethod::OPTIONS)
                 {
@@ -1263,6 +1317,10 @@ void RouteController::initRoutes(crow::SimpleApp &app)
                                         { getMatchesJSON(req, res); });
 
     /* LISTING ROUTES */
+    CROW_ROUTE(app, "/listing/create")
+        .methods("POST"_method, "OPTIONS"_method)([this](const crow::request &req, crow::response &res)
+                                          { createListing(req, res); });
+
     CROW_ROUTE(app, "/listing/changeField")
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                           { changeField(req, res); });

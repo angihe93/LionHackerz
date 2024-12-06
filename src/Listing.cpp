@@ -583,6 +583,8 @@ int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::ma
 {
 	std::cout << "in Listing::insertListing" << std::endl;
 
+	std::string companyName = basicInfo["cname"];
+	std::string companySize = basicInfo["csize"];
 	std::string jobField = basicInfo["field"];
 	std::string jobPosition = basicInfo["position"];
 	std::string jobDescription = basicInfo["job_description"];
@@ -606,16 +608,33 @@ int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::ma
 					   "\", \"job_flexibility\":" + flex + ", \"remote_available\": " + remote + ", \"diverse_workforce\": " + diverse + ", \"mixed_gender\": " +
 					   gender + ", \"modern_building\": " + modern + ", \"pay\": " + payStr + "}";
 
-	std::cout << db->insert("Listing", data) << std::endl;
+	std::cout << db->insert("Listing_AI", data) << std::endl;
 	int resCount = 0;
-	std::vector<std::vector<std::string>> lidQ = db->query("Listing", "lid", "order", "lid", "desc", false, resCount);
+	int lid = 0;
+	int eid = 0;
+
+	std::vector<std::vector<std::string>> lidQ = db->query("Listing_AI", "lid", "order", "lid", "desc", false, resCount);
 	std::cout << "resCount: " << resCount << "  lidQ[0][0]: " << lidQ[0][0] << std::endl;
 
 	// return lid of inserted listing
 	if (resCount > 0)
 	{
-		int lid = std::stoi(lidQ[0][0]);
-		return lid;
+		lid = std::stoi(lidQ[0][0]);
+
+		resCount = 0;
+		std::string cdata = "{\"company_name\": \"" + companyName + "\", \"size\": \"" + companySize + "\" }";
+		std::cout << db->insert("Employer_AI", cdata);
+
+		std::vector<std::vector<std::string>> eidQ = db->query("Employer_AI", "eid", "order", "eid", "desc", false, resCount);
+		if (resCount > 0)
+		{
+			eid = std::stoi(eidQ[0][0]);
+			std::string crdata = "{\"eid\": " + std::to_string(eid) + ", \"lid\": " + std::to_string(lid) + "}";
+			std::cout << db->insert("Created_AI", crdata);
+
+			return lid;
+		}
+		return -1;
 	}
 
 	return -1;

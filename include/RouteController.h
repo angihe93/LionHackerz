@@ -108,7 +108,7 @@ class RouteController {
          *      provides examples of queries and inserts. Not intended for
          *      the end user of the API, more for development purposes. */
         void dbtest(const crow::request& req, crow::response& res);
-
+        void createListing(const crow::request &req, crow::response &res);
         void getProfile(const crow::request &req, crow::response &res);
         void makeUser(const crow::request &req, crow::response &res);
         void getUIDFromAPIKey(const crow::request &req, crow::response &res);
