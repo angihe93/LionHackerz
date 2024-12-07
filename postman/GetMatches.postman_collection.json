@@ -60,12 +60,12 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "{{pwd}}",
+							"value": "",
 							"type": "string"
 						},
 						{
 							"key": "username",
-							"value": "{{username}}",
+							"value": "{{api-key}}",
 							"type": "string"
 						}
 					]
@@ -109,7 +109,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.variables.set(\"localUID\", 5)"
+							"pm.variables.set(\"localUID\", 1)"
 						],
 						"type": "text/javascript",
 						"packages": {}

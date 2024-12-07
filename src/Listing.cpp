@@ -757,7 +757,7 @@ std::string Listing::changeSkillRequirements(int lid, std::vector<SkillInput> ne
 		return "Error: The listing ID you provided does not exist in the database.";
 	}
 }
-std::string Listing::changePersonalityType(int lid, std::string newPersonalityTypes, int &resCode)
+std::string Listing::changePersonalityType(int lid, std::string newPersonalityType, int &resCode)
 {
 	int resCount = 0;
 
@@ -768,7 +768,7 @@ std::string Listing::changePersonalityType(int lid, std::string newPersonalityTy
 		return "Error: The listing ID you provided does not exist in the database.";
 	}
 
-	std::string data = "{\"personality_types\": \"" + newPersonalityTypes + "\"}";
+	std::string data = "{\"personality_types\": \"" + newPersonalityType + "\"}";
 	std::cout << data << std::endl;
 	db->update("Listing", data, "lid", "eq", std::to_string(lid));
 

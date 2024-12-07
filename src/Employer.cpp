@@ -672,11 +672,11 @@ bool Employer::changeSkillRequirements(int eid, int lid, std::vector<SkillInput>
  *
  * @param eid                  The employer id of the employer
  * @param lid                  The listing id of the listing
- * @param newPersonalityTypes  The new personality type requirements for the listing
+ * @param newPersonalityType  The new personality type requirements for the listing
  * @param resCode              Reference to an integer to store the result code
  * @return true if the personality types were updated successfully, false otherwise
  */
-bool Employer::changePersonalityType(int eid, int lid, std::string newPersonalityTypes, int &resCode)
+bool Employer::changePersonalityType(int eid, int lid, std::string newPersonalityType, int &resCode)
 {
         // Check if the employer owns the listing
         bool hasListing = checkHasListing(eid, lid, resCode);
@@ -688,7 +688,7 @@ bool Employer::changePersonalityType(int eid, int lid, std::string newPersonalit
         }
 
         // Perform the personality types update
-        std::string res = l->changePersonalityType(lid, newPersonalityTypes, resCode);
+        std::string res = l->changePersonalityType(lid, newPersonalityType, resCode);
 
         // Check if the operation was successful
         if (res.find("Error:") != std::string::npos)
