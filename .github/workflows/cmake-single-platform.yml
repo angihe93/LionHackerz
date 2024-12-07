@@ -115,36 +115,6 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: make
 
-      - name: Test
-        #   # Execute tests defined by the CMake configuration.
-        #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        working-directory: ${{github.workspace}}/build
-        run: ./LionHackerzProjectTests > test_output.txt 2>&1
-        continue-on-error: true
-
-      - name: Upload test output
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-output
-          path: ${{github.workspace}}/build/test_output.txt
-
-      - name: Run coverage
-        working-directory: ${{github.workspace}}/build
-        run: make gen_cov
-        continue-on-error: true
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: ${{github.workspace}}/build/coverage_report
-
-      - name: Upload coverage report gcovr
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report-gcovr
-          path: ${{github.workspace}}/build/coverage_report_gcovr
-
       - name: Run static analysis
         working-directory: ${{github.workspace}}/build
         run: cppcheck ../src > cppcheck_output.txt 2>&1
@@ -168,6 +138,19 @@ jobs:
           path:
             ${{github.workspace}}/build/cpplint_output.txt
 
+      - name: Test
+        #   # Execute tests defined by the CMake configuration.
+        #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        working-directory: ${{github.workspace}}/build
+        run: ./LionHackerzProjectTests > test_output.txt 2>&1
+        continue-on-error: true
+
+      - name: Upload test output
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-output
+          path: ${{github.workspace}}/build/test_output.txt
+      
             # Add steps to run Postman Collection
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -211,3 +194,21 @@ jobs:
           newman run ./postman/GetMatches.postman_collection.json \
             --environment ./postman/workspace.postman_globals.json \
             --reporters cli
+
+      - name: Run coverage
+        working-directory: ${{github.workspace}}/build
+        run: make gen_cov
+        continue-on-error: true
+    
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ${{github.workspace}}/build/coverage_report
+    
+      - name: Upload coverage report gcovr
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report-gcovr
+          path: ${{github.workspace}}/build/coverage_report_gcovr
+

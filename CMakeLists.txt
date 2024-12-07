@@ -122,10 +122,12 @@ add_custom_target(run_tests
 add_custom_target(gen_cov
     COMMAND lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
     COMMAND lcov --rc lcov_branch_coverage=1 --no-external --remove coverage.info '*/external_libraries/*' '*/opt/homebrew/*' '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
-    COMMAND python3 filterbr.py coverageN.info > coverageN_.info
-    COMMAND genhtml --branch-coverage coverageN_.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
-    COMMAND mkdir -p coverage_report_gcovr
-    COMMAND gcovr --root .. --object-directory . --html --html-details -o coverage_report_gcovr/coverage.html -f ../src -v --gcov-ignore-errors=no_working_dir_found --exclude-throw-branches --exclude-unreachable-branches --decisions
+    COMMAND genhtml --branch-coverage coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+    # commented out below to debug github workflow:
+    # COMMAND python3 filterbr.py coverageN.info > coverageN_.info
+    # COMMAND genhtml --branch-coverage coverageN_.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
+    # COMMAND mkdir -p coverage_report_gcovr
+    # COMMAND gcovr --root .. --object-directory . --html --html-details -o coverage_report_gcovr/coverage.html -f ../src -v --gcov-ignore-errors=no_working_dir_found --exclude-throw-branches --exclude-unreachable-branches --decisions
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating coverage report"
 )
