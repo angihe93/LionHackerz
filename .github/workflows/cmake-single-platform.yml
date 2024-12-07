@@ -177,6 +177,11 @@ jobs:
       - name: Install Newman
         run: npm install -g newman
 
+      - name: Start app in test mode
+        run: |
+        ./LionHackerzProject test &
+        sleep 5
+
       - name: Run Employer Collection
         run: |
           newman run ./postman/Employer.postman_collection.json \

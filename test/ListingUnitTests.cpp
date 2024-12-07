@@ -311,7 +311,7 @@ TEST(GenAIListing, checkGenAIListing)
     std::string res = l->generateAIListing("1"); // also calls parseAI
     // std::cout << "res: " << res << std::endl;
     std::string errRes = "Error: OpenAI request failed.  Please check you have credits or have access to model gpt-4o.";
-    EXPECT_EQ(res, errRes);
+    EXPECT_NE(res, errRes);
 
     delete db;
     delete l;
