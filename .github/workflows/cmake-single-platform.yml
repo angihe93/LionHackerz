@@ -197,14 +197,17 @@ jobs:
 
       - name: Run coverage
         working-directory: ${{github.workspace}}/build
-        run: make gen_cov
+        # run: make gen_cov
+        run: |
+          mkdir -p coverage_report_gcovr
+          gcovr --root .. --object-directory . --html --html-details -o coverage_report_gcovr/coverage.html -f ../src -v --gcov-ignore-errors=no_working_dir_found --exclude-throw-branches --exclude-unreachable-branches --decisions > gcovr.log 2>&1
         continue-on-error: true
-    
-      # - name: Upload coverage report
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: coverage-report
-      #     path: ${{github.workspace}}/build/coverage_report
+
+      - name: Upload coverage logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-logs
+          path: ${{github.workspace}}/build/gcovr.log
     
       - name: Upload coverage report gcovr
         uses: actions/upload-artifact@v3
