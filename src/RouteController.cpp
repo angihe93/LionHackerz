@@ -2422,6 +2422,13 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                           { employerChangeRemoteAll(req, res); });
 
+    CROW_ROUTE(app, "/employer/postListing")
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
+                                         { employerPostListing(req, res); });
+
+    CROW_ROUTE(app, "/employer/createEmployer")
+        .methods(crow::HTTPMethod::DELETE)([this](const crow::request &req, crow::response &res)
+                                           { employerCreateEmployer(req, res); });
     CROW_ROUTE(app, "/employer/deleteListing")
         .methods(crow::HTTPMethod::DELETE)([this](const crow::request &req, crow::response &res)
                                            { employerDeleteListing(req, res); });
