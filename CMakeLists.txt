@@ -78,7 +78,7 @@ include(GoogleTest)
    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
-#    test/EmployerUnitTests.cpp  # commented out for speed
+#    test/EmployerUnitTests.cpp
    test/DimensionUnitTests.cpp
    test/AugmentUnitTests.cpp
 #    test/UserUnitTests.cpp
@@ -94,6 +94,9 @@ include(GoogleTest)
    src/Employer.cpp
    src/Auth.cpp
    src/Dimension.cpp
+#    src/main.cpp
+   src/RouteController.cpp
+   src/Worker.cpp
  )
 
 target_compile_options(LionHackerzProjectTests PRIVATE -O0 -fno-inline -fno-builtin -fno-omit-frame-pointer -fno-optimize-sibling-calls)

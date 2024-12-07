@@ -206,10 +206,10 @@ jobs:
           gcovr --root .. --object-directory . --html --html-details -o coverage_report_gcovr/coverage.html -f ../src -v --gcov-ignore-errors=no_working_dir_found --exclude-throw-branches --exclude-unreachable-branches --decisions > gcovr.log 2>&1
         continue-on-error: true
 
-      - name: Upload coverage logs
+      - name: Upload gcovr log
         uses: actions/upload-artifact@v3
         with:
-          name: coverage-logs
+          name: gcovr-log
           path: ${{github.workspace}}/build/gcovr.log
     
       - name: Upload coverage report gcovr
