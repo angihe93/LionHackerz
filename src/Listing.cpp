@@ -749,7 +749,7 @@ std::string Listing::changeSkillRequirements(int lid, std::vector<SkillInput> ne
 
 	if (!result.empty())
 	{
-		return getSkillsString(result, resCode);
+		return getSkillsString(result, &resCode);
 	}
 	else
 	{
