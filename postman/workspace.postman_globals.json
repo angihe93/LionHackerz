@@ -3,7 +3,7 @@
 	"values": [
 		{
 			"key": "serverUrl",
-			"value": "http://0.0.0.0:18080/",
+			"value": "http://0.0.0.0:18080",
 			"type": "default",
 			"enabled": true
 		},
