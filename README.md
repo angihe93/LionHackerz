@@ -14,7 +14,7 @@ A demoable app/client can be found in the following repo:
 
  CI is set up to build and run tests, coverage, static analysis, and style check on push and pull requests. It is set up in Actions as a workflow named "CMake on a single platform". Click on a workflow run and scroll down to <b>Artifacts</b> section to download reports and outputs produced during runtime. 
  
- Some reports and outputs produced from a previous workflow run is in this repo in <b>workflow_output/</b>. Coverage report from a previous run is in <b>coverage_report_gcovr/</b>. Note we are using the `--decisions` flag in gcovr to get the actual code-level branches coverage rate, so we are aiming to achieve 85% coverage rate in coverage_report_gcovr/coverage.html.
+ Some reports and outputs produced from a previous workflow run is in this repo in <b>workflow_output/</b>. Coverage, style checker, and static analysis report reports from a previous manual run is in <b>manual_output/</b>. Note we are using the `--decisions` flag in gcovr to get the actual code-level branches coverage rate, so we are aiming to achieve 85% <b>decisions</b> coverage rate in coverage_report_gcovr/coverage.html.
 
 # Initial Setup
 
