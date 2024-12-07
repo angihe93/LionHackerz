@@ -205,11 +205,3 @@ jobs:
           newman run ./postman/GetMatches.postman_collection.json \
             --environment ./postman/workspace.postman_globals.json \
             --reporters cli
-
-        # If you don't have an environment file, you can omit the --environment flag
-
-      # - name: Upload Newman Report
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: newman-report
-      #     path: newman-report.html

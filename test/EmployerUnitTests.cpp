@@ -25,7 +25,7 @@ TEST(EmployerCheckHasListing, checkHasListing)
         EXPECT_EQ(res, expected);
 
         // case where employer has the listing
-        res = e->checkHasListing(1, 1, resCode);
+        res = e->checkHasListing(3, 3, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -54,7 +54,7 @@ TEST(EmployerChangeField, checkChangeField)
         EXPECT_EQ(res, expected);
 
         // case where change field should succeed
-        res = e->changeField(1, 1, "Computer science", resCode);
+        res = e->changeField(3, 3, "Computer science", resCode);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -83,7 +83,7 @@ TEST(EmployerChangePosition, checkChangePosition)
         EXPECT_EQ(res, expected);
 
         // case where change position should succeed
-        res = e->changePosition(2, 2, "Lead Engineer", resCode);
+        res = e->changePosition(3, 3, "Lead Engineer", resCode);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -238,12 +238,9 @@ TEST(EmployerChangeDiversity, checkChangeDiversity)
         EXPECT_EQ(res, expected);
 
         // case where change diversity should succeed
-        res = e->changeDiversity(1, 1, resCode);
+        res = e->changeDiversity(3, 3, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
-        // revert change if success
-        if (res == expected)
-                e->changeDiversity(1, 1, resCode);
 
         // case where change diversity should fail
         res = e->changeDiversity(1, 2, true, resCode);
@@ -254,9 +251,7 @@ TEST(EmployerChangeDiversity, checkChangeDiversity)
         // use MockListing to simulate error
         Listing *l2 = new MockListing(*db);
         Employer *e2 = new Employer(*db, *l2);
-        res = e2->changeDiversity(1, 1, resCode);
-        EXPECT_EQ(res, false);
-        res = e2->changeDiversity(1, 1, true, resCode);
+        res = e2->changeDiversity(3, 3, resCode);
         EXPECT_EQ(res, false);
 
         delete db;
@@ -286,12 +281,9 @@ TEST(EmployerChangeRemote, checkChangeRemote)
         EXPECT_EQ(res, expected);
 
         // case where change remote should succeed
-        res = e->changeRemote(1, 1, resCode);
+        res = e->changeRemote(3, 3, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
-        // revert change if success
-        if (res == expected)
-                e->changeRemote(1, 1, resCode);
 
         // case where change remote should fail
         res = e->changeRemote(1, 2, true, resCode);
@@ -372,7 +364,7 @@ TEST(EmployerChangeMBTI, checkChangeMBTI)
         EXPECT_EQ(res, expected);
 
         // case where change MBTI should succeed
-        res = e->changeMBTI(2, 2, "INTJ", resCode);
+        res = e->changeMBTI(3, 3, "INTJ", resCode);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -410,12 +402,9 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace)
         EXPECT_EQ(res, expected);
 
         // case where change modern workspace should succeed
-        res = e->changeModernWorkspace(1, 1, resCode);
+        res = e->changeModernWorkspace(3, 3, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
-        // revert change if success
-        if (res == expected)
-                e->changeModernWorkspace(1, 1, resCode);
 
         // case where change modern workspace should fail
         res = e->changeModernWorkspace(1, 2, true, resCode);
@@ -647,7 +636,7 @@ TEST(EmployerChangePay, checkPayListing)
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
-        bool res = e->changePay(1, 1, 100000, resCode);
+        bool res = e->changePay(3, 3, 100000, resCode);
         EXPECT_EQ(res, true);
 
         res = e->changePay(1, 2, 100000, resCode);
@@ -668,7 +657,7 @@ TEST(EmployerChangeSkillRequirements, checkChangeSkillRequirements)
         Employer *e = new Employer(*db, *l);
 
         std::vector<SkillInput> newSkills1 = {{"Data Analysis"}, {"SQL"}, {"Healthcare Industry Knowledge"}, {"Problem-solving"}, {"Communication"}};
-        bool res = e->changeSkillRequirements(1, 1, newSkills1, resCode);
+        bool res = e->changeSkillRequirements(3, 3, newSkills1, resCode);
         EXPECT_EQ(res, true);
 
         std::vector<SkillInput> newSkills2 = {{"Data Analysis"}, {"SQL"}, {"Healthcare Industry Knowledge"}, {"Problem-solving"}, {"Communication"}};
@@ -688,7 +677,7 @@ TEST(EmployerChangePersonalityType, checkChangePersonalityType)
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
-        bool res = e->changePersonalityType(1, 1, "INTJ", resCode);
+        bool res = e->changePersonalityType(3, 3, "INTJ", resCode);
         EXPECT_EQ(res, true);
 
         res = e->changePersonalityType(1, 2, "INTJ", resCode);

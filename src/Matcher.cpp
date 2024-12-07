@@ -39,7 +39,8 @@ std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
 
     // debug for MatcherUserDimensionIntegrationTests seg fault
     // std::cout << "in gatherRelevantDimensions lists.empty(): " << lists.empty() << std::endl;
-    if (lists.empty()) {
+    if (lists.empty())
+    {
         return lists;
     }
 
@@ -742,7 +743,7 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
         matchRes.listingId = candidates[i];
         matchRes.score = scores[count];
 
-        std::vector<std::string> listingResult = l->getListing(candidates[i], false);
+        std::vector<std::string> listingResult = l->getListing(candidates[i], test);
 
         matchRes.company = listingResult[0];
         matchRes.time_created = listingResult[1];
@@ -754,7 +755,7 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
         matchRes.skill3 = listingResult[7];
         matchRes.skill4 = listingResult[8];
         matchRes.skill5 = listingResult[9];
-        matchRes.pay = stoi(listingResult[10]);
+        // matchRes.pay = std::stoi(listingResult[10]);
         matchRes.flex = listingResult[11];
         matchRes.modern = listingResult[12];
         matchRes.gender = listingResult[13];

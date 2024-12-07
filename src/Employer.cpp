@@ -21,7 +21,6 @@ bool Employer::checkHasListing(int eid, int lid, int &resCode)
         std::vector<std::vector<std::string>> eidRes = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
         if (resCount == 0)
         {
-                std::cout << "ERRRRRROR" << std::endl;
                 std::cout << "Error: The listing ID you provided does not exist in the database." << std::endl;
                 resCode = 404;
                 return false;

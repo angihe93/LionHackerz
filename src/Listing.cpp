@@ -39,7 +39,7 @@ std::string Listing::changePosition(int lid, std::string newPosition, int &resCo
 		resCode = 404;
 		return "Error: The listing ID you provided does not exist in the database.";
 	}
-	std::string data = "{\"positionx\": \"" + newPosition + "\"}";
+	std::string data = "{\"position\": \"" + newPosition + "\"}";
 	std::cout << data << std::endl;
 	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
@@ -116,7 +116,7 @@ std::string Listing::changeGender(int lid, int &resCode)
 	}
 
 	std::string setVal = R"({"mixed_gender" : true})";
-	if (listing[16][0] == "\"true\"")
+	if (listing[13][0] == "\"true\"")
 		setVal = R"({"mixed_gender" : false})";
 
 	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
