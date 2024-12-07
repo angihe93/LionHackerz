@@ -177,6 +177,12 @@ jobs:
       - name: Install Newman
         run: npm install -g newman
 
+      - name: Run Employer Collection
+        run: |
+          newman run ./postman/Employer.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
+            --reporters cli
+
       - name: Run Get Matches Collection
         run: |
           newman run ./postman/GetMatches.postman_collection.json \

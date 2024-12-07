@@ -29,6 +29,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{pwd}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"url": {
@@ -65,6 +80,9 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [],
 				"url": {
@@ -185,13 +203,15 @@
 							"    header: {",
 							"        'Authorization': `Basic ${encodedCredentials}`, // Basic Authentication header",
 							"        'Content-Type': 'application/json', // Add other headers if needed",
-							"    },",
+							"    }, ",
 							"    body: {",
 							"        mode: 'raw',",
-							"        raw: JSON.stringify({",
-							"            key1: 'value1', // Replace with your JSON payload",
-							"            key2: 'value2',",
-							"        }),",
+							"\t\traw: JSON.stringify(",
+							"            {",
+							"\t\t\t\tkey1: 'value1',",
+							"\t\t\t\tkey2: 'value2'",
+							"            }",
+							"        ),\t\t\t\t\t",
 							"    },",
 							"}, function (err, response) {",
 							"    if (err) {",
@@ -434,6 +454,28 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

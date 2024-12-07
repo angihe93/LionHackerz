@@ -8,10 +8,320 @@
 	},
 	"item": [
 		{
-			"name": "changeField",
+			"name": "changePay",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newPay\", 100000);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"const body = pm.response.json();",
+							"",
+							"pm.test(\"New pay updated\", function () {",
+							"    pm.expect(body).to.eql(pm.variables.get(\"newPay\"))",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
-				"header": []
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/listing/changePay?lid={{lid}}&newPay={{newPay}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"listing",
+						"changePay"
+					],
+					"query": [
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newPay",
+							"value": "{{newPay}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteListing",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newPay\", 100000);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/listing/changePay?lid={{lid}}&newPay={{newPay}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"listing",
+						"changePay"
+					],
+					"query": [
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newPay",
+							"value": "{{newPay}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "changePersonalityType",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newPersonalityType\", \"INFP\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"const body = pm.response.json();",
+							"",
+							"pm.test(\"New personality type updated\", function () {",
+							"    pm.expect(body).to.eql(pm.variables.get(\"newPersonalityType\"))",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/listing/changePersonalityType?lid={{lid}}&newPersonalityType={{newPersonalityType}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"listing",
+						"changePersonalityType"
+					],
+					"query": [
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newPersonalityType",
+							"value": "{{newPersonalityType}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "changeSkillRequirements",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"pm.variables.set(\"skill1\", \"data structures\");",
+							"pm.variables.set(\"skill2\", \"stonemasonry\");",
+							"const userData = {      ",
+							"      skills:",
+							"        [{\"name\":pm.variables.get(\"skill1\")},{\"name\":pm.variables.get(\"skill2\")}]      ",
+							"    };",
+							"pm.variables.set('newSkills', JSON.stringify(userData));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const body = pm.response.json();",
+							"const skills = body[\"skills\"].split(\",\");",
+							"",
+							"pm.test(\"skill1 updated\", function () {",
+							"    pm.expect(skills[0]).to.eql(pm.variables.get(\"skill1\"));",
+							"});",
+							"",
+							"pm.test(\"skill2 updated\", function () {",
+							"    pm.expect(skills[1]).to.eql(pm.variables.get(\"skill2\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{newSkills}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverUrl}}/listing/changeSkillRequirements?lid={{lid}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"listing",
+						"changeSkillRequirements"
+					],
+					"query": [
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						}
+					]
+				}
 			},
 			"response": []
 		}
