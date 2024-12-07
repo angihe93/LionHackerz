@@ -78,7 +78,7 @@ include(GoogleTest)
    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
-#    test/EmployerUnitTests.cpp
+   test/EmployerUnitTests.cpp
    test/DimensionUnitTests.cpp
    test/AugmentUnitTests.cpp
 #    test/UserUnitTests.cpp
@@ -94,10 +94,13 @@ include(GoogleTest)
    src/Employer.cpp
    src/Auth.cpp
    src/Dimension.cpp
-#    src/main.cpp
+#    src/main.cpp # can't include main.cpp in test executable bc conflicts with testMain.cpp
    src/RouteController.cpp
    src/Worker.cpp
  )
+
+# # Doesn't work: Define the preprocessor directive for the test target so can have both main.cpp and testMain.cpp in test executable without conflict
+# target_compile_definitions(LionHackerzProjectTests PRIVATE RUN_TESTS)
 
 target_compile_options(LionHackerzProjectTests PRIVATE -O0 -fno-inline -fno-builtin -fno-omit-frame-pointer -fno-optimize-sibling-calls)
 
@@ -123,12 +126,6 @@ add_custom_target(run_tests
 )
 
 add_custom_target(gen_cov
-    # COMMAND lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file coverage.info --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
-    # COMMAND lcov --rc lcov_branch_coverage=1 --no-external --remove coverage.info '*/external_libraries/*' '*/opt/homebrew/*' '*/googletest/*' '/usr/*' '*/test/*' --output-file coverageN.info --ignore-errors inconsistent --ignore-errors range > /dev/null 2>&1
-    # COMMAND genhtml --branch-coverage coverageN.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
-    # commented out below to debug github workflow:
-    # COMMAND python3 filterbr.py coverageN.info > coverageN_.info
-    # COMMAND genhtml --branch-coverage coverageN_.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range > /dev/null 2>&1
     COMMAND mkdir -p coverage_report_gcovr
     COMMAND gcovr --root .. --object-directory . --html --html-details -o coverage_report_gcovr/coverage.html -f ../src -v --gcov-ignore-errors=no_working_dir_found --exclude-throw-branches --exclude-unreachable-branches --decisions
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}

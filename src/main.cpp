@@ -22,7 +22,7 @@ void setup_redis()
             std::cerr << "Redis connection lost to " << host << ":" << port << std::endl;
         } });
 }
-
+// #ifndef RUN_TESTS
 int main(int argc, char *argv[])
 {
     bool testMode = false;
@@ -61,3 +61,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+// #endif
