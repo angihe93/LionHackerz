@@ -12,6 +12,8 @@
 #include <vector>
 #include <map>
 #include "Database.h"
+#include "Listing.h"
+#include "RouteController.h"
 
 class Listing
 {
@@ -28,21 +30,21 @@ public:
 	 *	@param lid			The listing id of the listing
 	 *
 	 *	@param newField		The new data for the field */
-	std::string changeField(int lid, std::string newField);
+	std::string changeField(int lid, std::string newField, int &resCode);
 
 	/* Updates the value of the 'position' column in the job listing
 	 *
 	 *	@param lid				The listing id of the listing
 	 *
 	 *	@param newPosition		The new data for the position */
-	std::string changePosition(int lid, std::string newPosition);
+	std::string changePosition(int lid, std::string newPosition, int &resCode);
 
 	/* Updates the value of the 'job_description' column in the job listing
 	 *
 	 *	@param lid					The listing id of the listing
 	 *
 	 *	@param newDescription		The new data for the job description */
-	std::string changeJobDescription(int lid, std::string newDescription);
+	std::string changeJobDescription(int lid, std::string newDescription, int &resCode);
 
 	/* Change the boolean value of the 'job_flexibility' column in the
 	 *  job listing.  If null to begin with, sets to true.  If true,
@@ -206,7 +208,7 @@ public:
 	 * @param newSkills   A map of skill fields (e.g., skill1_req to skill5_req) and their new values
 	 * @return true if the skills were updated successfully, false otherwise
 	 */
-	std::string changeSkillRequirements(int lid, std::map<std::string, std::string> newSkills, int &resCode);
+	std::string changeSkillRequirements(int lid, std::vector<SkillInput> newSkills, int &resCode);
 
 	/**
 	 * Updates the personality type requirements for a job listing.
@@ -215,7 +217,7 @@ public:
 	 * @param newPersonalityTypes   The new personality type requirements for the listing
 	 * @return true if the personality types were updated successfully, false otherwise
 	 */
-	std::string changePersonalityTypes(int lid, std::string newPersonalityTypes, int &resCode);
+	std::string changePersonalityType(int lid, std::string newPersonalityTypes, int &resCode);
 
 private:
 	Database *db;

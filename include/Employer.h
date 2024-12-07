@@ -19,7 +19,7 @@ public:
          * @param lid   The listing id of the listing
          * @return true if employer has the listing with lid, false otherwise
          */
-        bool checkHasListing(int eid, int lid);
+        bool checkHasListing(int eid, int lid, int &resCode);
 
         /**
          * Allows an employer to change the field of a listing
@@ -27,9 +27,10 @@ public:
          * @param eid   The employer id of the employer
          * @param lid   The listing id of the listing
          * @param newField   The new data for the field
+         * @param resCode   Status code to return depending on query results
          * @return true if changed successfully, false otherwise
          */
-        bool changeField(int eid, int lid, std::string newField);
+        bool changeField(int eid, int lid, std::string newField, int &resCode);
 
         /**
          * Allows an employer to change the position of a listing
@@ -37,9 +38,10 @@ public:
          * @param eid   The employer id of the employer
          * @param lid   The listing id of the listing
          * @param newPosition   The new data for the position
+         * @param resCode   Status code to return depending on query results
          * @return true if changed successfully, false otherwise
          */
-        bool changePosition(int eid, int lid, std::string newPosition);
+        bool changePosition(int eid, int lid, std::string newPosition, int &resCode);
 
         /**
          * Allows an employer to change the job description of a listing
@@ -47,9 +49,10 @@ public:
          * @param eid   The employer id of the employer
          * @param lid   The listing id of the listing
          * @param newDescription   The new data for the job description
+         * @param resCode   Status code to return depending on query results
          * @return true changed successfully, false otherwise
          */
-        bool changeJobDescription(int eid, int lid, std::string newDescription);
+        bool changeJobDescription(int eid, int lid, std::string newDescription, int &resCode);
 
         /**
          * Allows an employer to change the job flexibility boolean value of a listing
@@ -193,18 +196,20 @@ public:
          *
          * @param eid   The employer id of the employer
          * @param newField   The new data for the field
+         * @param resCode   Status code to return depending on query results
          * @return true if all listings' fields were changed successfully, false otherwise
          */
-        bool changeFieldAll(int eid, std::string newField);
+        bool changeFieldAll(int eid, std::string newField, int &resCode);
 
         /**
          * Allows an employer to change the position of all its listings
          *
          * @param eid   The employer id of the employer
          * @param newPosition   The new data for the position
+         * @param resCode   Status code to return depending on query results
          * @return true if all listings' positions were changed successfully, false otherwise
          */
-        bool changePositionAll(int eid, std::string newPosition);
+        bool changePositionAll(int eid, std::string newPosition, int &resCode);
 
         // changeDescriptionAll probably not needed, not a likely use case
 
@@ -266,18 +271,20 @@ public:
          * @param skillsPersonality   map (string:string) of skills and personality types required for the listing, including skill1_req, ..., skill5_req, personality_types
          * @param pay   int64_t of the pay for the listing
          * @param boolFields   map (string:bool) of boolean fields for the listing, including job_flexibility, modern_building, mixed_gender, diverse_workforce, remote_available
+         * @param resCode   Status code to return depending on query results
          * @return   lid (int) for the created listing, or -1 on failure
          */
-        int postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int64_t pay, std::map<std::string, bool> boolFields);
+        int postListing(int eid, std::map<std::string, std::string> basicInfo, std::map<std::string, std::string> skillsPersonality, int64_t pay, std::map<std::string, bool> boolFields, int &resCode);
 
         /**
          * Create a new employer and insert into database
          *
          * @param company_name   Employer's company name
          * @param size   Employer's company size
+         * @param resCode   Status code to return depending on query results
          * @return   eid (int) for the created employer, or -1 on failure
          */
-        int createEmployer(std::string company_name, std::string size);
+        int createEmployer(std::string company_name, std::string size, int &resCode);
 
         // PETER ADDED
 
@@ -286,6 +293,7 @@ public:
          *
          * @param eid   The employer id of the employer
          * @param lid   The listing id of the listing
+         * @param resCode   Status code to return depending on query results
          * @return true if the listing was deleted successfully, false otherwise
          */
         bool deleteListing(int eid, int lid, int &resCode);
@@ -296,6 +304,7 @@ public:
          * @param eid   The employer id of the employer
          * @param lid   The listing id of the listing
          * @param newPay   The new pay for the listing
+         * @param resCode   Status code to return depending on query results
          * @return true if the pay was updated successfully, false otherwise
          */
         bool changePay(int eid, int lid, int64_t newPay, int &resCode);
@@ -305,10 +314,11 @@ public:
          *
          * @param eid   The employer id of the employer
          * @param lid   The listing id of the listing
-         * @param newSkills   A map of skill fields (e.g., skill1_req to skill5_req) and their new values
+         * @param newSkills   A vector of SkillInput representing new skill requirements
+         * @param resCode   Status code to return depending on query results
          * @return true if the skills were updated successfully, false otherwise
          */
-        bool changeSkillRequirements(int eid, int lid, std::map<std::string, std::string> newSkills, int &resCode);
+        bool changeSkillRequirements(int eid, int lid, std::vector<SkillInput> newSkills, int &resCode);
 
         /**
          * Allows an employer to update the personality type requirements for a listing.
@@ -316,9 +326,10 @@ public:
          * @param eid   The employer id of the employer
          * @param lid   The listing id of the listing
          * @param newPersonalityTypes   The new personality type requirements for the listing
+         * @param resCode   Status code to return depending on query results
          * @return true if the personality types were updated successfully, false otherwise
          */
-        bool changePersonalityTypes(int eid, int lid, std::string newPersonalityTypes, int &resCode);
+        bool changePersonalityType(int eid, int lid, std::string newPersonalityTypes, int &resCode);
 
 private:
         Database *db;

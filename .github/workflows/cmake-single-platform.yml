@@ -144,7 +144,7 @@ jobs:
         with:
           name: coverage-report-gcovr
           path: ${{github.workspace}}/build/coverage_report_gcovr
-  
+
       - name: Run static analysis
         working-directory: ${{github.workspace}}/build
         run: cppcheck ../src > cppcheck_output.txt 2>&1
@@ -187,21 +187,18 @@ jobs:
         run: |
           newman run ./postman/Listing.postman_collection.json \
             --environment ./postman/workspace.postman_globals.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report.html
+            --reporters cli
 
       - name: Run SignUp Collection
         run: |
           newman run ./postman/SignUp.postman_collection.json \
             --environment ./postman/workspace.postman_globals.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report.html
+            --reporters cli
       - name: Run User Collection
         run: |
           newman run ./postman/User.postman_collection.json \
             --environment ./postman/workspace.postman_globals.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report.html
+            --reporters cli
 
         # If you don't have an environment file, you can omit the --environment flag
 

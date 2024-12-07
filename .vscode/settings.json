@@ -103,5 +103,7 @@
         "__split_buffer": "cpp",
         "__verbose_abort": "cpp",
         "locale": "cpp"
-    }
+    },
+    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
+    "lldb.launch.expressions": "native"
 }
