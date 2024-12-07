@@ -249,7 +249,7 @@ Database::query2(std::string table, std::string selectColumns,
         queryLists.push_back(rowValues);
     }
 
-    resCount = (int)queryLists.size();
+    resCount = static_cast<int>(queryLists.size());
     if (printResults)
         iterateLists(queryLists);
 

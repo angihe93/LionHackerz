@@ -694,7 +694,7 @@ std::string Listing::changePay(int lid, int64_t newPay, int &resCode)
 	return result[0][0];
 }
 
-std::string getSkillsString(const std::vector<std::vector<std::string>> &result, int &resCode)
+std::string getSkillsString(const std::vector<std::vector<std::string>> &result, int *resCode)
 {
 	std::vector<std::string> skills;
 
@@ -710,7 +710,7 @@ std::string getSkillsString(const std::vector<std::vector<std::string>> &result,
 		}
 	}
 
-	resCode = 200;
+	*resCode = 200;
 
 	// Join all skills into a single comma-separated string
 	std::string commaSeparated;
