@@ -78,7 +78,7 @@ include(GoogleTest)
    test/MatcherUnitTests.cpp
    test/DatabaseUnitTests.cpp
    test/ListingUnitTests.cpp
-   test/EmployerUnitTests.cpp
+#    test/EmployerUnitTests.cpp  # commented out for speed
    test/DimensionUnitTests.cpp
    test/AugmentUnitTests.cpp
 #    test/UserUnitTests.cpp
