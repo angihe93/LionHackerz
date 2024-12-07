@@ -11,6 +11,7 @@
 #include "Augment.h"
 #include "Auth.h"
 #include "Dimension.h"
+#include "Employer.h"
 #include <map>
 #include <set>
 #include <string>
@@ -92,12 +93,9 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
         // check in database if this is admin, if so, issue admin api key
         int resCount = 0;
         std::vector<std::vector<std::string>> queryRes = db->query("Admin", "*", "username", "eq", username, "password", "eq", password, false, resCount);
-        std::cout << "test0" << std::endl;
 
         if (resCount == 0)
         {
-            std::cout << "test1" << std::endl;
-
             res.code = 400;
             jsonRes["error"]["code"] = res.code;
             jsonRes["error"]["message"] = "Wrong username or password";
@@ -106,17 +104,12 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
             delete a;
             return;
         }
-        std::cout << "test2" << std::endl;
         // gen api key
         std::string retStr = a->genAPIKey(role, uid);
-        std::cout << "test3" << std::endl;
-
         size_t id_pos = retStr.find("Error:");
-        std::cout << "test4" << std::endl;
 
         if (id_pos != std::string::npos)
         { // error
-            std::cout << "test5" << std::endl;
 
             std::cout << retStr << std::endl;
             res.code = 500;
@@ -127,7 +120,6 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
             delete a;
             return;
         }
-        std::cout << "test6" << std::endl;
 
         res.code = 201;
         jsonRes["data"]["apikey"] = retStr;
@@ -392,7 +384,7 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
     {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'field' parameter.";
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
         res.write(jsonRes.dump());
         res.end();
         return;
@@ -413,7 +405,7 @@ void RouteController::changeField(const crow::request &req, crow::response &res)
 
     Listing *l = new Listing(*db);
 
-    std::string result = l->changeField(lid, newField);
+    std::string result = l->changeField(lid, newField, res.code);
     res.code = 200;
     res.write(result);
     res.end();
@@ -443,7 +435,7 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
     {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'position' parameter.";
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
         res.write(jsonRes.dump());
         res.end();
         return;
@@ -464,7 +456,7 @@ void RouteController::changePosition(const crow::request &req, crow::response &r
 
     Listing *l = new Listing(*db);
 
-    std::string result = l->changePosition(lid, newPosition);
+    std::string result = l->changePosition(lid, newPosition, res.code);
     res.code = 200;
     res.write(result);
     res.end();
@@ -494,7 +486,7 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'position' parameter.";
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
         res.write(jsonRes.dump());
         res.end();
         return;
@@ -515,8 +507,260 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
 
     Listing *l = new Listing(*db);
 
-    std::string result = l->changeJobDescription(lid, newDescription);
+    std::string result = l->changeJobDescription(lid, newDescription, res.code);
     res.code = 200;
+    res.write(result);
+    res.end();
+
+    delete l;
+    return;
+}
+
+void RouteController::changeFlex(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return; // response has already been written in checkApiHeaders
+    }
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    int lid = 0;
+
+    if (params.get("lid") != nullptr)
+    {
+        lid = std::stoi(params.get("lid"));
+    }
+    else
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    Listing *l = new Listing(*db);
+
+    int resCode = 0;
+
+    std::string result = l->changeFlex(lid, resCode);
+    if (resCode == 404)
+    {
+        res.code = 404;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "The listing ID you provided does not exist in the database.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    jsonRes["success"] = true;
+    jsonRes["code"] = 200;
+    jsonRes["message"] = "Successfully changed the value of 'job_flexibility' for the given listing.";
+    jsonRes["data"] = result;
+    res.code = 200;
+    res.write(jsonRes.dump());
+    res.end();
+
+    delete l;
+    return;
+}
+
+void RouteController::deleteListing(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return; // response has already been written in checkApiHeaders
+    }
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    int lid = 0;
+
+    if (params.get("lid") != nullptr)
+    {
+        lid = std::stoi(params.get("lid"));
+    }
+    else
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+    Listing *l = new Listing(*db);
+
+    std::string result = l->deleteListing(lid, res.code);
+    res.write(result);
+    res.end();
+
+    delete l;
+    return;
+}
+
+void RouteController::changePay(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return; // response has already been written in checkApiHeaders
+    }
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    int lid = 0;
+    int newPay = 0;
+
+    if (params.get("lid") != nullptr)
+    {
+        lid = std::stoi(params.get("lid"));
+    }
+    else
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+    if (params.get("newPay") != nullptr)
+    {
+        newPay = std::stoi(params.get("newPay"));
+    }
+    else
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a value for the new pay with 'newPay=X'";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    Listing *l = new Listing(*db);
+
+    std::string result = l->changePay(lid, newPay, res.code);
+
+    res.write(result);
+    res.end();
+
+    delete l;
+    return;
+}
+
+void RouteController::changeSkillRequirements(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return; // response has already been written in checkApiHeaders
+    }
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    int lid = 0;
+    if (params.get("lid") != nullptr)
+    {
+        lid = std::stoi(params.get("lid"));
+    }
+    else
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    auto body = crow::json::load(req.body);
+
+    if (!body)
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a value for the new skill requirements in the body of the request.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+    else
+    {
+        if (body.has("skills"))
+        {
+            std::vector<SkillInput> newSkills;
+            std::string skillError = parseSkills(body["skills"], newSkills);
+            if (!skillError.empty())
+            {
+                returnError(res, 400, skillError);
+                return;
+            }
+
+            Listing *l = new Listing(*db);
+
+            std::string result = l->changeSkillRequirements(lid, newSkills, res.code);
+
+            jsonRes["skills"] = result;
+            res.code = 200;
+            res.write(jsonRes.dump());
+            res.end();
+
+            delete l;
+            return;
+        }
+    }
+}
+
+void RouteController::changePersonalityType(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return; // response has already been written in checkApiHeaders
+    }
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    int lid = 0;
+    std::string newPersonalityType;
+
+    if (params.get("lid") != nullptr)
+    {
+        lid = std::stoi(params.get("lid"));
+    }
+    else
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+    if (params.get("newPersonalityType") != nullptr)
+    {
+        newPersonalityType = params.get("newPersonalityType");
+    }
+    else
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a value for the new personality type with 'newPersonalityType=X'";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    Listing *l = new Listing(*db);
+
+    std::string result = l->changePersonalityType(lid, newPersonalityType, res.code);
     res.write(result);
     res.end();
 
@@ -583,59 +827,6 @@ void RouteController::generateAIListing(const crow::request &req, crow::response
     return;
 }
 
-void RouteController::changeFlex(const crow::request &req, crow::response &res)
-{
-    if (!checkAuthHeaders(req, res))
-    {
-        return; // response has already been written in checkApiHeaders
-    }
-
-    auto params = crow::query_string(req.url_params);
-    crow::json::wvalue jsonRes;
-
-    int lid = 0;
-
-    if (params.get("lid") != nullptr)
-    {
-        lid = std::stoi(params.get("lid"));
-    }
-    else
-    {
-        res.code = 400;
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'job_flexibility' parameter.";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-    }
-
-    Listing *l = new Listing(*db);
-
-    int resCode = 0;
-
-    std::string result = l->changeFlex(lid, resCode);
-    if (resCode == 404)
-    {
-        res.code = 404;
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "The listing ID you provided does not exist in the database.";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-    }
-
-    jsonRes["success"] = true;
-    jsonRes["code"] = 200;
-    jsonRes["message"] = "Successfully changed the value of 'job_flexibility' for the given listing.";
-    jsonRes["data"] = result;
-    res.code = 200;
-    res.write(jsonRes.dump());
-    res.end();
-
-    delete l;
-    return;
-}
-
 void RouteController::changeModernWorkspace(const crow::request &req, crow::response &res)
 {
     if (!checkAuthHeaders(req, res))
@@ -655,7 +846,7 @@ void RouteController::changeModernWorkspace(const crow::request &req, crow::resp
     {
         res.code = 400;
         jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X' to update the 'modern_building' parameter.";
+        jsonRes["error"]["message"] = "You must specify a listing ID with '?lid=X'.";
         res.write(jsonRes.dump());
         res.end();
         return;
@@ -1025,16 +1216,1042 @@ std::string RouteController::processInterests(Database &db, int user_id, const s
     return "Interests processed successfully.";
 }
 
+void RouteController::handleEmployerBoolResult(crow::response &res, bool result, int resCode, const std::string &successMsg)
+{
+    crow::json::wvalue jsonRes;
+    if (!result)
+    {
+        res.code = (resCode == 0) ? 400 : resCode; // default to 400 if no code set
+        jsonRes["success"] = false;
+        jsonRes["error"] = "Operation failed.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    // success
+    res.code = 200;
+    jsonRes["success"] = true;
+    jsonRes["message"] = successMsg;
+    res.write(jsonRes.dump());
+    res.end();
+}
+void RouteController::employerChangeField(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return;
+    }
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    int lid = 0;
+    std::string newField;
+    crow::json::wvalue jsonRes;
+
+    if (params.get("eid") == nullptr || params.get("lid") == nullptr || params.get("newField") == nullptr)
+    {
+        res.code = 400;
+        jsonRes["success"] = false;
+        jsonRes["error"] = "You must specify 'eid', 'lid', and 'newField' parameters.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    eid = std::stoi(params.get("eid"));
+    lid = std::stoi(params.get("lid"));
+    newField = params.get("newField");
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeField(eid, lid, newField, resCode);
+    handleEmployerBoolResult(res, result, resCode, "Field changed successfully.");
+}
+
+void RouteController::employerChangePosition(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return;
+    }
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    int lid = 0;
+    std::string newPosition;
+    crow::json::wvalue jsonRes;
+
+    if (params.get("eid") == nullptr || params.get("lid") == nullptr || params.get("newPosition") == nullptr)
+    {
+        res.code = 400;
+        jsonRes["success"] = false;
+        jsonRes["error"] = "You must specify 'eid', 'lid', and 'newPosition'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    eid = std::stoi(params.get("eid"));
+    lid = std::stoi(params.get("lid"));
+    newPosition = params.get("newPosition");
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changePosition(eid, lid, newPosition, resCode);
+    handleEmployerBoolResult(res, result, resCode, "Position changed successfully.");
+}
+
+void RouteController::employerChangeJobDescription(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return;
+    }
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    int lid = 0;
+    std::string newDescription;
+    crow::json::wvalue jsonRes;
+
+    if (params.get("eid") == nullptr || params.get("lid") == nullptr || params.get("newDescription") == nullptr)
+    {
+        res.code = 400;
+        jsonRes["success"] = false;
+        jsonRes["error"] = "You must specify 'eid', 'lid', and 'newDescription'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    eid = std::stoi(params.get("eid"));
+    lid = std::stoi(params.get("lid"));
+    newDescription = params.get("newDescription");
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeJobDescription(eid, lid, newDescription, resCode);
+    handleEmployerBoolResult(res, result, resCode, "Job description changed successfully.");
+}
+
+void RouteController::employerChangeFlex(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return;
+    }
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    int lid = 0;
+    crow::json::wvalue jsonRes;
+
+    if (params.get("eid") == nullptr || params.get("lid") == nullptr)
+    {
+        res.code = 400;
+        jsonRes["success"] = false;
+        jsonRes["error"] = "You must specify 'eid' and 'lid'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    eid = std::stoi(params.get("eid"));
+    lid = std::stoi(params.get("lid"));
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result;
+
+    if (params.get("newFlex") != nullptr)
+    {
+        bool newFlex = (std::string(params.get("newFlex")) == "true");
+        result = employer.changeFlex(eid, lid, newFlex, resCode);
+    }
+    else
+    {
+        // Calls the toggle version if no newFlex is provided
+        result = employer.changeFlex(eid, lid, resCode);
+    }
+
+    handleEmployerBoolResult(res, result, resCode, "Flex changed successfully.");
+}
+
+void RouteController::employerChangePay(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return;
+    }
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    int lid = 0;
+    int64_t newPay = 0;
+    crow::json::wvalue jsonRes;
+
+    if (params.get("eid") == nullptr || params.get("lid") == nullptr || params.get("newPay") == nullptr)
+    {
+        res.code = 400;
+        jsonRes["success"] = false;
+        jsonRes["error"] = "You must specify 'eid', 'lid', and 'newPay'.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    eid = std::stoi(params.get("eid"));
+    lid = std::stoi(params.get("lid"));
+    newPay = std::stoll(params.get("newPay"));
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changePay(eid, lid, newPay, resCode);
+    handleEmployerBoolResult(res, result, resCode, "Pay changed successfully.");
+}
+void RouteController::employerChangeSkillRequirements(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return;
+    }
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+
+    const char *eid_str = params.get("eid");
+    if (eid_str == nullptr)
+    {
+        returnError(res, 400, "Missing 'eid' (Employer ID) parameter.");
+        return;
+    }
+
+    int eid;
+    try
+    {
+        eid = std::stoi(eid_str);
+    }
+    catch (const std::exception &e)
+    {
+        returnError(res, 400, "Invalid 'eid' (Employer ID) parameter.");
+        return;
+    }
+
+    const char *lid_str = params.get("lid");
+    if (lid_str == nullptr)
+    {
+        returnError(res, 400, "Missing 'lid' (Listing ID) parameter.");
+        return;
+    }
+
+    int lid;
+    try
+    {
+        lid = std::stoi(lid_str);
+    }
+    catch (const std::exception &e)
+    {
+        returnError(res, 400, "Invalid 'lid' (Listing ID) parameter.");
+        return;
+    }
+
+    // parse the JSON body for 'skills'
+    auto body = crow::json::load(req.body);
+    if (!body)
+    {
+        returnError(res, 400, "Invalid JSON body.");
+        return;
+    }
+
+    if (!body.has("skills"))
+    {
+        returnError(res, 400, "Missing 'skills' in the request body.");
+        return;
+    }
+
+    // validate and extract skills
+    std::vector<SkillInput> newSkills;
+    std::string skillError = parseSkills(body["skills"], newSkills);
+    if (!skillError.empty())
+    {
+        returnError(res, 400, skillError);
+        return;
+    }
+
+    // Perform the database operation
+    Listing listing(*db); // Assuming Listing is required by Employer
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeSkillRequirements(eid, lid, newSkills, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Skill requirements updated successfully.");
+}
+
+void RouteController::employerChangeGender(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0, lid = 0;
+    bool useSetValue = false;
+    bool newValue = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("lid"))
+        lid = std::stoi(params.get("lid"));
+    else
+    {
+        returnError(res, 400, "No lid");
+        return;
+    }
+
+    if (params.get("newValue"))
+    {
+        useSetValue = true;
+        newValue = (std::string(params.get("newValue")) == "true");
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = false;
+    if (useSetValue)
+    {
+        result = employer.changeGender(eid, lid, newValue, resCode);
+    }
+    else
+    {
+        result = employer.changeGender(eid, lid, resCode);
+    }
+
+    handleEmployerBoolResult(res, result, resCode, "Gender field changed successfully.");
+}
+
+void RouteController::employerChangeDiversity(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0, lid = 0;
+    bool useSetValue = false;
+    bool newValue = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("lid"))
+        lid = std::stoi(params.get("lid"));
+    else
+    {
+        returnError(res, 400, "No lid");
+        return;
+    }
+
+    if (params.get("newValue"))
+    {
+        useSetValue = true;
+        newValue = (std::string(params.get("newValue")) == "true");
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result;
+    if (useSetValue)
+    {
+        result = employer.changeDiversity(eid, lid, newValue, resCode);
+    }
+    else
+    {
+        result = employer.changeDiversity(eid, lid, resCode);
+    }
+
+    handleEmployerBoolResult(res, result, resCode, "Diversity field changed successfully.");
+}
+
+void RouteController::employerChangeRemote(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0, lid = 0;
+    bool useSetValue = false;
+    bool newValue = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("lid"))
+        lid = std::stoi(params.get("lid"));
+    else
+    {
+        returnError(res, 400, "No lid");
+        return;
+    }
+
+    if (params.get("newValue"))
+    {
+        useSetValue = true;
+        newValue = (std::string(params.get("newValue")) == "true");
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result;
+    if (useSetValue)
+    {
+        result = employer.changeRemote(eid, lid, newValue, resCode);
+    }
+    else
+    {
+        result = employer.changeRemote(eid, lid, resCode);
+    }
+
+    handleEmployerBoolResult(res, result, resCode, "Remote field changed successfully.");
+}
+
+void RouteController::employerChangeLocation(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0, lid = 0;
+    std::string newLocation;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("lid"))
+        lid = std::stoi(params.get("lid"));
+    else
+    {
+        returnError(res, 400, "No lid");
+        return;
+    }
+    if (params.get("newLocation"))
+        newLocation = params.get("newLocation");
+    else
+    {
+        returnError(res, 400, "No new Location");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeLocation(eid, lid, newLocation, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Location changed successfully.");
+}
+
+void RouteController::employerChangeMBTI(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0, lid = 0;
+    std::string newMBTI;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("lid"))
+        lid = std::stoi(params.get("lid"));
+    else
+    {
+        returnError(res, 400, "No lid");
+        return;
+    }
+    if (params.get("newMBTI"))
+        newMBTI = params.get("newMBTI");
+    else
+    {
+        returnError(res, 400, "No newMBTI");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeMBTI(eid, lid, newMBTI, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "MBTI changed successfully.");
+}
+
+void RouteController::employerChangeModernWorkspace(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0, lid = 0;
+    bool useSetValue = false;
+    bool newValue = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("lid"))
+        lid = std::stoi(params.get("lid"));
+    else
+    {
+        returnError(res, 400, "No lid");
+        return;
+    }
+
+    if (params.get("newValue"))
+    {
+        useSetValue = true;
+        newValue = (std::string(params.get("newValue")) == "true");
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result;
+    if (useSetValue)
+    {
+        result = employer.changeModernWorkspace(eid, lid, newValue, resCode);
+    }
+    else
+    {
+        result = employer.changeModernWorkspace(eid, lid, resCode);
+    }
+    handleEmployerBoolResult(res, result, resCode, "Modern workspace field changed successfully.");
+}
+
+// "All" variants
+
+void RouteController::employerChangeFieldAll(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    std::string newField;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("newField"))
+        newField = params.get("newField");
+    else
+    {
+        returnError(res, 400, "No newField");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeFieldAll(eid, newField, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Field changed for all listings successfully.");
+}
+
+void RouteController::employerChangePositionAll(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    std::string newPosition;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("newPosition"))
+        newPosition = params.get("newPosition");
+    else
+    {
+        returnError(res, 400, "No newPosition");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changePositionAll(eid, newPosition, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Position changed for all listings successfully.");
+}
+
+void RouteController::employerChangeFlexAll(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    bool newFlex = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("newFlex"))
+        newFlex = (std::string(params.get("newFlex")) == "true");
+    else
+    {
+        returnError(res, 400, "No newFlex");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeFlexAll(eid, newFlex, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Flex changed for all listings successfully.");
+}
+
+void RouteController::employerChangeModernWorkspaceAll(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    bool newValue = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("newValue"))
+        newValue = (std::string(params.get("newValue")) == "true");
+    else
+    {
+        returnError(res, 400, "No newValue");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeModernWorkspaceAll(eid, newValue, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Modern workspace changed for all listings successfully.");
+}
+
+void RouteController::employerChangeGenderAll(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    bool newValue = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("newValue"))
+        newValue = (std::string(params.get("newValue")) == "true");
+    else
+    {
+        returnError(res, 400, "No newValue");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeGenderAll(eid, newValue, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Gender field changed for all listings successfully.");
+}
+
+void RouteController::employerChangeDiversityAll(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    bool newValue = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("newValue"))
+        newValue = (std::string(params.get("newValue")) == "true");
+    else
+    {
+        returnError(res, 400, "No newValue");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeDiversityAll(eid, newValue, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Diversity changed for all listings successfully.");
+}
+
+void RouteController::employerChangeRemoteAll(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    bool newValue = false;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("newValue"))
+        newValue = (std::string(params.get("newValue")) == "true");
+    else
+    {
+        returnError(res, 400, "No newValue");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.changeRemoteAll(eid, newValue, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Remote field changed for all listings successfully.");
+}
+void RouteController::employerPostListing(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0;
+    int64_t pay = 0;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "Missing 'eid' (Employer ID) parameter.");
+        return;
+    }
+
+    if (params.get("pay"))
+        pay = std::stoll(params.get("pay"));
+    else
+    {
+        returnError(res, 400, "Missing 'pay' parameter.");
+        return;
+    }
+
+    auto body = crow::json::load(req.body);
+    if (!body)
+    {
+        returnError(res, 400, "Invalid JSON body.");
+        return;
+    }
+
+    // Extract 'basicInfo'
+    std::map<std::string, std::string> basicInfo;
+    if (body.has("basicInfo"))
+    {
+        for (auto &kv : body["basicInfo"])
+        {
+            basicInfo[kv.key()] = kv.s();
+        }
+    }
+    else
+    {
+        returnError(res, 400, "Missing 'basicInfo' in request body.");
+        return;
+    }
+
+    // Extract 'skillsPersonality'
+    std::map<std::string, std::string> skillsPersonality;
+    if (body.has("skillsPersonality"))
+    {
+        for (auto &kv : body["skillsPersonality"])
+        {
+            skillsPersonality[kv.key()] = kv.s();
+        }
+    }
+    else
+    {
+        returnError(res, 400, "Missing 'skillsPersonality' in request body.");
+        return;
+    }
+
+    // Extract 'boolFields'
+    std::map<std::string, bool> boolFields;
+    if (body.has("boolFields"))
+    {
+        for (auto &kv : body["boolFields"])
+        {
+            boolFields[kv.key()] = (kv.s() == "true");
+        }
+    }
+    else
+    {
+        returnError(res, 400, "Missing 'boolFields' in request body.");
+        return;
+    }
+
+    // Create Employer and Listing objects
+    Employer emp(*db, *(new Listing(*db)));
+    int resCode = 200;
+
+    // Post the listing
+    int lid = emp.postListing(eid, basicInfo, skillsPersonality, pay, boolFields, resCode);
+    if (lid == -1)
+    {
+        returnError(res, resCode, "Failed to post listing.");
+        return;
+    }
+
+    crow::json::wvalue jsonRes;
+    jsonRes["success"] = true;
+    jsonRes["lid"] = lid;
+    jsonRes["code"] = 200;
+
+    res.code = 200;
+    res.write(jsonRes.dump());
+    res.end();
+}
+void RouteController::employerCreateEmployer(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    std::string company_name;
+    std::string size;
+
+    if (params.get("company_name"))
+        company_name = params.get("company_name");
+    else
+    {
+        returnError(res, 400, "Missing 'company_name' parameter.");
+        return;
+    }
+
+    if (params.get("size"))
+        size = params.get("size");
+    else
+    {
+        returnError(res, 400, "Missing 'size' parameter.");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    int eid = employer.createEmployer(company_name, size, resCode);
+    if (eid == -1)
+    {
+        res.code = (resCode != 0) ? resCode : 400;
+        crow::json::wvalue jsonRes;
+        jsonRes["success"] = false;
+        jsonRes["error"] = "Failed to create employer.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    crow::json::wvalue jsonRes;
+    jsonRes["success"] = true;
+    jsonRes["message"] = "Employer created successfully.";
+    jsonRes["eid"] = eid;
+
+    res.code = 200;
+    res.write(jsonRes.dump());
+    res.end();
+}
+void RouteController::employerDeleteListing(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    crow::json::wvalue jsonRes;
+    int eid = 0;
+    int lid = 0;
+
+    const char *eid_str = params.get("eid");
+    if (eid_str == nullptr)
+    {
+        returnError(res, 400, "Missing 'eid' (Employer ID) parameter.");
+        return;
+    }
+    try
+    {
+        eid = std::stoi(eid_str);
+    }
+    catch (const std::exception &e)
+    {
+        returnError(res, 400, "Invalid 'eid' (Employer ID) parameter.");
+        return;
+    }
+
+    const char *lid_str = params.get("lid");
+    if (lid_str == nullptr)
+    {
+        returnError(res, 400, "Missing 'lid' (Listing ID) parameter.");
+        return;
+    }
+    try
+    {
+        lid = std::stoi(lid_str);
+    }
+    catch (const std::exception &e)
+    {
+        returnError(res, 400, "Invalid 'lid' (Listing ID) parameter.");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+
+    int resCode = 0;
+    bool result = employer.deleteListing(eid, lid, resCode);
+
+    handleEmployerBoolResult(res, result, resCode, "Listing deleted successfully.");
+}
+
+void RouteController::employerChangePersonalityType(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+        return;
+
+    auto params = crow::query_string(req.url_params);
+    int eid = 0, lid = 0;
+    std::string newPersonalityTypes;
+
+    if (params.get("eid"))
+        eid = std::stoi(params.get("eid"));
+    else
+    {
+        returnError(res, 400, "No eid");
+        return;
+    }
+    if (params.get("lid"))
+        lid = std::stoi(params.get("lid"));
+    else
+    {
+        returnError(res, 400, "No lid");
+        return;
+    }
+    if (params.get("newPersonalityTypes"))
+        newPersonalityTypes = params.get("newPersonalityTypes");
+    else
+    {
+        returnError(res, 400, "No newPersonalityTypes");
+        return;
+    }
+
+    Listing listing(*db);
+    Employer employer(*db, listing);
+    int resCode = 0;
+    bool result = employer.changePersonalityType(eid, lid, newPersonalityTypes, resCode);
+    handleEmployerBoolResult(res, result, resCode, "Personality type changed successfully.");
+}
+
 void RouteController::initRoutes(crow::App<> &app)
 {
+    // Root Route
     CROW_ROUTE(app, "/")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { index(res); });
 
+    // SignUp Route
     CROW_ROUTE(app, "/signup")
         .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
                                          { signUp(req, res); });
 
+    // Database Test Route
     CROW_ROUTE(app, "/dbtest")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { dbtest(req, res); });
@@ -1057,14 +2274,12 @@ void RouteController::initRoutes(crow::App<> &app)
                 }
                 getMatches(req, res);
             });
-    /* get the progress of a job match while processing in queue */
 
+    /* Progress Route */
     CROW_ROUTE(app, "/progress/<string>")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res,
                                                const std::string &user_id)
                                         {
-
-
         auto future_reply = redis_client.get("progress:" + user_id);
         redis_client.commit();
 
@@ -1077,7 +2292,6 @@ void RouteController::initRoutes(crow::App<> &app)
             return;
         }
 
-
                 res.add_header("Access-Control-Allow-Origin", "*");
                 res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
                 res.add_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -1086,7 +2300,6 @@ void RouteController::initRoutes(crow::App<> &app)
         res.write(reply.as_string());
         res.end();
         return; });
-
 
     /* LISTING ROUTES */
     CROW_ROUTE(app, "/listing/changeField")
@@ -1109,6 +2322,28 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                           { changeModernWorkspace(req, res); });
 
+    CROW_ROUTE(app, "/listing/postListing")
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
+                                         { employerPostListing(req, res); });
+    CROW_ROUTE(app, "/listing/createEmployer")
+        .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
+                                         { employerCreateEmployer(req, res); });
+    CROW_ROUTE(app, "/listing/deleteListing")
+        .methods(crow::HTTPMethod::DELETE)([this](const crow::request &req, crow::response &res)
+                                           { deleteListing(req, res); });
+
+    CROW_ROUTE(app, "/listing/changePay")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { changePay(req, res); });
+
+    CROW_ROUTE(app, "/listing/changeSkillRequirements")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { changeSkillRequirements(req, res); });
+
+    CROW_ROUTE(app, "/listing/changePersonalityType")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { changePersonalityType(req, res); });
+
     CROW_ROUTE(app, "/listing/generateAI")
         .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
                                          { generateAIListing(req, res); });
@@ -1119,6 +2354,83 @@ void RouteController::initRoutes(crow::App<> &app)
                                          { makeUser(req, res); });
 
     /* EMPLOYER ROUTES */
-    // CROW_ROUTE(app, "/employer/changeField") ...
+    CROW_ROUTE(app, "/employer/changeField")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeField(req, res); });
 
+    CROW_ROUTE(app, "/employer/changePosition")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangePosition(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeJobDescription")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeJobDescription(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeFlex")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeFlex(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeGender")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeGender(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeDiversity")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeDiversity(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeRemote")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeRemote(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeLocation")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeLocation(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeMBTI")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeMBTI(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeModernWorkspace")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeModernWorkspace(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeFieldAll")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeFieldAll(req, res); });
+
+    CROW_ROUTE(app, "/employer/changePositionAll")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangePositionAll(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeFlexAll")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeFlexAll(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeModernWorkspaceAll")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeModernWorkspaceAll(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeGenderAll")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeGenderAll(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeDiversityAll")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeDiversityAll(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeRemoteAll")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeRemoteAll(req, res); });
+
+    CROW_ROUTE(app, "/employer/deleteListing")
+        .methods(crow::HTTPMethod::DELETE)([this](const crow::request &req, crow::response &res)
+                                           { employerDeleteListing(req, res); });
+
+    CROW_ROUTE(app, "/employer/changeSkillRequirements")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangeSkillRequirements(req, res); });
+
+    CROW_ROUTE(app, "/employer/changePersonalityType")
+        .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
+                                          { employerChangePersonalityType(req, res); });
 }

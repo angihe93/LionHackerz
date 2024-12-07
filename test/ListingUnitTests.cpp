@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include "Database.h"
 #include "Listing.h"
+#include "RouteController.h"
 #include <curl/curl.h>
 #include <vector>
 #include <map>
@@ -79,38 +80,39 @@ TEST(ListingGet, checkGetListing)
 /* tests Listing::changeField(),changePosition(),changeJobDescription(), changeFlex() functions in Listing.cpp */
 TEST(ListingChange, checkChangeField)
 {
+    int resCode = 0;
+
     Database *db = new MockDatabase();
     Listing *l = new Listing(*db);
 
     // Change field for invalid lid
-    std::string changeRes = l->changeField(-1, "blank");
+    std::string changeRes = l->changeField(-1, "blank", resCode);
     std::string expected = "Error: The listing ID you provided does not exist in the database.";
     EXPECT_EQ(changeRes, expected);
 
     // Change field for valid lid
-    changeRes = l->changeField(1, "Computer science");
+    changeRes = l->changeField(1, "Computer science", resCode);
     EXPECT_TRUE(changeRes.find("\"field\":\"Computer science\"") != std::string::npos);
 
     // Change position for invalid lid
-    changeRes = l->changePosition(-1, "blank");
+    changeRes = l->changePosition(-1, "blank", resCode);
     expected = "Error: The listing ID you provided does not exist in the database.";
     EXPECT_EQ(changeRes, expected);
 
     // Change position for valid lid
-    changeRes = l->changePosition(1, "Software Engineer");
+    changeRes = l->changePosition(1, "Software Engineer", resCode);
     EXPECT_TRUE(changeRes.find("\"position\":\"Software Engineer\"") != std::string::npos);
 
     // Change job description for valid lid
-    changeRes = l->changeJobDescription(2, "Microsoft is currently looking for an experienced candidate to lead our engineering team.");
+    changeRes = l->changeJobDescription(2, "Microsoft is currently looking for an experienced candidate to lead our engineering team.", resCode);
     EXPECT_TRUE(changeRes.find("\"job_description\":\"Microsoft is currently looking for an experienced candidate to lead our engineering team.\"") != std::string::npos);
 
     // Change job description for invalid lid
-    changeRes = l->changeJobDescription(9999, "Microsoft is currently looking for an experienced candidate to lead our engineering team.");
+    changeRes = l->changeJobDescription(9999, "Microsoft is currently looking for an experienced candidate to lead our engineering team.", resCode);
     expected = "Error: The listing ID you provided does not exist in the database.";
     EXPECT_EQ(changeRes, expected);
 
     // Change diversity for invalid lid
-    int resCode = 0;
     changeRes = l->changeDiversity(-1, resCode);
     expected = "Error: The listing ID you provided does not exist in the database.";
     EXPECT_EQ(changeRes, expected);
@@ -203,6 +205,7 @@ TEST(ListingChange, checkChangeField)
 /* tests Listing::insertListing() function in Listing.cpp */
 TEST(ListingInsert, checkInsertListing)
 {
+    int resCode = 0;
 
     Database *db = new MockDatabase();
     Listing *l = new Listing(*db);
@@ -265,7 +268,7 @@ TEST(ListingDelete, checkDeleteListing)
     delete l;
     delete db;
 }
-/* Tests Listing::changePay(), changeSkillRequirements(), changePersonalityTypes() functions in Listing.cpp */
+/* Tests Listing::changePay(), changeSkillRequirements(), changePersonalityType() functions in Listing.cpp */
 TEST(ListingChangeAdditional, checkChangePaySkillPersonality)
 {
     // Create a MockDatabase instance
@@ -307,10 +310,7 @@ TEST(ListingChangeAdditional, checkChangePaySkillPersonality)
     EXPECT_EQ(listing[0][0], std::to_string(newPay));
 
     // // Step 3: Test changeSkillRequirements function
-    std::map<std::string, std::string> newSkills = {
-        {"skill1_req", "Java"},
-        {"skill2_req", "Kotlin"},
-        {"skill3_req", "Android Development"}};
+    std::vector<SkillInput> newSkills = {{"Java"}, {"JavaScript"}, {"React"}, {"Node.js"}, {"MongoDB"}};
     l->changeSkillRequirements(lid, newSkills, resCode);
     EXPECT_EQ(resCode, 200); // Expect the response code to be 200
 
@@ -318,9 +318,9 @@ TEST(ListingChangeAdditional, checkChangePaySkillPersonality)
     listing = db->query("Listing", "skill1_req,skill2_req,skill3_req", "lid", "eq", std::to_string(lid), false, resCount);
     EXPECT_EQ(resCount, 1);
 
-    // // Step 4: Test changePersonalityTypes function
+    // // Step 4: Test changePersonalityType function
     std::string newPersonality = "ENFP";
-    l->changePersonalityTypes(lid, newPersonality, resCode);
+    l->changePersonalityType(lid, newPersonality, resCode);
     EXPECT_EQ(resCode, 200); // Expect the response code to be 200
 
     // EXPECT_TRUE(changePersonalityResult); // Expect the personality type update to succeed
@@ -341,7 +341,7 @@ TEST(ListingChangeAdditional, checkChangePaySkillPersonality)
     l->changeSkillRequirements(invalidLid, newSkills, resCode);
     EXPECT_EQ(resCode, 404);
 
-    l->changePersonalityTypes(invalidLid, newPersonality, resCode);
+    l->changePersonalityType(invalidLid, newPersonality, resCode);
     EXPECT_EQ(resCode, 404);
 
     // Clean up

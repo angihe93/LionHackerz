@@ -4,6 +4,7 @@
 #include "Database.h"
 #include "Employer.h"
 #include "MockListing.h"
+#include "RouteController.h"
 #include <curl/curl.h>
 #include <vector>
 
@@ -13,17 +14,18 @@
 TEST(EmployerCheckHasListing, checkHasListing)
 {
 
+        int resCode = 0;
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where employer does not have the listing
-        bool res = e->checkHasListing(1, 2);
+        bool res = e->checkHasListing(1, 2, resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
 
         // case where employer has the listing
-        res = e->checkHasListing(1, 1);
+        res = e->checkHasListing(1, 1, resCode);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -35,23 +37,24 @@ TEST(EmployerCheckHasListing, checkHasListing)
 /* tests Employer::changeField() function in Employer.cpp */
 TEST(EmployerChangeField, checkChangeField)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change field should fail
-        bool res = e->changeField(1, 2, "blank");
+        bool res = e->changeField(1, 2, "blank", resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change field should fail
-        res = e->changeField(1, 9999, "Computer science");
+        res = e->changeField(1, 9999, "Computer science", resCode);
         expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change field should succeed
-        res = e->changeField(1, 1, "Computer science");
+        res = e->changeField(1, 1, "Computer science", resCode);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -63,23 +66,24 @@ TEST(EmployerChangeField, checkChangeField)
 /* tests Employer::changePosition() function in Employer.cpp */
 TEST(EmployerChangePosition, checkChangePosition)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change position should fail
-        bool res = e->changePosition(2, 20, "blank");
+        bool res = e->changePosition(2, 20, "blank", resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change position should fail
-        res = e->changePosition(2, 9999, "Lead Engineer");
+        res = e->changePosition(2, 9999, "Lead Engineer", resCode);
         expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change position should succeed
-        res = e->changePosition(2, 2, "Lead Engineer");
+        res = e->changePosition(2, 2, "Lead Engineer", resCode);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -91,22 +95,24 @@ TEST(EmployerChangePosition, checkChangePosition)
 /* tests Employer::changeJobDescription() function in Employer.cpp */
 TEST(EmployerChangeJobDescription, checkChangeJobDescription)
 {
+        int resCode = 0;
+
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change job description should fail
-        bool res = e->changeJobDescription(3, 5, "blank");
+        bool res = e->changeJobDescription(3, 5, "blank", resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change job description should fail
-        res = e->changeJobDescription(3, 9999, "We are looking for a few new programmers to round off our team.  Students welcome to apply.");
+        res = e->changeJobDescription(3, 9999, "We are looking for a few new programmers to round off our team.  Students welcome to apply.", resCode);
         expected = false;
         EXPECT_EQ(res, expected);
 
         // case where change job description should succeed
-        res = e->changeJobDescription(3, 3, "We are looking for a few new programmers to round off our team.  Students welcome to apply.");
+        res = e->changeJobDescription(3, 3, "We are looking for a few new programmers to round off our team.  Students welcome to apply.", resCode);
         expected = true;
         EXPECT_EQ(res, expected);
 
@@ -118,13 +124,13 @@ TEST(EmployerChangeJobDescription, checkChangeJobDescription)
 /* tests Employer::changeFlex() function in Employer.cpp */
 TEST(EmployerChangeFlex, checkChangeFlex)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change flex should fail because eid 4 does not have lid 3
-        int resCode = 0;
         bool res = e->changeFlex(4, 3, resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
@@ -167,13 +173,13 @@ TEST(EmployerChangeFlex, checkChangeFlex)
 /* tests Employer::changeGender() function in Employer.cpp */
 TEST(EmployerChangeGender, checkChangeGender)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change gender should fail
-        int resCode = 0;
         bool res = e->changeGender(5, 6, resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
@@ -205,7 +211,6 @@ TEST(EmployerChangeGender, checkChangeGender)
         res = e2->changeGender(7, 6, true, resCode);
         EXPECT_EQ(res, false);
 
-
         delete db;
         delete l;
         delete e;
@@ -216,13 +221,13 @@ TEST(EmployerChangeGender, checkChangeGender)
 /* Tests Employer::changeDiversity() function in Employer.cpp */
 TEST(EmployerChangeDiversity, checkChangeDiversity)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change diversity should fail
-        int resCode = 0;
         bool res = e->changeDiversity(1, 2, resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
@@ -264,13 +269,13 @@ TEST(EmployerChangeDiversity, checkChangeDiversity)
 /* Tests Employer::changeRemote() function in Employer.cpp */
 TEST(EmployerChangeRemote, checkChangeRemote)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change remote should fail
-        int resCode = 0;
         bool res = e->changeRemote(1, 2, resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
@@ -312,13 +317,13 @@ TEST(EmployerChangeRemote, checkChangeRemote)
 /* Tests Employer::changeLocation() function in Employer.cpp */
 TEST(EmployerChangeLocation, checkChangeLocation)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change location should fail
-        int resCode = 0;
         bool res = e->changeLocation(1, 2, "blank", resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
@@ -350,13 +355,13 @@ TEST(EmployerChangeLocation, checkChangeLocation)
 /* Tests Employer::changeMBTI() function in Employer.cpp */
 TEST(EmployerChangeMBTI, checkChangeMBTI)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change MBTI should fail
-        int resCode = 0;
         bool res = e->changeMBTI(1, 2, "blank", resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
@@ -388,13 +393,13 @@ TEST(EmployerChangeMBTI, checkChangeMBTI)
 /* Tests Employer::changeModernWorkspace() function in Employer.cpp */
 TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where change modern workspace should fail
-        int resCode = 0;
         bool res = e->changeModernWorkspace(1, 2, resCode);
         bool expected = false;
         EXPECT_EQ(res, expected);
@@ -436,18 +441,19 @@ TEST(EmployerChangeModernWorkspace, checkChangeModernWorkspace)
 /* Tests Employer::changeFieldAll() function in Employer.cpp */
 TEST(EmployerChangeFieldAll, checkChangeFieldAll)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where changeFieldAll should succeed
-        bool res = e->changeFieldAll(4, "Arts");
+        bool res = e->changeFieldAll(4, "Arts", resCode);
         // std::cout << "res from changeFieldAll: " << res << std::endl;
         EXPECT_EQ(res, true);
 
         // case where changeFieldAll should fail
-        res = e->changeFieldAll(9999, "Arts");
+        res = e->changeFieldAll(9999, "Arts", resCode);
         EXPECT_EQ(res, false);
 
         delete db;
@@ -458,18 +464,19 @@ TEST(EmployerChangeFieldAll, checkChangeFieldAll)
 /* Tests Employer::changePositionAll() function in Employer.cpp */
 TEST(EmployerChangePositionAll, checkChangePositionAll)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where changePositionAll should succeed
-        bool res = e->changePositionAll(3, "Programmer");
+        bool res = e->changePositionAll(3, "Programmer", resCode);
         // std::cout << "res from changePositionAll: " << res << std::endl;
         EXPECT_EQ(res, true);
 
         // case where changePositionAll should fail
-        res = e->changePositionAll(9999, "Programmer");
+        res = e->changePositionAll(9999, "Programmer", resCode);
         EXPECT_EQ(res, false);
 
         delete db;
@@ -480,13 +487,13 @@ TEST(EmployerChangePositionAll, checkChangePositionAll)
 /* Tests Employer::changeFlexAll() function in Employer.cpp */
 TEST(EmployerChangeFlexAll, checkChangeFlexAll)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where changeFlexAll should succeed
-        int resCode = 0;
         bool res = e->changeFlexAll(7, true, resCode);
         EXPECT_EQ(res, true);
 
@@ -502,13 +509,13 @@ TEST(EmployerChangeFlexAll, checkChangeFlexAll)
 /* Tests Employer::changeModernWorkspaceAll() function in Employer.cpp */
 TEST(EmployerChangeModernWorkspaceAll, checkChangeModernWorkspaceAll)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where changeModernWorkspaceAll should succeed
-        int resCode = 0;
         bool res = e->changeModernWorkspaceAll(7, true, resCode);
         EXPECT_EQ(res, true);
 
@@ -524,13 +531,13 @@ TEST(EmployerChangeModernWorkspaceAll, checkChangeModernWorkspaceAll)
 /* Tests Employer::changeGenderAll() function in Employer.cpp */
 TEST(EmployerChangeGenderAll, checkChangeGenderAll)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where changeGenderAll should succeed
-        int resCode = 0;
         bool res = e->changeGenderAll(7, true, resCode);
         EXPECT_EQ(res, true);
 
@@ -546,13 +553,13 @@ TEST(EmployerChangeGenderAll, checkChangeGenderAll)
 /* Tests Employer::changeDiversityAll() function in Employer.cpp */
 TEST(EmployerChangeDiversityAll, checkChangeDiversityAll)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where changeDiversityAll should succeed
-        int resCode = 0;
         bool res = e->changeDiversityAll(7, true, resCode);
         EXPECT_EQ(res, true);
 
@@ -568,13 +575,13 @@ TEST(EmployerChangeDiversityAll, checkChangeDiversityAll)
 /* Tests Employer::changeRemoteAll() function in Employer.cpp */
 TEST(EmployerChangeRemoteAll, checkChangeRemoteAll)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
         // case where changeRemoteAll should succeed
-        int resCode = 0;
         bool res = e->changeRemoteAll(7, false, resCode);
         EXPECT_EQ(res, true);
 
@@ -591,6 +598,7 @@ TEST(EmployerChangeRemoteAll, checkChangeRemoteAll)
 int postId;
 TEST(EmployerPostListing, checkPostListing)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
@@ -601,7 +609,7 @@ TEST(EmployerPostListing, checkPostListing)
         std::map<std::string, bool> boolFields = {{"job_flexibility", false}, {"modern_building", true}, {"mixed_gender", true}, {"diverse_workforce", true}, {"remote_available", false}};
         int64_t pay = 65000;
 
-        int resLid = e->postListing(7, basicInfo, skillsPersonality, pay, boolFields);
+        int resLid = e->postListing(7, basicInfo, skillsPersonality, pay, boolFields, resCode);
         EXPECT_GT(resLid, 0);
         postId = resLid;
 
@@ -613,6 +621,7 @@ TEST(EmployerPostListing, checkPostListing)
 /* Tests Employer::createEmployer() function in Employer.cpp */
 TEST(EmployerCreate, checkCreateEmployer)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
@@ -621,7 +630,7 @@ TEST(EmployerCreate, checkCreateEmployer)
         std::string company_name = "MediMetrics";
         std::string size = "Medium";
 
-        int res = e->createEmployer(company_name, size);
+        int res = e->createEmployer(company_name, size, resCode);
         EXPECT_GT(res, 0);
 
         delete db;
@@ -632,12 +641,12 @@ TEST(EmployerCreate, checkCreateEmployer)
 /* Tests Employer::changePay() function in Employer.cpp */
 TEST(EmployerChangePay, checkPayListing)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
-        int resCode = 0;
         bool res = e->changePay(1, 1, 100000, resCode);
         EXPECT_EQ(res, true);
 
@@ -652,16 +661,18 @@ TEST(EmployerChangePay, checkPayListing)
 /* Tests Employer::changePay() function in Employer.cpp */
 TEST(EmployerChangeSkillRequirements, checkChangeSkillRequirements)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
-        int resCode = 0;
-        bool res = e->changeSkillRequirements(1, 1, {{"skill1_req", "Data Analysis"}, {"skill2_req", "SQL"}, {"skill3_req", "Healthcare Industry Knowledge"}, {"skill4_req", "Problem-solving"}, {"skill5_req", "Communication"}}, resCode);
+        std::vector<SkillInput> newSkills1 = {{"Data Analysis"}, {"SQL"}, {"Healthcare Industry Knowledge"}, {"Problem-solving"}, {"Communication"}};
+        bool res = e->changeSkillRequirements(1, 1, newSkills1, resCode);
         EXPECT_EQ(res, true);
 
-        res = e->changeSkillRequirements(1, 2, {{"skill1_req", "Data Analysis"}, {"skill2_req", "SQL"}, {"skill3_req", "Healthcare Industry Knowledge"}, {"skill4_req", "Problem-solving"}, {"skill5_req", "Communication"}}, resCode);
+        std::vector<SkillInput> newSkills2 = {{"Data Analysis"}, {"SQL"}, {"Healthcare Industry Knowledge"}, {"Problem-solving"}, {"Communication"}};
+        res = e->changeSkillRequirements(1, 2, newSkills2, resCode);
         EXPECT_EQ(res, false);
 
         delete db;
@@ -671,16 +682,16 @@ TEST(EmployerChangeSkillRequirements, checkChangeSkillRequirements)
 
 TEST(EmployerChangePersonalityType, checkChangePersonalityType)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
-        int resCode = 0;
-        bool res = e->changePersonalityTypes(1, 1, "INTJ", resCode);
+        bool res = e->changePersonalityType(1, 1, "INTJ", resCode);
         EXPECT_EQ(res, true);
 
-        res = e->changePersonalityTypes(1, 2, "INTJ", resCode);
+        res = e->changePersonalityType(1, 2, "INTJ", resCode);
         EXPECT_EQ(res, false);
 
         delete db;
@@ -691,12 +702,12 @@ TEST(EmployerChangePersonalityType, checkChangePersonalityType)
 /* Tests Employer::deleteListing() function in Employer.cpp */
 TEST(EmployerDeleteListing, checkDeleteListing)
 {
+        int resCode = 0;
 
         Database *db = new MockDatabase();
         Listing *l = new Listing(*db);
         Employer *e = new Employer(*db, *l);
 
-        int resCode = 0;
         bool res = e->deleteListing(7, postId, resCode);
         EXPECT_EQ(res, true);
 

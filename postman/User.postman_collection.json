@@ -48,7 +48,23 @@
 						"exec": [
 							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
-							"});"
+							"});",
+							"",
+							"// Parse the response body as JSON",
+							"let response = pm.response.json();",
+							"",
+							"// Check if the response status is 'success' and 'user_id' exists",
+							"if (response.status === \"success\" && response.user_id) {",
+							"    // Set the global environment variable 'uid' to the value of 'user_id'",
+							"    pm.globals.set(\"uid\", response.user_id);",
+							"",
+							"    // Optional: Log a success message to the Postman Console",
+							"    console.log(`Global variable 'uid' set to: ${response.user_id}`);",
+							"} else {",
+							"    // Optional: Log an error message if 'user_id' is not found or status is not 'success'",
+							"    console.error(\"Failed to retrieve 'user_id' from the response.\");",
+							"}",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -60,7 +76,7 @@
 				"header": [
 					{
 						"key": "x-api-key",
-						"value": "368ca6ef48ce334200225e3b0066b553ecb98c83794d976f7d6aabf17bf077cb",
+						"value": "{{api-key}}",
 						"type": "text"
 					},
 					{
@@ -89,6 +105,43 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{pwd}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{api-key}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

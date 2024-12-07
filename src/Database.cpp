@@ -12,6 +12,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cctype>
+#include <nlohmann/json.hpp>
 
 // using namespace std;
 
@@ -195,11 +196,64 @@ std::string Database::deleteRecord(std::string table, std::string column, std::s
 
     const std::string method = "DELETE";
 
-    // Send DELETE request
     std::string status = request(method, fURL, "", statusCode);
-    std::cout << "status: " << status << std::endl;
-    std::cout << "statusCode: " << statusCode << std::endl;
     return statusCode;
+}
+
+std::vector<std::vector<std::string>>
+Database::query2(std::string table, std::string selectColumns,
+                 std::string filterColumn, std::string op,
+                 std::string value, bool printResults, int &resCount)
+{
+    std::string statusCode = "";
+
+    std::string url = this->url + "/rest/v1/" + table + "?" + "select=" +
+                      selectColumns + "&" + filterColumn + "=" + op + "." + value;
+
+    const std::string fURL = url;
+
+    const std::string &method = "GET";
+    const std::string &insertData = "";
+
+    std::string result = request(method, fURL, insertData, statusCode);
+
+    // Parse JSON
+    nlohmann::json jsonData = nlohmann::json::parse(result);
+
+    // Assuming the returned JSON is an array of objects or a single object:
+    std::vector<std::vector<std::string>> queryLists;
+
+    // If it's an array of rows:
+    for (auto &rowJson : jsonData)
+    {
+        std::vector<std::string> rowValues;
+        // Split the selected columns by comma
+        std::istringstream cols(selectColumns);
+        std::string col;
+        while (std::getline(cols, col, ','))
+        {
+            col.erase(std::remove_if(col.begin(), col.end(), ::isspace), col.end());
+            // Extract value for each column from the JSON object
+            if (rowJson.contains(col))
+            {
+                // rowJson[col] is a JSON value, which can be converted to string
+                // The quotes are handled by the parser, so rowJson[col].get<std::string>()
+                // will not have extra quotes.
+                rowValues.push_back(rowJson[col].is_null() ? "" : rowJson[col].get<std::string>());
+            }
+            else
+            {
+                rowValues.push_back("");
+            }
+        }
+        queryLists.push_back(rowValues);
+    }
+
+    resCount = (int)queryLists.size();
+    if (printResults)
+        iterateLists(queryLists);
+
+    return queryLists;
 }
 
 std::vector<std::vector<std::string>>
@@ -244,7 +298,7 @@ Database::query(std::string table, std::string selectColumns,
         std::cout << std::endl
                   << "Results: " << result << std::endl;
     }
- 
+
     tokenize(result, cR, listCount, queryLists);
 
     if (printResults)

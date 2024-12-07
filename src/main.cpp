@@ -23,8 +23,11 @@ void setup_redis()
         } });
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    bool testMode = false;
+    if (argc > 1 && std::string(argv[1]) == "test")
+        testMode = true;
 
     setup_redis();
 
@@ -34,10 +37,20 @@ int main()
 
     RouteController routeController;
     routeController.initRoutes(app);
-    Database *db = new Database();
+    Database *db;
+    if (testMode)
+    {
+        db = new MockDatabase();
+        std::cout << "Running in test mode with MockDatabase" << std::endl;
+    }
+    else
+    {
+        db = new Database();
+        std::cout << "Running in normal mode with Database" << std::endl;
+    }
     routeController.setDatabase(db);
 
-    Matcher m(*db);
+    Matcher m(*db); // or use real DB bc unit tests use real DB?
     Worker worker(redis_client, &m);
 
     /* start task queue */

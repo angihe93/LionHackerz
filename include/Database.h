@@ -38,7 +38,43 @@ public:
     {
         curl_global_cleanup();
     }
-
+    /* query2(): Main query2 function with 1 filter column.
+     * This function takes as input the name of a table in the database,
+     * the name(s) of 1 or more columns to select from, the name of 1
+     * column to serve as a filter, the comparison operation (e.g., is,
+     * equal, not equal, greater than, etc.), a corresponding value, and
+     * a flag for printing the query2 results.  Any string field not used
+     * should be passed as the empty string ""
+     *
+     *   @param table           name of table in database (case sensitive)
+     *
+     *   @param selectColumns   one or more columns to select from,
+     *                          separated by commas
+     *
+     *   @param filterColumn    the column name to filter on
+     *
+     *   @param op              a comparison operation (=, >, <, !=, etc.)
+     *
+     *   @param value           a value to filter on
+     *
+     *   @param printResults    true to print results, false otherwise
+     *
+     * On successful completion, the function returns a pointer to an array of vectors, one
+     * per column requested, containing the values in the database (as strings).
+     *
+     *      e.g., selecting 2 columns from 'table', col1 and col2, will
+     *          return an array of 2 vectors containing the values from col1 and
+     *          col2:
+     *                  vecsArray[0]: vector<string> col1 -> col1.v1, col1.v2, etc.
+     *                  vecsArray[1]: vector<string> col2 -> col2.v1, col2.v2, etc.
+     *
+     * In terms of the SQL query2, this function is equivalent to:
+     *      SELECT selectColumns FROM table WHERE filterColumn op value
+     */
+    virtual std::vector<std::vector<std::string>> query2(std::string table, std::string selectColumns,
+                                                         std::string filterColumn, std::string op,
+                                                         std::string value,
+                                                         bool printResults, int &resCount);
     /* query(): Main query function with 1 filter column.
      * This function takes as input the name of a table in the database,
      * the name(s) of 1 or more columns to select from, the name of 1
@@ -252,6 +288,28 @@ public:
         // Use the test table suffix _TEST
         std::string testTable = table + "_TEST";
         return Database::deleteRecord(testTable, column, op, val);
+    }
+
+    /**
+     * query2() overrides the query2() method in Database to use the _TEST tables
+     *
+     * @param table   The table you are querying data from
+     * @param selectColumns   One or more columns to select from, separated by commas
+     * @param filterColumn   The column name to filter on
+     * @param op   A comparison operation (=, >, <, !=, etc.)
+     * @param value   A value to filter on
+     * @param printResults   True to print results, false otherwise
+     * @param resCount   The number of results returned
+     * @return std::vector<std::vector<std::string>>
+     */
+    std::vector<std::vector<std::string>> query2(std::string table, std::string selectColumns,
+                                                 std::string filterColumn, std::string op,
+                                                 std::string value,
+                                                 bool printResults, int &resCount) override
+    {
+        // Use the test table suffix _TEST
+        std::string testTable = table + "_TEST";
+        return Database::query2(testTable, selectColumns, filterColumn, op, value, printResults, resCount);
     }
 
     /**

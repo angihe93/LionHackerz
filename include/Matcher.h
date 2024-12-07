@@ -21,7 +21,8 @@
 #include <nlohmann/json.hpp>
 
 /* struct for holding a listing match */
-struct JobMatch {
+struct JobMatch
+{
     int listingId;
     int pay;
     int score;
@@ -44,31 +45,32 @@ struct JobMatch {
     std::string location;
     std::string matchedWords;
 
-nlohmann::json to_json() const {
-            return {
-                {"score", score},
-                {"listing_id", listingId},
-                {"company", company},
-                {"time_created", time_created},
-                {"field", field},
-                {"position", position},
-                {"description", description},
-                {"skill1", skill1},
-                {"skill2", skill2},
-                {"skill3", skill3},
-                {"skill4", skill4},
-                {"skill5", skill5},
-                {"pay", pay},
-                {"flex", flex},
-                {"modern", modern},
-                {"gender", gender},
-                {"diversity", diversity},
-                {"remote", remote},
-                {"personality", personality},
-                {"location", location}
-            };
+    nlohmann::json to_json() const
+    {
+        return {
+            {"score", score},
+            {"listing_id", listingId},
+            {"company", company},
+            {"time_created", time_created},
+            {"field", field},
+            {"position", position},
+            {"description", description},
+            {"skill1", skill1},
+            {"skill2", skill2},
+            {"skill3", skill3},
+            {"skill4", skill4},
+            {"skill5", skill5},
+            {"pay", pay},
+            {"flex", flex},
+            {"modern", modern},
+            {"gender", gender},
+            {"diversity", diversity},
+            {"remote", remote},
+            {"personality", personality},
+            {"location", location}};
     }
-    void print() const {
+    void print() const
+    {
         std::cout << "{ "
                   << "listingId: " << listingId << ", "
                   << "pay: " << pay << ", "
@@ -92,7 +94,8 @@ nlohmann::json to_json() const {
                   << "location: \"" << location << "\""
                   << " }" << std::endl;
     }
-    bool operator==(const JobMatch& other) const {
+    bool operator==(const JobMatch &other) const
+    {
         return listingId == other.listingId &&
                company == other.company &&
                description == other.description &&
@@ -114,7 +117,6 @@ nlohmann::json to_json() const {
                modern == other.modern &&
                flex == other.flex;
     }
-
 };
 
 /* Matcher class for pairing job seekers with employers */
@@ -130,8 +132,8 @@ public:
      * accessing the route to display matches in the browser, this
      * function will call all of the below functions in order to get
      * a set of matches and returns the results as a string to be
-     * passed to the browser.  
-     * 
+     * passed to the browser.
+     *
      * There is no need to call any of the other functions in this
      * class if you are just looking to return the listings.  At
      * present, this will give a list of listing IDs and their
@@ -146,7 +148,7 @@ public:
      * and the corresponding augment values in list<int> augments.
      *
      *     @param uid: the given user id */
-    std::vector<std::vector<std::string> > gatherRelevantDimensions(int uid);
+    std::vector<std::vector<std::string>> gatherRelevantDimensions(int uid);
 
     /* After populating dimensions with gatherRelevantDimensions(),
      * select all job listings and filter them by those which have
@@ -171,8 +173,8 @@ public:
     /* After populating matchs scores for each candidate with match(),
      * this function filters once again, this time by match score.
      * Any candidate that scores below 100 is remoted from the
-     * match list. 
-    */
+     * match list.
+     */
     std::vector<std::vector<int>> filterMatches();
 
     /* With filtering finished, this function sorts the candidates,
@@ -190,12 +192,12 @@ public:
 
 private:
     Database *db;
-    std::vector<std::vector<std::string>> all_listings;  /* all job listings in db */
-    std::vector<std::string> dimensions;  /* list of dimensions */
-    std::vector<int> augments; /* user augments for certain dimenions */
-    std::vector<int> candidates;  /* job listing candidates by listing id */
-    std::vector<int> scores; /* scores for candidates (same indices as candidates) */
-    std::vector<std::vector<std::string>> matchedWords; /* words that were matched for 
+    std::vector<std::vector<std::string>> all_listings; /* all job listings in db */
+    std::vector<std::string> dimensions;                /* list of dimensions */
+    std::vector<int> augments;                          /* user augments for certain dimenions */
+    std::vector<int> candidates;                        /* job listing candidates by listing id */
+    std::vector<int> scores;                            /* scores for candidates (same indices as candidates) */
+    std::vector<std::vector<std::string>> matchedWords; /* words that were matched for
                                                             successful matches*/
     int payReq;
     std::mutex mutex_;
