@@ -178,9 +178,10 @@ jobs:
         run: npm install -g newman
 
       - name: Start app in test mode
+        working-directory: ${{github.workspace}}/build
         run: |
-        ./LionHackerzProject test &
-        sleep 5
+          ./LionHackerzProject test &
+          sleep 5
 
       - name: Run Employer Collection
         run: |
