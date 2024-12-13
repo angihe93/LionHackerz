@@ -1,0 +1,1 @@
+genhtml --branch-coverage coverageN_.info --output-directory coverage_report --ignore-errors inconsistent --ignore-errors corrupt --ignore-errors range

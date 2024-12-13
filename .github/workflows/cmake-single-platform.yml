@@ -4,9 +4,9 @@ name: CMake on a single platform
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main', 'angi']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -25,138 +25,183 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up environment
-      run: |
-        echo "SUPABASE_URL=${SUPABASE_URL}" >> $GITHUB_ENV
-        echo "SUPABASE_API_KEY=${SUPABASE_API_KEY}" >> $GITHUB_ENV
-        echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> $GITHUB_ENV
+      - name: Set up environment
+        run: |
+          echo "SUPABASE_URL=${SUPABASE_URL}" >> $GITHUB_ENV
+          echo "SUPABASE_API_KEY=${SUPABASE_API_KEY}" >> $GITHUB_ENV
+          echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> $GITHUB_ENV
 
-    - name: Install asio
-      run: brew install asio
+      - name: Install asio
+        run: brew install asio
 
-    - name: Install cppcheck
-      run: brew install cppcheck
+      - name: Install cppcheck
+        run: brew install cppcheck
 
-    - name: Install cpplint
-      run: brew install cpplint
+      - name: Install cpplint
+        run: brew install cpplint
 
-    - name: Install lcov
-      run: brew install lcov
+      - name: Install lcov
+        run: brew install lcov
 
-    - name: Install Crow
-      working-directory: ${{github.workspace}}/external_libraries
-      run: git clone https://github.com/CrowCpp/Crow.git
+      - name: Install Crow
+        working-directory: ${{github.workspace}}/external_libraries
+        run: git clone https://github.com/CrowCpp/Crow.git
 
-    - name: Install boost
-      working-directory: ${{github.workspace}}/external_libraries
-      run: |
-        brew install wget
-        wget https://boostorg.jfrog.io/artifactory/main/release/1.86.0/source/boost_1_86_0.tar.gz
-        tar -xzf boost_1_86_0.tar.gz && rm boost_1_86_0.tar.gz
+      - name: Install boost
+        working-directory: ${{github.workspace}}/external_libraries
+        run: |
+          brew install wget
+          wget https://boostorg.jfrog.io/artifactory/main/release/1.86.0/source/boost_1_86_0.tar.gz
+          tar -xzf boost_1_86_0.tar.gz && rm boost_1_86_0.tar.gz
 
-    - name: Install tcl-tk
-      run: brew install tcl-tk@8
+      - name: Install tcl-tk
+        run: brew install tcl-tk@8
 
-    - name: Install Wordnet
-      working-directory: ${{github.workspace}}/external_libraries
-      run: |
-        wget http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz
-        tar -xzf WordNet-3.0.tar.gz && rm WordNet-3.0.tar.gz
-        cd WordNet-3.0
-        TCL_CONFIG_DIR=$(find /opt/homebrew -name tclConfig.sh -exec dirname {} \; | head -n1)
-        TK_CONFIG_DIR=$(find /opt/homebrew -name tkConfig.sh -exec dirname {} \; | head -n1)
-        ./configure --with-tcl=$TCL_CONFIG_DIR --with-tk=$TK_CONFIG_DIR
-        sudo cp ../stubs.c src/stubs.c
-        sed -i '' '132s/.*/int main(int argc,char *argv[])/' src/wn.c
-        sudo make
-        sudo make install
+      - name: Install Wordnet
+        working-directory: ${{github.workspace}}/external_libraries
+        run: |
+          wget http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz
+          tar -xzf WordNet-3.0.tar.gz && rm WordNet-3.0.tar.gz
+          cd WordNet-3.0
+          TCL_CONFIG_DIR=$(find /opt/homebrew -name tclConfig.sh -exec dirname {} \; | head -n1)
+          TK_CONFIG_DIR=$(find /opt/homebrew -name tkConfig.sh -exec dirname {} \; | head -n1)
+          ./configure --with-tcl=$TCL_CONFIG_DIR --with-tk=$TK_CONFIG_DIR
+          sudo cp ../stubs.c src/stubs.c
+          sed -i '' '132s/.*/int main(int argc,char *argv[])/' src/wn.c
+          sudo make
+          sudo make install
 
-    # workflow can find OpenSSL 3.3.2
+      # workflow can find OpenSSL 3.3.2
 
-    - name: Install tacopie
-      working-directory: ${{github.workspace}}/external_libraries
-      run: |
-        git clone https://github.com/cylix/tacopie.git
-        cp cmake/tacopie/CMakeLists.txt tacopie/CMakeLists.txt
-        cd tacopie
-        mkdir build && cd build
-        cmake ..
-        make
-        sudo make install
+      - name: Install tacopie
+        working-directory: ${{github.workspace}}/external_libraries
+        run: |
+          git clone https://github.com/cylix/tacopie.git
+          cp cmake/tacopie/CMakeLists.txt tacopie/CMakeLists.txt
+          cd tacopie
+          mkdir build && cd build
+          cmake ..
+          make
+          sudo make install
 
-    - name: Install cpp_redis
-      working-directory: ${{github.workspace}}/external_libraries
-      run: |
-        git clone https://github.com/cpp-redis/cpp_redis.git
-        cd cpp_redis
-        git submodule init && git submodule update
-        cp ../cmake/cpp_redis/CMakeLists.txt CMakeLists.txt
-        mkdir build && cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release || true
-        make
-        sudo make install
+      - name: Install cpp_redis
+        working-directory: ${{github.workspace}}/external_libraries
+        run: |
+          git clone https://github.com/cpp-redis/cpp_redis.git
+          cd cpp_redis
+          git submodule init && git submodule update
+          cp ../cmake/cpp_redis/CMakeLists.txt CMakeLists.txt
+          mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release || true
+          make
+          sudo make install
 
-    - name: Install nlohmann json
-      run: brew install nlohmann-json
+      - name: Install nlohmann json
+        run: brew install nlohmann-json
 
-    - name: install redis
-      run: brew install redis && brew services start redis
-    
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      working-directory: ${{github.workspace}}/build
-      run: cmake ..
+      - name: install redis
+        run: brew install redis && brew services start redis
 
-    - name: Build
-      # Build your program with the given configuration
-      working-directory: ${{github.workspace}}/build
-      run: make
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        working-directory: ${{github.workspace}}/build
+        run: cmake ..
 
-    - name: Test
-    #   # Execute tests defined by the CMake configuration.
-    #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      working-directory: ${{github.workspace}}/build
-      run: ./LionHackerzProjectTests > test_output.txt 2>&1
-      continue-on-error: true
+      - name: Build
+        # Build your program with the given configuration
+        working-directory: ${{github.workspace}}/build
+        run: make
 
-    - name: Upload test output
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-output
-        path: ${{github.workspace}}/build/test_output.txt
+      - name: Test
+        #   # Execute tests defined by the CMake configuration.
+        #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        working-directory: ${{github.workspace}}/build
+        run: ./LionHackerzProjectTests > test_output.txt 2>&1
+        continue-on-error: true
 
-    - name: Run coverage
-      working-directory: ${{github.workspace}}/build
-      run: make gen_cov
-      continue-on-error: true
-    
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-report
-        path: ${{github.workspace}}/build/coverage_report
+      - name: Upload test output
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-output
+          path: ${{github.workspace}}/build/test_output.txt
 
-    - name: Run static analysis
-      working-directory: ${{github.workspace}}/build
-      run: cppcheck ../src > cppcheck_output.txt 2>&1
-      continue-on-error: true
+      - name: Run coverage
+        working-directory: ${{github.workspace}}/build
+        run: make gen_cov
+        continue-on-error: true
 
-    - name: Upload cppcheck output
-      uses: actions/upload-artifact@v3
-      with:
-        name: cppcheck-output
-        path: ${{github.workspace}}/build/cppcheck_output.txt
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ${{github.workspace}}/build/coverage_report
 
-    - name: Run style check
-      working-directory: ${{github.workspace}}/build
-      run: make cpplint > cpplint_output.txt 2>&1
-      continue-on-error: true
+      - name: Upload coverage report gcovr
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report-gcovr
+          path: ${{github.workspace}}/build/coverage_report_gcovr
 
-    - name: Upload cpplint output
-      uses: actions/upload-artifact@v3
-      with:
-        name: cpplint-output
-        path: ${{github.workspace}}/build/cpplint_output.txt
+      - name: Run static analysis
+        working-directory: ${{github.workspace}}/build
+        run: cppcheck ../src > cppcheck_output.txt 2>&1
+        continue-on-error: true
+
+      - name: Upload cppcheck output
+        uses: actions/upload-artifact@v3
+        with:
+          name: cppcheck-output
+          path: ${{github.workspace}}/build/cppcheck_output.txt
+
+      - name: Run style check
+        working-directory: ${{github.workspace}}/build
+        run: make cpplint > cpplint_output.txt 2>&1
+        continue-on-error: true
+
+      - name: Upload cpplint output
+        uses: actions/upload-artifact@v3
+        with:
+          name: cpplint-output
+          path:
+            ${{github.workspace}}/build/cpplint_output.txt
+
+            # Add steps to run Postman Collection
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Specify the Node.js version you prefer
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Employer Collection
+        run: |
+          newman run ./postman/Employer.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
+            --reporters cli
+
+      - name: Run Listing Collection
+        run: |
+          newman run ./postman/Listing.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
+            --reporters cli
+
+      - name: Run SignUp Collection
+        run: |
+          newman run ./postman/SignUp.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
+            --reporters cli
+      - name: Run User Collection
+        run: |
+          newman run ./postman/User.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
+            --reporters cli
+
+      - name: Run Get Matches Collection
+        run: |
+          newman run ./postman/GetMatches.postman_collection.json \
+            --environment ./postman/workspace.postman_globals.json \
+            --reporters cli

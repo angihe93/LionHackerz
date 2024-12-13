@@ -21,103 +21,372 @@ struct InterestInput
     int rank;
 };
 
-class RouteController {
-    private:
-        Database* db;
+class RouteController
+{
+private:
+    Database *db;
 
-    public:
-        void initRoutes(crow::SimpleApp &app);
-        void setDatabase(Database* db);
+public:
+    void initRoutes(crow::App<> &app);
+    void setDatabase(Database *db);
 
-        /**
-        * Redirects to the homepage.
-        *
-        * @return A crow::response object containing the welcome message and an HTTP 200 response
-        */
-        void index(crow::response& res);
+    /**
+     * @brief Redirects to the homepage.
+     *
+     * @return A crow::response object containing the welcome message and an
+     * HTTP 200 response
+     */
+    void index(crow::response &res);
 
-       /**
-         * Client sign up route
-         * 
-         * @param req   
-         * @param res 
-         */
-        void signUp(const crow::request& req, crow::response &res);
+    /**
+     * @brief Client sign up route
+     *
+     * @param req
+     * @param res
+     */
+    void signUp(const crow::request &req, crow::response &res);
 
-        /**
-         * Check Auth Headers for API credentials 
-         * 
-         * @param req
-         * @param res
-         */
-        bool checkAuthHeaders(const crow::request &req, crow::response &res);
+    /**
+     * @brief Check Auth Headers for API credentials
+     *
+     * @param req
+     * @param res
+     */
+    bool checkAuthHeaders(const crow::request &req, crow::response &res);
 
-        /* Route: /getMatches?uid=X 
-        *       This route checks all job listings and performs
-        *       the matching algorithm in the Matcher.cpp class,
-        *       returning a sorted list of matches based on
-        *       the user's stated preferences.  */
-        void getMatches(const crow::request& req, crow::response &res);
+    /* MATCHER ROUTE */
 
-        void getMatchesJSON(const crow::request& req, crow::response &res);
+    /** 
+     * @brief Route: /getMatches?uid=X
+     * 
+     * This route checks all job listings and performs the matching algorithm
+     * in the Matcher.cpp class, returning a sorted list of matches based on
+     * the user's stated preferences.  
+     */
+    void getMatches(const crow::request &req, crow::response &res);
 
-        /* Route: /listing/changeField?lid=X&newField=Y
-        *       This route updates the 'field' parameter of the job
-        *       listing with listing ID lid and sets the field to
-        *       the string following 'newField=' in the URL. */
-        void changeField(const crow::request &req, crow::response &res);        
-        
-        /* Route: /listing/changePosition?lid=X&newPosition=Y
-        *       This route updates the 'position' parameter of the job
-        *       listing with listing ID lid and sets the position to
-        *       the string following 'newPosition=' in the URL. */       
-        void changePosition(const crow::request &req, crow::response &res);                
-        
-        /* Route: /listing/changeJobDescription?lid=X&newDescription=Y
-        *       This route updates the 'job_description' parameter of the job
-        *       listing with listing ID lid and sets the description to
-        *       the string following 'newDescription=' in the URL. */   
-        void changeJobDescription(const crow::request &req, crow::response &res); 
+    /* END MATCHER ROUTE */
 
-        /* Route: /listing/changeFlex?lid=X
-        *       This route updates the 'job_flexibility' parameter of the job
-        *       listing with listing ID lid and sets the position to
-        *       the true if previously null, false if previously true, 
-        *       and true if previously false.  Multiple calls cycle
-        *       between setting true and false. */
-        void changeFlex(const crow::request &req, crow::response &res);
+    /* BEGIN LISTING ROUTES */
 
-        /* Route: /listing/changeModernWorkspace?lid=X
-        *       This route updates the 'modern_building' parameter of the job
-        *       listing with listing ID lid and sets the position to
-        *       the true if previously null, false if previously true, 
-        *       and true if previously false.  Multiple calls cycle
-        *       between setting true and false. */
-        void changeModernWorkspace(const crow::request &req, crow::response &res);
+    /**
+     * @brief Route: /listing/changeField?lid=X&newField=Y
+     * 
+     * This route updates the 'field' parameter of the job listing with
+     * listing ID lid and sets the field to the string following 'newField='
+     * in the URL. 
+     */
+    void changeField(const crow::request &req, crow::response &res);
 
-        /* Route: /listing/generateAIListing?n=X
-        *       This route generates n new listings in the database generated
-        *       by AI.  The listings are from random fields with random
-        *       dimensions generated via the AI but corresponding to 
-        *       values one would expect from real jobs.  n must be
-        *       between 1-20. Listings are generated in Listing_AI. */
-        void generateAIListing(const crow::request &req, crow::response &res);
+    /** 
+     * @brief Route: /listing/changePosition?lid=X&newPosition=Y
+     * 
+     * This route updates the 'position' parameter of the job listing with
+     * listing ID lid and sets the position to the string following 
+     * 'newPosition=' in the URL. 
+     */
+    void changePosition(const crow::request &req, crow::response &res);
 
-        /* Route: /dbtest
-         *      This route tests the functionality of the database class and
-         *      provides examples of queries and inserts. Not intended for
-         *      the end user of the API, more for development purposes. */
-        void dbtest(const crow::request& req, crow::response& res);
-        void createListing(const crow::request &req, crow::response &res);
-        void getProfile(const crow::request &req, crow::response &res);
-        void makeUser(const crow::request &req, crow::response &res);
-        void generateAIJobDescription(const crow::request &req, crow::response &res);
-        void getUIDFromAPIKey(const crow::request &req, crow::response &res);
-        void returnError(crow::response &res, int code, const std::string &message);
-        std::string parseSkills(const crow::json::rvalue &skills_json, std::vector<SkillInput> &skills);
-        std::string parseInterests(const crow::json::rvalue &interests_json, std::vector<InterestInput> &interests);
-        std::string processSkills(Database &db, int user_id, const std::vector<SkillInput> &skills);
-        std::string processInterests(Database &db, int user_id, const std::vector<InterestInput> &interests);
+    /**
+     * @brief Route: /listing/changeJobDescription?lid=X&newDescription=Y
+     * 
+     * This route updates the 'job_description' parameter of the job listing
+     * with listing ID lid and sets the description to the string following
+     * 'newDescription=' in the URL. 
+     */
+    void changeJobDescription(const crow::request &req, crow::response &res);
+
+    /** 
+     * @brief Route: /listing/changeFlex?lid=X
+     * 
+     * This route updates the 'job_flexibility' parameter of the job listing
+     * with listing ID lid and sets the position to the true if previously
+     * null, false if previously true, and true if previously false.  Multiple
+     * calls cycle between setting true and false. 
+     */
+    void changeFlex(const crow::request &req, crow::response &res);
+
+    /** 
+     * @brief Route: /listing/changeModernWorkspace?lid=X
+     * 
+     * This route updates the 'modern_building' parameter of the job listing
+     * with listing ID lid and sets the position to the true if previously
+     * null, false if previously true, and true if previously false.  Multiple
+     * calls cycle between setting true and false. 
+     */
+    void changeModernWorkspace(const crow::request &req, crow::response &res);
+    
+    /**
+     * @brief Route: /listing/create
+     * 
+     * This route creates a new job listing.  Overlap with Employer::postListing.
+     */
+    void createListing(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /listing/generateJobDescription
+     * 
+     * This route takes a series of context fields and generates a job
+     * description for a listing using OpenAI's ChatGPT.  Can only be
+     * used with an active OpenAI subscription and OpenAI API key.
+     */
+    void generateAIJobDescription(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /listing/generateAIListing?n=X
+     * 
+     * This route generates n new listings in the database generated by AI.
+     * The listings are from random fields with random dimensions generated
+     * via the AI but corresponding to values one would expect from real jobs.
+     * 
+     * n must be between 1-20. Listings are generated in Listing_AI. 
+     * Can only be used with an active OpenAI subscription and OpenAI API key.
+    */
+    void generateAIListing(const crow::request &req, crow::response &res);
+
+    void getUIDFromAPIKey(const crow::request &req, crow::response &res);
+    
+    /**
+     * @brief Route: /listing/deleteListing?lid=X
+     * 
+     * This route deletes the job listing with listing ID lid. 
+     */
+    void deleteListing(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /listing/changePay?lid=X&newPay=Y
+     * 
+     * This route updates the 'pay' parameter of the job listing with listing
+     * ID lid and sets the pay to the integer following 'newPay=' in the URL. 
+     */
+    void changePay(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /listing/changeSkillRequirements?lid=X&newSkills=Y
+     * 
+     * This route updates the 'skill1_req', 'skill2_req', 'skill3_req',
+     * 'skill4_req', and 'skill5_req' parameters of the job listing with
+     * listing ID lid and sets the skills to the strings following
+     * 'newSkills=' in the URL. 
+     */
+    void changeSkillRequirements(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /listing/changePersonalityType?lid=X&newPersonalityTypes=Y
+     * 
+     * This route updates the 'personality_types' parameter of the job
+     * listing with listing ID lid and sets the personality types to
+     * the strings following 'newPersonalityTypes=' in the URL. 
+     */
+    void changePersonalityType(const crow::request &req, crow::response &res);
+
+    /* END LISTING ROUTES */
+
+    /* BEGIN EMPLOYER ROUTES */
+
+    /**
+     * @brief Route: /employer/ChangeField?eid=X&lid=Y&newField=Z
+     * 
+     * This route updates the 'field' parameter of the job listing with
+     * listing ID lid and sets the field to the string following 'newField='
+     * in the URL. 
+     */
+    void employerChangeField(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /employer/ChangePosition?eid=X&lid=Y&newPosition=Z
+     * 
+     * This route updates the 'position' parameter of the job listing with
+     * listing ID lid and sets the position to the string following
+     * 'newPosition=' in the URL. 
+     */
+    void employerChangePosition(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /employer/ChangeJobDescription?eid=X&lid=Y&newDescription=Z
+     * 
+     * This route updates the 'job_description' parameter of the job listing
+     * with listing ID lid and sets the description to the string following
+     * 'newDescription=' in the URL. 
+     */
+    void employerChangeJobDescription(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /employer/ChangeFlex?eid=X&lid=Y
+     * 
+     * This route updates the 'job_flexibility' parameter of the job listing with
+     * listing ID lid and sets the position to the true if previously null, false
+     * if previously true, and true if previously false.  Multiple calls cycle
+     * between setting true and false. 
+     */
+    void employerChangeFlex(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /employer/ChangeGender?eid=X&lid=Y
+     * 
+     * This route updates the 'mixed_gender' parameter of the job listing with
+     * listing ID lid and sets the mixed_gender to the true if previously null,
+     * false if previously true, and true if previously false.  Multiple calls
+     * cycle between setting true and false. 
+     */
+    void employerChangeGender(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /employer/ChangeDiversity?eid=X&lid=Y
+     * 
+     * This route updates the 'diverse_workforce' parameter of the job listing
+     * with listing ID lid and sets the diverse_workforce to the true if
+     * previously null, false if previously true, and true if previously false.
+     * Multiple calls cycle between setting true and false. 
+     */
+    void employerChangeDiversity(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /employer/ChangeRemote?eid=X&lid=Y
+     * 
+     * This route updates the 'remote_available' parameter of the job listing
+     * with listing ID lid and sets the remote_available to the true if
+     * previously null, false if previously true, and true if previously false.
+     * Multiple calls cycle between setting true and false. 
+     */
+    void employerChangeRemote(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /employer/ChangeLocation?eid=X&lid=Y?newLocation=Z
+     * 
+     * This route updates the 'location' parameter of the job listing with
+     * listing ID lid and sets the location to the string following
+     * 'newLocation=' in the URL. 
+     */
+    void employerChangeLocation(const crow::request &req, crow::response &res);
+
+    /** 
+     * @brief Route: /employer/ChangeMBTI?eid=X&lid=Y?newMBTI=Z
+     * 
+     * This route updates the 'personality_types' parameter of the job listing
+     * with listing ID lid and sets the personality types to the string
+     * following 'newMBTI=' in the URL. 
+     */
+    void employerChangeMBTI(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Route: /employer/ChangeModernWorkspace?eid=X&lid=Y
+     * 
+     * This route updates the 'modern_building' parameter of the job listing
+     * with listing ID lid and sets the modern_building to the true if
+     * previously null, false if previously true, and true if previously false.
+     * Multiple calls cycle between setting true and false. 
+     */
+    void employerChangeModernWorkspace(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Various employer functions
+     */
+    void employerChangeFieldAll(const crow::request &req, crow::response &res);
+    void employerChangePositionAll(const crow::request &req, crow::response &res);
+    void employerChangeFlexAll(const crow::request &req, crow::response &res);
+    void employerChangeModernWorkspaceAll(const crow::request &req, crow::response &res);
+    void employerChangeGenderAll(const crow::request &req, crow::response &res);
+    void employerChangeDiversityAll(const crow::request &req, crow::response &res);
+    void employerChangeRemoteAll(const crow::request &req, crow::response &res);
+
+    void employerPostListing(const crow::request &req, crow::response &res);
+    void employerCreateEmployer(const crow::request &req, crow::response &res);
+    void employerDeleteListing(const crow::request &req, crow::response &res);
+    void employerChangePay(const crow::request &req, crow::response &res);
+    void employerChangeSkillRequirements(const crow::request &req, crow::response &res);
+    void employerChangePersonalityType(const crow::request &req, crow::response &res);
+
+    /**
+     * @brief Employer helper functions
+     * 
+     * Helper functions to handle boolean return of Employer methods
+     */
+    void handleEmployerBoolResult(crow::response &res, bool result, int resCode, 
+        const std::string &successMsg);
+
+    void handleEmployerBoolResult2(crow::response &res, std::string result, int resCode, 
+        const std::string &successMsg);
+
+    /* END EMPLOYER ROUTES */
+
+    /* BEGIN USER ROUTES */
+
+    /** 
+     * @brief Route: /makeUser
+     * 
+     * This route allows a user to create a new user profile in the database.
+     * The user must provide a name, email, and dimensions.  The dimensions
+     * are a JSON object containing the user's skills and interests. 
+     */
+    void makeUser(const crow::request &req, crow::response &res);
+
+    /** 
+     * @brief Route: /getProfile
+     * 
+     * This route retrieves a user's profile details including dimensions,
+     * skills, interests, and augments
+     */
+    void getProfile(const crow::request &req, crow::response &res);    
+
+    /**
+     * @brief Helper function for makeUser: returnError
+     * 
+     * This is a helper function for makeUser that returns an error message
+     * with a specified error code. 
+     */
+    void returnError(crow::response &res, int code, const std::string &message);
+
+    /**
+     * @brief Helper function for makeUser: parseSkills
+     * 
+     * This is a helper funciton for makeUser that parses a JSON object
+     * containing a list of skills and their ranks. 
+     */
+    std::string parseSkills(const crow::json::rvalue &skills_json, 
+        std::vector<SkillInput> &skills);
+
+    /**
+     * @brief Helper function for makeUser: parseInterests
+     * 
+     * This is a helper function for makeUser that parses a JSON object
+     * containing a list of interests and their ranks. 
+    */
+    std::string parseInterests(const crow::json::rvalue &interests_json, 
+        std::vector<InterestInput> &interests);
+
+    /**
+     * @brief Heper function for makeUser: processSkills
+     * 
+     * This is a helper function for makeUser that processes a list of skills
+     * and their ranks for a user. 
+     */
+    std::string processSkills(Database &db, int user_id, 
+        const std::vector<SkillInput> &skills);
+
+    /**
+     * @brief Heper function for makeUser: processInterests
+     * 
+     * This is a helper function for makeUser that processes a list of interests
+     * and their ranks for a user. 
+     */
+    std::string processInterests(Database &db, int user_id,
+        const std::vector<InterestInput> &interests);
+
+    /* END USER ROUTES */
+
+    /* BEGIN DATABASE ROUTE */
+
+    /**
+     * @brief Route: /dbtest
+     *       
+     * This route tests the functionality of the database class and provides
+     * examples of queries and inserts. Not intended for the end user of the
+     * API, more for development purposes. 
+     */
+    void dbtest(const crow::request& req, crow::response& res);
+
+    /* END DATABASE ROUTE */
 };
 
-#endif 
+#endif

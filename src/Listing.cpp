@@ -9,42 +9,53 @@
 #include <string>
 #include <vector>
 #include <sstream>
-
+#include "RouteController.h"
 Listing::Listing(Database &db)
 {
 	this->db = &db;
 }
 
-std::string Listing::changeField(int lid, std::string newField)
+std::string Listing::changeField(int lid, std::string newField, int &resCode)
 {
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
+	{
+		resCode = 404;
 		return "Error: The listing ID you provided does not exist in the database.";
+	}
 	std::string data = "{\"field\": \"" + newField + "\"}";
 	std::cout << data << std::endl;
 	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
-std::string Listing::changePosition(int lid, std::string newPosition)
+std::string Listing::changePosition(int lid, std::string newPosition, int &resCode)
 {
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
 	if (resCount == 0)
+	{
+		resCode = 404;
 		return "Error: The listing ID you provided does not exist in the database.";
+	}
 	std::string data = "{\"position\": \"" + newPosition + "\"}";
 	std::cout << data << std::endl;
 	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
 	return result;
 }
 
-std::string Listing::changeJobDescription(int lid, std::string newDescription)
+std::string Listing::changeJobDescription(int lid, std::string newDescription, int &resCode)
 {
 	int resCount = 0;
 	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+
 	if (resCount == 0)
+	{
+		resCode = 404;
 		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
 	std::string data = "{\"job_description\": \"" + newDescription + "\"}";
 	std::cout << data << std::endl;
 	std::string result = db->update("Listing", data, "lid", "eq", std::to_string(lid));
@@ -105,7 +116,7 @@ std::string Listing::changeGender(int lid, int &resCode)
 	}
 
 	std::string setVal = R"({"mixed_gender" : true})";
-	if (listing[16][0] == "\"true\"")
+	if (listing[13][0] == "\"true\"")
 		setVal = R"({"mixed_gender" : false})";
 
 	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
@@ -307,7 +318,6 @@ std::string Listing::changeModernWorkspace(int lid, bool newValue, int &resCode)
 
 std::vector<std::string> Listing::getListing(int lid, bool test)
 {
-	// TODO(angi): do error checking for lid that doesn't exist
 	int resCount = 0;
 
 	std::vector<std::vector<std::string>> listings;
@@ -318,13 +328,27 @@ std::vector<std::string> Listing::getListing(int lid, bool test)
 	{
 		listings = db->query("Listing_AI", "", "lid", "eq", std::to_string(lid), false, resCount);
 		eid = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+		// if listings or eid is uninitialized, return error
+		if (listings.size() == 0 || eid.size() == 0)
+		{
+			std::vector<std::string> res;
+			res.push_back("Error: The listing ID you provided does not exist in the database or is not associated with an employer.");
+			return res;
+		}
 		company = db->query("Employer_AI", "company_name", "eid", "eq", eid[0][0], false, resCount);
 	}
 	else
 	{
-		listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
-		eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-		company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
+		listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), true, resCount);
+		eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), true, resCount);
+		// if listings or eid is uninitialized, return error
+		if (listings.size() == 0 || eid.size() == 0)
+		{
+			std::vector<std::string> res;
+			res.push_back("Error: The listing ID you provided does not exist in the database or is not associated with an employer.");
+			return res;
+		}
+		company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], true, resCount);
 
 		std::ostringstream oss;
 
@@ -396,29 +420,30 @@ std::vector<std::string> Listing::getListing(int lid, bool test)
 		if (listings[i][0] != "\"null\"")
 			listingResults.push_back(listings[i][0]);
 
-	if (listings[13][0] != "\"null\"")
-		listingResults.push_back(listings[13][0]);
+	// don't need the if's since these are not nullable in Listing_AI
+	// if (listings[13][0] != "\"null\"")
+	listingResults.push_back(listings[13][0]);
 
-	if (listings[14][0] != "\"null\"")
-		listingResults.push_back(listings[14][0]);
+	// if (listings[14][0] != "\"null\"")
+	listingResults.push_back(listings[14][0]);
 
-	if (listings[15][0] != "\"null\"")
-		listingResults.push_back(listings[15][0]);
+	// if (listings[15][0] != "\"null\"")
+	listingResults.push_back(listings[15][0]);
 
-	if (listings[16][0] != "\"null\"")
-		listingResults.push_back(listings[16][0]);
+	// if (listings[16][0] != "\"null\"")
+	listingResults.push_back(listings[16][0]);
 
-	if (listings[17][0] != "\"null\"")
-		listingResults.push_back(listings[17][0]);
+	// if (listings[17][0] != "\"null\"")
+	listingResults.push_back(listings[17][0]);
 
-	if (listings[18][0] != "\"null\"")
-		listingResults.push_back(listings[18][0]);
+	// if (listings[18][0] != "\"null\"")
+	listingResults.push_back(listings[18][0]);
 
-	if (listings[19][0] != "\"null\"")
-		listingResults.push_back(listings[19][0]);
+	// if (listings[19][0] != "\"null\"")
+	listingResults.push_back(listings[19][0]);
 
-	if (listings[20][0] != "\"null\"")
-		listingResults.push_back(listings[20][0]);
+	// if (listings[20][0] != "\"null\"")
+	listingResults.push_back(listings[20][0]);
 
 	return listingResults;
 }
@@ -478,8 +503,16 @@ std::string Listing::generateAIListing(std::string n)
 	const std::string url = "https://api.openai.com/v1/chat/completions";
 	const std::string method = "AI";
 	std::string statusCode = "";
-
 	std::string listing_list = db->request(method, url, insertData, statusCode);
+
+	// if gpt request failed, eg due to not having access to gpt-4o, return error
+	if (statusCode != "200")
+	{
+		std::cout << "statusCode after listing_list = db->request(method, url, insertData, statusCode): " << statusCode << std::endl;
+		std::cout << "listing_list: " << listing_list << std::endl;
+		return "Error: OpenAI request failed.  Please check you have credits or have access to model gpt-4o.";
+	}
+
 	std::string starting_junk = listing_list.substr(0, listing_list.find("\"content\":"));
 	listing_list.erase(0, starting_junk.length() + 12);
 	listing_list = listing_list.substr(0, listing_list.find("\"refusal\": null"));
@@ -493,7 +526,7 @@ std::string Listing::generateAIListing(std::string n)
 void Listing::parseAI(const std::string listings, int n)
 {
 
-	std::cout << n << std::endl;
+	std::cout << "in parseAI, n: " << n << std::endl;
 	std::string localListings = listings;
 
 	std::string jobField;
@@ -575,6 +608,7 @@ void Listing::parseAI(const std::string listings, int n)
 		lids.push_back(stoi(lidQ[0][0]));
 	}
 
+	std::cout << "localListings after inserting to Listing_AI: " << localListings << std::endl;
 	std::string localCompanies = localListings.substr(listings.find('(') + 1, std::string::npos);
 
 	while (localCompanies[0] != '(')
@@ -672,4 +706,127 @@ int Listing::insertListing(std::map<std::string, std::string> basicInfo, std::ma
 	}
 
 	return -1;
+}
+
+// PETER ADDED
+std::string Listing::deleteListing(int lid, int &resCode)
+{
+
+	int resCount = 0;
+
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string res = db->deleteRecord("Listing", "lid", "eq", std::to_string(lid));
+	resCode = 200;
+	return res;
+}
+std::string Listing::changePay(int lid, int64_t newPay, int &resCode)
+{
+	int resCount = 0;
+
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string newPayStr = std::to_string(newPay);
+	std::string setVal = R"({"pay" : )" + newPayStr + "}";
+	db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+
+	std::vector<std::vector<std::string>> result = db->query("Listing", "pay", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[0][0];
+}
+
+std::string getSkillsString(const std::vector<std::vector<std::string>> &result, int &resCode)
+{
+	std::vector<std::string> skills;
+
+	// Gather all non-null, non-empty skills into a single vector
+	for (const auto &row : result)
+	{
+		for (const auto &skill : row)
+		{
+			if (skill != "null" && !skill.empty())
+			{
+				skills.push_back(skill);
+			}
+		}
+	}
+
+	resCode = 200;
+
+	// Join all skills into a single comma-separated string
+	std::string commaSeparated;
+	for (size_t i = 0; i < skills.size(); ++i)
+	{
+		if (i > 0)
+		{
+			commaSeparated += ",";
+		}
+		commaSeparated += skills[i];
+	}
+
+	return commaSeparated;
+}
+
+std::string Listing::changeSkillRequirements(int lid, std::vector<SkillInput> newSkills, int &resCode)
+{
+	int resCount = 0;
+
+	std::vector<std::vector<std::string>> listing = db->query2("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+	// loop through length of newSkills and update each skill
+	std::string setVal = "";
+	for (int i = 0; i < newSkills.size(); i++)
+	{
+		SkillInput skill = newSkills[i];
+		std::string setVal = R"({"skill)" + std::to_string(i + 1) + R"(_req" : ")" + skill.name + "\"}";
+		db->update("Listing", setVal, "lid", "eq", std::to_string(lid));
+	}
+	std::vector<std::vector<std::string>> result = db->query2("Listing", "skill1_req,skill2_req,skill3_req,skill4_req,skill5_req", "lid", "eq",
+															  std::to_string(lid), true, resCount);
+
+	if (!result.empty())
+	{
+		return getSkillsString(result, resCode);
+	}
+	else
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+}
+std::string Listing::changePersonalityType(int lid, std::string newPersonalityType, int &resCode)
+{
+	int resCount = 0;
+
+	std::vector<std::vector<std::string>> listing = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
+	if (resCount == 0)
+	{
+		resCode = 404;
+		return "Error: The listing ID you provided does not exist in the database.";
+	}
+
+	std::string data = "{\"personality_types\": \"" + newPersonalityType + "\"}";
+	std::cout << data << std::endl;
+	db->update("Listing", data, "lid", "eq", std::to_string(lid));
+
+	std::vector<std::vector<std::string>> result = db->query("Listing", "personality_types", "lid", "eq",
+															 std::to_string(lid), false, resCount);
+	resCode = 200;
+	return result[0][0];
 }

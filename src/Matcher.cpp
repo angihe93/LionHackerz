@@ -39,7 +39,8 @@ std::vector<std::vector<std::string>> Matcher::gatherRelevantDimensions(int uid)
 
     // debug for MatcherUserDimensionIntegrationTests seg fault
     // std::cout << "in gatherRelevantDimensions lists.empty(): " << lists.empty() << std::endl;
-    if (lists.empty()) {
+    if (lists.empty())
+    {
         return lists;
     }
 
@@ -260,8 +261,9 @@ std::vector<int> Matcher::match(int uid)
         matchedWords.resize(candidates.size());
     }
 
-    std::vector<std::vector<std::string>> userVals = this->db->query("Has_Dimension", "", "id", "eq",
-                                                                     std::to_string(uid), false, resCount);
+    std::vector<std::vector<std::string>> userVals = 
+        this->db->query("Has_Dimension", "", "id", "eq", std::to_string(uid),
+         false, resCount);
 
     int cNum = 0;
 
@@ -305,7 +307,6 @@ std::vector<int> Matcher::match(int uid)
                 uAug++;
             }
             uAug = 0;
-            //     std::cout << "\tScore on location: " << candidateScore << std::endl;
         }
 
         /* score on field + augment if applicable */
@@ -323,11 +324,12 @@ std::vector<int> Matcher::match(int uid)
                 uAug++;
             }
             uAug = 0;
-            //  std::cout << "\tScore on field: " << candidateScore << std::endl;
         }
 
         /* score on skills + augment if applicable */
-        std::vector<std::vector<std::string>> userSkills = db->query("Has_Skill", "name", "id", "eq", std::to_string(uid), false, resCount);
+        std::vector<std::vector<std::string>> userSkills = 
+            db->query("Has_Skill", "name", "id", "eq", std::to_string(uid), 
+                false, resCount);
 
         if (!userSkills.empty()) {
 
@@ -336,47 +338,47 @@ std::vector<int> Matcher::match(int uid)
             std::vector<std::string> skillAugments;
             std::vector<std::string> skillAugmentsAlreadyApplied;
 
-            for (int i = 6; i < 13; i++)
+        for (int i = 6; i < 13; i++) 
+        {
                 if (all_listings[i][cInd] != "\"null\"")
                     listingSkills.push_back(all_listings[i][cInd]);
+        }
+        for (std::string &wU : userSkills[0])
+        {
+            if (find(skillAugmentsAlreadyApplied.begin(),
+                     skillAugmentsAlreadyApplied.end(),
+                     "\"skill1\"") == skillAugmentsAlreadyApplied.end())
+                skillAugments.push_back("\"skill1\"");
+            if (find(skillAugmentsAlreadyApplied.begin(),
+                     skillAugmentsAlreadyApplied.end(),
+                     "\"skill2\"") == skillAugmentsAlreadyApplied.end())
+                skillAugments.push_back("\"skill2\"");
+            if (find(skillAugmentsAlreadyApplied.begin(),
+                     skillAugmentsAlreadyApplied.end(),
+                     "\"skill3\"") == skillAugmentsAlreadyApplied.end())
+                skillAugments.push_back("\"skill3\"");
+            if (find(skillAugmentsAlreadyApplied.begin(),
+                     skillAugmentsAlreadyApplied.end(),
+                     "\"skill4\"") == skillAugmentsAlreadyApplied.end())
+                skillAugments.push_back("\"skill4\"");
+            if (find(skillAugmentsAlreadyApplied.begin(),
+                     skillAugmentsAlreadyApplied.end(),
+                     "\"skill5\"") == skillAugmentsAlreadyApplied.end())
+                skillAugments.push_back("\"skill5\"");
 
-            for (std::string &wU : userSkills[0])
+            for (std::string &wE : listingSkills)
             {
-                if (find(skillAugmentsAlreadyApplied.begin(),
-                        skillAugmentsAlreadyApplied.end(),
-                        "\"skill1\"") == skillAugmentsAlreadyApplied.end())
-                    skillAugments.push_back("\"skill1\"");
-                if (find(skillAugmentsAlreadyApplied.begin(),
-                        skillAugmentsAlreadyApplied.end(),
-                        "\"skill2\"") == skillAugmentsAlreadyApplied.end())
-                    skillAugments.push_back("\"skill2\"");
-                if (find(skillAugmentsAlreadyApplied.begin(),
-                        skillAugmentsAlreadyApplied.end(),
-                        "\"skill3\"") == skillAugmentsAlreadyApplied.end())
-                    skillAugments.push_back("\"skill3\"");
-                if (find(skillAugmentsAlreadyApplied.begin(),
-                        skillAugmentsAlreadyApplied.end(),
-                        "\"skill4\"") == skillAugmentsAlreadyApplied.end())
-                    skillAugments.push_back("\"skill4\"");
-                if (find(skillAugmentsAlreadyApplied.begin(),
-                        skillAugmentsAlreadyApplied.end(),
-                        "\"skill5\"") == skillAugmentsAlreadyApplied.end())
-                    skillAugments.push_back("\"skill5\"");
-
-                for (std::string &wE : listingSkills)
+                int skillMatches = wordMatchFound(wU, wE, cNum);
+                if (wU == wE || skillMatches)
                 {
-                    int skillMatches = wordMatchFound(wU, wE, cNum);
-                    if (wU == wE || skillMatches)
+                    if (wU == wE)
                     {
-                        if (wU == wE)
+                        bool alreadyStored = false;
+                        for (std::string &mw : matchedWords[cNum])
                         {
-                            bool alreadyStored = false;
-                            for (std::string &mw : matchedWords[cNum])
+                            if (mw == wE)
                             {
-                                if (mw == wE)
-                                {
-                                    alreadyStored = true;
-                                }
+                                alreadyStored = true;
                             }
                             if (!alreadyStored)
                                 matchedWords[cNum].push_back(wE);
@@ -418,42 +420,56 @@ std::vector<int> Matcher::match(int uid)
             std::vector<std::string> interestAugments;
             std::vector<std::string> interestAugmentsAlreadyApplied;
 
-            for (std::string &wU : userInterests[0])
-            {
-                if (find(interestAugmentsAlreadyApplied.begin(),
-                        interestAugmentsAlreadyApplied.end(), "\"interest1\"") ==
-                    interestAugmentsAlreadyApplied.end())
-                    interestAugments.push_back("\"interest1\"");
-                if (find(interestAugmentsAlreadyApplied.begin(),
-                        interestAugmentsAlreadyApplied.end(), "\"interest2\"") ==
-                    interestAugmentsAlreadyApplied.end())
-                    interestAugments.push_back("\"interest2\"");
-                if (find(interestAugmentsAlreadyApplied.begin(),
-                        interestAugmentsAlreadyApplied.end(), "\"interest3\"") ==
-                    interestAugmentsAlreadyApplied.end())
-                    interestAugments.push_back("\"interest3\"");
-                if (find(interestAugmentsAlreadyApplied.begin(),
-                        interestAugmentsAlreadyApplied.end(), "\"interest4\"") ==
-                    interestAugmentsAlreadyApplied.end())
-                    interestAugments.push_back("\"interest4\"");
-                if (find(interestAugmentsAlreadyApplied.begin(),
-                        interestAugmentsAlreadyApplied.end(), "\"interest5\"") ==
-                    interestAugmentsAlreadyApplied.end())
-                    interestAugments.push_back("\"interest5\"");
+        for (std::string &wU : userInterests[0])
+        {
+            if (find(interestAugmentsAlreadyApplied.begin(),
+                     interestAugmentsAlreadyApplied.end(), "\"interest1\"") ==
+                interestAugmentsAlreadyApplied.end())
+                interestAugments.push_back("\"interest1\"");
+            if (find(interestAugmentsAlreadyApplied.begin(),
+                     interestAugmentsAlreadyApplied.end(), "\"interest2\"") ==
+                interestAugmentsAlreadyApplied.end())
+                interestAugments.push_back("\"interest2\"");
+            if (find(interestAugmentsAlreadyApplied.begin(),
+                     interestAugmentsAlreadyApplied.end(), "\"interest3\"") ==
+                interestAugmentsAlreadyApplied.end())
+                interestAugments.push_back("\"interest3\"");
+            if (find(interestAugmentsAlreadyApplied.begin(),
+                     interestAugmentsAlreadyApplied.end(), "\"interest4\"") ==
+                interestAugmentsAlreadyApplied.end())
+                interestAugments.push_back("\"interest4\"");
+            if (find(interestAugmentsAlreadyApplied.begin(),
+                     interestAugmentsAlreadyApplied.end(), "\"interest5\"") ==
+                interestAugmentsAlreadyApplied.end())
+                interestAugments.push_back("\"interest5\"");
 
-                for (std::string &wE : listingInterests)
+            for (std::string &wE : listingInterests)
+            {
+                int interestMatches = wordMatchFound(wU, wE, cNum);
+                if (wU == wE || interestMatches)
                 {
-                    int interestMatches = wordMatchFound(wU, wE, cNum);
-                    if (wU == wE || interestMatches)
+                    if (wU == wE)
                     {
-                        if (wU == wE)
+                        bool alreadyStored = false;
+                        for (std::string &mw : matchedWords[cNum])
+                            if (mw == wE)
+                                alreadyStored = true;
+                        if (!alreadyStored)
+                            matchedWords[cNum].push_back(wE);
+                    }
+
+                    candidateScore += (150 + 5 * interestMatches);
+
+                    for (auto &d : dimensions)
+                    {
+                        if (find(interestAugments.begin(),
+                                 interestAugments.end(), d) !=
+                            interestAugments.end())
                         {
-                            bool alreadyStored = false;
-                            for (std::string &mw : matchedWords[cNum])
-                                if (mw == wE)
-                                    alreadyStored = true;
-                            if (!alreadyStored)
-                                matchedWords[cNum].push_back(wE);
+                            candidateScore += augments[uAug];
+                            auto it = find(interestAugments.begin(), interestAugments.end(), d);
+                            interestAugmentsAlreadyApplied.push_back(*it);
+                            interestAugments.clear();
                         }
 
                         candidateScore += (150 + 5 * interestMatches);
@@ -617,7 +633,6 @@ std::vector<int> Matcher::match(int uid)
         }
         cNum++;
     }
-
     return scores;
 }
 
@@ -747,7 +762,7 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
         matchRes.listingId = candidates[i];
         matchRes.score = scores[count];
 
-        std::vector<std::string> listingResult = l->getListing(candidates[i], false);
+        std::vector<std::string> listingResult = l->getListing(candidates[i], test);
 
         matchRes.company = listingResult[0];
         matchRes.time_created = listingResult[1];
@@ -759,7 +774,7 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
         matchRes.skill3 = listingResult[7];
         matchRes.skill4 = listingResult[8];
         matchRes.skill5 = listingResult[9];
-        matchRes.pay = stoi(listingResult[10]);
+        // matchRes.pay = std::stoi(listingResult[10]);
         matchRes.flex = listingResult[11];
         matchRes.modern = listingResult[12];
         matchRes.gender = listingResult[13];
@@ -786,194 +801,9 @@ std::vector<JobMatch> Matcher::displayMatches(int uid, bool test)
     return allMatches;
 }
 
-/* Helper functions for generating API's returned JSON objects*/
-std::map<std::string, std::variant<std::string, std::vector<std::map<std::string,
-                                                                     JobListingMapVariantType>>>>
-Matcher::matchResponse(int uid)
-{
-    gatherRelevantDimensions(uid);
-    filterJobs(true);
-    match(uid);
-    filterMatches();
-    sortMatches();
-
-    std::map<std::string, std::variant<std::string, std::vector<std::map<std::string, JobListingMapVariantType>>>> map;
-    map["summary"] = "There are a total of " + std::to_string(candidates.size()) + " matches out of " + std::to_string(all_listings[0].size()) + " total listings for User " + std::to_string(uid) + ".";
-    std::vector<std::map<std::string, JobListingMapVariantType>> job_listings;
-
-    int count = 0;
-    for (int i = 0; i < candidates.size(); i++)
-    {
-        std::map<std::string, JobListingMapVariantType> jl;
-
-        // from getListing:
-        int resCount = 0;
-        int lid = candidates[i];
-        std::vector<std::vector<std::string>> listings = db->query("Listing", "", "lid", "eq", std::to_string(lid), false, resCount);
-        std::vector<std::vector<std::string>> eid = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
-        std::vector<std::vector<std::string>> company = db->query("Employer", "company_name", "eid", "eq", eid[0][0], false, resCount);
-
-        jl["match_score"] = scores[count];
-
-        std::string company_ = company[0][0];
-        company_.erase(std::remove(company_.begin(), company_.end(), '\"'), company_.end());
-        jl["posted_by"] = company_;
-
-        std::string created_on = listings[1][0];
-        created_on.erase(std::remove(created_on.begin(), created_on.end(), '\"'), created_on.end());
-        jl["created_on"] = created_on;
-
-        std::string field = listings[5][0];
-        field.erase(std::remove(field.begin(), field.end(), '\"'), field.end());
-        jl["field"] = field;
-
-        std::string position = listings[6][0];
-        position.erase(std::remove(position.begin(), position.end(), '\"'), position.end());
-        jl["position"] = position;
-
-        std::string job_description = listings[7][0];
-        job_description.erase(std::remove(job_description.begin(), job_description.end(), '\"'), job_description.end());
-        jl["job_description"] = job_description;
-
-        // doing list fields like skills one by one because std::vector causes issue for JSON
-        if (listings[8][0] != "\"null\"")
-        {
-            std::string skill = listings[8][0];
-            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
-            jl["skill1"] = skill;
-        }
-
-        if (listings[9][0] != "\"null\"")
-        {
-            std::string skill = listings[9][0];
-            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
-            jl["skill2"] = skill;
-        }
-
-        if (listings[10][0] != "\"null\"")
-        {
-            std::string skill = listings[10][0];
-            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
-            jl["skill3"] = skill;
-        }
-
-        if (listings[11][0] != "\"null\"")
-        {
-            std::string skill = listings[11][0];
-            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
-            jl["skill4"] = skill;
-        }
-
-        if (listings[12][0] != "\"null\"")
-        {
-            std::string skill = listings[12][0];
-            skill.erase(std::remove(skill.begin(), skill.end(), '\"'), skill.end());
-            jl["skill5"] = skill;
-        }
-
-        if (listings[13][0] != "\"null\"")
-            jl["pay"] = listings[13][0];
-
-        if (listings[14][0] != "\"null\"")
-        {
-            std::string flexibility = listings[14][0];
-            flexibility.erase(std::remove(flexibility.begin(), flexibility.end(), '\"'), flexibility.end());
-            jl["flexibility"] = flexibility;
-        }
-
-        if (listings[15][0] != "\"null\"")
-        {
-            std::string modern_workspace = listings[15][0];
-            modern_workspace.erase(std::remove(modern_workspace.begin(), modern_workspace.end(), '\"'), modern_workspace.end());
-            jl["modern_workspace"] = modern_workspace;
-        }
-
-        if (listings[16][0] != "\"null\"")
-        {
-            std::string gender_parity = listings[16][0];
-            gender_parity.erase(std::remove(gender_parity.begin(), gender_parity.end(), '\"'), gender_parity.end());
-            jl["gender_parity"] = gender_parity;
-        }
-
-        if (listings[17][0] != "\"null\"")
-        {
-            std::string diverse_workforce = listings[17][0];
-            diverse_workforce.erase(std::remove(diverse_workforce.begin(), diverse_workforce.end(), '\"'), diverse_workforce.end());
-            jl["diverse_workforce"] = diverse_workforce;
-        }
-
-        if (listings[18][0] != "\"null\"")
-        {
-            std::string remote_option_available = listings[18][0];
-            remote_option_available.erase(std::remove(remote_option_available.begin(), remote_option_available.end(), '\"'), remote_option_available.end());
-            jl["remote_option_available"] = remote_option_available;
-        }
-
-        if (listings[19][0] != "\"null\"")
-        {
-            std::string personality_types = listings[19][0];
-            personality_types.erase(std::remove(personality_types.begin(), personality_types.end(), '\"'), personality_types.end());
-            jl["personality_types"] = personality_types;
-        }
-
-        if (listings[20][0] != "\"null\"")
-        {
-            std::string location = listings[20][0];
-            location.erase(std::remove(location.begin(), location.end(), '\"'), location.end());
-            jl["location"] = location;
-        }
-
-        std::string matched_words = "";
-        for (std::string mw : matchedWords[count])
-        {
-            matched_words += mw;
-            matched_words += ";";
-        }
-        matched_words.erase(std::remove(matched_words.begin(), matched_words.end(), '\"'), matched_words.end());
-        jl["matched_words"] = matched_words;
-
-        job_listings.push_back(jl);
-        count++;
-    }
-
-    map["job_listings"] = job_listings;
-
-    return map;
-}
-
-void Matcher::iterateList(std::vector<std::string> l)
-{
-    int count = 0;
-    int size = l.size();
-    std::cout << "(";
-    for (auto &v : l)
-    {
-        std::cout << v;
-        if (count != size - 1)
-            std::cout << ", ";
-        count++;
-    }
-    std::cout << ")" << std::endl;
-}
-
 std::vector<int> Matcher::getCandidates()
 {
     return candidates;
-}
-
-void Matcher::iterateList(std::vector<int> l)
-{
-    int count = 0;
-    int size = l.size();
-    std::cout << "(";
-    for (auto &v : l)
-    {
-        std::cout << v;
-        if (count != size - 1)
-            std::cout << ", ";
-        count++;
-    }
-    std::cout << ")" << std::endl;
 }
 
 int Matcher::matchDimensions(std::string d)
@@ -1100,32 +930,6 @@ int Matcher::wordMatchFound(std::string fieldU, std::string fieldE, int c)
         }
     }
     return matchCount;
-}
-
-int Matcher::binSearch(SynsetPtr s, int left, int right, char val)
-{
-    /* base case */
-    if (left < 0 || right > s->wcount - 1 || left > right)
-        return -1;
-
-    /* calc midpoint */
-    int mp = (left + right) / 2;
-
-    /* recurse */
-    if (s->words[mp][0] < val)
-        return binSearch(s, mp + 1, right, val);
-    if (s->words[mp][0] > val)
-        return binSearch(s, left, mp - 1, val);
-
-    /* if found, backtrack to first entry */
-    if (s->words[mp][0] == val)
-    {
-        while (mp >= 0 && s->words[mp][0] == val)
-            mp--;
-        return ++mp;
-    }
-
-    return 0;
 }
 
 std::vector<std::string> Matcher::tokenize(const std::string &input)

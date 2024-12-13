@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "f017ff46-8b23-4d21-8e1d-0c5e8beedde6",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28999626",
+		"_collection_link": "https://interstellar-shuttle-26423.postman.co/workspace/LionHackerz~4010c7da-71ab-40b4-b3ee-104cd08ffa03/collection/28999626-f017ff46-8b23-4d21-8e1d-0c5e8beedde6?action=share&source=collection_link&creator=28999626"
+	},
+	"item": [
+		{
+			"name": "makeUser",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"const userData = {",
+							"      name: pm.variables.replaceIn('{{$randomFirstName}}'),",
+							"      email: pm.variables.replaceIn('{{$randomEmail}}'),",
+							"      dimensions: {",
+							"        field: \"Computer Science\",",
+							"        pay: 20000,",
+							"        mbti: \"INFP\",",
+							"        loc: \"New York\",",
+							"        gender: true,",
+							"        diversity: true,",
+							"        flexibility: true,",
+							"        remote: true,",
+							"        workspace: true,",
+							"      },",
+							"      skills:",
+							"        [{\"name\":\"python\"},{\"name\":\"algorithms\"}],",
+							"      interests:",
+							"        [{\"name\":\"anatomy\"}],",
+							"      augments: [{\"dim_id\": \"18\", \"importance\":\"very\"},{\"dim_id\": \"19\", \"importance\":\"very\"}, {\"dim_id\": \"4\", \"importance\":\"very\"},{\"dim_id\": \"13\", \"importance\":\"very\"}, {\"dim_id\": \"3\", \"importance\":\"somewhat\"},{\"dim_id\": \"8\", \"importance\":\"somewhat\"},{\"dim_id\": \"16\", \"importance\":\"somewhat\"},{\"dim_id\": \"1\", \"importance\":\"somewhat\"} ],",
+							"    };",
+							"",
+							"    pm.variables.set('userData', JSON.stringify(userData));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// Parse the response body as JSON",
+							"let response = pm.response.json();",
+							"",
+							"// Check if the response status is 'success' and 'user_id' exists",
+							"if (response.status === \"success\" && response.user_id) {",
+							"    // Set the global environment variable 'uid' to the value of 'user_id'",
+							"    pm.globals.set(\"uid\", response.user_id);",
+							"",
+							"    // Optional: Log a success message to the Postman Console",
+							"    console.log(`Global variable 'uid' set to: ${response.user_id}`);",
+							"} else {",
+							"    // Optional: Log an error message if 'user_id' is not found or status is not 'success'",
+							"    console.error(\"Failed to retrieve 'user_id' from the response.\");",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{userData}}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverUrl}}/makeUser",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"makeUser"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{pwd}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{api-key}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

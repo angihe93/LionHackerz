@@ -1,0 +1,1621 @@
+{
+	"info": {
+		"_postman_id": "76588d5d-0176-4ded-8564-aee646af7370",
+		"name": "Employer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28999626",
+		"_collection_link": "https://interstellar-shuttle-26423.postman.co/workspace/LionHackerz~4010c7da-71ab-40b4-b3ee-104cd08ffa03/collection/28999626-76588d5d-0176-4ded-8564-aee646af7370?action=share&source=collection_link&creator=28999626"
+	},
+	"item": [
+		{
+			"name": "employerChangeField",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newField\", \"Software Development\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeField?eid={{eid}}&lid={{lid}}&newField={{newField}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeField"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newField",
+							"value": "{{newField}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangePosition",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newPosition\", \"Lead Engineer\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changePosition?eid={{eid}}&lid={{lid}}&newPosition={{newPosition}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changePosition"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newPosition",
+							"value": "{{newPosition}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeJobDescription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newJobDescription\", \"Microsoft is currently looking for an experienced candidate to lead our engineering team.\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeJobDescription?eid={{eid}}&lid={{lid}}&newDescription={{newJobDescription}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeJobDescription"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newDescription",
+							"value": "{{newJobDescription}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeFlex",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeFlex?eid={{eid}}&lid={{lid}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeFlex"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeGender",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeGender?eid={{eid}}&lid={{lid}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeGender"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeDiversity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeDiversity?eid={{eid}}&lid={{lid}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeDiversity"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeRemote",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeRemote?eid={{eid}}&lid={{lid}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeRemote"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeLocation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeLocation?eid={{eid}}&lid={{lid}}&newLocation=",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeLocation"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newLocation",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeMBTI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newMBTI\", \"INTJ\")"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeMBTI?eid={{eid}}&lid={{lid}}&newMBTI={{newMBTI}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeMBTI"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newMBTI",
+							"value": "{{newMBTI}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeModernWorkspace",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeModernWorkspace?eid={{eid}}&lid={{lid}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeModernWorkspace"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeFieldAll",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newField\", \"Computer science\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeFieldAll?eid={{eid}}&lid={{lid}}&newField={{newField}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeFieldAll"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newField",
+							"value": "{{newField}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangePositionAll",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newPosition\", \"Software Engineer\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changePositionAll?eid={{eid}}&lid={{lid}}&newPosition={{newPosition}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changePositionAll"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newPosition",
+							"value": "{{newPosition}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeFlexAll",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeFlexAll?eid={{eid}}&lid={{lid}}&newFlex=true",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeFlexAll"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newFlex",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeModernWorkspaceAll",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeModernWorkspaceAll?eid={{eid}}&lid={{lid}}&newValue=true",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeModernWorkspaceAll"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newValue",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeGenderAll",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeGenderAll?eid={{eid}}&lid={{lid}}&newValue=true",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeGenderAll"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newValue",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeDiversityAll",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeDiversityAll?eid={{eid}}&lid={{lid}}&newValue=true",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeDiversityAll"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newValue",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeRemoteAll",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeRemoteAll?eid={{eid}}&lid={{lid}}&newValue=true",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeRemoteAll"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newValue",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerPostListing",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Define the newListing object with the same properties as the C++ object",
+							"let newListing = {",
+							"    eid: pm.variables.get(\"eid\"), // Employer ID",
+							"    basicInfo: {",
+							"        field: \"Education\",",
+							"        position: \"Education Consultant\",",
+							"        job_description: \"Develop and implement educational programs for schools and other institutions, providing guidance on curriculum and teaching strategies\",",
+							"        location: \"Boston\"",
+							"    },",
+							"    skillsPersonality: {",
+							"        skill1_req: \"Curriculum Development\",",
+							"        skill2_req: \"Teaching Experience\",",
+							"        skill3_req: \"Instructional Design\",",
+							"        skill4_req: \"Project Management\",",
+							"        skill5_req: \"Communication\",",
+							"        personality_types: \"ENFJ\"",
+							"    },",
+							"    pay: 65000,",
+							"    boolFields: {",
+							"        job_flexibility: false,",
+							"        modern_building: true",
+							"    }",
+							"};",
+							"",
+							"// Option 1: Set as a Global Variable",
+							"pm.variables.set(\"newListing\", JSON.stringify(newListing));",
+							"",
+							"// Option 2: Set as an Environment Variable (recommended if scoped to a specific environment)",
+							"// pm.environment.set(\"newListing\", newListing);",
+							"",
+							"// Option 3: Set as a Collection Variable",
+							"// pm.collectionVariables.set(\"newListing\", newListing);",
+							"",
+							"// Option 4: If you prefer to use it as a JSON string in the request body",
+							"// pm.variables.set(\"newListingJSON\", JSON.stringify(newListing));",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{newListing}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverUrl}}/employer/postListing?eid={{eid}}&pay=65000",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"postListing"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "pay",
+							"value": "65000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerCreateEmployer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"companyName\", \"OpenAI\")",
+							"pm.variables.set(\"companySize\", \"5000\")"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/createEmployer?eid={{eid}}&lid={{lid}}&company_name={{companyName}}&size={{companySize}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"createEmployer"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "company_name",
+							"value": "{{companyName}}"
+						},
+						{
+							"key": "size",
+							"value": "{{companySize}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerDeleteListing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let newListing = {",
+							"    basicInfo: {",
+							"        field: \"Education\",",
+							"        position: \"Education Consultant\",",
+							"        job_description: \"Develop and implement educational programs for schools and other institutions, providing guidance on curriculum and teaching strategies\",",
+							"        location: \"Boston\"",
+							"    },",
+							"    skillsPersonality: {",
+							"        skill1_req: \"Curriculum Development\",",
+							"        skill2_req: \"Teaching Experience\",",
+							"        skill3_req: \"Instructional Design\",",
+							"        skill4_req: \"Project Management\",",
+							"        skill5_req: \"Communication\",",
+							"        personality_types: \"ENFJ\"",
+							"    },",
+							"    boolFields: {",
+							"        job_flexibility: false,",
+							"        modern_building: true",
+							"    }",
+							"};",
+							"",
+							"let eid = pm.variables.get(\"eid\");",
+							"let pay = 65000;",
+							"let apiKey = pm.variables.get(\"api-key\");",
+							"let authHeader = \"Basic \" + Buffer.from(apiKey + \":\").toString('base64');",
+							"",
+							"pm.sendRequest({",
+							"    url: pm.variables.get(\"serverUrl\") + \"/employer/postListing?eid=\" + eid + \"&pay=\" + pay,",
+							"    method: 'POST',",
+							"    header: {",
+							"        'Content-Type': 'application/json',",
+							"        'Authorization': authHeader",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify(newListing)",
+							"    }",
+							"}, function (err, res) {",
+							"    if (err) {",
+							"        console.error(err);",
+							"    } else {",
+							"        let response = res.json();",
+							"        if (response.lid) {",
+							"            pm.variables.set(\"new-tmp-lid\", response.lid);",
+							"        }",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/deleteListing?eid={{eid}}&lid={{new-tmp-lid}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"deleteListing"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{new-tmp-lid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangePay",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newPay\", 100000);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changePay?eid={{eid}}&lid={{lid}}&newPay={{newPay}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changePay"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newPay",
+							"value": "{{newPay}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "changePersonalityType",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"newPersonalityType\", \"INFP\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{serverUrl}}/employer/changePersonalityType?eid={{eid}}&lid={{lid}}&newPersonalityType={{newPersonalityType}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changePersonalityType"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						},
+						{
+							"key": "newPersonalityType",
+							"value": "{{newPersonalityType}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "employerChangeSkillRequirements",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"pm.variables.set(\"skill1\", \"data structures\");",
+							"pm.variables.set(\"skill2\", \"stonemasonry\");",
+							"const userData = {      ",
+							"      skills:",
+							"        [{\"name\":pm.variables.get(\"skill1\")},{\"name\":pm.variables.get(\"skill2\")}]      ",
+							"    };",
+							"pm.variables.set('newSkills', JSON.stringify(userData));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{api-key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{newSkills}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverUrl}}/employer/changeSkillRequirements?eid={{eid}}&lid={{lid}}",
+					"host": [
+						"{{serverUrl}}"
+					],
+					"path": [
+						"employer",
+						"changeSkillRequirements"
+					],
+					"query": [
+						{
+							"key": "eid",
+							"value": "{{eid}}"
+						},
+						{
+							"key": "lid",
+							"value": "{{lid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

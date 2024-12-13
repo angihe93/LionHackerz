@@ -2,7 +2,6 @@
 
 #include "Worker.h"
 #include <cpp_redis/cpp_redis>
-#include "Worker.h"
 #include <chrono>
 #include <mutex>
 #include <iostream>

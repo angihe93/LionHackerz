@@ -12,7 +12,9 @@ A demoable app/client can be found in the following repo:
 
 	https://github.com/ds4015/w4156-app
 
- CI is set up to build and run tests, coverage, static analysis, and style check on push and pull requests. It is set up in Actions as a workflow named "CMake on a single platform". Click on a workflow run and scroll down to Artifacts section to download reports and outputs produced during runtime. Some reports and outputs may also be uploaded to some repo directory before final submission.
+ CI is set up to build and run tests, coverage, static analysis, and style check on push and pull requests. It is set up in Actions as a workflow named "CMake on a single platform". Click on a workflow run and scroll down to <b>Artifacts</b> section to download reports and outputs produced during runtime. 
+ 
+ Some reports and outputs produced from a previous workflow run is in this repo in <b>workflow_output/</b>. Coverage, style checker, and static analysis report reports from a previous manual run is in <b>manual_output/</b>. Note we are using the `--decisions` flag in gcovr to get the actual code-level branches coverage rate, so we are aiming to achieve 85% <b>decisions</b> coverage rate in coverage_report_gcovr/coverage.html.
 
 # Initial Setup
 
@@ -170,23 +172,88 @@ GET /
 
 GET /dbtest
 
+	Tests of the custom database class
+
 GET /getMatches
+
+	Get a listing of job matches (for users)
+
+POST /listing/create
+
+	Create a new job listing (for employers)
+
+POST /listing/generateAI
+
+	Generate a set number of full job listings using AI
+
+POST /listing/generateJobDescription
+
+	Generate a job description using AI
 
 PATCH /listing/changeField
 
+	Change the job field of a listing
+
 PATCH /listing/changePosition
+
+	Change the job position field in a listing
 
 PATCH /listing/changeJobDescription
 
+	Change the job description field in a listing
+
 PATCH /listing/changeFlex
+
+	Change the boolean flexibility field in a listing
 
 PATCH /listing/changeModernWorkspace
 
+	Change the boolean workspace field in a listing
+
 POST /makeUser
+
+	Register a new user account
+
+GET /getProfile
+
+	Returns the profile of a given user to display alongside match results
 
 Postman tests for these routes can be found on our Trello board located here:
 
     https://trello.com/c/2X1naGF8/29-postman-tests-export
+
+### User Creation
+
+The user is created using a JSON request to the /makeUser endpoint. The request body will need to have a name and email. The request needs to have a "dimensions" parameter, which contains the information about the user's desired pay, field, gender, etc. The user may or may not indicate their skills and interests, and they may or may not include information about their "augments" which specifies how important certain things like location, pay, etc for a job is to a user and this will be used in the matching algorithm.
+```
+Sample Request:
+{
+  "name": "SampleUser",
+  "email": "sampleuser@email.com",
+  "dimensions": {
+    "loc": "New York",
+    "field": "Software Engineering",
+    "pay": 120000,
+    "gender": true,
+    "diversity": true,
+    "mbti": "INTJ",
+    "flexibility": true,
+    "remote": true,
+    "workspace": false
+  },
+  "skills": [
+    { "name": "python" }
+  ],
+  "interests": [
+    { "name": "drawing", "rank": 3 },
+    { "name": "software development", "rank": 5 }
+  ],
+  "augments": [
+    { "dim_id": "1", "importance": "very" },
+    { "dim_id": "2", "importance": "somewhat" }
+  ]
+}
+```
 
 # Database Queries - For Team Members in Designing your Classes
 
