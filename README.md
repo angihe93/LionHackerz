@@ -74,9 +74,9 @@ Optional:
 
 To get rid of WordNet warnings when compiling, copy over the revised wn.h file
 from the external_libraries root directory into external_libraries/WordNet-3.0/include
-From the project root directory, run the following):
+From the project root directory, run the following:
 
-`sudo cp external_libaries/wn.h external_libraries/WordNet-3.0/include/wn.h`
+`sudo cp external_libraries/wn.h external_libraries/WordNet-3.0/include/wn.h`
 
 This should complete the WordNet library installation. 
 
