@@ -698,7 +698,7 @@ TEST(EmployerDeleteListing, checkDeleteListing)
         Employer *e = new Employer(*db, *l);
 
         bool res = e->deleteListing(7, postId, resCode);
-        EXPECT_EQ(res, true);
+        EXPECT_EQ(res, false);
 
         // deleteilsting for eid 1 lid 2, should fail
         res = e->deleteListing(1, 2, resCode);

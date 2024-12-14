@@ -1,7 +1,7 @@
 // Copyright 2024 LionHackerz
 
 /* Dallas Scott - ds4015 */
-/* Matcher Prototype */
+/* Matcher Algorithm */
 #ifndef MATCHER_H
 #define MATCHER_H
 
@@ -19,6 +19,7 @@
 #include <cpp_redis/cpp_redis>
 #include "Database.h"
 #include <nlohmann/json.hpp>
+
 
 /* struct for holding a listing match */
 struct JobMatch
@@ -121,14 +122,18 @@ struct JobMatch
 
 /* Matcher class for pairing job seekers with employers */
 
-using JobListingMapVariantType = std::variant<int, std::string, bool, std::vector<std::string>>;
+using JobListingMapVariantType = std::variant<int, std::string, bool,
+    std::vector<std::string>>;
 
 class Matcher
 {
 public:
     Matcher(Database &db);
 
-    /* This is the main call function for the Matcher class.  When
+    /**
+     * @brief Display matches
+     * 
+     * This is the main call function for the Matcher class.  When
      * accessing the route to display matches in the browser, this
      * function will call all of the below functions in order to get
      * a set of matches and returns the results as a string to be
@@ -139,18 +144,29 @@ public:
      * present, this will give a list of listing IDs and their
      * corresponding match scores in descending order when called.
      * When the Listing class is created, more details can be
-     * included. */
+     * included. 
+     * 
+     * @param uid The user ID of the given user
+     * @param test True for unit tests, false otherwise
+     */
     std::vector<JobMatch> displayMatches(int uid, bool test);
 
-    /* If user has preferences for certain match criteria,
+    /**
+     * @brief Gather relevant user dimenions
+     * 
+     * If user has preferences for certain match criteria,
      * select those to apply augments to those dimensions.
      * stores the dimensions in list<int> dimensions by dim_id
      * and the corresponding augment values in list<int> augments.
      *
-     *     @param uid: the given user id */
+     * @param uid The given user id 
+     */
     std::vector<std::vector<std::string>> gatherRelevantDimensions(int uid);
 
-    /* After populating dimensions with gatherRelevantDimensions(),
+    /**
+     * @brief Filter job listings
+     * 
+     * After populating dimensions with gatherRelevantDimensions(),
      * select all job listings and filter them by those which have
      * at least 75% of the user's preferred dimensions filled in.
      *
@@ -158,26 +174,38 @@ public:
      * entered by the employer and hence what is most important
      * to the job seeker is not present in the listing.
      *
-     *  Returns the list of filtered listings 'candidates' */
+     *  Returns the list of filtered listings 'candidates' 
+     * 
+     * @param test True for unit tests, false otherwise
+     */
     std::vector<int> filterJobs(bool test);
 
-    /* After filtering jobs with filterJobs() to get candidates, the
+    /**
+     * @brief Perform matching
+     * 
+     * After filtering jobs with filterJobs() to get candidates, the
      * match() function will calculate scores for each listing based on
      * the dimensions in the listing that match the dimensions in the
      * user's profile + additional augments for positive matches where
      * the user has specified.  These are stored in list<int> scores.
      *
-     *      @param uid: the given user id to match on  */
+     * @param uid: the given user id to match on  */
     std::vector<int> match(int uid);
 
-    /* After populating matchs scores for each candidate with match(),
+    /**
+     * @brief Filter matches
+     * 
+     * After populating matchs scores for each candidate with match(),
      * this function filters once again, this time by match score.
      * Any candidate that scores below 100 is remoted from the
      * match list.
      */
     std::vector<std::vector<int>> filterMatches();
 
-    /* With filtering finished, this function sorts the candidates,
+    /**
+     * @brief Sort matches
+     * 
+     * With filtering finished, this function sorts the candidates,
      * their scores, and their matched words in descending order
      * (candidate with the largest score first).  The relative indices
      * of all 3 vectors are preserved after the sort (i.e., score in
@@ -193,20 +221,20 @@ public:
 private:
     Database *db;
     std::vector<std::vector<std::string>> all_listings; /* all job listings in db */
-    std::vector<std::string> dimensions;                /* list of dimensions */
-    std::vector<int> augments;                          /* user augments for certain dimenions */
-    std::vector<int> candidates;                        /* job listing candidates by listing id */
-    std::vector<int> scores;                            /* scores for candidates (same indices as candidates) */
-    std::vector<std::vector<std::string>> matchedWords; /* words that were matched for
-                                                            successful matches*/
-    int payReq;
+    static thread_local std::vector<std::string> dimensions; /* list of dimensions */
+    static thread_local std::vector<int> augments; /* user augments for certain dimenions */
+    static thread_local std::vector<int> candidates; /* job listing candidates by listing id */
+    static thread_local std::vector<int> scores; /* scores for candidates (same indices as candidates) */
+    static thread_local std::vector<std::vector<std::string>> matchedWords; /* words that were matched for
+                                                                            successful matches*/
+    int payReq; /* minimum pay threshold for the user */
     std::mutex mutex_;
-
+    static std::mutex global_wordnet_mutex;
     /* helper functions */
     std::vector<std::string> tokenize(const std::string& input); /* tokenize input */
     int wordMatchFound(std::string fieldU, std::string fieldE, int c);
-                                                /* matches words using WordNet synonyms */
+    /* matches words using WordNet synonyms */
 protected:    
-    int matchDimensions(std::string d);         /* match dims b/w Dimension and Listing tables */
+    int matchDimensions(std::string d);  /* match dims b/w Dimension and Listing tables */
 };
 #endif

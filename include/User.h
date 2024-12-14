@@ -10,11 +10,20 @@ class User {
 public:
     int id; 
     std::string name;
+    std::string real_name;
     std::string email;
 
     // Constructor
-    User(const std::string& name, const std::string& email);
+    User(const std::string& rname, const std::string& name, const std::string& email);
 
+    /**
+     * @brief Save a new user to the database
+     * 
+     * Takes the user's information provided during registration and places it in
+     * the appropriate table in the database
+     * 
+     * @param db 
+     */
     // Method to save the user to the database
     std::string save(Database& db);
 

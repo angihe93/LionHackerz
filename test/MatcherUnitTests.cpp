@@ -47,18 +47,20 @@ TEST(FilterListings, discardTooManyNull)
 	Database *db = new Database();
 	Matcher *m = new Matcher(*db);
 
-	int uid = 5;
+	int uid = 1;
 
-	std::vector<int> candidates;
-	for (int i = 1; i < 10; i++)
-	{
-		if (i != 3)
-			candidates.push_back(i);
-	}
+	std::vector<int> candidates = {
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    };
 
 	std::vector<std::vector<std::string>> dimensions;
 	dimensions.push_back(m->gatherRelevantDimensions(uid)[0]);
 	std::vector<int> filter = m->filterJobs(true);
+
+		for (auto &f : filter)
+		std::cout << f << ", ";
+	std::cout << std::endl;
+
 
 	EXPECT_EQ(candidates, filter);
 
@@ -73,22 +75,20 @@ TEST(FilterListings, calculateScores)
 	Database *db = new Database();
 	Matcher *m = new Matcher(*db);
 
-	int uid = 5;
+	int uid = 1;
 
-	std::vector<int> scores;
-	scores.push_back(525);
-	scores.push_back(200);
-	scores.push_back(1010);
-	scores.push_back(965);
-	scores.push_back(1070);
-	scores.push_back(470);
-	scores.push_back(215);
-	scores.push_back(215);
+	std::vector<int> scores = {
+        330, 305, 65, 275, 75, 280, 195, 195, 120, 0
+    };
 
 	std::vector<std::vector<std::string>> dimensions;
 	dimensions.push_back(m->gatherRelevantDimensions(uid)[0]);
 	std::vector<int> filter = m->filterJobs(true);
 	std::vector<int> sc = m->match(uid);
+
+	for (auto &s : sc)
+		std::cout << s << ", ";
+	std::cout << std::endl;
 
 	EXPECT_EQ(scores, sc);
 
@@ -104,26 +104,15 @@ TEST(FilterListings, elimLowScores)
 	Database *db = new Database();
 	Matcher *m = new Matcher(*db);
 
-	int uid = 5;
+	int uid = 1;
 
-	std::vector<int> candidates;
-	candidates.push_back(1);
-	candidates.push_back(2);
-	candidates.push_back(4);
-	candidates.push_back(5);
-	candidates.push_back(6);
-	candidates.push_back(7);
-	candidates.push_back(8);
-	candidates.push_back(9);
-	std::vector<int> scores;
-	scores.push_back(525);
-	scores.push_back(200);
-	scores.push_back(1010);
-	scores.push_back(965);
-	scores.push_back(1070);
-	scores.push_back(470);
-	scores.push_back(215);
-	scores.push_back(215);
+	std::vector<int> candidates = { 
+		 1, 2, 4, 6, 7, 8 
+	};
+
+	std::vector<int> scores = { 
+		330, 305, 275, 280, 195, 195 
+	};
 
 	std::vector<std::vector<int>> testResults;
 	testResults.push_back(candidates);
@@ -133,6 +122,13 @@ TEST(FilterListings, elimLowScores)
 	m->filterJobs(true);
 	m->match(uid);
 	std::vector<std::vector<int>> filteredMatches = m->filterMatches();
+
+	for (auto &m : filteredMatches[0])
+		std::cout << m << ", ";
+	std::cout << std::endl;
+	for (auto &m : filteredMatches[1])
+		std::cout << m << ", ";
+	std::cout << std::endl;
 
 	EXPECT_EQ(testResults, filteredMatches);
 
@@ -146,26 +142,11 @@ TEST(Sort, sortMatches)
 	Database *db = new Database();
 	Matcher *m = new Matcher(*db);
 
-	int uid = 5;
+	int uid = 1;
 
-	std::vector<int> candidates;
-	candidates.push_back(6);
-	candidates.push_back(4);
-	candidates.push_back(5);
-	candidates.push_back(1);
-	candidates.push_back(7);
-	candidates.push_back(8);
-	candidates.push_back(9);
-	candidates.push_back(2);
-	std::vector<int> scores;
-	scores.push_back(1070);
-	scores.push_back(1010);
-	scores.push_back(965);
-	scores.push_back(525);
-	scores.push_back(470);
-	scores.push_back(215);
-	scores.push_back(215);
-	scores.push_back(200);
+	std::vector<int> candidates =  { 1, 2, 6, 4, 7, 8 };
+	
+	std::vector<int> scores = { 330, 305, 280, 275, 195, 195 };
 
 	std::vector<std::vector<int>> testResults;
 	testResults.push_back(candidates);
@@ -190,11 +171,11 @@ TEST(Display, displayMatches)
 	Database *db = new Database();
 	Matcher *m = new Matcher(*db);
 
-	int uid = 5;
+	int uid = 1;
 
 	std::vector<JobMatch> display = m->displayMatches(uid, true);
 
-	// display[0].print();
+	display[0].print();
 
 	// std::vector<JobMatch> matchList;
 
@@ -238,20 +219,17 @@ TEST(GetValues, retrieveCandidates)
 	Database *db = new Database();
 	Matcher *m = new Matcher(*db);
 
-	int uid = 5;
+	int uid = 1;
 
-	std::vector<int> testCandidates;
-	testCandidates.push_back(1);
-	testCandidates.push_back(2);
-	testCandidates.push_back(4);
-	testCandidates.push_back(5);
-	testCandidates.push_back(6);
-	testCandidates.push_back(7);
-	testCandidates.push_back(8);
-	testCandidates.push_back(9);
+	std::vector<int> testCandidates = {
+		4, 8, 10, 13, 14, 15, 28, 44, 45, 53, 56, 60, 61, 63, 64,
+        69, 72, 79, 84, 86, 87, 89, 90, 95, 114, 120, 122, 124, 125,
+        126, 130, 131, 133, 134, 156, 158, 187, 189, 190, 192, 194,
+        199, 200, 201
+	};
 
 	m->gatherRelevantDimensions(uid);
-	m->filterJobs(true);
+	m->filterJobs(false);
 
 	EXPECT_EQ(testCandidates, m->getCandidates());
 

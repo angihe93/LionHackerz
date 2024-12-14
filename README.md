@@ -70,6 +70,14 @@ Finally, run:
 	sudo make
 	sudo make install
 
+Optional: 
+
+To get rid of WordNet warnings when compiling, copy over the revised wn.h file
+from the external_libraries root directory into external_libraries/WordNet-3.0/include
+From the project root directory, run the following):
+
+`sudo cp external_libaries/wn.h external_libraries/WordNet-3.0/include/wn.h`
+
 This should complete the WordNet library installation. 
 
 NEW (11/25/2024):
@@ -105,11 +113,29 @@ For other platforms, see:
 
 	https://github.com/nlohmann/json
 
-When building the service in /build, if you get error such as "terminating due to uncaught exception of type cpp_redis::redis_error: connect() failure", then make sure redis is installed and running:
+When building the service in /build, if you get error such as "terminating due to uncaught 
+exception of type cpp_redis::redis_error: connect() failure", then make sure redis is installed
+and running:
 
 `brew install redis`
 
 `brew services start redis`
+
+Optional: 
+
+To get rid of warning messages from redis when compiling, copy the 'redis_logger.hpp' and 
+'tacopie_logger.hpp' files from the external_libraries directory into your local install 
+directories (on macOs, these should be /usr/local/include/cpp_redis/misc and 
+/usr/local/include/tacopie/utils), removing the  prefixes reddis_ and tacopie_ 
+(i.e., the copied versions should just be named logger.hpp in their respective 
+destination folders). To do this, from external_directories in the project, run:
+
+`sudo cp redis_logger.hpp /usr/local/include/cpp_redis/misc/logger.hpp`
+
+`sudo cp tacopie_logger.hpp /usr/local/include/tacopie/utils/logger.hpp`
+
+If your local libraries are installed somewhere else, use that path instead to copy over into.
+
 
 NEW:
 
