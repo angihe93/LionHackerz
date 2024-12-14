@@ -18,7 +18,7 @@ bool Employer::checkHasListing(int eid, int lid, int &resCode)
 {
         resCode = 200; // Assume success by default
         int resCount = 0;
-        std::vector<std::vector<std::string>> eidRes = db->query("Created", "eid", "lid", "eq", std::to_string(lid), false, resCount);
+        std::vector<std::vector<std::string>> eidRes = db->query("Created_AI", "eid", "lid", "eq", std::to_string(lid), false, resCount);
         if (resCount == 0)
         {
                 std::cout << "Error: The listing ID you provided does not exist in the database." << std::endl;
@@ -349,7 +349,7 @@ bool Employer::changeModernWorkspace(int eid, int lid, bool newValue, int &resCo
         bool hasListing = checkHasListing(eid, lid, resCode);
         if (!hasListing)
         {
-                std::cout << "Error: The listing ID is not associated with the employer ID." << std::endl;
+                std::cout << "Error: The listing ID " << lid << " is not associated with the employer ID." << std::endl;
                 return false;
         }
 
@@ -370,7 +370,7 @@ bool Employer::changeModernWorkspace(int eid, int lid, bool newValue, int &resCo
 bool Employer::changeFieldAll(int eid, std::string newField, int &resCode)
 {
         int resCount = 0;
-        std::vector<std::vector<std::string>> listings = db->query("Created", "lid", "eid", "eq", std::to_string(eid), false, resCount);
+        std::vector<std::vector<std::string>> listings = db->query("Created_AI", "lid", "eid", "eq", std::to_string(eid), false, resCount);
         if (resCount == 0)
         {
                 std::cout << "Error: The employer does not have any listings or the employer eid does not exist" << std::endl;
@@ -390,7 +390,7 @@ bool Employer::changeFieldAll(int eid, std::string newField, int &resCode)
 bool Employer::changePositionAll(int eid, std::string newPosition, int &resCode)
 {
         int resCount = 0;
-        std::vector<std::vector<std::string>> listings = db->query("Created", "lid", "eid", "eq", std::to_string(eid), false, resCount);
+        std::vector<std::vector<std::string>> listings = db->query("Created_AI", "lid", "eid", "eq", std::to_string(eid), false, resCount);
         if (resCount == 0)
         {
                 std::cout << "Error: The employer does not have any listings or the employer eid does not exist" << std::endl;
@@ -409,7 +409,7 @@ bool Employer::changePositionAll(int eid, std::string newPosition, int &resCode)
 bool Employer::changeFlexAll(int eid, bool newFlex, int &resCode)
 {
         int resCount = 0;
-        std::vector<std::vector<std::string>> listings = db->query("Created", "lid", "eid", "eq", std::to_string(eid), false, resCount);
+        std::vector<std::vector<std::string>> listings = db->query("Created_AI", "lid", "eid", "eq", std::to_string(eid), false, resCount);
         if (resCount == 0)
         {
                 std::cout << "Error: The employer does not have any listings or the employer eid does not exist" << std::endl;
@@ -429,7 +429,7 @@ bool Employer::changeFlexAll(int eid, bool newFlex, int &resCode)
 bool Employer::changeModernWorkspaceAll(int eid, bool newValue, int &resCode)
 {
         int resCount = 0;
-        std::vector<std::vector<std::string>> listings = db->query("Created", "lid", "eid", "eq", std::to_string(eid), false, resCount);
+        std::vector<std::vector<std::string>> listings = db->query("Created_AI", "lid", "eid", "eq", std::to_string(eid), false, resCount);
         if (resCount == 0)
         {
                 std::cout << "Error: The employer does not have any listings or the employer eid does not exist" << std::endl;
@@ -449,7 +449,7 @@ bool Employer::changeModernWorkspaceAll(int eid, bool newValue, int &resCode)
 bool Employer::changeGenderAll(int eid, bool newValue, int &resCode)
 {
         int resCount = 0;
-        std::vector<std::vector<std::string>> listings = db->query("Created", "lid", "eid", "eq", std::to_string(eid), false, resCount);
+        std::vector<std::vector<std::string>> listings = db->query("Created_AI", "lid", "eid", "eq", std::to_string(eid), false, resCount);
         if (resCount == 0)
         {
                 std::cout << "Error: The employer does not have any listings or the employer eid does not exist" << std::endl;
@@ -468,8 +468,10 @@ bool Employer::changeGenderAll(int eid, bool newValue, int &resCode)
 
 bool Employer::changeDiversityAll(int eid, bool newValue, int &resCode)
 {
+
+        std::cout << "inChangeDiversityall: eid: " << eid << std::endl;
         int resCount = 0;
-        std::vector<std::vector<std::string>> listings = db->query("Created", "lid", "eid", "eq", std::to_string(eid), false, resCount);
+        std::vector<std::vector<std::string>> listings = db->query("Created_AI", "lid", "eid", "eq", std::to_string(eid), false, resCount);
         if (resCount == 0)
         {
                 std::cout << "Error: The employer does not have any listings or the employer eid does not exist" << std::endl;
@@ -489,7 +491,7 @@ bool Employer::changeDiversityAll(int eid, bool newValue, int &resCode)
 bool Employer::changeRemoteAll(int eid, bool newValue, int &resCode)
 {
         int resCount = 0;
-        std::vector<std::vector<std::string>> listings = db->query("Created", "lid", "eid", "eq", std::to_string(eid), false, resCount);
+        std::vector<std::vector<std::string>> listings = db->query("Created_AI", "lid", "eid", "eq", std::to_string(eid), false, resCount);
         if (resCount == 0)
         {
                 std::cout << "Error: The employer does not have any listings or the employer eid does not exist" << std::endl;
@@ -519,7 +521,7 @@ int Employer::postListing(int eid, std::map<std::string, std::string> basicInfo,
 
         // insert to Created table
         std::string data = "{\"eid\": " + std::to_string(eid) + ", \"lid\": " + std::to_string(insertedLid) + "}";
-        std::string res = db->insert("Created", data);
+        std::string res = db->insert("Created_AI", data);
         std::cout << "res from insert to Created: " << res << std::endl;
         size_t id_pos = res.find("Error:");
         if (id_pos != std::string::npos)
@@ -534,7 +536,7 @@ int Employer::postListing(int eid, std::map<std::string, std::string> basicInfo,
 int Employer::createEmployer(std::string company_name, std::string size, int &resCode)
 {
         std::string data = "{\"company_name\": \"" + company_name + "\", \"size\": \"" + size + "\"}";
-        std::string res = db->insert("Employer", data);
+        std::string res = db->insert("Employer_AI", data);
         std::cout << "createEmployer res: " << res << std::endl;
         size_t id_pos = res.find("Error:");
         if (id_pos != std::string::npos)

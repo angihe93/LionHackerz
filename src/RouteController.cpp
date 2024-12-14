@@ -274,7 +274,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         return;
     }
 
-    int resCount = 0;
+    resCount = 0;
     
     /* check if user ID exists */
     std::vector<std::vector<std::string>> userExists = 
@@ -326,17 +326,24 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         /* write JSONified string to client */
         res.write(jsonRes.dump());
 
-        /* add CORS headers */
-       res.add_header("Access-Control-Allow-Origin", "*"); 
-       res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); 
-       res.add_header("Access-Control-Allow-Headers", "Content-Type"); 
-
         res.end();
         return;
     }
 
     // No cached result, queue the task for processing
     std::cout << "No cache found for UID " << uid << ". Adding task to queue." << std::endl;
+
+        auto exists_future = redis_client.exists({"job" + std::to_string(uid)});
+        redis_client.sync_commit();
+        cpp_redis::reply exists_reply = exists_future.get();
+
+        if (exists_reply.is_integer() && exists_reply.as_integer() > 0) {
+            std::cout << "Task is already in queue.  Wait a bit.." << std::endl;
+            res.write("Task is already in queue. Give it time..");
+
+           res.end();
+           return;
+        } 
 
     // Push the task to the Redis task queue
     redis_client.lpush("task_queue", {std::to_string(uid)}, [](cpp_redis::reply &lpush_reply)
@@ -357,14 +364,44 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     jsonRes["success"]["message"] = "Task was added to the job queue. Check back soon for results.";
     res.write(jsonRes.dump());
 
-    /* add CORS headers */
-    res.add_header("Access-Control-Allow-Origin", "*");
-    res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.add_header("Access-Control-Allow-Headers", "Content-Type");
-
     res.end();
 
     redis_client.commit();
+}
+
+void RouteController::checkStatus(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return; // response has already been written in checkApiHeaders
+    }
+
+
+    res.add_header("Content-Type", "application/json");
+    
+    auto params = crow::query_string(req.url_params);
+
+    std::string exists_key = "job" + std::string(params.get("uid"));
+
+    auto future_reply = redis_client.get(exists_key);
+
+    cpp_redis::reply reply = future_reply.get();
+
+    if(reply.is_string())
+    {
+        res.code = 200;
+        res.set_header("Content-Type", "application/json");
+        res.write("{\"status\": \"found\", \"progress\": 0}");
+        return;
+    } else {
+        res.code = 404;
+        res.set_header("Content-Type", "application/json");
+        res.write("{\"status\": \"not_found\", \"progress\": 0}");
+    }
+
+    res.end();
+    return;
+
 }
 
 /* LISTING ROUTES */
@@ -1266,7 +1303,6 @@ void RouteController::getProfile(const crow::request &req, crow::response &res) 
 
     return;
 }
-
 
 void RouteController::returnError(crow::response &res, int code, const std::string &message)
 {
@@ -2425,18 +2461,29 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::GET, crow::HTTPMethod::OPTIONS)(
             [this](const crow::request &req, crow::response &res, const std::string &user_id)
         {
-            if (req.method == crow::HTTPMethod::OPTIONS)
-            {
-                std::cout << "Handling OPTIONS request for /progress" << std::endl;
-                res.code = 204;
+           
+
+            auto future_reply = redis_client.get("progress:" + user_id);
+            redis_client.commit();
+
+            cpp_redis::reply reply = future_reply.get();
+
+            if (!reply.is_string()) {
+                res.code = 404;
+                res.write("Progress not found.");
                 res.end();
                 return;
             }
-
+            
             res.code = 200;
             res.write(reply.as_string());
             res.end();
             return; });
+
+    CROW_ROUTE(app, "/checkStatus")
+        .methods(crow::HTTPMethod::GET, crow::HTTPMethod::OPTIONS)(
+            [this](const crow::request &req, crow::response &res)
+                                         { checkStatus(req, res); });
 
     /* LISTING ROUTES */
     CROW_ROUTE(app, "/listing/create")
@@ -2495,8 +2542,6 @@ void RouteController::initRoutes(crow::App<> &app)
     CROW_ROUTE(app, "/getProfile")
         .methods("GET"_method, "OPTIONS"_method)([this](const crow::request &req, crow::response &res)
                                         { getProfile(req, res); }); 
-
-                                         { makeUser(req, res); });
 
     /* EMPLOYER ROUTES */
     CROW_ROUTE(app, "/employer/changeField")

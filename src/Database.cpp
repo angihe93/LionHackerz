@@ -309,6 +309,56 @@ Database::query(std::string table, std::string selectColumns,
 }
 
 std::vector<std::vector<std::string>>
+Database::queryOrder(std::string table, std::string selectColumns,
+                std::string field, std::string dir, bool printResults, int &resCount)
+{
+    std::string statusCode = "";
+
+    std::string url = this->url + "/rest/v1/" + table + "?" + "order=" +
+                      field + "." + dir;
+
+    const std::string fURL = url;
+
+    const std::string &method = "GET";
+    const std::string &insertData = "";
+
+    std::string result = request(method, fURL, insertData, statusCode);
+
+    int i = 0;
+    int listCount = 0;
+
+    while (i < result.size() && result[i] != '}')
+    {
+        if (result[i] == ':')
+            listCount++;
+        i++;
+    }
+
+    std::vector<std::vector<std::string>> queryLists;
+
+    int cR = this->countResults(result);
+    resCount = this->countResults(result);
+    if (printResults)
+    {
+        std::cout << "SELECT " << selectColumns << " FROM " << table << " ORDER BY "
+                  << field << " " << dir << std::endl;
+        std::cout << "Query complete." << std::endl;
+        std::cout << "\tNumber of results: " << cR << std::endl;
+        std::cout << "\tNumber of columns returned:  " << listCount << std::endl;
+
+        std::cout << std::endl
+                  << "Results: " << result << std::endl;
+    }
+
+    tokenize(result, cR, listCount, queryLists);
+
+    if (printResults)
+        iterateLists(queryLists);
+
+    return queryLists;
+}
+
+std::vector<std::vector<std::string>>
 Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn1, std::string op1, std::string value1,
                 std::string filterColumn2, std::string op2, std::string value2,

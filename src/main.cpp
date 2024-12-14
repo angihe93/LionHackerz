@@ -19,9 +19,9 @@ cpp_redis::client redis_client;
 /* redis task queue initialization */
 void setup_redis()
 {
-    redis_client.connect("127.0.0.1", 6379, [](const std::string &host, std::size_t port, cpp_redis::connect_state status)
+    redis_client.connect("127.0.0.1", 6379, [](const std::string &host, std::size_t port, cpp_redis::client::connect_state status)
                          {
-        if (status == cpp_redis::connect_state::dropped) {
+        if (status == cpp_redis::client::connect_state::dropped) {
             std::cerr << "Redis connection lost to " << host << ":" << port << std::endl;
         } });
 }
@@ -40,7 +40,9 @@ int main(int argc, char *argv[])
 
     RouteController routeController;
     routeController.initRoutes(app);
+
     Database *db;
+
     if (testMode)
     {
         db = new MockDatabase();
@@ -54,7 +56,8 @@ int main(int argc, char *argv[])
     routeController.setDatabase(db);
 
     Matcher m(*db);
-    Worker worker(redis_client, &m, redis_mutex);
+
+    Worker worker(redis_client, m, redis_mutex);
 
     /* start task queue */
     worker.start_worker_pool(4);

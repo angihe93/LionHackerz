@@ -54,7 +54,7 @@ public:
      */
     bool checkAuthHeaders(const crow::request &req, crow::response &res);
 
-    /* MATCHER ROUTE */
+    /* MATCHER ROUTES */
 
     /** 
      * @brief Route: /getMatches?uid=X
@@ -65,7 +65,19 @@ public:
      */
     void getMatches(const crow::request &req, crow::response &res);
 
-    /* END MATCHER ROUTE */
+    /** 
+     * @brief Route: /checkStatus?uid=X
+     * 
+     * This route checks whether a job has been pulled from the redis
+     * task queue.  Used to determine when all workers are currently
+     * occupied to delay display of the progress bar until a worker
+     * is free to process the job.  If status is found, it's being
+     * processed by a worker.  If not, it's in queue but not yet
+     * pulled from the queue because no workers currently available.   
+     */
+    void checkStatus(const crow::request &req, crow::response &res);
+
+    /* END MATCHER ROUTES */
 
     /* BEGIN LISTING ROUTES */
 
@@ -280,7 +292,7 @@ public:
     void employerChangeModernWorkspace(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Various employer functions
+     * @brief Various Employer functions
      */
     void employerChangeFieldAll(const crow::request &req, crow::response &res);
     void employerChangePositionAll(const crow::request &req, crow::response &res);

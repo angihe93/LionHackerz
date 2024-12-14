@@ -24,21 +24,36 @@
 class Database
 {
 public:
-    /* Constructor:  Create a new database instance using SUPABASE environment variables.
+    /**
+     * @brief Constructor
+     * 
+     * Create a new database instance using SUPABASE environment variables.
      */
     Database();
 
-    /* Constructor:  Create a new database instance.
-     *      @param url - the URL to the database (PostgREST root URL)
-     *      @para api_key - the API key needed to perform queries */
+    /** 
+     * @brief Constructor overload
+     * 
+     * Create a new database instance.
+     * 
+     * @param url The URL to the database (PostgREST root URL)
+     * @param api_key The API key needed to perform queries 
+     */
     Database(const std::string url, const std::string api_key);
 
-    /* Destructor:  Call cleanup on curl after database closed. */
+    /**
+     * @brief Destructor
+     * 
+     * Call cleanup on curl after database closed. 
+     */
     virtual ~Database()
     {
         curl_global_cleanup();
     }
-    /* query2(): Main query2 function with 1 filter column.
+
+    /**
+     * @brief query2(): Main query2 function with 1 filter column.
+     *
      * This function takes as input the name of a table in the database,
      * the name(s) of 1 or more columns to select from, the name of 1
      * column to serve as a filter, the comparison operation (e.g., is,
@@ -46,36 +61,31 @@ public:
      * a flag for printing the query2 results.  Any string field not used
      * should be passed as the empty string ""
      *
-     *   @param table           name of table in database (case sensitive)
+     * @param table Name of table in database (case sensitive)
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn The column name to filter on
+     * @param op A comparison operation (=, >, <, !=, etc.)
+     * @param value A value to filter on
+     * @param printResults True to print results, false otherwise
+     * @return A pointer to an array of vectors, one per column requested, 
+     * containing the values in the database (as strings).
      *
-     *   @param selectColumns   one or more columns to select from,
-     *                          separated by commas
-     *
-     *   @param filterColumn    the column name to filter on
-     *
-     *   @param op              a comparison operation (=, >, <, !=, etc.)
-     *
-     *   @param value           a value to filter on
-     *
-     *   @param printResults    true to print results, false otherwise
-     *
-     * On successful completion, the function returns a pointer to an array of vectors, one
-     * per column requested, containing the values in the database (as strings).
-     *
-     *      e.g., selecting 2 columns from 'table', col1 and col2, will
-     *          return an array of 2 vectors containing the values from col1 and
-     *          col2:
-     *                  vecsArray[0]: vector<string> col1 -> col1.v1, col1.v2, etc.
-     *                  vecsArray[1]: vector<string> col2 -> col2.v1, col2.v2, etc.
+     * e.g., selecting 2 columns from 'table', col1 and col2, will
+     * return an array of 2 vectors containing the values from col1 and
+     * col2:
+     *  vecsArray[0]: vector<string> col1 -> col1.v1, col1.v2, etc.
+     *  vecsArray[1]: vector<string> col2 -> col2.v1, col2.v2, etc.
      *
      * In terms of the SQL query2, this function is equivalent to:
-     *      SELECT selectColumns FROM table WHERE filterColumn op value
+     *  SELECT selectColumns FROM table WHERE filterColumn op value
      */
     virtual std::vector<std::vector<std::string>> query2(std::string table, std::string selectColumns,
                                                          std::string filterColumn, std::string op,
                                                          std::string value,
                                                          bool printResults, int &resCount);
-    /* query(): Main query function with 1 filter column.
+    /**
+     * @brief query(): Main query function with 1 filter column.
+     * 
      * This function takes as input the name of a table in the database,
      * the name(s) of 1 or more columns to select from, the name of 1
      * column to serve as a filter, the comparison operation (e.g., is,
@@ -83,39 +93,53 @@ public:
      * a flag for printing the query results.  Any string field not used
      * should be passed as the empty string ""
      *
-     *   @param table           name of table in database (case sensitive)
+     * @param table Name of table in database (case sensitive)
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn The column name to filter on
+     * @param op A comparison operation (=, >, <, !=, etc.)
+     * @param value A value to filter on
+     * @param printResults True to print results, false otherwise
+     * @param resCount Variable to hold the number of results found
+     * @return A pointer to an array of vectors, one per column requested, 
+     * containing the values in the database (as strings).
      *
-     *   @param selectColumns   one or more columns to select from,
-     *                          separated by commas
-     *
-     *   @param filterColumn    the column name to filter on
-     *
-     *   @param op              a comparison operation (=, >, <, !=, etc.)
-     *
-     *   @param value           a value to filter on
-     *
-     *   @param printResults    true to print results, false otherwise
-     *
-     * On successful completion, the function returns a pointer to an array of vectors, one
-     * per column requested, containing the values in the database (as strings).
-     *
-     *      e.g., selecting 2 columns from 'table', col1 and col2, will
-     *          return an array of 2 vectors containing the values from col1 and
-     *          col2:
-     *                  vecsArray[0]: vector<string> col1 -> col1.v1, col1.v2, etc.
-     *                  vecsArray[1]: vector<string> col2 -> col2.v1, col2.v2, etc.
+     * e.g., selecting 2 columns from 'table', col1 and col2, will
+     * return an array of 2 vectors containing the values from col1 and
+     * col2:
+     *  vecsArray[0]: vector<string> col1 -> col1.v1, col1.v2, etc.
+     *  vecsArray[1]: vector<string> col2 -> col2.v1, col2.v2, etc.
      *
      * In terms of the SQL query, this function is equivalent to:
-     *      SELECT selectColumns FROM table WHERE filterColumn op value
+     *  SELECT selectColumns FROM table WHERE filterColumn op value
      */
     virtual std::vector<std::vector<std::string>> query(std::string table, std::string selectColumns,
                                                         std::string filterColumn, std::string op,
                                                         std::string value,
                                                         bool printResults, int &resCount);
 
-    /* Overloaded query function:  Same as above, but with 2 filters
-     *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
-     *              AND filterColumn2 op2 value2 */
+
+    virtual std::vector<std::vector<std::string>> queryOrder (std::string table, std::string selectColumn,
+                                            std::string field, std::string dir,
+                                            bool printResults, int &resCount);
+
+    /**
+     * @brief Overloaded query function
+     * 
+     * Same as above, but with 2 filters
+     * e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
+     * AND filterColumn2 op2 value2
+     * 
+     * @param table Name of table in database (case sensitive)
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn1 The first column name to filter on
+     * @param op1 The first comparison operation (=, >, <, !=, etc.)
+     * @param value1 The first value to filter on
+     * @param filterColumn2 The second column name to filter on
+     * @param op2 The second comparison operation (=, >, <, !=, etc.)
+     * @param value2 The second value to filter on
+     * @param printResults True to print results, false otherwise
+     * @param resCount Variable to hold the number of results found
+     */
     virtual std::vector<std::vector<std::string>> query(std::string table, std::string selectColumns,
                                                         std::string filterColumn1, std::string op1,
                                                         std::string value1,
@@ -123,9 +147,27 @@ public:
                                                         std::string value2,
                                                         bool printResults, int &resCount);
 
-    /* Overloaded query function:  Same as above, but with 3 filters
-     *      e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
-     *              AND filterColumn2 op2 value2 AND filterColumn3 op3 value3 */
+    /**
+     * @brief Overloaded query function
+     * 
+     * Same as above, but with 3 filters
+     * e.g., SELECT selectColumns FROM table WHERE filterColumn1 op1 value1
+     * AND filterColumn2 op2 value2 AND filterColumn3 op3 value3 
+     * 
+     * @param table Name of table in database (case sensitive)
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn1 The first column name to filter on
+     * @param op1 The first comparison operation (=, >, <, !=, etc.)
+     * @param value1 The first value to filter on
+     * @param filterColumn2 The second column name to filter on
+     * @param op2 The second comparison operation (=, >, <, !=, etc.)
+     * @param value2 The second value to filter on
+     * @param filterColumn3 The third column name to filter on
+     * @param op3 The third comparison operation (=, >, <, !=, etc.)
+     * @param value3 The third value to filter on
+     * @param printResults True to print results, false otherwise
+     * @param resCount Variable to hold the number of results found
+     */
     virtual std::vector<std::vector<std::string>> query(std::string table, std::string selectColumns,
                                                         std::string filterColumn1, std::string op1,
                                                         std::string value1,
@@ -135,7 +177,10 @@ public:
                                                         std::string value3,
                                                         bool printResults, int &resCount);
 
-    /* insert():  This function allows you to insert a new entry into the database.
+    /**
+     * @brief Insert operation
+     * 
+     * insert():  This function allows you to insert a new entry into the database.
      * It takes 2 arguments, both strings, the first being the table you wish to enter
      * the entry into, the second being a JSON formatted list of column: value pairs to
      * enter into that table. The list string takes the format:
@@ -146,15 +191,16 @@ public:
      * a string literal R"( data with no escapes )" to make escapes unnecessary.  See
      * dbtest route in RouteController for example requests.
      *
-     *     @param table         The table you are inserting data into
-     *
-     *     @param data          A JSON formatted string ("{ "col1": "val1", ... }")
-     *                          that contains the data for each column you are
-     *                          inserting.
+     * @param table The table you are inserting data into
+     * @param data A JSON formatted string ("{ "col1": "val1", ... }") that contains
+     * the data for each column you are inserting.
      */
     virtual std::string insert(std::string table, std::string data);
 
-    /* update():  This function allows you to update an existing entry in the database.
+    /** 
+     * @brief Update operation
+     * 
+     * update():  This function allows you to update an existing entry in the database.
      * It takes 2 arguments, both strings, the first being the table where the entry is
      * located, the second being a JSON formatted list of column: value pairs to
      * update. The list string takes the format:
@@ -165,31 +211,27 @@ public:
      * a string literal R"( data with no escapes )" to make escapes unnecessary.  See
      * dbtest route in RouteController for example requests.
      *
-     *     @param table         The table where the to-be-udpated entry is located
-     *
-     *     @param data          A JSON formatted string ("{ "col1": "val1", ... }")
-     *                          that contains the data for each column you are
-     *                          updating.
-     *
-     *     @param column        The filter column you wish to use for an update, i.e.,
-     *                          listing ID, user ID, usually the primary key in
-     *                          the database for this table.
-     *
-     *     @param op            Logical operator, e.g., "eq", "is", "lt"
-     *
-     *     @param value         Value of the filter column to select on for update.
+     * @param table The table where the to-be-udpated entry is located
+     * @param data A JSON formatted string ("{ "col1": "val1", ... }") that contains
+     * the data for each column you are updating.
+     * @param column The filter column you wish to use for an update, i.e., listing ID,
+     * user ID, usually the primary key in the database for this table.
+     * @param op Logical operator, e.g., "eq", "is", "lt"
+     * @param value Value of the filter column to select on for update.
      */
     virtual std::string update(std::string table, std::string data, std::string column,
                                std::string op, std::string val);
 
     /**
+     * @brief Delete operation
+     * 
      * Deletes a record from the specified table.
      *
-     * @param table   The name of the database table.
-     * @param column  The column name to filter by.
-     * @param op      The operator for the condition (e.g., "=" or "!="). Must be URL-encoded.
-     * @param val     The value to compare against.
-     * @return        The response from the server as a string.
+     * @param table The name of the database table.
+     * @param column The column name to filter by.
+     * @param op The operator for the condition (e.g., "=" or "!="). Must be URL-encoded.
+     * @param val The value to compare against.
+     * @return The response from the server as a string.
      */
     virtual std::string deleteRecord(const std::string table, const std::string column, const std::string op, const std::string val);
 
@@ -244,62 +286,87 @@ public:
     // ~MockDatabase();
 
     /**
+     * @brief Insert override
+     * 
      * insert() overrides the insert() method in Database to use the _TEST tables
      *
-     * @param table   The table you are inserting data into
-     * @param data   A JSON formatted string ("{ "col1": "val1", ... }") that contains the data for each column you are inserting.
+     * @param table The table you are inserting data into
+     * @param data A JSON formatted string ("{ "col1": "val1", ... }") that contains
+     * the data for each column you are inserting.
      * @return std::string
      */
     std::string insert(std::string table, std::string data) override
     {
         // Use the test table suffix _TEST
-        std::string testTable = table + "_TEST";
+        std::string modified_table = table;
+        if (table.size() >= 3 && table.compare(table.size() - 3, 3, "_AI") == 0) {
+            modified_table = table.substr(0, table.size() - 3); 
+        }
+        std::string testTable = modified_table + "_TEST";
         return Database::insert(testTable, data);
     }
 
     /**
+     * @brief Update override
+     * 
      * update() overrides the update() method in Database to use the _TEST tables
      *
-     * @param table   The table you are updating data in
-     * @param data   A JSON formatted string ("{ "col1": "val1", ... }") that contains the data for each column you are updating.
-     * @param column   The filter column you wish to use for an update, i.e., listing ID, user ID, usually the primary key in the database for this table.
-     * @param op   Logical operator, e.g., "eq", "is", "lt"
-     * @param val   Value of the filter column to select on for update.
+     * @param table The table you are updating data in
+     * @param data A JSON formatted string ("{ "col1": "val1", ... }") that
+     * contains the data for each column you are updating.
+     * @param column The filter column you wish to use for an update, i.e.,
+     * listing ID, user ID, usually the primary key in the database for this table.
+     * @param op Logical operator, e.g., "eq", "is", "lt"
+     * @param val Value of the filter column to select on for update.
      * @return std::string
      */
     std::string update(std::string table, std::string data, std::string column, std::string op, std::string val) override
     {
         // Use the test table suffix _TEST
-        std::string testTable = table + "_TEST";
+        std::string modified_table = table;
+        if (table.size() >= 3 && table.compare(table.size() - 3, 3, "_AI") == 0) {
+            modified_table = table.substr(0, table.size() - 3); 
+        }
+        std::string testTable = modified_table + "_TEST";
         return Database::update(testTable, data, column, op, val);
     }
 
     /**
+     * @brief Delete override
+     * 
      * Deletes a record from the specified table.
      *
      * @param table   The name of the database table.
      * @param column  The column name to filter by.
-     * @param op      The operator for the condition (e.g., "=" or "!="). Must be URL-encoded.
+     * @param op      The operator for the condition (e.g., "=" or "!="). Must
+     * be URL-encoded.
      * @param val     The value to compare against.
      * @return        The response from the server as a string.
      */
-    std::string deleteRecord(const std::string table, const std::string column, const std::string op, const std::string val) override
+    std::string deleteRecord(const std::string table, const std::string column, 
+        const std::string op, const std::string val) override
     {
         // Use the test table suffix _TEST
-        std::string testTable = table + "_TEST";
+        std::string modified_table = table;
+        if (table.size() >= 3 && table.compare(table.size() - 3, 3, "_AI") == 0) {
+            modified_table = table.substr(0, table.size() - 3); 
+        }
+        std::string testTable = modified_table + "_TEST";
         return Database::deleteRecord(testTable, column, op, val);
     }
 
     /**
+     * @brief Query2 override
+     * 
      * query2() overrides the query2() method in Database to use the _TEST tables
      *
-     * @param table   The table you are querying data from
-     * @param selectColumns   One or more columns to select from, separated by commas
-     * @param filterColumn   The column name to filter on
-     * @param op   A comparison operation (=, >, <, !=, etc.)
-     * @param value   A value to filter on
-     * @param printResults   True to print results, false otherwise
-     * @param resCount   The number of results returned
+     * @param table The table you are querying data from
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn The column name to filter on
+     * @param op A comparison operation (=, >, <, !=, etc.)
+     * @param value A value to filter on
+     * @param printResults True to print results, false otherwise
+     * @param resCount The number of results returned
      * @return std::vector<std::vector<std::string>>
      */
     std::vector<std::vector<std::string>> query2(std::string table, std::string selectColumns,
@@ -308,20 +375,53 @@ public:
                                                  bool printResults, int &resCount) override
     {
         // Use the test table suffix _TEST
-        std::string testTable = table + "_TEST";
+        std::string modified_table = table;
+        if (table.size() >= 3 && table.compare(table.size() - 3, 3, "_AI") == 0) {
+            modified_table = table.substr(0, table.size() - 3); 
+        }
+        std::string testTable = modified_table + "_TEST";
         return Database::query2(testTable, selectColumns, filterColumn, op, value, printResults, resCount);
     }
 
     /**
+     * @brief Order query override
+     * 
+     * queryOrder() overrides the queryOrder() method in Database to use the _TEST tables
+     *
+     * @param table The table you are querying data from
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn The column name to filter on
+     * @param op A comparison operation (=, >, <, !=, etc.)
+     * @param value A value to filter on
+     * @param printResults True to print results, false otherwise
+     * @param resCount The number of results returned
+     * @return std::vector<std::vector<std::string>>
+     */
+    std::vector<std::vector<std::string>> queryOrder(std::string table, std::string selectColumns,
+                std::string field, std::string dir, bool printResults, int &resCount) override
+    {
+        // Use the test table suffix _TEST
+        std::string modified_table = table;
+        if (table.size() >= 3 && table.compare(table.size() - 3, 3, "_AI") == 0) {
+            modified_table = table.substr(0, table.size() - 3); 
+        }
+        std::string testTable = modified_table + "_TEST";
+        return Database::queryOrder(testTable, selectColumns, field, dir, printResults, resCount);
+    }
+
+
+    /**
+     * @brief Query override
+     * 
      * query() overrides the query() method in Database to use the _TEST tables
      *
-     * @param table   The table you are querying data from
-     * @param selectColumns   One or more columns to select from, separated by commas
-     * @param filterColumn   The column name to filter on
-     * @param op   A comparison operation (=, >, <, !=, etc.)
-     * @param value   A value to filter on
-     * @param printResults   True to print results, false otherwise
-     * @param resCount   The number of results returned
+     * @param table The table you are querying data from
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn The column name to filter on
+     * @param op A comparison operation (=, >, <, !=, etc.)
+     * @param value A value to filter on
+     * @param printResults True to print results, false otherwise
+     * @param resCount The number of results returned
      * @return std::vector<std::vector<std::string>>
      */
     std::vector<std::vector<std::string>> query(std::string table, std::string selectColumns,
@@ -330,23 +430,29 @@ public:
                                                 bool printResults, int &resCount) override
     {
         // Use the test table suffix _TEST
-        std::string testTable = table + "_TEST";
+        std::string modified_table = table;
+        if (table.size() >= 3 && table.compare(table.size() - 3, 3, "_AI") == 0) {
+            modified_table = table.substr(0, table.size() - 3); 
+        }
+        std::string testTable = modified_table + "_TEST";
         return Database::query(testTable, selectColumns, filterColumn, op, value, printResults, resCount);
     }
 
     /**
+     * @brief Query 2-filter override
+     * 
      * query() overrides the query() method in Database to use the _TEST tables
      *
-     * @param table   The table you are querying data from
-     * @param selectColumns   One or more columns to select from, separated by commas
-     * @param filterColumn1   The first column name to filter on
-     * @param op1   The comparison operation for the first filter column
-     * @param value1   The value to filter on for the first filter column
-     * @param filterColumn2   The second column name to filter on
-     * @param op2   The comparison operation for the second filter column
-     * @param value2   The value to filter on for the second filter column
-     * @param printResults   True to print results, false otherwise
-     * @param resCount   The number of results returned
+     * @param table The table you are querying data from
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn1 The first column name to filter on
+     * @param op1 The comparison operation for the first filter column
+     * @param value1 The value to filter on for the first filter column
+     * @param filterColumn2 The second column name to filter on
+     * @param op2 The comparison operation for the second filter column
+     * @param value2 The value to filter on for the second filter column
+     * @param printResults True to print results, false otherwise
+     * @param resCount The number of results returned
      */
     std::vector<std::vector<std::string>> query(std::string table, std::string selectColumns,
                                                 std::string filterColumn1, std::string op1,
@@ -356,26 +462,33 @@ public:
                                                 bool printResults, int &resCount) override
     {
         // Use the test table suffix _TEST
-        std::string testTable = table + "_TEST";
-        return Database::query(testTable, selectColumns, filterColumn1, op1, value1, filterColumn2, op2, value2, printResults, resCount);
+        std::string modified_table = table;
+        if (table.size() >= 3 && table.compare(table.size() - 3, 3, "_AI") == 0) {
+            modified_table = table.substr(0, table.size() - 3); 
+        }
+        std::string testTable = modified_table + "_TEST";
+        return Database::query(testTable, selectColumns, filterColumn1, op1, value1,
+            filterColumn2, op2, value2, printResults, resCount);
     }
 
     /**
+     * @brief Query 3-filter override
+     *
      * query() overrides the query() method in Database to use the _TEST tables
      *
-     * @param table   The table you are querying data from
-     * @param selectColumns   One or more columns to select from, separated by commas
-     * @param filterColumn1   The first column name to filter on
-     * @param op1   The comparison operation for the first filter column
-     * @param value1   The value to filter on for the first filter column
-     * @param filterColumn2   The second column name to filter on
-     * @param op2   The comparison operation for the second filter column
-     * @param value2   The value to filter on for the second filter column
-     * @param filterColumn3   The third column name to filter on
-     * @param op3   The comparison operation for the third filter column
-     * @param value3   The value to filter on for the third filter column
-     * @param printResults   True to print results, false otherwise
-     * @param resCount   The number of results returned
+     * @param table The table you are querying data from
+     * @param selectColumns One or more columns to select from, separated by commas
+     * @param filterColumn1 The first column name to filter on
+     * @param op1 The comparison operation for the first filter column
+     * @param value1 The value to filter on for the first filter column
+     * @param filterColumn2 The second column name to filter on
+     * @param op2 The comparison operation for the second filter column
+     * @param value2 The value to filter on for the second filter column
+     * @param filterColumn3 The third column name to filter on
+     * @param op3 The comparison operation for the third filter column
+     * @param value3 The value to filter on for the third filter column
+     * @param printResults True to print results, false otherwise
+     * @param resCount The number of results returned
      */
     std::vector<std::vector<std::string>> query(std::string table, std::string selectColumns,
                                                 std::string filterColumn1, std::string op1,
@@ -387,8 +500,13 @@ public:
                                                 bool printResults, int &resCount) override
     {
         // Use the test table suffix _TEST
-        std::string testTable = table + "_TEST";
-        return Database::query(testTable, selectColumns, filterColumn1, op1, value1, filterColumn2, op2, value2, filterColumn3, op3, value3, printResults, resCount);
+        std::string modified_table = table;
+        if (table.size() >= 3 && table.compare(table.size() - 3, 3, "_AI") == 0) {
+            modified_table = table.substr(0, table.size() - 3); 
+        }
+        std::string testTable = modified_table + "_TEST";
+        return Database::query(testTable, selectColumns, filterColumn1, op1, value1, 
+            filterColumn2, op2, value2, filterColumn3, op3, value3, printResults, resCount);
     }
 };
 

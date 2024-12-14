@@ -10,11 +10,12 @@
 class Worker {
 private:
     cpp_redis::client &redis_client; 
-    Matcher *m;       
     std::vector<std::thread> worker_threads;
+    Matcher *m;
     std::mutex &redis_mutex;
+    std::vector<int> in_queue;
 public:
-    Worker(cpp_redis::client &redis, Matcher *matcher, std::mutex &mutex);
+    Worker(cpp_redis::client &redis, Matcher &m, std::mutex &mutex);
 
     /* Starts the worker pool */
 	void start_worker_pool(int num_threads);
