@@ -245,6 +245,8 @@ public:
     /* helper function: returns the number of results returned in the query string */
     int countResults(std::string results);
 
+    std::string descQuery(int lid);
+
     /* helper function: tokenizes and listifies a query result string */
     std::vector<std::vector<std::string>> tokenize(const std::string &res, int cR, int listCount,
                                                    std::vector<std::vector<std::string>> &queryLists);

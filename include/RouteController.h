@@ -82,6 +82,13 @@ public:
     /* BEGIN LISTING ROUTES */
 
     /**
+     * @brief Route: /listing/retrieve?lid=X
+     * 
+     * This route retrieves an existing listing from the database.
+     */
+    void getListing(const crow::request &req, crow::response &res);
+
+    /**
      * @brief Route: /listing/changeField?lid=X&newField=Y
      * 
      * This route updates the 'field' parameter of the job listing with
@@ -192,12 +199,20 @@ public:
      */
     void changePersonalityType(const crow::request &req, crow::response &res);
 
+    /**
+     * @brief Route: /listing/getEID?lid=X
+     * 
+     * This route retrieves the employer ID for the employer that created a
+     * giving job listing with listing ID 'lid'.  
+     */
+    void getEID(const crow::request &req, crow::response &res);
+
     /* END LISTING ROUTES */
 
     /* BEGIN EMPLOYER ROUTES */
 
     /**
-     * @brief Route: /employer/ChangeField?eid=X&lid=Y&newField=Z
+     * @brief Route: /employer/changeField?eid=X&lid=Y&newField=Z
      * 
      * This route updates the 'field' parameter of the job listing with
      * listing ID lid and sets the field to the string following 'newField='
@@ -206,7 +221,7 @@ public:
     void employerChangeField(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Route: /employer/ChangePosition?eid=X&lid=Y&newPosition=Z
+     * @brief Route: /employer/changePosition?eid=X&lid=Y&newPosition=Z
      * 
      * This route updates the 'position' parameter of the job listing with
      * listing ID lid and sets the position to the string following
@@ -215,7 +230,7 @@ public:
     void employerChangePosition(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Route: /employer/ChangeJobDescription?eid=X&lid=Y&newDescription=Z
+     * @brief Route: /employer/changeJobDescription?eid=X&lid=Y&newDescription=Z
      * 
      * This route updates the 'job_description' parameter of the job listing
      * with listing ID lid and sets the description to the string following
@@ -224,7 +239,7 @@ public:
     void employerChangeJobDescription(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Route: /employer/ChangeFlex?eid=X&lid=Y
+     * @brief Route: /employer/changeFlex?eid=X&lid=Y
      * 
      * This route updates the 'job_flexibility' parameter of the job listing with
      * listing ID lid and sets the position to the true if previously null, false
@@ -234,7 +249,7 @@ public:
     void employerChangeFlex(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Route: /employer/ChangeGender?eid=X&lid=Y
+     * @brief Route: /employer/changeGender?eid=X&lid=Y
      * 
      * This route updates the 'mixed_gender' parameter of the job listing with
      * listing ID lid and sets the mixed_gender to the true if previously null,
@@ -244,7 +259,7 @@ public:
     void employerChangeGender(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Route: /employer/ChangeDiversity?eid=X&lid=Y
+     * @brief Route: /employer/changeDiversity?eid=X&lid=Y
      * 
      * This route updates the 'diverse_workforce' parameter of the job listing
      * with listing ID lid and sets the diverse_workforce to the true if
@@ -254,7 +269,7 @@ public:
     void employerChangeDiversity(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Route: /employer/ChangeRemote?eid=X&lid=Y
+     * @brief Route: /employer/changeRemote?eid=X&lid=Y
      * 
      * This route updates the 'remote_available' parameter of the job listing
      * with listing ID lid and sets the remote_available to the true if
@@ -264,7 +279,7 @@ public:
     void employerChangeRemote(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Route: /employer/ChangeLocation?eid=X&lid=Y?newLocation=Z
+     * @brief Route: /employer/changeLocation?eid=X&lid=Y?newLocation=Z
      * 
      * This route updates the 'location' parameter of the job listing with
      * listing ID lid and sets the location to the string following
@@ -273,7 +288,7 @@ public:
     void employerChangeLocation(const crow::request &req, crow::response &res);
 
     /** 
-     * @brief Route: /employer/ChangeMBTI?eid=X&lid=Y?newMBTI=Z
+     * @brief Route: /employer/changeMBTI?eid=X&lid=Y?newMBTI=Z
      * 
      * This route updates the 'personality_types' parameter of the job listing
      * with listing ID lid and sets the personality types to the string
@@ -282,7 +297,7 @@ public:
     void employerChangeMBTI(const crow::request &req, crow::response &res);
 
     /**
-     * @brief Route: /employer/ChangeModernWorkspace?eid=X&lid=Y
+     * @brief Route: /employer/changeModernWorkspace?eid=X&lid=Y
      * 
      * This route updates the 'modern_building' parameter of the job listing
      * with listing ID lid and sets the modern_building to the true if

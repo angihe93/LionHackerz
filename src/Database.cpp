@@ -257,6 +257,24 @@ Database::query2(std::string table, std::string selectColumns,
     return queryLists;
 }
 
+std::string
+Database::descQuery(int lid)
+{
+    std::string statusCode = "";
+    std::string url = this->url + "/rest/v1/Listing_AI?select=job_description&lid=eq." + std::to_string(lid);
+
+    const std::string &method = "GET";
+    const std::string &insertData = "";
+
+    std::string result = request(method, url, insertData, statusCode);
+
+    auto json = nlohmann::json::parse(result);
+
+    std::string description = json[0]["job_description"];
+
+    return description;
+}
+
 std::vector<std::vector<std::string>>
 Database::query(std::string table, std::string selectColumns,
                 std::string filterColumn, std::string op,
