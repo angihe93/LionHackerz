@@ -3,10 +3,13 @@
 #include "Worker.h"
 #include <cpp_redis/cpp_redis>
 #include <chrono>
+#include <mutex>
+#include <algorithm>
 #include <iostream>
 
-Worker::Worker(cpp_redis::client &redis, Matcher *matcher)
-	: redis_client(redis), m(matcher) {}
+
+Worker::Worker(cpp_redis::client &redis, Matcher &m, std::mutex &mutex)
+	: redis_client(redis), m(&m), redis_mutex(mutex) {}
 
 void Worker::process_tasks()
 {
@@ -15,7 +18,7 @@ void Worker::process_tasks()
 		try
 		{
 			// Fetch a task from the queue
-			auto future_reply = redis_client.rpop("task_queue");
+			auto future_reply = redis_client.lpop("task_queue");
 			redis_client.commit();
 
 			// Get the actual reply
@@ -31,12 +34,30 @@ void Worker::process_tasks()
 			// Extract user ID from the task
 			std::string user_id = reply.as_string();
 
+			int uid = std::stoi(user_id);
+			if (!uid)
+				return;
+			std::cout << "Processing task for UID: " << uid << std::endl;
+
+			if (std::find(in_queue.begin(), in_queue.end(), uid) != in_queue.end()) {
+        		std::cout << "That UID is already in the queue.  Give it time.." << std::endl;
+				return;
+    		} else {
+				in_queue.push_back(uid);
+   			}
+
+			redis_client.set("job" + user_id, "1", [](cpp_redis::reply& reply) {
+				if (reply.is_simple_string() && reply.as_string() == "OK") {
+					std::cout << "Exists key successfully set." << std::endl;
+				} else {
+					std::cerr << "Failed to set exists key." << std::endl;
+				}
+        	});
+			redis_client.expire("job" + user_id, 120);
+
 			// Track progress in Redis
 			redis_client.set("progress:" + user_id, "{\"status\": \"processing\", \"progress\": 0}");
 			redis_client.commit();
-
-			int uid = std::stoi(user_id);
-			std::cout << "Processing task for UID: " << uid << std::endl;
 
 			// Perform matching algorithm
 			auto matches = m->displayMatches(uid, false);
@@ -56,7 +77,7 @@ void Worker::process_tasks()
 
 			// Cache match results in Redis with expiration
 			redis_client.set("matches:" + user_id, jsonArray.dump());
-			redis_client.expire("matches:" + user_id, 100);
+			redis_client.expire("matches:" + user_id, 200);
 			redis_client.commit();
 
 			// Mark task as completed
@@ -64,6 +85,17 @@ void Worker::process_tasks()
 			redis_client.commit();
 
 			std::cout << "Task completed for UID: " << uid << std::endl;
+			in_queue.erase(find(in_queue.begin(), in_queue.end(), uid));
+
+			auto del_future = redis_client.del({"job" + user_id});
+            redis_client.commit();
+            cpp_redis::reply del_reply = del_future.get();
+
+            if (del_reply.is_integer() && del_reply.as_integer() > 0) {
+                std::cout << "Exists key erased successfully" << std::endl;
+            } else {
+                std::cerr << "Failed to erase exists key." << std::endl;
+            }
 		}
 		catch (const std::exception &e)
 		{

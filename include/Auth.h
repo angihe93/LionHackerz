@@ -15,6 +15,8 @@ class Auth {
                 Auth(Database &db); 
 
                 /**
+                 * @brief Create API user
+                 * 
                  * create an API user with the given email and password or look up an existing user by email
                  * 
                  * @param email   a string of the user's email
@@ -24,6 +26,8 @@ class Auth {
                 int createAPIUser(std::string email, std::string password);
 
                 /**
+                 * @brief Decode header
+                 * 
                  * Get the username and password values from the HTTP Basic Auth Authorization header
                  * 
                  * @param auth   the Authorization header from the request
@@ -33,8 +37,11 @@ class Auth {
 
 
                 /**
+                 * @brief Generate API key
+                 * 
                  * A function to generate an API key for a user with the given role
-                 * currently only support role = "admin", will eventually expand to other kinds of user roles with different permissions
+                 * currently only support role = "admin", will eventually expand to other kinds of user roles
+                 * with different permissions
                  * 
                  * @param role   the role for the API key to be generated
                  * @param uid    the id of the user to generate API key for
@@ -47,13 +54,14 @@ class Auth {
                 int getAid(std::string apiKey);
 
                 // get the role for the aid
-
                 std::string getRole(int aid);
 
         private:
                 Database *db;
 
                 /**
+                 * @brief Helper: Generate API key
+                 * 
                 * Helper function to generate API key 
                 * 
                 * @param length   number of bytes of random data to generate

@@ -12,7 +12,7 @@ TEST(MatcherUserDimensionIntegration, CheckMatcherUserDimensionIntegration) {
     Database *db = new MockDatabase();
     Matcher *m = new Matcher(*db);
 
-    // call displayMatches on a uid that doesn't exit
+    // call displayMatches on a uid that doesn't exist
     int resCount = 0;
     std::vector<std::vector<std::string>> queryRes = db->query("User", "id", "", "", "", false, resCount);
     int last_id = std::stoi(queryRes[0][resCount-1]);
@@ -21,7 +21,9 @@ TEST(MatcherUserDimensionIntegration, CheckMatcherUserDimensionIntegration) {
     EXPECT_EQ(res.size(), 0);
 
     // make user with User::save 
-    User user("test" + next_id, "test" + next_id + "@email.com");
+    User user(std::string("test") + std::string(next_id), std::string("test") + std::string(next_id), 
+        std::string("testUser") + std::string(next_id) + std::string("@email.com"));
+
     std::string saveRes = user.save(*db);
     std::cout << "saveRes: " << saveRes << std::endl;
     EXPECT_EQ(saveRes, "User created with ID: " + next_id);

@@ -22,9 +22,9 @@ TEST(ListingGet, checkGetListing)
     // std::cout << "getRes: " << getRes << std::endl;
 
     // Extract and test the "Skills required" field
-    std::size_t skillsStart = getRes.find("Skills required: ");
+    std::size_t skillsStart = getRes.find("Skill 1 required: ");
     ASSERT_NE(skillsStart, std::string::npos); // Ensure the field exists
-    skillsStart += std::string("Skills required: ").length();
+    skillsStart += std::string("Skill 1 required: ").length();
     std::size_t skillsEnd = getRes.find('\n', skillsStart);
     std::string skillsField = getRes.substr(skillsStart, skillsEnd - skillsStart);
 
@@ -171,6 +171,8 @@ TEST(ListingInsert, checkInsertListing)
     int insertRes = l->insertListing(basicInfo, skillsPersonality, pay, boolFields);
     EXPECT_GT(insertRes, 0);
 
+    l->deleteListing(insertRes, resCode);
+
     delete db;
     delete l;
 }
@@ -209,8 +211,9 @@ TEST(ListingDelete, checkDeleteListing)
     EXPECT_GT(insertRes, 0);
     // std::cout << "insertRes: " << insertRes << std::endl;
 
-    // // Delete listing for invalid lid
+    // Delete listing for invalid lid
     l->deleteListing(-1, resCode);
+    std::cout << "res code for -1: " << resCode << std::endl;
     EXPECT_EQ(resCode, 404);
     // std::cout << "deleteRes (invalid lid): " << deleteRes << std::endl;
 
@@ -259,7 +262,7 @@ TEST(ListingChangeAdditional, checkChangePaySkillPersonality)
 
     // Verify that the pay was updated in the database
     int resCount = 0;
-    std::vector<std::vector<std::string>> listing = db->query("Listing", "pay", "lid", "eq", std::to_string(lid), false, resCount);
+    std::vector<std::vector<std::string>> listing = db->query("Listing_AI", "pay", "lid", "eq", std::to_string(lid), false, resCount);
     EXPECT_EQ(resCount, 1);
     EXPECT_EQ(listing[0][0], std::to_string(newPay));
 
@@ -269,7 +272,7 @@ TEST(ListingChangeAdditional, checkChangePaySkillPersonality)
     EXPECT_EQ(resCode, 200); // Expect the response code to be 200
 
     // // Verify that the skills were updated in the database
-    listing = db->query("Listing", "skill1_req,skill2_req,skill3_req", "lid", "eq", std::to_string(lid), false, resCount);
+    listing = db->query("Listing_AI", "skill1_req,skill2_req,skill3_req", "lid", "eq", std::to_string(lid), false, resCount);
     EXPECT_EQ(resCount, 1);
 
     // // Step 4: Test changePersonalityType function
@@ -280,7 +283,7 @@ TEST(ListingChangeAdditional, checkChangePaySkillPersonality)
     // EXPECT_TRUE(changePersonalityResult); // Expect the personality type update to succeed
 
     // // Verify that the personality types were updated in the database
-    listing = db->query("Listing", "personality_types", "lid", "eq", std::to_string(lid), false, resCount);
+    listing = db->query("Listing_AI", "personality_types", "lid", "eq", std::to_string(lid), false, resCount);
     std::string newPersonalityWithQuotes = "\"" + newPersonality + "\"";
     EXPECT_EQ(listing[0][0], newPersonalityWithQuotes);
     EXPECT_EQ(resCount, 1);
@@ -299,6 +302,7 @@ TEST(ListingChangeAdditional, checkChangePaySkillPersonality)
     EXPECT_EQ(resCode, 404);
 
     // Clean up
+    l->deleteListing(lid, resCode);
     delete l;
     delete db;
 }
@@ -308,10 +312,25 @@ TEST(GenAIListing, checkGenAIListing)
     Database *db = new Database();
     Listing *l = new Listing(*db);
 
-    std::string res = l->generateAIListing("1"); // also calls parseAI
-    // std::cout << "res: " << res << std::endl;
-    std::string errRes = "Error: OpenAI request failed.  Please check you have credits or have access to model gpt-4o.";
-    EXPECT_NE(res, errRes);
+    const char* apiKey = std::getenv("OPENAI_API_KEY");
+
+    /* no openAI api */
+    if (apiKey == nullptr) {
+            std::string res = l->generateAIListing("1"); // also calls parseAI
+            std::string errRes = "Error: OpenAI request failed.  Please check you have credits or have access to model gpt-4o.";
+            EXPECT_EQ(res, errRes);
+    /* valid openAI api */
+    } else {
+        /* invalid n */
+        std::string errMsgN = "You entered an invalid number of listings to create.  N must be between 1 and 15.";
+        std::string res = l->generateAIListing("-4");
+        EXPECT_EQ(res, errMsgN);
+
+        /* valid n: check correct return count */
+        std::string res2 = l->generateAIListing("2"); 
+        int count = std::count(res2.begin(), res2.end(), '(');
+        EXPECT_EQ(count, 4);
+    }
 
     delete db;
     delete l;

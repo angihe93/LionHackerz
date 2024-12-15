@@ -20,7 +20,6 @@
 #include <exception>
 #include <iostream>
 #include <typeinfo>
-#include "../external_libraries/Crow/include/crow.h"
 
 void RouteController::index(crow::response &res)
 {
@@ -92,10 +91,14 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
         std::cout << "Username: " << username << ", Password: " << password << std::endl;
         // check in database if this is admin, if so, issue admin api key
         int resCount = 0;
-        std::vector<std::vector<std::string>> queryRes = db->query("Admin", "*", "username", "eq", username, "password", "eq", password, false, resCount);
+        std::vector<std::vector<std::string>> queryRes = 
+            db->query("Admin", "*", "username", "eq", username, "password", "eq", password, 
+                false, resCount);
 
         if (resCount == 0)
         {
+            std::cout << "test1" << std::endl;
+
             res.code = 400;
             jsonRes["error"]["code"] = res.code;
             jsonRes["error"]["message"] = "Wrong username or password";
@@ -110,7 +113,6 @@ void RouteController::signUp(const crow::request &req, crow::response &res)
 
         if (id_pos != std::string::npos)
         { // error
-
             std::cout << retStr << std::endl;
             res.code = 500;
             jsonRes["error"]["code"] = res.code;
@@ -244,19 +246,7 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     auto params = crow::query_string(req.url_params);
 
     crow::json::wvalue jsonRes;
-
-    // Check for the 'uid' parameter
-    const char *uid_str = params.get("uid");
-    if (params.get("uid") == NULL)
-    {
-        res.code = 400;
-        jsonRes["error"]["code"] = res.code;
-        jsonRes["error"]["message"] = "You must specify a user ID with '?uid=X' to retrieve job matches.";
-        res.write(jsonRes.dump());
-        res.end();
-        return;
-    }
-
+    int resCount = 0;
     int uid;
     try
     {
@@ -272,9 +262,23 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         return;
     }
 
-    int resCount = 0;
+    // Check for the 'uid' parameter
+    const char *uid_str = params.get("uid");
+    if (params.get("uid") == NULL)
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must specify a user ID with '?uid=X' to retrieve job matches.";
+        res.write(jsonRes.dump());
+        res.end();
+        return;
+    }
+
+    resCount = 0;
+    
     /* check if user ID exists */
-    std::vector<std::vector<std::string>> userExists = db->query("User", "", "id", "eq", std::to_string(uid), false, resCount);
+    std::vector<std::vector<std::string>> userExists = 
+        db->query("User", "", "id", "eq", std::to_string(uid), false, resCount);
     if (userExists.empty())
     {
         std::cerr << "Invalid UID: " << uid << std::endl;
@@ -288,7 +292,8 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     resCount = 0;
 
     /* check if user has dimensions to compare on */
-    std::vector<std::vector<std::string>> hasDim = db->query("Has_Dimensions", "", "id", "eq", std::to_string(uid), false, resCount);
+    std::vector<std::vector<std::string>> hasDim = 
+        db->query("Has_Dimensions", "", "id", "eq", std::to_string(uid), false, resCount);
     if (hasDim.empty())
     {
         std::cerr << "User ID: " << uid << std::endl;
@@ -321,17 +326,24 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
         /* write JSONified string to client */
         res.write(jsonRes.dump());
 
-        /* add CORS headers */
-        res.add_header("Access-Control-Allow-Origin", "*");
-        res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        res.add_header("Access-Control-Allow-Headers", "Content-Type");
-
         res.end();
         return;
     }
 
     // No cached result, queue the task for processing
     std::cout << "No cache found for UID " << uid << ". Adding task to queue." << std::endl;
+
+        auto exists_future = redis_client.exists({"job" + std::to_string(uid)});
+        redis_client.sync_commit();
+        cpp_redis::reply exists_reply = exists_future.get();
+
+        if (exists_reply.is_integer() && exists_reply.as_integer() > 0) {
+            std::cout << "Task is already in queue.  Wait a bit.." << std::endl;
+            res.write("Task is already in queue. Give it time..");
+
+           res.end();
+           return;
+        } 
 
     // Push the task to the Redis task queue
     redis_client.lpush("task_queue", {std::to_string(uid)}, [](cpp_redis::reply &lpush_reply)
@@ -352,17 +364,104 @@ void RouteController::getMatches(const crow::request &req, crow::response &res)
     jsonRes["success"]["message"] = "Task was added to the job queue. Check back soon for results.";
     res.write(jsonRes.dump());
 
-    /* add CORS headers */
-    res.add_header("Access-Control-Allow-Origin", "*");
-    res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.add_header("Access-Control-Allow-Headers", "Content-Type");
-
     res.end();
 
     redis_client.commit();
 }
 
+void RouteController::checkStatus(const crow::request &req, crow::response &res)
+{
+    if (!checkAuthHeaders(req, res))
+    {
+        return; // response has already been written in checkApiHeaders
+    }
+
+
+    res.add_header("Content-Type", "application/json");
+    
+    auto params = crow::query_string(req.url_params);
+
+    std::string exists_key = "job" + std::string(params.get("uid"));
+
+    auto future_reply = redis_client.get(exists_key);
+
+    cpp_redis::reply reply = future_reply.get();
+
+    if(reply.is_string())
+    {
+        res.code = 200;
+        res.set_header("Content-Type", "application/json");
+        res.write("{\"status\": \"found\", \"progress\": 0}");
+        return;
+    } else {
+        res.code = 404;
+        res.set_header("Content-Type", "application/json");
+        res.write("{\"status\": \"not_found\", \"progress\": 0}");
+    }
+
+    res.end();
+    return;
+
+}
+
 /* LISTING ROUTES */
+
+void RouteController::createListing(const crow::request &req, crow::response &res)
+{
+    crow::json::wvalue jsonRes;
+    auto json = crow::json::load(req.body);
+    if (!json) {
+        res.code = 400;
+        res.write("Invalid JSON");
+        return;
+    }
+
+     std::map<std::string, std::string> basicInfo;
+    basicInfo["cname"] = json["basicInfo"]["cname"].s(); 
+    basicInfo["csize"] = json["basicInfo"]["csize"].s();
+    basicInfo["field"] = json["basicInfo"]["field"].s();
+    basicInfo["position"] = json["basicInfo"]["position"].s();    
+    basicInfo["job_description"] = json["basicInfo"]["job_description"].s();
+    basicInfo["location"] = json["basicInfo"]["location"].s();
+
+
+    std::map<std::string, std::string> skillsPersonality;
+    skillsPersonality["skill1_req"] = json["skillsPersonality"]["skill1_req"].s();
+    skillsPersonality["skill2_req"] = json["skillsPersonality"]["skill2_req"].s();    
+    skillsPersonality["skill3_req"] = json["skillsPersonality"]["skill2_req"].s();    
+    skillsPersonality["skill4_req"] = json["skillsPersonality"]["skill2_req"].s();    
+    skillsPersonality["skill5_req"] = json["skillsPersonality"]["skill2_req"].s();
+
+    skillsPersonality["personality_types"] = json["skillsPersonality"]["personality_types"].s();    
+
+    int64_t pay = json["pay"].i();  
+
+    std::map<std::string, bool> boolFields;
+    boolFields["job_flexibility"] = json["boolFields"]["job_flexibility"].b();
+    boolFields["remote_available"] = json["boolFields"]["remote_available"].b();
+    boolFields["diverse_workforce"] = json["boolFields"]["diverse_workforce"].b();    
+    boolFields["mixed_gender"] = json["boolFields"]["mixed_gender"].b();
+    boolFields["modern_building"] = json["boolFields"]["modern_building"].b();
+
+    Listing *l = new Listing(*db);
+
+    if (l->insertListing(basicInfo, skillsPersonality, pay, boolFields)) {
+        jsonRes["error"]["message"] = "Error creating listing.";
+        res.code = 400;
+        res.write(jsonRes.dump());
+        res.end();
+        delete l;
+        return;
+    }
+
+    res.code = 200;
+    jsonRes["success"]["message"] = "Listing successfully created.";
+    res.write(jsonRes.dump());
+    res.end();
+    delete l;
+    return;
+
+}
 
 void RouteController::changeField(const crow::request &req, crow::response &res)
 {
@@ -516,6 +615,49 @@ void RouteController::changeJobDescription(const crow::request &req, crow::respo
     delete l;
     return;
 }
+
+void RouteController::generateAIJobDescription(const crow::request &req, crow::response &res) 
+{
+
+    crow::json::wvalue jsonRes;
+
+    if (this->db->getAIkey() == "")
+    {
+        res.code = 400;
+        jsonRes["error"]["code"] = res.code;
+        jsonRes["error"]["message"] = "You must have an Open AI API key set as an environmental variable to use AI.  Please set this and try again.";
+    }  
+    
+    auto json = crow::json::load(req.body);
+    if (!json) {
+        res.code = 400;
+        res.write("Invalid JSON");
+        return;
+    }
+
+    std::string title = json["job_title"].s();
+    std::string field = json["job_field"].s();
+    std::string skill1 = json["skill1"].s();
+    std::string skill2 = json["skill2"].s();
+    std::string skill3 = json["skill3"].s();
+    std::string skill4 = json["skill4"].s();
+    std::string skill5 = json["skill5"].s();
+    std::string pay = std::to_string(json["pay"].i());
+    std::string location = json["loc"].s();
+
+    Listing *l = new Listing(*db);
+
+    std::string description = l->generateAIJobDescription(title, field, skill1,
+        skill2, skill3, skill4, skill5, pay, location);
+    res.code = 200;
+    jsonRes["description"] = description;
+
+    res.write(jsonRes.dump());
+    res.end();
+    delete l;
+    return;
+}
+
 
 void RouteController::changeFlex(const crow::request &req, crow::response &res)
 {
@@ -978,7 +1120,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         }
 
         // Extract name and email
-        if (!body.has("name") || !body.has("email") || !body.has("dimensions"))
+        if (!body.has("name") || !body.has("real_name") || !body.has("email") || !body.has("dimensions"))
         {
             crow::json::wvalue error;
             error["status"] = "error";
@@ -990,6 +1132,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         }
 
         std::string name = body["name"].s();
+        std::string real_name = body["real_name"].s();
         std::string email = body["email"].s();
 
         // Extract dimensions
@@ -1011,7 +1154,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
 
         // Create and save the user
         Database *db = new Database();
-        User user(name, email);
+        User user(real_name, name, email);
         std::string save_result = user.save(*db);
         std::cout << save_result << std::endl;
 
@@ -1038,6 +1181,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         // Process interests if provided
         if (body.has("interests"))
         {
+            std::cout << body["interests"] << std::endl;
             std::vector<InterestInput> interests;
             std::string interestError = parseInterests(body["interests"], interests);
             if (!interestError.empty())
@@ -1065,7 +1209,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
                 AugmentInput ai;
                 try
                 {
-                    ai.dim_id = std::stoi(item["dim_id"].s()); // Convert to integer
+                    ai.dim_id = item["dim_id"].i(); 
                 }
                 catch (...)
                 {
@@ -1089,6 +1233,7 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         response["status"] = "success";
         response["user_id"] = user.id;
         res.code = 201;
+        
         res.write(response.dump());
         res.end();
     }
@@ -1102,6 +1247,63 @@ void RouteController::makeUser(const crow::request &req, crow::response &res)
         res.end();
     }
 }
+
+void RouteController::getProfile(const crow::request &req, crow::response &res) {
+
+    crow::json::wvalue jsonRes;
+
+    auto params = crow::query_string(req.url_params);
+
+    int uid = std::stoi(params.get("uid"));    
+
+    int resCount = 0;
+    std::vector<std::vector<std::string>> result = 
+        db->query("Has_Dimension", "", "id", "eq", std::to_string(uid), false, resCount);
+    resCount = 0;
+
+    std::vector<std::vector<std::string>> skills = 
+        db->query("Has_Skill", "name", "id", "eq", std::to_string(uid), false, resCount);
+
+    resCount = 0;
+    std::vector<std::vector<std::string>> interests = 
+        db->query("Has_Interest", "name", "uid", "eq", std::to_string(uid), false, resCount);
+
+    std::string profile = "{";
+    
+    int count = 1;
+    
+    for (auto &r : skills) {
+        for (auto &c : r) {
+            profile += "\"skill" + std::to_string(count) + "\": " + c + ",";
+            count++;
+        }
+    }
+    count = 1;
+    for (auto &r : interests) {
+        for (auto &c : r) {
+            profile += "\"interest" + std::to_string(count) + "\": " + c + ",";
+            count++;
+        }
+    }
+
+    profile += "\"location\": " + result[1][0] + ",";
+    profile += "\"field\": " + result[2][0] + ",";    
+    profile += "\"pay\": " + result[3][0] + ",";
+    profile += "\"gender\": " + result[4][0] + ",";
+    profile += "\"diversity\": " + result[5][0] + ",";
+    profile += "\"mbti\": " + result[6][0] + ",";
+    profile += "\"flexibility\": " + result[7][0] + ",";
+    profile += "\"remote\": " + result[8][0] + ",";
+    profile += "\"workspace\": " + result[9][0] + "";
+    profile += "}";
+
+    jsonRes["results"] = profile;
+    res.write(jsonRes.dump());
+    res.end();
+
+    return;
+}
+
 void RouteController::returnError(crow::response &res, int code, const std::string &message)
 {
     crow::json::wvalue error;
@@ -1127,22 +1329,8 @@ std::string RouteController::parseSkills(const crow::json::rvalue &skills_json, 
         SkillInput si;
         si.name = item["name"].s();
 
-        // Validate that the skill exists in the 'skill' table
-        if (!db.skillExists(si.name))
-        {
-            return "Skill '" + si.name + "' does not exist.";
-        }
 
-        // Check if 'rank' is provided
-        if (item.has("rank"))
-        {
-            si.rank = item["rank"].i();
-        }
-        else
-        {
-            // Rank is not provided; leave si.rank as std::nullopt
-            si.rank = std::nullopt;
-        }
+        si.rank = std::nullopt;
 
         skills.emplace_back(si);
     }
@@ -1163,12 +1351,6 @@ std::string RouteController::parseInterests(const crow::json::rvalue &interests_
 
         InterestInput ii;
         ii.name = item["name"].s();
-
-        // Validate that the interest exists in the 'interest' table
-        if (!db.interestExists(ii.name))
-        {
-            return "Interest '" + ii.name + "' does not exist.";
-        }
 
         interests.emplace_back(ii);
     }
@@ -1206,10 +1388,13 @@ std::string RouteController::processInterests(Database &db, int user_id, const s
 {
     for (const auto &interest : interests)
     {
+        std::cout << interest.name << std::endl;
         std::string data = "{";
-        data += "\"id\": " + std::to_string(user_id) + ",";
-        data += "\"name\": \"" + db.escapeString(interest.name) + "\",";
+        data += "\"uid\": " + std::to_string(user_id) + ",";
+        data += "\"name\": \"" + db.escapeString(interest.name) + "\"";
         data += "}";
+
+        std::cout << data << std::endl;
 
         std::string response = db.insert("Has_Interest", data);
         std::cout << "Interest Insert Response: " << response << std::endl;
@@ -2267,52 +2452,44 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
                                         { dbtest(req, res); });
 
-    /* MATCH ROUTE */
+    /* MATCH ROUTES */
     CROW_ROUTE(app, "/getMatches")
+        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
+            { getMatches(req, res); });
+
+    CROW_ROUTE(app, "/progress/<string>")
+        .methods(crow::HTTPMethod::GET, crow::HTTPMethod::OPTIONS)(
+            [this](const crow::request &req, crow::response &res, const std::string &user_id)
+        {
+           
+
+            auto future_reply = redis_client.get("progress:" + user_id);
+            redis_client.commit();
+
+            cpp_redis::reply reply = future_reply.get();
+
+            if (!reply.is_string()) {
+                res.code = 404;
+                res.write("Progress not found.");
+                res.end();
+                return;
+            }
+            
+            res.code = 200;
+            res.write(reply.as_string());
+            res.end();
+            return; });
+
+    CROW_ROUTE(app, "/checkStatus")
         .methods(crow::HTTPMethod::GET, crow::HTTPMethod::OPTIONS)(
             [this](const crow::request &req, crow::response &res)
-            {
-                res.add_header("Access-Control-Allow-Origin", "*");
-                res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-                res.add_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-                res.add_header("Content-Type", "application/json");
-
-                if (req.method == crow::HTTPMethod::OPTIONS)
-                {
-                    res.code = 204;
-                    res.end();
-                    return;
-                }
-                getMatches(req, res);
-            });
-
-    /* Progress Route */
-    CROW_ROUTE(app, "/progress/<string>")
-        .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res,
-                                               const std::string &user_id)
-                                        {
-        auto future_reply = redis_client.get("progress:" + user_id);
-        redis_client.commit();
-
-        cpp_redis::reply reply = future_reply.get();
-
-        if (!reply.is_string()) {
-            res.code = 404;
-            res.write("Progress not found.");
-            res.end();
-            return;
-        }
-
-                res.add_header("Access-Control-Allow-Origin", "*");
-                res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-                res.add_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-                res.add_header("Content-Type", "application/json");
-        res.code = 200;
-        res.write(reply.as_string());
-        res.end();
-        return; });
+                                         { checkStatus(req, res); });
 
     /* LISTING ROUTES */
+    CROW_ROUTE(app, "/listing/create")
+        .methods("POST"_method, "OPTIONS"_method)([this](const crow::request &req, crow::response &res)
+                                          { createListing(req, res); });
+
     CROW_ROUTE(app, "/listing/changeField")
         .methods(crow::HTTPMethod::PATCH)([this](const crow::request &req, crow::response &res)
                                           { changeField(req, res); });
@@ -2353,10 +2530,18 @@ void RouteController::initRoutes(crow::App<> &app)
         .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
                                          { generateAIListing(req, res); });
 
-    /* USER ROUTE */
-    CROW_ROUTE(app, "/makeUser")
+    CROW_ROUTE(app, "/listing/generateJobDescription")
         .methods(crow::HTTPMethod::POST)([this](const crow::request &req, crow::response &res)
-                                         { makeUser(req, res); });
+                                         { generateAIJobDescription(req, res); });
+
+    /* USER ROUTES */
+    CROW_ROUTE(app, "/makeUser")
+        .methods("POST"_method, "OPTIONS"_method)([this](const crow::request &req, crow::response &res)
+                                        { makeUser(req, res); });
+
+    CROW_ROUTE(app, "/getProfile")
+        .methods("GET"_method, "OPTIONS"_method)([this](const crow::request &req, crow::response &res)
+                                        { getProfile(req, res); }); 
 
     /* EMPLOYER ROUTES */
     CROW_ROUTE(app, "/employer/changeField")
