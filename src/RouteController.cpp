@@ -391,14 +391,14 @@ void RouteController::checkStatus(const crow::request &req, crow::response &res)
     {
         res.code = 200;
         res.set_header("Content-Type", "application/json");
-        res.write("{\"status\": \"found\", \"progress\": 0}");
+        res.write("found");
         return;
     }
     else
     {
         res.code = 404;
         res.set_header("Content-Type", "application/json");
-        res.write("{\"status\": \"not_found\", \"progress\": 0}");
+        res.write("not found");
     }
 
     res.end();
@@ -2601,9 +2601,8 @@ void RouteController::initRoutes(crow::App<> &app)
             return; });
 
     CROW_ROUTE(app, "/checkStatus")
-        .methods(crow::HTTPMethod::GET, crow::HTTPMethod::OPTIONS)(
-            [this](const crow::request &req, crow::response &res)
-            { checkStatus(req, res); });
+        .methods(crow::HTTPMethod::GET, crow::HTTPMethod::OPTIONS)([this](const crow::request &req, crow::response &res)
+                                                                   { checkStatus(req, res); });
 
     /* LISTING ROUTES */
     CROW_ROUTE(app, "/listing/retrieve")
@@ -2659,7 +2658,7 @@ void RouteController::initRoutes(crow::App<> &app)
 
     CROW_ROUTE(app, "/listing/getEID")
         .methods(crow::HTTPMethod::GET)([this](const crow::request &req, crow::response &res)
-                                         { getEID(req, res); });
+                                        { getEID(req, res); });
 
     /* USER ROUTES */
     CROW_ROUTE(app, "/makeUser")
@@ -2669,6 +2668,52 @@ void RouteController::initRoutes(crow::App<> &app)
     CROW_ROUTE(app, "/getProfile")
         .methods("GET"_method, "OPTIONS"_method)([this](const crow::request &req, crow::response &res)
                                                  { getProfile(req, res); });
+
+    CROW_ROUTE(app, "/login").methods("POST"_method)([this](const crow::request &req)
+                                                     {
+        auto body = crow::json::load(req.body);
+        if (!body) {
+            return crow::response(400, "Invalid JSON");
+        }
+
+        std::string username = body["username"].s();
+        std::string email = body["email"].s();
+
+
+        int resCount = 0;
+        std::vector<std::vector<std::string>> results = db->query(
+            "User", "id,email,real_name", "uname", "eq", username, false, resCount);
+
+        if (resCount == 0 || results.size() < 3) {
+            std::cout << "No matching user found in the database." << std::endl;
+            return crow::response(401, "Invalid username or email");
+        }
+
+        for (auto &row : results) {
+            for (auto &col : row) {
+                if (!col.empty() && col.front() == '"' && col.back() == '"') {
+                    col = col.substr(1, col.size() - 2);
+                }
+            }
+        }
+
+        std::string uid = results[0][0];
+        std::string dbEmail = results[1][0];
+        std::string realname = results[2][0];
+
+        if (dbEmail == email) {
+            crow::json::wvalue response_body;
+            response_body["uid"] = uid;
+            response_body["uname"] = username;
+            response_body["realname"] = realname;
+
+            crow::response res(200);
+            res.body = response_body.dump();
+            res.set_header("Content-Type", "application/json");
+            return res;
+        } else {
+            return crow::response(401, "Invalid username or email");
+    } });
 
     /* EMPLOYER ROUTES */
     CROW_ROUTE(app, "/employer/changeField")

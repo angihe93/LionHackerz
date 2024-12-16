@@ -414,6 +414,8 @@ public:
     void dbtest(const crow::request& req, crow::response& res);
 
     /* END DATABASE ROUTE */
+
+    std::string generateSessionId();
 };
 
 #endif
